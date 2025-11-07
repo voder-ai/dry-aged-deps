@@ -1,0 +1,28 @@
+{
+  "name": "dry-aged-deps",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": {
+    "dry-aged-deps": "./bin/dry-aged-deps.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "start": "node ./bin/dry-aged-deps.js",
+    "test": "vitest --coverage",
+    "test:cli": "vitest",
+    "lint": "eslint"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "*",
+    "@vitest/coverage-v8": "^4.0.7",
+    "eslint": "^9.39.1",
+    "eslint-plugin-security": "^3.0.1",
+    "execa": "^9.6.0",
+    "vitest": "^4.0.7"
+  },
+  "dependencies": {
+    "semver": "^7.7.3"
+  }
+}

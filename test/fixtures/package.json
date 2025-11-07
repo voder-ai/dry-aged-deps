@@ -1,0 +1,12 @@
+{
+  "name": "test-project",
+  "version": "1.0.0",
+  "description": "Test project for dry-aged-deps CLI testing",
+  "dependencies": {
+    "lodash": "4.17.20",
+    "express": "4.18.0"
+  },
+  "devDependencies": {
+    "jest": "28.0.0"
+  }
+}
