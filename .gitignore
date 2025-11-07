@@ -100,9 +100,8 @@ Desktop.ini
 
 # AI assistant directories
 .cursor/
-prompts/
-.github/instructions/
-.github/prompts/
+.github/instructions
+.github/prompts
 
 # Temporary folders
 tmp/
