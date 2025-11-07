@@ -1,12 +1,12 @@
 ## NOW
-Refactor the CLI entrypoint (`bin/dry-aged-deps.js`) to normalize exit codes: explicitly call `process.exit(0)` after successful execution (including when outdated packages are found) and ensure only fatal errors invoke `process.exit(1)`.
+Add a new end-to-end Vitest integration test in `test/cli.e2e.real-fixture.test.js` that runs `npm ci` in `test/fixtures`, invokes the CLI with Execa, and asserts that at least one “Age (days)” cell contains a positive integer.
 
 ## NEXT
-- Add integration tests to verify exit codes for all scenarios: `--help`, up-to-date, outdated results, and real errors.
-- Improve error handling in `bin/dry-aged-deps.js` by catching and reporting JSON-parse failures from both `npm outdated` and `npm view` with clear, user-friendly messages.
-- Document the CLI’s exit-code contract in `README.md` under a new “Exit Codes” section.
+- Update the CI workflow (`.github/workflows/ci.yml`) to run the new E2E test alongside existing CLI tests.  
+- Refine `printOutdated` output formatting to align and validate numeric age values (e.g. ensure “Age (days)” is always a number or “N/A”).  
+- Improve `bin/dry-aged-deps.js` error handling to catch and display user-friendly messages when `npm view` fails (e.g. “Unable to fetch publish times for <pkg>”).
 
 ## LATER
-- Introduce a `--profile` flag that uses Node’s `perf_hooks` to measure and optionally print execution times for each major step.
-- Refactor `fetchVersionTimes` to use asynchronous, parallelized calls with configurable concurrency, timeouts, and retry logic for network resilience.
-- Add a CI check that captures and enforces performance benchmarks (e.g., maximum allowed runtime) for the CLI on a typical project.
+- Introduce a `--cwd <path>` CLI flag to target a custom project directory, with corresponding tests.  
+- Refactor `fetchVersionTimes` to an async implementation with configurable timeouts, retries, and concurrency limits.  
+- Add a `--profile` flag using Node’s `perf_hooks` and enforce a CI performance benchmark job.
