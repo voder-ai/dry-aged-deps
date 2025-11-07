@@ -8,14 +8,14 @@
     "start": "node ./bin/dry-aged-deps.js",
     "test": "vitest",
     "test:cli": "vitest --threads=false",
-    "lint": "eslint . --ext .js -c .eslintrc.cjs"
+    "lint": "eslint . --ext .js"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.3.1",
     "eslint": "^9.39.1",
     "eslint-plugin-security": "^3.0.1",
     "execa": "^9.6.0",
-    "vitest": "^4.0.7"
+    "vitest": "^4.0.7",
+    "@eslint/eslintrc": "*"
   },
   "dependencies": {
     "semver": "^7.7.3"
