@@ -1,12 +1,15 @@
 ## NOW
-In `package.json`, pin the version of `@eslint/eslintrc` by replacing its wildcard `"*"` with the exact version recorded in `package-lock.json`.
+Update `.github/workflows/ci.yml` so that the “Install dependencies” step runs:  
+```yaml
+run: npm ci --prefer-frozen-lockfile --dry-run
+```  
 
 ## NEXT
-- Remove the unused `semver` dependency (or integrate it into the code).  
-- Pin any other open-ended version specifiers in `package.json` to exact versions, run `npm install`, and commit the updated `package.json` and `package-lock.json`.
+- Add `.voder/` to `.gitignore` and commit the change to remove internal AI artifacts from version control.  
+- Configure **commitlint** (conventional config) with a Husky `commit-msg` hook to enforce scoped commit messages (`feat:`, `fix:`, `chore:`).  
+- Set up **lint-staged** with a Husky `pre-commit` hook to run `npm run lint` and `npm test` on staged files.  
 
 ## LATER
-- Add a CI step to enforce lockfile consistency using `npm ci --prefer-frozen-lockfile --dry-run`.  
-- Enable automated lockfile updates with Dependabot or Renovate.  
-- Integrate semantic-release (or changesets) for automated version bumps and changelog generation on tag pushes.  
-- Investigate caching of frequent `npm view` calls in CI to speed up CLI tests.
+- Integrate **semantic-release** (or **changesets**) in CI for automated version bumps and changelog generation on tag pushes.  
+- Add a GitHub Actions workflow (`.github/workflows/publish.yml`) triggered on new tags to publish the package to npm.  
+- Enable Dependabot or Renovate to automatically update the lockfile and raise PRs.
