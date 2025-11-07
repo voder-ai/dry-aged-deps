@@ -5,9 +5,8 @@
  * Lists outdated npm dependencies and shows how long they have been outdated.
  */
 
-const { execFileSync } = require('child_process');
-const { fetchVersionTimes } = require('../src/fetch-version-times');
-const { calculateAgeInDays } = require('../src/age-calculator');
+const cp = require('child_process');
+const { printOutdated } = require('../src/print-outdated');
 
 // Parse CLI arguments for help flag
 const args = process.argv.slice(2);
@@ -19,40 +18,9 @@ if (args.includes('-h') || args.includes('--help')) {
   process.exit(0);
 }
 
-/**
- * Print outdated dependencies information with age
- * @param {Record<string, { current: string; wanted: string; latest: string }>} data
- */
-function printOutdated(data) {
-  const entries = Object.entries(data);
-  if (entries.length === 0) {
-    console.log('All dependencies are up to date.');
-    return;
-  }
-
-  console.log('Outdated packages:');
-  // Header with Age column
-  console.log(['Name', 'Current', 'Wanted', 'Latest', 'Age (days)'].join('	'));
-
-  for (const [name, info] of entries) {
-    let age = 'N/A';
-    try {
-      const versionTimes = fetchVersionTimes(name);
-      const latestTime = versionTimes[info.latest];
-      if (latestTime) {
-        age = calculateAgeInDays(latestTime);
-      }
-    } catch (err) {
-      // ignore errors fetching times
-    }
-
-    console.log([name, info.current, info.wanted, info.latest, age].join('	'));
-  }
-}
-
 try {
   // Run npm outdated in JSON mode
-  const output = execFileSync('npm', ['outdated', '--json'], { encoding: 'utf8' });
+  const output = cp.execFileSync('npm', ['outdated', '--json'], { encoding: 'utf8' });
   const data = output ? JSON.parse(output) : {};
   printOutdated(data);
 } catch (err) {

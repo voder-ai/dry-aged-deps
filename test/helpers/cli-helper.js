@@ -6,7 +6,12 @@ const { execa } = require('execa');
  * @returns {Promise<import('execa').ExecaReturnValue>}
  */
 async function runCli(args) {
-  return await execa('node', ['./bin/dry-aged-deps.js', ...args]);
+  const nodeArgs = [];
+  if (process.env.CLI_MOCK_PATH) {
+    nodeArgs.push('-r', process.env.CLI_MOCK_PATH);
+  }
+  nodeArgs.push('./bin/dry-aged-deps.js', ...args);
+  return await execa('node', nodeArgs, { env: process.env });
 }
 
 module.exports = { runCli };

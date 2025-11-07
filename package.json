@@ -6,7 +6,7 @@
   },
   "scripts": {
     "start": "node ./bin/dry-aged-deps.js",
-    "test": "vitest",
+    "test": "vitest --coverage",
     "test:cli": "vitest --threads=false",
     "lint": "eslint"
   },
