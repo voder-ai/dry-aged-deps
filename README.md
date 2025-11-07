@@ -19,6 +19,23 @@ dry-aged-deps
 dry-aged-deps --help
 ```
 
+## Usage & Examples
+
+Run the CLI:
+
+```sh
+dry-aged-deps
+```
+
+Sample output:
+
+```txt
+Outdated packages:
+Name	Current	Wanted	Latest	Age (days)
+express	4.16.0	4.18.2	4.18.2	600
+lodash	4.17.15	4.17.21	4.17.21	120
+```
+
 ## Contribution Guidelines
 
 1. Fork the repository
