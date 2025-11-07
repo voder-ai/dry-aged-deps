@@ -18,10 +18,14 @@ if (args.includes('-h') || args.includes('--help')) {
   process.exit(0);
 }
 
-// Helper to print results and exit successfully
+// Helper to print results and exit successfully or handle errors
 function handleOutdatedOutput(data) {
-  printOutdated(data);
-  process.exit(0);
+  printOutdated(data)
+    .then(() => process.exit(0))
+    .catch(err => {
+      console.error(err.message);
+      process.exit(1);
+    });
 }
 
 try {
