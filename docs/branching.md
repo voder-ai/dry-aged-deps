@@ -13,6 +13,27 @@ There are no long-lived feature branches or separate `develop` branch. This appr
 - Supports rapid feedback loops
 - Aligns with high-performing engineering teams (per DORA metrics)
 
+### No Branch Protections or CODEOWNERS
+
+**Critical**: This repository **MUST NOT** use:
+- Branch protection rules
+- Required pull request reviews
+- CODEOWNERS approval requirements
+
+Why? Because trunk-based development relies on:
+1. **Pre-commit quality checks** - Developers run checks locally before committing
+2. **CI/CD validation** - Automated pipeline catches issues immediately after push
+3. **Trust and responsibility** - Developers are trusted to maintain quality
+4. **Fast feedback loops** - No waiting for approvals delays integration
+
+Branch protections and approval workflows are anti-patterns in trunk-based development. They:
+- Create artificial delays and batching
+- Encourage larger changes (waiting for approval)
+- Reduce deployment frequency
+- Conflict with continuous integration principles
+
+The quality gates are automated (pre-commit checks + CI/CD), not manual approval gates.
+
 ## Quality Gates
 
 ### Pre-Commit Quality Checks
