@@ -13,7 +13,8 @@
     "start": "node ./bin/dry-aged-deps.js",
     "test": "vitest --coverage",
     "test:cli": "vitest",
-    "lint": "eslint"
+    "lint": "eslint",
+    "release": "npm version patch && git push --follow-tags"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.1.0",
