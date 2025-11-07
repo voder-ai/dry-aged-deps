@@ -1,0 +1,6 @@
+*** Begin Patch
+*** Update File: README.md
+@@
+-![build](https://img.shields.io/github/actions/workflow/status/voder-ai/dry-aged-deps/ci-publish.yml?branch=main)
++![build](https://img.shields.io/github/actions/workflow/status/voder-ai/dry-aged-deps/ci-publish.yml?branch=main&event=push)
+*** End Patch

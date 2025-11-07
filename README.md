@@ -1,5 +1,5 @@
 ![npm](https://img.shields.io/npm/v/dry-aged-deps)
-![build](https://img.shields.io/github/actions/workflow/status/voder-ai/dry-aged-deps/ci-publish.yml?branch=main)
+![build](https://img.shields.io/github/actions/workflow/status/voder-ai/dry-aged-deps/ci-publish.yml?branch=main&event=push)
 ![coverage](https://img.shields.io/coveralls/github/voder-ai/dry-aged-deps?branch=main)
 
 # dry-aged-deps
