@@ -21,6 +21,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Lint code
+        run: npm run lint
+
       - name: Run tests
         run: npm test
 
@@ -28,4 +31,4 @@ jobs:
         run: npm run test:cli
 
       - name: Vulnerability scan
-        run: npm audit --audit-level=moderate
+        run: npm audit --audit-level=high

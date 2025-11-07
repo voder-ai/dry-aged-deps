@@ -7,7 +7,8 @@
   "scripts": {
     "start": "node ./bin/dry-aged-deps.js",
     "test": "vitest",
-    "test:cli": "vitest --threads=false"
+    "test:cli": "vitest --threads=false",
+    "lint": "eslint . --ext .js"
   },
   "devDependencies": {
     "eslint": "^9.39.1",
