@@ -1,30 +1,40 @@
-import { execFileSync } from 'child_process';
+import { execFile } from 'child_process';
 
 /**
  * Fetch version publish times for an npm package.
  * @param {string} packageName - The name of the npm package.
- * @returns {Record<string,string>} A mapping of version to publish date string.
+ * @returns {Promise<Record<string, string>>} A promise resolving to a mapping of version to publish date string.
  */
 export function fetchVersionTimes(packageName) {
   const pkgNameRegex = /^[a-z0-9@\-_/.]+$/i;
   if (!pkgNameRegex.test(packageName)) {
-    throw new Error(`Invalid package name: ${packageName}`);
+    return Promise.reject(new Error(`Invalid package name: ${packageName}`));
   }
 
-  // Execute npm view to get time data in JSON
-  const output = execFileSync('npm', ['view', packageName, 'time', '--json'], {
-    encoding: 'utf8',
+  return new Promise((resolve, reject) => {
+    execFile(
+      'npm',
+      ['view', packageName, 'time', '--json'],
+      { encoding: 'utf8' },
+      (error, stdout, stderr) => {
+        if (error) {
+          return reject(error);
+        }
+        let times;
+        try {
+          times = stdout ? JSON.parse(stdout) : {};
+        } catch (parseErr) {
+          return reject(parseErr);
+        }
+        const versionTimes = {};
+        // Exclude non-version entries like 'created' and 'modified'
+        for (const [version, time] of Object.entries(times || {})) {
+          if (version !== 'created' && version !== 'modified') {
+            versionTimes[version] = time;
+          }
+        }
+        resolve(versionTimes);
+      }
+    );
   });
-  const times = JSON.parse(output);
-  const versionTimes = {};
-
-  // Exclude non-version entries like 'created' and 'modified'
-  for (const [version, time] of Object.entries(times || {})) {
-    if (version !== 'created' && version !== 'modified') {
-      // eslint-disable-next-line security/detect-object-injection
-      versionTimes[version] = time;
-    }
-  }
-
-  return versionTimes;
 }

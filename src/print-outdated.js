@@ -8,7 +8,7 @@ import { calculateAgeInDays as defaultCalculateAgeInDays } from './age-calculato
  * @param {Record<string, { current: string; wanted: string; latest: string }>} data
  * @param {{ fetchVersionTimes?: function, calculateAgeInDays?: function }} [options]
  */
-export function printOutdated(data, options = {}) {
+export async function printOutdated(data, options = {}) {
   const fetchVersionTimes =
     options.fetchVersionTimes || defaultFetchVersionTimes;
   const calculateAgeInDays =
@@ -24,18 +24,26 @@ export function printOutdated(data, options = {}) {
   // Header with Age column
   console.log(['Name', 'Current', 'Wanted', 'Latest', 'Age (days)'].join('	'));
 
-  for (const [name, info] of entries) {
+  // Fetch all version times in parallel
+  const tasks = entries.map(([name, info]) => (async () => {
     let age = 'N/A';
     try {
-      const versionTimes = fetchVersionTimes(name);
+      const versionTimes = await fetchVersionTimes(name);
       const latestTime = versionTimes[info.latest];
       if (latestTime) {
         age = calculateAgeInDays(latestTime);
       }
     } catch (err) {
-      console.error(`Warning: failed to fetch version times for ${name}: ${err.message}`);
+      console.error(
+        `Warning: failed to fetch version times for ${name}: ${err.message}`
+      );
     }
+    return [name, info.current, info.wanted, info.latest, age];
+  })());
 
-    console.log([name, info.current, info.wanted, info.latest, age].join('	'));
+  const rows = await Promise.all(tasks);
+
+  for (const row of rows) {
+    console.log(row.join('	'));
   }
 }

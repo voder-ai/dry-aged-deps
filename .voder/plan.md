@@ -1,12 +1,12 @@
 ## NOW
-Update the `beforeAll` hook in `test/cli.e2e.real-fixture.test.js` to remove `test/fixtures/node_modules` and `test/fixtures/package-lock.json` before running `npm ci`.
+Refactor `src/print-outdated.js` so that `printOutdated` is an `async` function and uses `Promise.all` to fetch version times in parallel for all packages instead of calling `fetchVersionTimes` sequentially.
 
 ## NEXT
-- Add a cleanup step to `.github/workflows/ci.yml` (before the fixture install steps) that deletes both `test/fixtures/node_modules` & `test/fixtures-up-to-date/node_modules` and their `package-lock.json` files.
-- Rerun the CI pipeline to verify the E2E fixture tests now pass reliably on a clean install.
-- Adjust fixture setup timeouts or flags if necessary to stabilize the test.
+- Convert `fetchVersionTimes` in `src/fetch-version-times.js` into an `async` function that uses `child_process.execFile` wrapped in a `Promise` instead of `execFileSync`.
+- Update `bin/dry-aged-deps.js` to `await` the now-async `printOutdated` call and handle its promise before calling `process.exit`.
+- Modify existing tests and add new ones to mock and await the asynchronous `printOutdated` and `fetchVersionTimes` behaviors.
 
 ## LATER
-- Extract fixture cleanup logic into a reusable script (e.g. `scripts/clean-fixtures.js`) and invoke it in tests and CI.
-- Refactor CLI tests to copy fixtures into temporary directories for full isolation.
-- Introduce caching for fixture dependencies in CI to speed up installs without sacrificing a clean environment.
+- Introduce an in-memory cache inside `fetchVersionTimes` to dedupe identical `npm view` calls during a single run.
+- Add a CLI option (e.g. `--concurrency`) to limit the number of parallel version-time fetches.
+- Benchmark the performance on large dependency sets and add a CI check to guard against performance regressions.
