@@ -2,8 +2,8 @@
 
 // src/print-outdated.js
 
-const { fetchVersionTimes } = require('./fetch-version-times');
-const { calculateAgeInDays } = require('./age-calculator');
+const fetchVersionTimesModule = require('./fetch-version-times');
+const ageCalculatorModule = require('./age-calculator');
 
 /**
  * Print outdated dependencies information with age
@@ -23,10 +23,10 @@ function printOutdated(data) {
   for (const [name, info] of entries) {
     let age = 'N/A';
     try {
-      const versionTimes = fetchVersionTimes(name);
+      const versionTimes = fetchVersionTimesModule.fetchVersionTimes(name);
       const latestTime = versionTimes[info.latest];
       if (latestTime) {
-        age = calculateAgeInDays(latestTime);
+        age = ageCalculatorModule.calculateAgeInDays(latestTime);
       }
     } catch (err) {
       // ignore errors fetching times
