@@ -16,7 +16,7 @@ export function fetchVersionTimes(packageName) {
       'npm',
       ['view', packageName, 'time', '--json'],
       { encoding: 'utf8' },
-      (error, stdout, stderr) => {
+      (error, stdout) => {
         if (error) {
           return reject(error);
         }
