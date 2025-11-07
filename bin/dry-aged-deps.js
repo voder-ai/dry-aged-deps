@@ -3,6 +3,20 @@
 // CLI tool to list outdated npm dependencies
 const { execSync } = require('child_process');
 
+// Parse CLI arguments for help flag
+const args = process.argv.slice(2);
+if (args.includes('-h') || args.includes('--help')) {
+  console.log('Usage: dry-aged-deps [options]');
+  console.log('');
+  console.log('Options:');
+  console.log('  -h, --help    Show help');
+  process.exit(0);
+}
+
+/**
+ * Print outdated dependencies information
+ * @param {Record<string, { current: string; wanted: string; latest: string }> } data
+ */
 function printOutdated(data) {
   const entries = Object.entries(data);
   if (entries.length === 0) {
