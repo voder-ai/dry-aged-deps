@@ -1,12 +1,12 @@
 ## NOW  
-Create a unified GitHub Actions workflow file at .github/workflows/ci-publish.yml that merges the steps from both ci.yml and publish.yml, triggering on pushes to main and on tag pushes (`v*`), and runs lint, tests, audit, CodeQL, and npm publish in a single pipeline.  
+Delete the redundant `.github/workflows/codeql-analysis.yml` file from the repository.  
 
 ## NEXT  
-- Remove the old .github/workflows/ci.yml and .github/workflows/publish.yml files.  
-- In ci-publish.yml, add a post‐publish “smoke-test” job that runs `npm view dry-aged-deps version` to verify the package was published successfully.  
-- Update the README’s “Release Process” section to reference the new unified workflow.  
+- Install `semantic-release` and `@semantic-release/npm` as devDependencies in `package.json`.  
+- Create a `.releaserc.json` file configuring `semantic-release` for the `main` branch with plugins: `@semantic-release/commit-analyzer`, `@semantic-release/release-notes-generator`, `@semantic-release/npm`, and `@semantic-release/github`.  
+- Update `.github/workflows/ci-publish.yml` to replace the manual `npm publish` step with a `npx semantic-release` step that runs on every push to `main`.  
 
 ## LATER  
-- Integrate semantic-release or changesets for automatic version bumps and changelog generation.  
-- Enable continuous deployment on every green main-branch build (not just on tags).  
-- Add staged rollout or canary jobs and automated health-check tests to the CI pipeline.
+- Add staged-rollout/canary jobs and automated health-check tests in the CI pipeline.  
+- Expand the workflow matrix to test against multiple Node.js versions.  
+- Integrate notifications (e.g., Slack) and changelog generation plugins into `semantic-release`.
