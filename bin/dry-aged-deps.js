@@ -5,7 +5,7 @@
  * Lists outdated npm dependencies and shows how long they have been outdated.
  */
 
-const { execSync } = require('child_process');
+const { execFileSync } = require('child_process');
 const { fetchVersionTimes } = require('../src/fetch-version-times');
 const { calculateAgeInDays } = require('../src/age-calculator');
 
@@ -52,7 +52,7 @@ function printOutdated(data) {
 
 try {
   // Run npm outdated in JSON mode
-  const output = execSync('npm outdated --json', { encoding: 'utf8' });
+  const output = execFileSync('npm', ['outdated', '--json'], { encoding: 'utf8' });
   const data = output ? JSON.parse(output) : {};
   printOutdated(data);
 } catch (err) {
