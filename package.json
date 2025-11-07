@@ -1,0 +1,10 @@
+{
+  "name": "dry-aged-deps",
+  "version": "0.1.0",
+  "bin": {
+    "dry-aged-deps": "./bin/dry-aged-deps.js"
+  },
+  "scripts": {
+    "start": "node ./bin/dry-aged-deps.js"
+  }
+}
