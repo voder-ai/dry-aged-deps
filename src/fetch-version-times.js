@@ -1,4 +1,3 @@
-const { execFileSync } = require('child_process');
 
 /**
  * Fetch version publish times for an npm package.
@@ -11,8 +10,11 @@ function fetchVersionTimes(packageName) {
     throw new Error(`Invalid package name: ${packageName}`);
   }
 
+  // Load child_process dynamically to allow test spies to intercept
+  const cp = require('child_process');
+
   // Execute npm view to get time data in JSON
-  const output = execFileSync(
+  const output = cp.execFileSync(
     'npm',
     ['view', packageName, 'time', '--json'],
     { encoding: 'utf8' }
