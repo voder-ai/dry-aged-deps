@@ -1,12 +1,12 @@
 ## NOW
-Add a new end-to-end Vitest integration test in `test/cli.e2e.real-fixture.test.js` that runs `npm ci` in `test/fixtures`, invokes the CLI with Execa, and asserts that at least one “Age (days)” cell contains a positive integer.
+Update the `beforeAll` hook in `test/cli.e2e.real-fixture.test.js` to remove `test/fixtures/node_modules` and `test/fixtures/package-lock.json` before running `npm ci`.
 
 ## NEXT
-- Update the CI workflow (`.github/workflows/ci.yml`) to run the new E2E test alongside existing CLI tests.  
-- Refine `printOutdated` output formatting to align and validate numeric age values (e.g. ensure “Age (days)” is always a number or “N/A”).  
-- Improve `bin/dry-aged-deps.js` error handling to catch and display user-friendly messages when `npm view` fails (e.g. “Unable to fetch publish times for <pkg>”).
+- Add a cleanup step to `.github/workflows/ci.yml` (before the fixture install steps) that deletes both `test/fixtures/node_modules` & `test/fixtures-up-to-date/node_modules` and their `package-lock.json` files.
+- Rerun the CI pipeline to verify the E2E fixture tests now pass reliably on a clean install.
+- Adjust fixture setup timeouts or flags if necessary to stabilize the test.
 
 ## LATER
-- Introduce a `--cwd <path>` CLI flag to target a custom project directory, with corresponding tests.  
-- Refactor `fetchVersionTimes` to an async implementation with configurable timeouts, retries, and concurrency limits.  
-- Add a `--profile` flag using Node’s `perf_hooks` and enforce a CI performance benchmark job.
+- Extract fixture cleanup logic into a reusable script (e.g. `scripts/clean-fixtures.js`) and invoke it in tests and CI.
+- Refactor CLI tests to copy fixtures into temporary directories for full isolation.
+- Introduce caching for fixture dependencies in CI to speed up installs without sacrificing a clean environment.

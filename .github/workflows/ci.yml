@@ -32,6 +32,11 @@ jobs:
       - name: Run tests
         run: npm test
 
+      - name: Cleanup CLI fixture install artifacts
+        run: |
+          rm -rf test/fixtures/node_modules test/fixtures/package-lock.json
+          rm -rf test/fixtures-up-to-date/node_modules test/fixtures-up-to-date/package-lock.json
+
       - name: Prepare CLI fixture dependencies
         run: npm ci --prefer-frozen-lockfile
         working-directory: test/fixtures
