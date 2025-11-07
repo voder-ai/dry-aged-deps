@@ -1,0 +1,7 @@
+# Enforce consistent end-of-line handling across all files
+* text=auto
+
+# Force LF for script and source files
+ebin/* text eol=lf
+src/* text eol=lf
+test/* text eol=lf
