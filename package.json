@@ -6,5 +6,9 @@
   },
   "scripts": {
     "start": "node ./bin/dry-aged-deps.js"
+  },
+  "devDependencies": {
+    "execa": "^9.6.0",
+    "vitest": "^4.0.7"
   }
 }

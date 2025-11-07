@@ -1,13 +1,16 @@
 ## NOW  
-Create a `package.json` file in the project root with minimal metadata (name, version), a `bin` entry for `dry-aged-deps`, and a `"start"` script.
+Run `npm install --save-dev vitest execa` to add the testing framework and CLI‐process helper.
 
 ## NEXT  
-- Create `bin/dry-aged-deps.js` with a Unix shebang (`#!/usr/bin/env node`), import `child_process`, run `npm outdated --json`, parse its output, and print a simple table of outdated packages.  
-- Make `bin/dry-aged-deps.js` executable.  
-- Update `package.json` to include any needed dependencies (none for now) and a `"cli"` script (e.g. `"cli": "node bin/dry-aged-deps.js"`).
+- Update package.json with scripts:  
+  • `"test": "vitest"`  
+  • `"test:cli": "vitest --threads=false"`  
+- Create a `vitest.config.js` configured for a Node environment.  
+- Add `test/helpers/cli-helper.js` using Execa to spawn the CLI.  
+- Scaffold an initial integration test in `test/cli.test.js` that runs `dry-aged-deps --help` and asserts exit code 0.
 
 ## LATER  
-- Add unit and integration tests for the CLI (using Vitest + Execa).  
-- Configure ESLint and Prettier for code quality and auto-formatting.  
-- Write CI workflows to run lint, tests, and then publish on tag.  
-- Expand the CLI to calculate version ages and apply the 7-day maturity filter.
+- Write unit tests for core functions (e.g., `printOutdated`).  
+- Set up ESLint and Prettier with configuration files and lint/format scripts.  
+- Create a GitHub Actions workflow to run lint, tests, and publish on tag.  
+- Proceed with implementing version‐age fetching and 7-day maturity filtering.
