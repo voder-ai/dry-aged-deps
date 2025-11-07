@@ -10,6 +10,8 @@
     "test:cli": "vitest --threads=false"
   },
   "devDependencies": {
+    "eslint": "^9.39.1",
+    "eslint-plugin-security": "^3.0.1",
     "execa": "^9.6.0",
     "vitest": "^4.0.7"
   },

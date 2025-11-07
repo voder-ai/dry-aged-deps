@@ -1,4 +1,4 @@
-const cp = require('child_process');
+const { execFileSync } = require('child_process');
 
 /**
  * Fetch version publish times for an npm package.
@@ -6,8 +6,17 @@ const cp = require('child_process');
  * @returns {Record<string,string>} A mapping of version to publish date string.
  */
 function fetchVersionTimes(packageName) {
+  const pkgNameRegex = /^[a-z0-9@\-\/_\.]+$/i;
+  if (!pkgNameRegex.test(packageName)) {
+    throw new Error(`Invalid package name: ${packageName}`);
+  }
+
   // Execute npm view to get time data in JSON
-  const output = cp.execSync(`npm view ${packageName} time --json`, { encoding: 'utf8' });
+  const output = execFileSync(
+    'npm',
+    ['view', packageName, 'time', '--json'],
+    { encoding: 'utf8' }
+  );
   const times = JSON.parse(output);
   const versionTimes = {};
 
