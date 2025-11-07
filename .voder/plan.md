@@ -1,17 +1,13 @@
 ## NOW
-Modify `src/print-outdated.js` so that in the `catch` block around `fetchVersionTimes` it emits a warning with `console.error`, for example:
-```js
-catch (err) {
-  console.error(`Warning: failed to fetch version times for ${name}: ${err.message}`);
-}
+Stage and commit all `.voder` state files to clean the working directory:  
+```bash
+git add .voder && git commit -m "chore: persist voder state files for clean working directory"
 ```
 
 ## NEXT
-- Add a unit test in `test/printOutdated.test.js` asserting that when `fetchVersionTimes` throws, `console.error` is called with the expected message and `calculateAgeInDays` is not invoked.  
-- Update `docs/api.md` to document that `printOutdated` will warn on version-time fetch failures.  
-- Run `npm test` to verify all tests pass and coverage remains acceptable.
+- Update `docs/branching.md` to remove any stale references to a `develop` branch and explicitly document that all work happens on `main` under a trunk-based model.  
+- Create a new `docs/branching-strategy.md` outlining ephemeral feature-branch naming conventions, PR workflow, and merge practices for the trunk-based approach.
 
 ## LATER
-- Refine CLI error-handling to use specific exit codes for fetch failures.  
-- Introduce integration tests simulating malformed `npm outdated` output and verify CLI error output.  
-- Revisit and tighten coverage thresholds or add edge-case tests for other error scenarios.
+- Implement a CI check or pre-commit hook that fails if there are unstaged or uncommitted changes outside of `src/`, `bin/`, `test/`, and docs directories to enforce working-directory hygiene.  
+- Extend developer guidelines with a section on branch hygiene, specifying when and how to create and delete feature branches under the trunk-based model.
