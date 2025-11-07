@@ -1,5 +1,5 @@
 ![npm](https://img.shields.io/npm/v/dry-aged-deps)
-![build](https://img.shields.io/github/actions/workflow/status/voder-ai/dry-aged-deps/ci.yml?branch=main)
+![build](https://img.shields.io/github/actions/workflow/status/voder-ai/dry-aged-deps/ci-publish.yml?branch=main)
 ![coverage](https://img.shields.io/coveralls/github/voder-ai/dry-aged-deps?branch=main)
 
 # dry-aged-deps
@@ -76,7 +76,7 @@ git tag v<new-version>
 git push origin v<new-version>
 ```
 
-This triggers the `Publish` GitHub Actions workflow (`.github/workflows/publish.yml`), which runs lint, tests, and publishes the package to npm. Ensure you have configured a repository secret named `NPM_TOKEN` with a valid npm authentication token.
+This triggers the `CI & Publish` GitHub Actions workflow (`.github/workflows/ci-publish.yml`), which runs lint, tests, and publishes the package to npm. Ensure you have configured a repository secret named `NPM_TOKEN` with a valid npm authentication token.
 
 ## Contribution Guidelines
 
