@@ -1,4 +1,3 @@
-
 import { execFileSync } from 'child_process';
 
 /**
@@ -24,6 +23,7 @@ export function fetchVersionTimes(packageName) {
   // Exclude non-version entries like 'created' and 'modified'
   for (const [version, time] of Object.entries(times || {})) {
     if (version !== 'created' && version !== 'modified') {
+      // eslint-disable-next-line security/detect-object-injection
       versionTimes[version] = time;
     }
   }
