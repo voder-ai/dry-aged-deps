@@ -1,6 +1,5 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import { execa } from 'execa';
-import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -10,18 +9,12 @@ const fixturesDir = path.join(__dirname, 'fixtures');
 
 describe('dry-aged-deps CLI outdated output', () => {
   beforeAll(async () => {
-    // Install dependencies for fixture project
-    await execa('npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund'], {
+    // Install production dependencies for fixture project
+    await execa('npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund', '--omit=dev'], {
       cwd: fixturesDir,
       env: process.env,
     });
-  });
-
-  afterAll(() => {
-    // Clean up installed dependencies and lockfile
-    fs.rmSync(path.join(fixturesDir, 'node_modules'), { recursive: true, force: true });
-    fs.rmSync(path.join(fixturesDir, 'package-lock.json'), { force: true });
-  });
+  }, 60000);
 
   it('runs without error on test project with outdated dependencies', async () => {
     const cliPath = path.join(__dirname, '..', 'bin', 'dry-aged-deps.js');
