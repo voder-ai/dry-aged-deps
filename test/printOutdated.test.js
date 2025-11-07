@@ -4,10 +4,11 @@ import * as fetchModule from '../src/fetch-version-times';
 import * as ageModule from '../src/age-calculator';
 
 describe('printOutdated', () => {
-  let logSpy;
+  let logSpy, errorSpy;
 
   beforeEach(() => {
     logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -18,6 +19,7 @@ describe('printOutdated', () => {
     printOutdated({});
     expect(logSpy).toHaveBeenCalledTimes(1);
     expect(logSpy).toHaveBeenCalledWith('All dependencies are up to date.');
+    expect(errorSpy).not.toHaveBeenCalled();
   });
 
   it('prints header and data row with calculated age', () => {
@@ -46,6 +48,7 @@ describe('printOutdated', () => {
     expect(logSpy.mock.calls[2][0]).toBe(
       ['mypkg', '1.0.0', '1.5.0', '2.0.0', 10].join('	')
     );
+    expect(errorSpy).not.toHaveBeenCalled();
   });
 
   it('prints N/A when fetchVersionTimes throws', () => {
@@ -74,5 +77,6 @@ describe('printOutdated', () => {
     expect(cols[4]).toBe('N/A');
     // calculateAgeInDays should not have been called
     expect(ageModule.calculateAgeInDays).not.toHaveBeenCalled();
+    expect(errorSpy).toHaveBeenCalledWith(`Warning: failed to fetch version times for otherpkg: failed`);
   });
 });

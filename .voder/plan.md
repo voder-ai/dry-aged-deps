@@ -1,12 +1,17 @@
 ## NOW
-Generate and commit the project root package-lock.json file to version control to ensure reproducible installs.
+Modify `src/print-outdated.js` so that in the `catch` block around `fetchVersionTimes` it emits a warning with `console.error`, for example:
+```js
+catch (err) {
+  console.error(`Warning: failed to fetch version times for ${name}: ${err.message}`);
+}
+```
 
 ## NEXT
-- Add and commit `package-lock.json` files in **each** test fixture directory (`test/fixtures/` and `test/fixtures-up-to-date/`).
-- Update the fixture setup in `test/cli.outdated.test.js` and `test/cli.upToDate.test.js` to install dependencies with `npm ci --prefer-frozen-lockfile` instead of `npm install`.
-- Modify `.github/workflows/ci.yml` so that all dependency installs (root and fixtures) use `npm ci --prefer-frozen-lockfile` and fail immediately if the lockfile is out of sync.
+- Add a unit test in `test/printOutdated.test.js` asserting that when `fetchVersionTimes` throws, `console.error` is called with the expected message and `calculateAgeInDays` is not invoked.  
+- Update `docs/api.md` to document that `printOutdated` will warn on version-time fetch failures.  
+- Run `npm test` to verify all tests pass and coverage remains acceptable.
 
 ## LATER
-- Configure GitHub Actions cache for `~/.npm` and fixture `node_modules` to speed up CI builds.
-- Add a CI validation step that runs `npm ci --prefer-frozen-lockfile` and checks for lockfile drift (e.g., fail if it would update the lockfile).
-- Introduce a Husky pre-push hook to automatically verify lockfile consistency before any push.
+- Refine CLI error-handling to use specific exit codes for fetch failures.  
+- Introduce integration tests simulating malformed `npm outdated` output and verify CLI error output.  
+- Revisit and tighten coverage thresholds or add edge-case tests for other error scenarios.

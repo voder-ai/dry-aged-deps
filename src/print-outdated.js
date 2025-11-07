@@ -32,8 +32,8 @@ export function printOutdated(data, options = {}) {
       if (latestTime) {
         age = calculateAgeInDays(latestTime);
       }
-    } catch {
-      // ignore errors fetching times
+    } catch (err) {
+      console.error(`Warning: failed to fetch version times for ${name}: ${err.message}`);
     }
 
     console.log([name, info.current, info.wanted, info.latest, age].join('	'));
