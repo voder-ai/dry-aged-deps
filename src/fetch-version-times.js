@@ -30,6 +30,7 @@ export function fetchVersionTimes(packageName) {
         // Exclude non-version entries like 'created' and 'modified'
         for (const [version, time] of Object.entries(times || {})) {
           if (version !== 'created' && version !== 'modified') {
+            // eslint-disable-next-line security/detect-object-injection -- version comes from Object.entries iteration, not user input
             versionTimes[version] = time;
           }
         }
