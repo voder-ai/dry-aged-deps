@@ -1,12 +1,12 @@
 ## NOW
-Add `.voder/` to the project’s `.gitignore` so that all internal Voder files are ignored by Git.
+In `package.json`, pin the version of `@eslint/eslintrc` by replacing its wildcard `"*"` with the exact version recorded in `package-lock.json`.
 
 ## NEXT
-- Commit and push the updated `.gitignore`.  
-- Update `docs/branching.md` to note that `.voder/` is an internal directory and to reaffirm the `main`/`develop` branch and tag workflow.  
-- Verify `git status` shows a clean working directory (with only `.voder/` untracked but ignored).
+- Remove the unused `semver` dependency (or integrate it into the code).  
+- Pin any other open-ended version specifiers in `package.json` to exact versions, run `npm install`, and commit the updated `package.json` and `package-lock.json`.
 
 ## LATER
-- Configure GitHub branch protection rules to require pull-request reviews on `main` and `develop`.  
+- Add a CI step to enforce lockfile consistency using `npm ci --prefer-frozen-lockfile --dry-run`.  
+- Enable automated lockfile updates with Dependabot or Renovate.  
 - Integrate semantic-release (or changesets) for automated version bumps and changelog generation on tag pushes.  
-- Add CI checks for lockfile consistency (e.g. `npm ci --dry-run`) and investigate caching frequent `npm view` calls to speed up the CLI.
+- Investigate caching of frequent `npm view` calls in CI to speed up CLI tests.
