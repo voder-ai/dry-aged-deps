@@ -1,11 +1,13 @@
-## NOW  
-Commit the pending AI assistant metadata files to clear the dirty working directory (git add .voder/history.md .voder/last-action.md && git commit -m "chore: persist AI assistant metadata state").
+## NOW
+Create a `.github/CODEOWNERS` file that assigns ownership of `src/`, `bin/`, and `docs/` to the core maintainers.
 
-## NEXT  
-- Add a `.github/CODEOWNERS` file to require review approvals for changes to `src/`, `bin/`, and `docs/`.  
-- In GitHub branch protection settings for `main` and `develop`, require passing CI status checks and at least one approving review before merge.
+## NEXT
+- Configure GitHub branch protection on both `main` and `develop` to require all CI checks (lint, tests, audit, CodeQL) pass before merging.
+- Require at least one approving review for any pull request touching protected paths.
+- Push the CODEOWNERS file to the default branch and verify that PRs against those directories now require review.
 
-## LATER  
-- Configure Husky with a `commit-msg` hook running commitlint to enforce conventional commit messages.  
-- Configure Husky with a `pre-commit` hook running lint-staged to lint and test only staged files.  
-- Integrate semantic-release (or changesets) in CI to automate version bumps and changelog updates on tag pushes.
+## LATER
+- Remove or archive the `develop` branch to fully embrace trunk-based development on `main`.
+- Add a `.gitattributes` file to enforce consistent line endings and diff behaviors.
+- Commit and maintain a lockfile (`package-lock.json`) for reproducible installs.
+- Consider adding commit-message linting (e.g., via Husky + commitlint) and CI-driven semantic-release for automated versioning.

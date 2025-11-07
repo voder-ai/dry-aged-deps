@@ -1,0 +1,6 @@
+# Code owners for the dry-aged-deps repository
+
+# Core maintainers responsible for source code, CLI scripts, and documentation
+/bin/ @voder-ai
+/docs/ @voder-ai
+/src/ @voder-ai

@@ -1,132 +1,139 @@
 # Implementation Progress Assessment
 
-**Generated:** 2025-11-07T05:04:34.649Z
+**Generated:** 2025-11-07T05:32:02.129Z
 
 ![Progress Chart](./progress-chart.png)
 
-Projected completion (from current rate): cycle 40.6
+Projected completion (from current rate): cycle 53.4
 
-## IMPLEMENTATION STATUS: INCOMPLETE (88.125% ± 10% COMPLETE)
+## IMPLEMENTATION STATUS: INCOMPLETE (88.4% ± 8% COMPLETE)
 
 ## OVERALL ASSESSMENT
-Most assessment areas are strong and meet thresholds, but version control practices score below the required threshold and must be improved for a complete status.
+The tool excels in functionality, testing, execution, and dependency management while maintaining strong code quality, documentation, and security. Only version control falls below the 90% threshold, leaving the overall status incomplete.
 
 ## NEXT PRIORITY
-Enhance version control by cleaning up ignored metadata and enforcing stricter branch policies
+Add a CODEOWNERS file and enforce branch protection to strengthen version control practices.
 
 
 
-## FUNCTIONALITY ASSESSMENT (90% ± 15% COMPLETE)
-- Core functionality for listing outdated dependencies and computing package age is fully implemented, reliable, and verified end-to-end via unit and integration tests.
-- CLI entry point correctly handles help flags, runs ‘npm outdated’, parses JSON, and invokes printOutdated
-- printOutdated covers both no-outdated and outdated cases, including age calculation and graceful error fallback
-- fetchVersionTimes and calculateAgeInDays modules are implemented with unit tests that validate version time parsing and age computation
-- Integration test against a fixture project exercises the full CLI workflow; all Vitest tests pass with 100% statements/functions/lines coverage
-
-**Next Steps:**
-- Add an option to include devDependencies when listing outdated packages
-- Provide JSON or machine-readable output mode for automation
-- Implement sorting or filtering by age threshold (e.g., only show packages older than X days)
-- Expand integration tests to cover error scenarios such as network failures or invalid package names
-
-## CODE_QUALITY ASSESSMENT (88% ± 15% COMPLETE)
-- Overall the project demonstrates strong code quality: ESLint is configured with security rules, tests are comprehensive with high coverage, CI runs linting and tests, and the code is well-structured. A minor security lint warning and absence of a dedicated formatter are the only notable gaps.
-- ESLint flat config is in place (eslint.config.js) with the security plugin enabled.
-- `npm run lint` reports one security warning (security/detect-object-injection) in src/fetch-version-times.js.
-- All source files and CLI are covered by Vitest with 100% statements and 94% branch coverage.
-- CI workflow runs lint, tests, CLI tests, and an audit step on every push/PR.
-- Error handling exists in CLI and fetchVersionTimes, but catch blocks omit error logging (e.g., `catch {}` in print-outdated.js).
-- No dedicated code-formatter or Prettier configuration is present.
+## FUNCTIONALITY ASSESSMENT (90% ± 18% COMPLETE)
+- The CLI’s core feature—listing outdated npm dependencies with their age—is fully implemented, tested, and working as documented. All existing tests pass, the entry point and help flag behave correctly, and the code handles empty and error cases.
+- Entry point bin/dry-aged-deps.js correctly invokes npm outdated and prints results
+- Comprehensive unit tests for age calculation, version time fetching, and output formatting all pass
+- CLI integration test on a fixture project confirms real-world functionality
+- Help flag works, and the empty-state message (“All dependencies are up to date.”) is handled
+- 100% statement coverage on source files, with only minor branch coverage gaps in fetch-version-times
 
 **Next Steps:**
-- Fix the security/detect-object-injection warning by validating or sanitizing dynamic object access in fetch-version-times.
-- Add a code formatter (e.g., Prettier) and integrate a formatting check into CI to enforce consistent style.
-- Enhance error handling in catch blocks by capturing and logging error details for easier debugging.
-- Increase branch coverage to 100% by adding tests for edge cases and error paths (e.g., invalid package name in fetchVersionTimes).
+- Add CLI options for sorting and filtering (e.g., by dev vs prod deps)
+- Provide a JSON or machine-readable output mode
+- Implement caching or fallback when npm registry is unavailable
+- Document network requirements and error handling for npm commands
 
-## TESTING ASSESSMENT (90% ± 16% COMPLETE)
-- The project has a solid suite of unit and CLI tests using Vitest, all tests pass in CI, and it maintains very high coverage metrics. There are no failing tests and coverage thresholds are met. To further strengthen testing, consider adding integration/e2e scenarios and enforcing coverage thresholds in CI.
-- 7 test files under test/ covering modules (age‐calculator, fetch‐version‐times, printOutdated) and CLI behavior
-- 10 Vitest tests all passing locally and in GitHub Actions CI (npm test, npm run test:cli)
-- Coverage report shows 100% statements, 100% functions, 100% lines and 94.11% branches—above the 80% thresholds in vitest.config.js
-- CI workflow (.github/workflows/ci.yml) runs lint, vulnerability scan, and both test scripts
-- CLI tests include fixtures and helpers to simulate outdated dependency scenarios
-
-**Next Steps:**
-- Add integration or end‐to‐end tests to cover real HTTP interactions with npm registry or simulated environments
-- Enforce coverage thresholds in CI (e.g. fail build if coverage drops below configured levels)
-- Expand negative/error path testing for edge cases not yet covered
-- Consider mutation testing or fuzz tests to further validate test robustness
-
-## EXECUTION ASSESSMENT (90% ± 17% COMPLETE)
-- The CLI builds and runs without errors, all automated tests pass with full coverage of execution logic, and basic functionality (outdated-deps reporting) works as expected. There is one lint warning on object-injection but no runtime failures.
-- All 10 Vitest tests passed (including CLI integration) with 100% statement and line coverage in src/
-- Running `npm start` produces expected output (“All dependencies are up to date.”) without errors
-- CLI correctly handles `npm outdated` JSON output and prints both empty-state and outdated-state use cases
-- Error paths are caught: JSON parse errors, invalid package names, and `npm outdated` non-zero exits
-- One ESLint security warning in fetch-version-times.js (Generic Object Injection Sink) but no runtime impact
+## CODE_QUALITY ASSESSMENT (89% ± 17% COMPLETE)
+- The project exhibits a well-structured codebase with comprehensive linting, testing, and documentation. Nearly all code paths are covered by tests, and ESLint (including security rules) is in place. A single security warning on object property access is the only notable issue.
+- ESLint flat config is properly set up with recommended and security rules.
+- ‘npm run lint’ reports only one security/detect-object-injection warning.
+- Vitest tests pass with 100% statements/functions/lines coverage and 94% branch coverage.
+- Clear project structure: src/ for implementation, bin/ for CLI, test/ for tests, docs/ for documentation.
+- Consistent naming conventions, minimal code duplication, and proper error handling in CLI and fetchVersionTimes.
 
 **Next Steps:**
-- Address the ESLint security warning by sanitizing or validating object key access in fetch-version-times.js
-- Add integration or smoke tests against a live npm registry to cover real-world CLI runs
-- Enhance logging or user feedback for network failures or unexpected npm CLI errors
-- Consider adding a build or release pipeline step to package the CLI for distribution (e.g., publishing to npm)
+- Resolve the security/detect-object-injection warning in fetch-version-times.js (sanitize or whitelist version keys).
+- Consider adding formatting enforcement (e.g., Prettier) or ESLint format rules to ensure consistent style.
+- Add pre-commit or CI hooks to run lint and tests automatically before merges.
+- Handle invalid dates in calculateAgeInDays (e.g., throw or log on invalid input).
+- Add branch-specific tests to cover the ~6% of untested branches (e.g., npm view errors).
 
-## DOCUMENTATION ASSESSMENT (85% ± 15% COMPLETE)
-- Comprehensive documentation is present with README, API reference, architecture overview, developer guidelines, and changelog. Minor gaps include missing documentation for the printOutdated function and a conflicting guideline about the .voder directory.
-- README.md includes installation, usage examples, and contribution guide
-- docs/api.md documents fetchVersionTimes and calculateAgeInDays but omits printOutdated
-- docs/architecture.md and docs/developer-guidelines.md provide clear architectural and workflow guidance
-- CHANGELOG.md is present and up to date with version 0.1.0
-- Inline JSDoc comments exist in source files
-- docs/branching.md contains conflicting instructions regarding the .voder directory compared to developer-guidelines
-- CLI help flags are documented minimally in code and README
-
-**Next Steps:**
-- Add documentation for printOutdated (formatting/CLI output) in docs/api.md
-- Resolve conflicting .voder directory guidance between docs/branching.md and developer-guidelines.md
-- Enhance CLI documentation with all supported options, flags, and usage examples
-- Consider a dedicated CONTRIBUTING.md or link from README for contribution process
-
-## DEPENDENCIES ASSESSMENT (92% ± 17% COMPLETE)
-- The project has no external production dependencies (it relies solely on Node.js core modules), all devDependencies are properly declared, tests pass, no vulnerabilities are reported by npm audit, and no outdated packages are found.
-- package.json defines zero runtime dependencies and only devDependencies for linting and testing
-- npm audit --production reports zero vulnerabilities
-- npm outdated --json returns an empty object (no outdated deps)
-- All tests pass with 100% coverage for source files
-- package-lock.json is present locking versions
+## TESTING ASSESSMENT (90% ± 18% COMPLETE)
+- The project has a solid testing setup using Vitest with 7 test files (10 tests) covering all source code, including unit and CLI integration tests. Coverage thresholds are enforced and met locally and in CI, with 100% statements/functions/lines and 94% branches. Tests are passing and integrated into GitHub Actions.
+- Presence of dedicated test directory with 7 .test.js files covering core modules and CLI
+- Vitest configured in vitest.config.js with 80% coverage thresholds for statements, functions, branches, and lines
+- All 10 tests pass locally (npm test) and in CI, with no failures
+- Coverage report shows 100% statements, 100% functions, 100% lines, and 94.11% branches (above the 80% threshold)
+- CI workflow runs lint, tests, CLI tests, and vulnerability scan via npm audit
 
 **Next Steps:**
-- Configure Dependabot or a similar tool to keep devDependencies up to date automatically
-- Consider adding a badge or documentation on dependency update policy
-- Review whether package-lock.json should be committed for a CLI tool (if global installation is primary use)
+- Consider adding coverage badge to README to surface testing health
+- Add tests for additional edge cases or error conditions not yet covered (e.g., network timeouts)
+- Automate publishing of coverage reports (e.g., via Codecov or Coveralls)
+- Periodically review and update tests when adding new features to maintain coverage
+
+## EXECUTION ASSESSMENT (90% ± 14% COMPLETE)
+- The project executes reliably: all tests pass, CLI runs without errors, and runtime behavior is correct. There is one minor security lint warning but no critical execution issues.
+- “npm test” (Vitest) runs 10 tests with 100% statement and line coverage
+- CLI entrypoint (npm start) executes and handles both no‐outdated and outdated cases correctly
+- Error handling in printOutdated and CLI parsing prevents crashes on malformed data
+- Linting reports a single security/detect-object-injection warning in fetch-version-times.js
+- No build step is required; the package runs directly under Node.js >=18 with no missing runtime dependencies
+
+**Next Steps:**
+- Resolve the eslint-plugin-security warning by validating object keys to prevent injection
+- Consider adding a CI build badge or script for automated linting and testing
+- Document the execution requirements and error handling behavior in README
+- Optionally introduce end-to-end tests against a sample project with outdated deps
+
+## DOCUMENTATION ASSESSMENT (88% ± 6% COMPLETE)
+- The project has comprehensive, well-organized documentation covering setup, usage, architecture, ADRs, developer guidelines, and a changelog. JSDoc comments are present in the code, and there is API reference and branching/workflow docs. Minor inconsistencies and gaps prevent a near-perfect score.
+- README.md provides installation, usage examples, and contribution guidelines but omits development setup steps (e.g. `npm install`).
+- docs/api.md uses CommonJS `require()` examples despite the project being ESM (`"type": "module"`).
+- No API documentation for the `printOutdated` function or programmatic CLI usage in docs/api.md.
+- The ADR in docs/decisions/0001-use-es-modules.md is dated "2025-11-07", which appears incorrect relative to project timeline.
+- Changelog exists and is up to date for version 0.1.0; future release notes sections could be stubbed but are empty.
+- JSDoc comments are present in core modules (fetch-version-times, age-calculator), supporting inline code documentation.
+
+**Next Steps:**
+- Update docs/api.md to reflect ESM import syntax and document all exported functions (including printOutdated).
+- Add a developer setup section to README.md explaining how to clone, install dependencies, and run tests locally.
+- Correct the ADR date in docs/decisions/0001-use-es-modules.md to match actual project history.
+- Consider adding a dedicated CLI reference page in docs/ (or in README) with all available flags and options.
+- Populate or remove empty future-stories documents to avoid dead links in the docs navigation.
+
+## DEPENDENCIES ASSESSMENT (90% ± 18% COMPLETE)
+- The project has no runtime dependencies (it only uses Node.js built-ins), all declared modules are properly imported, and there are zero security vulnerabilities. Tests cover 100% of code and dependency audits pass. However, the repo does not commit a lock file for reproducible installs, and there is at least one unused devDependency.
+- package.json defines no "dependencies" (only built-in modules are used at runtime) and all imports resolve correctly.
+- devDependencies include ESLint, Vitest, eslint-plugin-security, etc., all of which are exercised by tests and lint scripts.
+- `npm audit` reports zero vulnerabilities; `npm outdated` returns empty, indicating up-to-date deps.
+- 100% test coverage with all tests passing under Vitest.
+- No lock file is committed (package-lock.json and yarn.lock are ignored), risking non-reproducible installs.
+- The `execa` package is declared in devDependencies but never used in code or tests.
+
+**Next Steps:**
+- Add and commit a lock file (package-lock.json or yarn.lock) to version control for reproducible installs.
+- Remove unused devDependencies (e.g., execa) to shrink the dev install footprint.
+- Consider a routine check (CI job) to detect outdated devDependencies.
+- Document the dependency management policy in CONTRIBUTING or README.
 
 ## SECURITY ASSESSMENT (85% ± 15% COMPLETE)
-- The project demonstrates strong baseline security with CodeQL scanning, npm audit in CI, and ESLint security rules enabled. Input validation for shell calls and locked dev dependencies further strengthen security. Areas for improvement include raising the audit threshold, adding automated dependency updates (e.g., Dependabot), and enabling secret scanning.
-- GitHub Actions CI includes npm audit (--audit-level=moderate) and CodeQL analysis workflows
-- ESLint is configured with eslint-plugin-security recommended rules
-- fetchVersionTimes validates package names via a regex and uses execFileSync with argument arrays to prevent shell injection
-- No hard‐coded secrets, environment files, or plaintext credentials were found
-- All dependencies passed npm audit with zero vulnerabilities
+- The project demonstrates a strong security posture with automated vulnerability scanning (npm audit), CodeQL analysis, Dependabot updates, ESLint security rules, and proper input validation in critical modules. However, there is no lockfile committed for reproducible installs, the audit threshold is set only to ‘moderate’, and there is no dedicated secret‐scanning workflow.
+- CI workflow runs npm audit (level=moderate) and CodeQL analysis on push/PR to main
+- Dependabot is configured for weekly npm dependency updates
+- ESLint is configured with eslint-plugin-security’s recommended rules
+- fetchVersionTimes validates package names against a strict regex before invoking child_process
+- No hardcoded secrets or environment variables found in source code
+- No package-lock.json or yarn.lock checked into version control
+- Audit threshold set to moderate could allow moderate vulnerabilities to slip by
+- No explicit GitHub secret‐scanning workflow or other secret detection automation
 
 **Next Steps:**
-- Consider raising npm audit threshold to high or critical to fail on more severe vulnerabilities
-- Enable Dependabot or similar automated dependency update workflows
-- Configure GitHub secret scanning and push protection to catch exposed secrets
-- Add a security.md or documentation outlining security policies and incident response
-- Periodically review and tighten the packageName regex to prevent edge‐case path abuses
+- Commit and maintain a lockfile (package-lock.json or yarn.lock) to ensure reproducible, secure installs
+- Raise npm audit threshold to high or critical to block moderate vulnerabilities
+- Add a dedicated secret-scanning workflow (e.g., GitHub Advanced Security Secret Scanning or truffleHog)
+- Consider integrating additional SAST/SCA tools (e.g., Snyk or OWASP Dependency-Check) for layered security
+- Document secure development practices and incident response processes in CONTRIBUTING or SECURITY.md
 
-## VERSION_CONTROL ASSESSMENT (85% ± 12% COMPLETE)
-- Version control is well-structured with conventional commits, a clear main/develop branch split, comprehensive .gitignore, and proper tracking of key files, but minor issues like unignored metadata files are degrading cleanliness.
-- Working directory is dirty: .voder/history.md and .voder/last-action.md are modified and tracked
-- .gitignore is very comprehensive but does not include the .voder directory despite a commit claiming to ignore it
-- Commit history shows clear, conventional commit messages (chore, docs, etc.)
-- Branch structure includes main and develop with recent activity on both
-- Important project files (README, LICENSE, CHANGELOG, package-lock.json, src, test) are present and tracked
+## VERSION_CONTROL ASSESSMENT (85% ± 17% COMPLETE)
+- The project demonstrates strong version control practices with a clean working directory, comprehensive .gitignore, clear conventional commit messages, CI workflows, and semantic version tagging. Minor misalignments include an unused ‘develop’ branch alongside trunk-based development documentation and the absence of a .gitattributes file.
+- Clean working directory: `git status` reports no uncommitted changes.
+- Commit history: well-structured, conventional messages (chore, docs, feat) and small, focused commits.
+- Branch structure: both `main` and `develop` branches exist, though docs prescribe trunk-based development on `main` only.
+- .gitignore is comprehensive, covering node_modules, build outputs, editor files, and temp directories.
+- GitHub Actions CI and CodeQL workflows are configured, with recent runs mostly successful.
+- Semantic versioning in place: v0.1.0 tag, CHANGELOG.md documents release details.
+- Missing .gitattributes file to enforce consistent line endings or diff behavior.
 
 **Next Steps:**
-- Add “.voder/” to .gitignore and remove existing .voder files from version control (git rm --cached) to restore a clean working directory
-- Ensure ephemeral or assistant-generated files are always ignored
-- Continue using conventional commit messages and consider feature branches for new work
-- Regularly prune stale branches and merge feature work into develop/main as part of a consistent workflow
-- Optionally add a pre-commit hook to prevent committing tool metadata files
+- Align branching strategy: remove or archive `develop` branch to conform with trunk-based development guidelines.
+- Add a .gitattributes file to enforce consistent EOL and Git settings across teams.
+- Define branch protection rules on `main` to require CI passing and review before merge.
+- Use annotated tags for releases and document tagging conventions in the changelog.
