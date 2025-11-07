@@ -24,5 +24,6 @@
   },
   "dependencies": {
     "semver": "^7.7.3"
-  }
+  },
+  "license": "MIT"
 }
