@@ -41,6 +41,32 @@ lodash	4.17.15	4.17.21	4.17.21	120
 - 0: Successful execution. This includes cases where outdated packages are found, all dependencies are up-to-date, or when the help flag is used.
 - 1: Fatal error. This occurs when there is an error running `npm outdated`, or when parsing the `npm outdated` JSON output fails.
 
+## Documentation
+
+- [API Reference](docs/api.md)
+- [Architecture](docs/architecture.md)
+- [Developer Guidelines](docs/developer-guidelines.md)
+
+## Development
+
+Install dependencies:
+
+```sh
+npm install
+```
+
+Run lint:
+
+```sh
+npm run lint
+```
+
+Run tests:
+
+```sh
+npm test
+```
+
 ## Contribution Guidelines
 
 1. Fork the repository

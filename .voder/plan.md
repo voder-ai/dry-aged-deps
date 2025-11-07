@@ -1,12 +1,14 @@
-## NOW
-Refactor `src/print-outdated.js` so that `printOutdated` is an `async` function and uses `Promise.all` to fetch version times in parallel for all packages instead of calling `fetchVersionTimes` sequentially.
+## NOW  
+Run the following command to push all local commits to origin:  
+```bash
+git push origin main
+```
 
-## NEXT
-- Convert `fetchVersionTimes` in `src/fetch-version-times.js` into an `async` function that uses `child_process.execFile` wrapped in a `Promise` instead of `execFileSync`.
-- Update `bin/dry-aged-deps.js` to `await` the now-async `printOutdated` call and handle its promise before calling `process.exit`.
-- Modify existing tests and add new ones to mock and await the asynchronous `printOutdated` and `fetchVersionTimes` behaviors.
+## NEXT  
+- Add a new entry for version 0.1.1 in CHANGELOG.md describing the recent bugfixes and improvements.  
+- Update README.md to link out to the docs/ folder (API Reference, Architecture, Developer Guidelines) and add “npm run lint” and “npm test” under a **Development** or **Contributing** section.  
 
-## LATER
-- Introduce an in-memory cache inside `fetchVersionTimes` to dedupe identical `npm view` calls during a single run.
-- Add a CLI option (e.g. `--concurrency`) to limit the number of parallel version-time fetches.
-- Benchmark the performance on large dependency sets and add a CI check to guard against performance regressions.
+## LATER  
+- Implement a pre-push Git hook (via Husky) that runs `git status --porcelain` and fails if there are uncommitted or unpushed changes.  
+- Automate releases with semantic-release or GitHub Actions so version bumps and changelog updates occur on tag creation.  
+- Add a coverage badge and link to the coverage report in README.md.
