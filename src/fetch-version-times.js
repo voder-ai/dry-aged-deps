@@ -12,11 +12,9 @@ export function fetchVersionTimes(packageName) {
   }
 
   // Execute npm view to get time data in JSON
-  const output = execFileSync(
-    'npm',
-    ['view', packageName, 'time', '--json'],
-    { encoding: 'utf8' }
-  );
+  const output = execFileSync('npm', ['view', packageName, 'time', '--json'], {
+    encoding: 'utf8',
+  });
   const times = JSON.parse(output);
   const versionTimes = {};
 

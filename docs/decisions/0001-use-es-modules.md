@@ -79,6 +79,7 @@ All code (src/, bin/, test/) will use ES modules (`import`/`export`) syntax.
 ## Implementation Notes
 
 ### Package.json Changes
+
 ```json
 {
   "type": "module",
@@ -89,6 +90,7 @@ All code (src/, bin/, test/) will use ES modules (`import`/`export`) syntax.
 ```
 
 ### ESLint Configuration
+
 ```javascript
 // All files use ES modules
 {
@@ -98,14 +100,16 @@ All code (src/, bin/, test/) will use ES modules (`import`/`export`) syntax.
 ```
 
 ### Migration Steps
+
 1. Add `"type": "module"` to package.json
 2. Convert `require()` calls to `import` statements
-3. Convert `module.exports` to `export` statements  
+3. Convert `module.exports` to `export` statements
 4. Add explicit `.js` extensions to local imports
 5. Use `await import()` for any CommonJS-only dependencies
 6. Update documentation and examples
 
 ### CommonJS Dependency Handling
+
 ```javascript
 // For CommonJS-only packages
 const packageName = await import('commonjs-package');
@@ -115,16 +119,19 @@ const { default: defaultExport } = packageName;
 ## Alternatives Considered
 
 ### Hybrid Approach (Original Decision)
+
 - **Pros**: Avoided migration effort, leveraged existing CommonJS code
 - **Cons**: Configuration complexity, inconsistent patterns, mental overhead
 - **Rejection Reason**: No real benefit for a CLI tool, adds unnecessary complexity
 
 ### Full CommonJS
+
 - **Pros**: No migration needed, familiar patterns
 - **Cons**: Fighting against modern tooling, not future-proof, vitest suboptimal performance
 - **Rejection Reason**: Going against ecosystem direction for no meaningful benefit
 
 ### TypeScript
+
 - **Pros**: Type safety, excellent tooling, can output either module format
 - **Cons**: Additional build step complexity for a simple CLI tool
 - **Future Consideration**: May revisit if the project grows significantly
@@ -138,6 +145,7 @@ const { default: defaultExport } = packageName;
 ## Review Schedule
 
 This decision should be reviewed:
+
 - When Node.js support policy changes significantly
 - When major dependencies drop ES module support (unlikely)
 - If the project scope expands to include library distribution

@@ -24,6 +24,7 @@ test/
 ## Components
 
 ### CLI (`bin/dry-aged-deps.js`)
+
 - Parses command-line arguments (`--help` flag).
 - Executes `npm outdated --json` via `child_process.execFileSync`.
 - Delegates to `printOutdated` to format output.
@@ -31,6 +32,7 @@ test/
 - Gracefully handles JSON parsing errors and missing outdated data.
 
 ### Version Time Fetcher (`src/fetch-version-times.js`)
+
 - Exposes `fetchVersionTimes(packageName)`.
 - Validates package name against a regex to prevent injection.
 - Calls `npm view <package> time --json` to retrieve publish timestamps.
@@ -38,6 +40,7 @@ test/
 - Returns a map of version strings to ISO date strings.
 
 ### Age Calculator (`src/age-calculator.js`)
+
 - Exposes `calculateAgeInDays(publishDate)`.
 - Converts ISO date strings to epoch times and computes difference from current time.
 - Returns the integer number of days.

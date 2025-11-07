@@ -20,7 +20,9 @@ if (args.includes('-h') || args.includes('--help')) {
 
 try {
   // Run npm outdated in JSON mode
-  const output = execFileSync('npm', ['outdated', '--json'], { encoding: 'utf8' });
+  const output = execFileSync('npm', ['outdated', '--json'], {
+    encoding: 'utf8',
+  });
   const data = output ? JSON.parse(output) : {};
   printOutdated(data);
 } catch (err) {

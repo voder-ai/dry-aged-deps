@@ -27,7 +27,13 @@ import security from 'eslint-plugin-security';
 export default [
   // Global ignores - must be first and separate
   {
-    ignores: ['dist/', 'build/', 'coverage/', 'node_modules/', 'test/fixtures/'],
+    ignores: [
+      'dist/',
+      'build/',
+      'coverage/',
+      'node_modules/',
+      'test/fixtures/',
+    ],
   },
 
   // Base ESLint recommended rules
@@ -62,11 +68,7 @@ export default [
 
   // Test files with additional testing globals
   {
-    files: [
-      'test/**/*.js',
-      '**/*.test.js',
-      '**/*.spec.js',
-    ],
+    files: ['test/**/*.js', '**/*.test.js', '**/*.spec.js'],
     languageOptions: {
       sourceType: 'module',
       ecmaVersion: 2022,

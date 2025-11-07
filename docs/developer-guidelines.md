@@ -16,12 +16,14 @@ This document outlines important guidelines and conventions for developers worki
 ### What .voder Contains
 
 The `.voder/` directory tracks:
+
 - Development history and progress
 - Implementation plans and status
 - Progress logs and metrics
 - Last actions taken by AI assistants
 
 This state information is crucial for:
+
 - Maintaining context across development sessions
 - Tracking project evolution
 - Coordinating between AI and human developers
@@ -42,6 +44,7 @@ This project uses **ES Modules (ESM)** exclusively. See [docs/decisions/0001-use
 ### Linting
 
 Run linting before committing:
+
 ```bash
 npm run lint
 ```
@@ -51,6 +54,7 @@ We use ESLint v9+ with flat config format. See [docs/eslint-flat-config.md](esli
 ### Testing
 
 All code changes should include appropriate tests:
+
 ```bash
 npm test           # Run tests with coverage
 npm run test:cli   # Run CLI-specific tests
@@ -63,6 +67,7 @@ Tests use vitest and must maintain 80% coverage thresholds.
 ### What NOT to Ignore
 
 The following directories MUST be tracked in git:
+
 - `.voder/` - AI development state (as mentioned above)
 - `prompts/` - Project specifications and user stories
 - `docs/` - All documentation
@@ -70,6 +75,7 @@ The following directories MUST be tracked in git:
 ### What to Ignore
 
 See `.gitignore` for the complete list. Key items:
+
 - `.cursor/` - AI assistant configuration (local only)
 - `.github/instructions/` - AI assistant prompts (local only via symlinks)
 - `.github/prompts/` - AI assistant prompts (local only via symlinks)
@@ -81,6 +87,7 @@ See `.gitignore` for the complete list. Key items:
 ### Keep Updated
 
 When making changes, update relevant documentation:
+
 - `docs/api.md` - API documentation
 - `docs/architecture.md` - Architecture decisions and patterns
 - `docs/decisions/*.md` - ADRs using MADR 4.0 format
@@ -93,6 +100,7 @@ Use Markdown Architectural Decision Records (MADR) format for architectural deci
 ## CI/CD
 
 All changes must pass CI checks:
+
 - Linting
 - Tests with coverage
 - CLI integration tests
@@ -106,6 +114,7 @@ View CI status: `gh run list --limit 5 | cat`
 ### Version Management
 
 This tool helps identify outdated dependencies. Practice what we preach:
+
 - Keep dependencies reasonably up-to-date
 - Use the tool to check for mature, secure updates
 - Document any pinned versions and why
@@ -113,6 +122,7 @@ This tool helps identify outdated dependencies. Practice what we preach:
 ### Security
 
 Run security audits regularly:
+
 ```bash
 npm audit --audit-level=moderate
 ```
@@ -120,6 +130,7 @@ npm audit --audit-level=moderate
 ## Questions?
 
 If you have questions about these guidelines or need clarification, refer to:
+
 - Project documentation in `docs/`
 - Existing code for patterns and examples
 - ADRs in `docs/decisions/` for architectural context

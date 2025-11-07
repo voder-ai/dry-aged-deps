@@ -2,7 +2,7 @@ import { describe, it, expect, vi, afterEach } from 'vitest';
 
 // Mock child_process at the module level
 vi.mock('child_process', () => ({
-  execFileSync: vi.fn()
+  execFileSync: vi.fn(),
 }));
 
 import { fetchVersionTimes } from '../src/fetch-version-times.js';

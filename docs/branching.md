@@ -7,6 +7,7 @@ This project follows **trunk-based development** principles as advocated by DORA
 **All commits go directly to `main`.**
 
 There are no long-lived feature branches or separate `develop` branch. This approach:
+
 - Minimizes merge conflicts
 - Enables continuous integration
 - Reduces batch size of changes
@@ -16,17 +17,20 @@ There are no long-lived feature branches or separate `develop` branch. This appr
 ### No Branch Protections or CODEOWNERS
 
 **Critical**: This repository **MUST NOT** use:
+
 - Branch protection rules
 - Required pull request reviews
 - CODEOWNERS approval requirements
 
 Why? Because trunk-based development relies on:
+
 1. **Pre-commit quality checks** - Developers run checks locally before committing
 2. **CI/CD validation** - Automated pipeline catches issues immediately after push
 3. **Trust and responsibility** - Developers are trusted to maintain quality
 4. **Fast feedback loops** - No waiting for approvals delays integration
 
 Branch protections and approval workflows are anti-patterns in trunk-based development. They:
+
 - Create artificial delays and batching
 - Encourage larger changes (waiting for approval)
 - Reduce deployment frequency
@@ -83,6 +87,7 @@ After pushing to `main`, the CI/CD pipeline automatically:
 ### Why No Feature Branches?
 
 Trunk-based development works because:
+
 - **Small commits**: Changes are small and frequent
 - **Quality checks**: Pre-commit checks prevent broken code
 - **Fast feedback**: CI/CD runs within minutes
@@ -109,7 +114,7 @@ Releases happen automatically through the CI/CD pipeline using semantic versioni
 ### Semantic Versioning
 
 - **Patch** (0.0.x): Bug fixes, no breaking changes
-- **Minor** (0.x.0): New features, no breaking changes  
+- **Minor** (0.x.0): New features, no breaking changes
 - **Major** (x.0.0): Breaking changes
 
 ## Monitoring

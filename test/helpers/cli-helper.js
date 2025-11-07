@@ -6,5 +6,7 @@ import { execa } from 'execa';
  * @returns {Promise<import('execa').ExecaReturnValue>}
  */
 export async function runCli(args) {
-  return await execa('node', ['./bin/dry-aged-deps.js', ...args], { env: process.env });
+  return await execa('node', ['./bin/dry-aged-deps.js', ...args], {
+    env: process.env,
+  });
 }

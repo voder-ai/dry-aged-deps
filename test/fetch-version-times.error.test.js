@@ -2,7 +2,7 @@ import { describe, it, expect, vi, afterEach } from 'vitest';
 
 // Mock child_process at the module level
 vi.mock('child_process', () => ({
-  execFileSync: vi.fn()
+  execFileSync: vi.fn(),
 }));
 
 import { fetchVersionTimes } from '../src/fetch-version-times.js';
@@ -14,7 +14,9 @@ describe('fetchVersionTimes error paths', () => {
   });
 
   it('throws an error for invalid package names', () => {
-    expect(() => fetchVersionTimes('invalid$pkg')).toThrowError(/Invalid package name/);
+    expect(() => fetchVersionTimes('invalid$pkg')).toThrowError(
+      /Invalid package name/
+    );
   });
 
   it('throws a SyntaxError when npm view output is malformed JSON', () => {

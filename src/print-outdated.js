@@ -9,8 +9,10 @@ import { calculateAgeInDays as defaultCalculateAgeInDays } from './age-calculato
  * @param {{ fetchVersionTimes?: function, calculateAgeInDays?: function }} [options]
  */
 export function printOutdated(data, options = {}) {
-  const fetchVersionTimes = options.fetchVersionTimes || defaultFetchVersionTimes;
-  const calculateAgeInDays = options.calculateAgeInDays || defaultCalculateAgeInDays;
+  const fetchVersionTimes =
+    options.fetchVersionTimes || defaultFetchVersionTimes;
+  const calculateAgeInDays =
+    options.calculateAgeInDays || defaultCalculateAgeInDays;
 
   const entries = Object.entries(data);
   if (entries.length === 0) {
@@ -34,12 +36,6 @@ export function printOutdated(data, options = {}) {
       // ignore errors fetching times
     }
 
-    console.log([
-      name,
-      info.current,
-      info.wanted,
-      info.latest,
-      age,
-    ].join('	'));
+    console.log([name, info.current, info.wanted, info.latest, age].join('	'));
   }
 }

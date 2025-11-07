@@ -23,13 +23,13 @@ describe('printOutdated', () => {
   it('prints header and data row with calculated age', () => {
     // Stub fetchVersionTimes to return a mapping with latest version time
     vi.spyOn(fetchModule, 'fetchVersionTimes').mockReturnValue({
-      '2.0.0': '2023-01-01T00:00:00Z'
+      '2.0.0': '2023-01-01T00:00:00Z',
     });
     // Stub calculateAgeInDays to return a fixed value
     vi.spyOn(ageModule, 'calculateAgeInDays').mockReturnValue(10);
 
     const data = {
-      mypkg: { current: '1.0.0', wanted: '1.5.0', latest: '2.0.0' }
+      mypkg: { current: '1.0.0', wanted: '1.5.0', latest: '2.0.0' },
     };
     printOutdated(data, {
       fetchVersionTimes: fetchModule.fetchVersionTimes,
@@ -39,9 +39,13 @@ describe('printOutdated', () => {
     // Expect first console.log: header title
     expect(logSpy.mock.calls[0][0]).toBe('Outdated packages:');
     // Expect header columns
-    expect(logSpy.mock.calls[1][0]).toBe(['Name', 'Current', 'Wanted', 'Latest', 'Age (days)'].join('	'));
+    expect(logSpy.mock.calls[1][0]).toBe(
+      ['Name', 'Current', 'Wanted', 'Latest', 'Age (days)'].join('	')
+    );
     // Expect data row
-    expect(logSpy.mock.calls[2][0]).toBe(['mypkg', '1.0.0', '1.5.0', '2.0.0', 10].join('	'));
+    expect(logSpy.mock.calls[2][0]).toBe(
+      ['mypkg', '1.0.0', '1.5.0', '2.0.0', 10].join('	')
+    );
   });
 
   it('prints N/A when fetchVersionTimes throws', () => {
@@ -53,7 +57,7 @@ describe('printOutdated', () => {
     vi.spyOn(ageModule, 'calculateAgeInDays');
 
     const data = {
-      otherpkg: { current: '0.1.0', wanted: '0.2.0', latest: '0.3.0' }
+      otherpkg: { current: '0.1.0', wanted: '0.2.0', latest: '0.3.0' },
     };
     printOutdated(data, {
       fetchVersionTimes: fetchModule.fetchVersionTimes,
