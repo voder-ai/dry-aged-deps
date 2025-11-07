@@ -1,0 +1,64 @@
+import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
+import { printOutdated } from '../src/print-outdated';
+import * as fetchModule from '../src/fetch-version-times';
+import * as ageModule from '../src/age-calculator';
+
+describe('printOutdated', () => {
+  let logSpy;
+
+  beforeEach(() => {
+    logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('prints up to date message when no packages are outdated', () => {
+    printOutdated({});
+    expect(logSpy).toHaveBeenCalledTimes(1);
+    expect(logSpy).toHaveBeenCalledWith('All dependencies are up to date.');
+  });
+
+  it('prints header and data row with calculated age', () => {
+    // Stub fetchVersionTimes to return a mapping with latest version time
+    vi.spyOn(fetchModule, 'fetchVersionTimes').mockReturnValue({
+      '2.0.0': '2023-01-01T00:00:00Z'
+    });
+    // Stub calculateAgeInDays to return a fixed value
+    vi.spyOn(ageModule, 'calculateAgeInDays').mockReturnValue(10);
+
+    const data = {
+      mypkg: { current: '1.0.0', wanted: '1.5.0', latest: '2.0.0' }
+    };
+    printOutdated(data);
+
+    // Expect first console.log: header title
+    expect(logSpy.mock.calls[0][0]).toBe('Outdated packages:');
+    // Expect header columns
+    expect(logSpy.mock.calls[1][0]).toBe(['Name', 'Current', 'Wanted', 'Latest', 'Age (days)'].join('	'));
+    // Expect data row
+    expect(logSpy.mock.calls[2][0]).toBe(['mypkg', '1.0.0', '1.5.0', '2.0.0', 10].join('	'));
+  });
+
+  it('prints N/A when fetchVersionTimes throws', () => {
+    // Stub fetchVersionTimes to throw
+    vi.spyOn(fetchModule, 'fetchVersionTimes').mockImplementation(() => {
+      throw new Error('failed');
+    });
+
+    const data = {
+      otherpkg: { current: '0.1.0', wanted: '0.2.0', latest: '0.3.0' }
+    };
+    printOutdated(data);
+
+    // Expect N/A age
+    const lastCall = logSpy.mock.calls[2][0];
+    const cols = lastCall.split('	');
+    expect(cols[0]).toBe('otherpkg');
+    expect(cols[1]).toBe('0.1.0');
+    expect(cols[2]).toBe('0.2.0');
+    expect(cols[3]).toBe('0.3.0');
+    expect(cols[4]).toBe('N/A');
+  });
+});
