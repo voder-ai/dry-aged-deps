@@ -27,6 +27,10 @@ jobs:
       - name: Run tests
         run: npm test
 
+      - name: Prepare CLI fixture dependencies
+        run: npm ci --prefer-frozen-lockfile
+        working-directory: test/fixtures
+
       - name: Run CLI tests
         run: npm run test:cli
 

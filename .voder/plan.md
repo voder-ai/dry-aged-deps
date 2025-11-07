@@ -1,31 +1,18 @@
 ## NOW
-Stage and commit all pending changes to ensure the working directory is clean:
-```bash
-git add . && git commit -m "chore: clean working directory by committing all changes"
-```
+In `test/cli.outdated.test.js`, add a `beforeAll` hook that runs `npm ci --prefer-frozen-lockfile` in the `test/fixtures` directory so that the fixture’s dependencies are installed before invoking the CLI.
 
 ## NEXT
-1. Add a standardized release script to package.json:
-   ```diff
-   "scripts": {
-   + "release": "npm version patch && git push --follow-tags",
-     "format": "prettier --write .",
-     "start": "node ./bin/dry-aged-deps.js",
-     // …
-   }
-   ```
-2. Create and push a new Git tag for the current version (e.g., v0.1.1):
-   ```bash
-   git tag v0.1.1 && git push origin v0.1.1
-   ```
-3. Update docs/branching.md to document semantic‐version tagging:
-   ```markdown
-   ### Triggering a Release
-   1. Bump version and create tag: `npm version <patch|minor|major>`
-   2. Push commits and tags: `git push origin main --follow-tags`
-   ```
+- In `.github/workflows/ci.yml`, insert a step before **Run CLI tests** to install fixture dependencies:
+  ```yaml
+  - name: Prepare CLI fixture dependencies
+    run: npm ci --prefer-frozen-lockfile
+    working-directory: test/fixtures
+  ```
+- In `test/cli.outdated.test.js`, add an `afterAll` hook to clean up `test/fixtures/node_modules` to prevent workspace pollution.
+- Add a new integration test (e.g., in `test/cli.upToDate.test.js`) using a fixture with all up-to-date dependencies and assert the “All dependencies are up to date.” message.
 
 ## LATER
-- Add a GitHub Actions workflow (`.github/workflows/publish.yml`) to automatically run `npm publish` on tag creation.
-- Integrate a tool like semantic-release or changesets for fully automated version bumps and changelog generation.
-- Enforce tag-based releases in CI (block merges until a version tag is created and pushed).
+- Refactor CLI integration tests to run the CLI logic in-process with a mocked `child_process.execFileSync`, eliminating real `npm` calls for faster, more deterministic tests.
+- Configure Vitest `setupFiles` to load mocks globally for CLI tests.
+- Introduce CI caching for the `test/fixtures/node_modules` folder to speed up repeated runs.
+- Add end-to-end tests that simulate network failures and validate CLI error handling.
