@@ -1,4 +1,4 @@
-const { execSync } = require('child_process');
+const cp = require('child_process');
 
 /**
  * Fetch version publish times for an npm package.
@@ -7,7 +7,7 @@ const { execSync } = require('child_process');
  */
 function fetchVersionTimes(packageName) {
   // Execute npm view to get time data in JSON
-  const output = execSync(`npm view ${packageName} time --json`, { encoding: 'utf8' });
+  const output = cp.execSync(`npm view ${packageName} time --json`, { encoding: 'utf8' });
   const times = JSON.parse(output);
   const versionTimes = {};
 
