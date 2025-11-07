@@ -1,12 +1,12 @@
 ## NOW
-Add a GitHub Actions workflow at `.github/workflows/ci.yml` that runs on `push`/`pull_request`, checks out the code, sets up Node.js, installs dependencies (`npm ci`), runs `npm test` and `npm run test:cli`, and performs a vulnerability scan with `npm audit --audit-level=moderate`.
+Populate `CHANGELOG.md` by filling in the release date for version 0.1.0 and summarizing all implemented features (npm-outdated wrapper, version-time fetching, age calculation, CLI output).
 
 ## NEXT
-- Modify all `execSync` invocations (in `src/fetch-version-times.js` and `bin/dry-aged-deps.js`) to validate `packageName` against a strict regex (e.g. `/^[a-z0-9@\-/_\.]+$/i`) and switch to `child_process.execFileSync` or `spawnSync` with argument arrays to eliminate shell‐injection risk.  
-- Enhance the CI workflow to fail on any audit errors by upgrading the audit step to `npm audit --audit-level=high`.  
-- Add a security-focused ESLint plugin (e.g. `eslint-plugin-security`) and include a lint step in the CI workflow.
+- Extend `README.md` with a “Usage & Examples” section that demonstrates the CLI command, flags, and sample table output.  
+- Create `docs/api.md` to document the public functions (`fetchVersionTimes`, `calculateAgeInDays`) and their inputs/outputs.  
+- Add `docs/architecture.md` to describe the module layout and key design decisions.
 
 ## LATER
-- Integrate a third‐party security scanner (e.g. Snyk or GitHub CodeQL) into CI.  
-- Enable Dependabot or Renovate to auto-open PRs for dependency updates.  
-- Document the sanitization rules and CI security checks in the README and developer guide.
+- Integrate JSDoc (or TypeDoc) generation into CI to publish API docs automatically.  
+- Stand up a static documentation site (e.g. Docusaurus or GitHub Pages) for user and developer guides.  
+- Author and package a man page for `dry-aged-deps` and include it in the distribution.
