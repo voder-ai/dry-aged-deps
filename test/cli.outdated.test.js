@@ -10,7 +10,7 @@ const fixturesDir = path.join(__dirname, 'fixtures');
 describe('dry-aged-deps CLI outdated output', () => {
   beforeAll(async () => {
     // Install production dependencies for fixture project
-    await execa('npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund', '--omit=dev'], {
+    await execa('npm', ['ci', '--ignore-scripts', '--no-audit', '--no-fund', '--omit=dev', '--prefer-frozen-lockfile'], {
       cwd: fixturesDir,
       env: process.env,
     });
