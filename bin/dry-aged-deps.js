@@ -1,7 +1,13 @@
 #!/usr/bin/env node
 
-// CLI tool to list outdated npm dependencies
+/*
+ * dry-aged-deps CLI
+ * Lists outdated npm dependencies and shows how long they have been outdated.
+ */
+
 const { execSync } = require('child_process');
+const { fetchVersionTimes } = require('../src/fetch-version-times');
+const { calculateAgeInDays } = require('../src/age-calculator');
 
 // Parse CLI arguments for help flag
 const args = process.argv.slice(2);
@@ -14,8 +20,8 @@ if (args.includes('-h') || args.includes('--help')) {
 }
 
 /**
- * Print outdated dependencies information
- * @param {Record<string, { current: string; wanted: string; latest: string }> } data
+ * Print outdated dependencies information with age
+ * @param {Record<string, { current: string; wanted: string; latest: string }>} data
  */
 function printOutdated(data) {
   const entries = Object.entries(data);
@@ -23,12 +29,24 @@ function printOutdated(data) {
     console.log('All dependencies are up to date.');
     return;
   }
+
   console.log('Outdated packages:');
-  // Header
-  console.log(['Name', 'Current', 'Wanted', 'Latest'].join('	'));
-  // Rows
+  // Header with Age column
+  console.log(['Name', 'Current', 'Wanted', 'Latest', 'Age (days)'].join('	'));
+
   for (const [name, info] of entries) {
-    console.log([name, info.current, info.wanted, info.latest].join('	'));
+    let age = 'N/A';
+    try {
+      const versionTimes = fetchVersionTimes(name);
+      const latestTime = versionTimes[info.latest];
+      if (latestTime) {
+        age = calculateAgeInDays(latestTime);
+      }
+    } catch (err) {
+      // ignore errors fetching times
+    }
+
+    console.log([name, info.current, info.wanted, info.latest, age].join('	'));
   }
 }
 
