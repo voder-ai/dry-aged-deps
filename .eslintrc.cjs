@@ -1,0 +1,14 @@
+module.exports = {
+  env: {
+    node: true,
+    es2021: true,
+    'vitest/globals': true,
+  },
+  parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'script',
+  },
+  plugins: ['security'],
+  extends: ['eslint:recommended', 'plugin:security/recommended'],
+  ignorePatterns: ['node_modules/', 'dist/', 'coverage/'],
+};
