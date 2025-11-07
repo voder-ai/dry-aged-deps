@@ -10,14 +10,17 @@ const fixturesDir = path.join(__dirname, 'fixtures');
 
 describe('dry-aged-deps CLI outdated output', () => {
   beforeAll(async () => {
-    await execa('npm', ['ci', '--prefer-frozen-lockfile'], {
+    // Install dependencies for fixture project
+    await execa('npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund'], {
       cwd: fixturesDir,
       env: process.env,
     });
   });
 
   afterAll(() => {
+    // Clean up installed dependencies and lockfile
     fs.rmSync(path.join(fixturesDir, 'node_modules'), { recursive: true, force: true });
+    fs.rmSync(path.join(fixturesDir, 'package-lock.json'), { force: true });
   });
 
   it('runs without error on test project with outdated dependencies', async () => {
