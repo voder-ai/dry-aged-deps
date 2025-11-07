@@ -18,24 +18,36 @@ if (args.includes('-h') || args.includes('--help')) {
   process.exit(0);
 }
 
+// Helper to print results and exit successfully
+function handleOutdatedOutput(data) {
+  printOutdated(data);
+  process.exit(0);
+}
+
 try {
   // Run npm outdated in JSON mode
-  const output = execFileSync('npm', ['outdated', '--json'], {
+  const outputStr = execFileSync('npm', ['outdated', '--json'], {
     encoding: 'utf8',
   });
-  const data = output ? JSON.parse(output) : {};
-  printOutdated(data);
+  let data;
+  try {
+    data = outputStr ? JSON.parse(outputStr) : {};
+  } catch (parseErr) {
+    console.error('Failed to parse npm outdated output:', parseErr.message);
+    process.exit(1);
+  }
+  handleOutdatedOutput(data);
 } catch (err) {
   // npm outdated exits with non-zero code if outdated packages found
   if (err.stdout) {
+    let data;
     try {
-      const data = JSON.parse(err.stdout.toString() || '{}');
-      printOutdated(data);
-      process.exit(0);
+      data = JSON.parse(err.stdout.toString() || '{}');
     } catch (parseErr) {
-      console.error('Failed to parse npm outdated output:', parseErr);
+      console.error('Failed to parse npm outdated output:', parseErr.message);
       process.exit(1);
     }
+    handleOutdatedOutput(data);
   } else {
     console.error('Error running npm outdated:', err.message);
     process.exit(1);
