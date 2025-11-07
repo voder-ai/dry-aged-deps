@@ -15,7 +15,7 @@ describe('dry-aged-deps CLI E2E with real fixture', () => {
     await fs.rm(path.join(fixturesDir, 'package-lock.json'), { force: true });
 
     // Install production dependencies for fixture project
-    await execa('npm', ['ci', '--ignore-scripts', '--no-audit', '--no-fund', '--omit=dev', '--prefer-frozen-lockfile'], {
+    await execa('npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund', '--omit=dev'], {
       cwd: fixturesDir,
       env: process.env,
     });
@@ -46,7 +46,7 @@ describe('dry-aged-deps CLI E2E with real fixture', () => {
     // Check if at least one age cell is a positive integer
     let foundPositive = false;
     for (const line of dataLines) {
-      const cols = line.split('  ');
+      const cols = line.split('	');
       const ageCell = cols[4];
       const age = parseInt(ageCell, 10);
       if (!isNaN(age) && age > 0) {
