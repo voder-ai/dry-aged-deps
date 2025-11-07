@@ -1,16 +1,21 @@
 ## NOW
-Modify the “Check tag matches version” step in `.github/workflows/ci-publish.yml` to retrieve the package version via  
-```bash
-npm pkg get version | tr -d '"'
-```  
-instead of using `require('./package.json')`, so the Git tag vs. `package.json` version comparison succeeds under ESM.
+
+Populate the root README.md with a “Getting Started” section that includes:
+
+- A project overview
+- Installation instructions (`npm install -g dry-aged-deps`)
+- Basic CLI usage examples showing `-h/--help`, `-v/--version`, and default run
 
 ## NEXT
-- Examine the latest CI logs for lockfile‐drift, `npm audit`, lint or test failures; reproduce locally, apply fixes (e.g. commit updated lockfile, adjust audit/lint rules), and push the corrections.  
-- Update the build‐status badge in `README.md` to point at the now‐stable workflow URL and branch.  
-- Add a build‐stage validation step that runs `dry-aged-deps --version` and checks its output matches the `package.json` version.
+
+- Add at the top of README.md a build-status badge pointing to the GitHub Actions “build” workflow on `main`.
+- Under “Getting Started,” link to `docs/api.md` and `docs/architecture.md` for advanced usage and architecture details.
+- Document the CLI options in a table (flags, descriptions) and include a brief “Troubleshooting” note.
+- Run `npm run format` to apply Prettier formatting to the updated README.md.
 
 ## LATER
-- Replace the manual tag/version check with semantic‐release’s built‐in verification (`@semantic-release/verify‐release`).  
-- Configure GitHub Actions notifications (Slack/email) for CI or post‐publish smoke‐test failures.  
-- Introduce Renovate for automated dependency updates, auto‐merging non‐breaking changes once CI is fully stable.
+
+- Introduce badges for coverage and npm version in README.md.
+- Generate and publish HTML docs from the `docs/` folder via GitHub Pages.
+- Add a “Contributing” section with links to issue and PR templates.
+- Automate parts of README assembly (e.g., version and badge injection) in future CI steps.

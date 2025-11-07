@@ -36,9 +36,9 @@ describe('dry-aged-deps CLI error exit code', () => {
       PATH: `${fakeNpmDir}:${process.env.PATH}`,
     });
 
-    await expect(
-      execa('node', [cliPath], { env })
-    ).rejects.toMatchObject({ exitCode: 1 });
+    await expect(execa('node', [cliPath], { env })).rejects.toMatchObject({
+      exitCode: 1,
+    });
 
     try {
       await execa('node', [cliPath], { env });

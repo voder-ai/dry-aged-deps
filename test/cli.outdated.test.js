@@ -11,14 +11,21 @@ const fixturesDir = path.join(__dirname, 'fixtures');
 describe('dry-aged-deps CLI outdated output', () => {
   beforeAll(async () => {
     // Clean up any existing install artifacts
-    await fs.rm(path.join(fixturesDir, 'node_modules'), { recursive: true, force: true });
+    await fs.rm(path.join(fixturesDir, 'node_modules'), {
+      recursive: true,
+      force: true,
+    });
     await fs.rm(path.join(fixturesDir, 'package-lock.json'), { force: true });
 
     // Install production dependencies for fixture project
-    await execa('npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund', '--omit=dev'], {
-      cwd: fixturesDir,
-      env: process.env,
-    });
+    await execa(
+      'npm',
+      ['install', '--ignore-scripts', '--no-audit', '--no-fund', '--omit=dev'],
+      {
+        cwd: fixturesDir,
+        env: process.env,
+      }
+    );
   }, 60000);
 
   it('runs without error on test project with outdated dependencies', async () => {
@@ -31,9 +38,7 @@ describe('dry-aged-deps CLI outdated output', () => {
 
     expect(result.exitCode).toBe(0);
     expect(result.stdout).toContain('Outdated packages:');
-    expect(result.stdout).toContain(
-      'Name	Current	Wanted	Latest	Age (days)'
-    );
+    expect(result.stdout).toContain('Name	Current	Wanted	Latest	Age (days)');
 
     // The output should contain at least one of our test packages
     const hasLodash = result.stdout.includes('lodash');

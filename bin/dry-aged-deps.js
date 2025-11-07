@@ -36,7 +36,7 @@ if (args.includes('-v') || args.includes('--version')) {
 function handleOutdatedOutput(data) {
   printOutdated(data)
     .then(() => process.exit(0))
-    .catch(err => {
+    .catch((err) => {
       console.error(err.message);
       process.exit(1);
     });

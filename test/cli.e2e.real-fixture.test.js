@@ -11,14 +11,21 @@ const fixturesDir = path.join(__dirname, 'fixtures');
 describe('dry-aged-deps CLI E2E with real fixture', () => {
   beforeAll(async () => {
     // Clean up any existing install artifacts
-    await fs.rm(path.join(fixturesDir, 'node_modules'), { recursive: true, force: true });
+    await fs.rm(path.join(fixturesDir, 'node_modules'), {
+      recursive: true,
+      force: true,
+    });
     await fs.rm(path.join(fixturesDir, 'package-lock.json'), { force: true });
 
     // Install production dependencies for fixture project
-    await execa('npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund', '--omit=dev'], {
-      cwd: fixturesDir,
-      env: process.env,
-    });
+    await execa(
+      'npm',
+      ['install', '--ignore-scripts', '--no-audit', '--no-fund', '--omit=dev'],
+      {
+        cwd: fixturesDir,
+        env: process.env,
+      }
+    );
   }, 60000);
 
   it('prints at least one positive age value in the output', async () => {
@@ -35,11 +42,15 @@ describe('dry-aged-deps CLI E2E with real fixture', () => {
     // Parse output lines and check age column
     const lines = result.stdout.split(/\r?\n/);
     // Find index of header line
-    const headerIndex = lines.findIndex(line => line.includes('Name') && line.includes('Age (days)'));
+    const headerIndex = lines.findIndex(
+      (line) => line.includes('Name') && line.includes('Age (days)')
+    );
     expect(headerIndex).toBeGreaterThanOrEqual(0);
 
     // Data lines are after header
-    const dataLines = lines.slice(headerIndex + 1).filter(line => line.trim().length > 0);
+    const dataLines = lines
+      .slice(headerIndex + 1)
+      .filter((line) => line.trim().length > 0);
     // There should be at least one data line
     expect(dataLines.length).toBeGreaterThan(0);
 
