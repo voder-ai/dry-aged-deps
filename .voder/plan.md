@@ -1,12 +1,16 @@
 ## NOW
-Add a post-publish smoke test step to the `publish` job in `.github/workflows/ci-publish.yml` that installs the freshly released `dry-aged-deps` package from npm into a temporary workspace and runs `dry-aged-deps --help` (or `--version`) to verify the published CLI executes successfully.
+Modify the “Check tag matches version” step in `.github/workflows/ci-publish.yml` to retrieve the package version via  
+```bash
+npm pkg get version | tr -d '"'
+```  
+instead of using `require('./package.json')`, so the Git tag vs. `package.json` version comparison succeeds under ESM.
 
 ## NEXT
-- Investigate and resolve any recent CI failures in the build and test jobs (lockfile-drift, audit, lint, or test errors) to stabilize the pipeline.
-- Add a CI check that ensures the git tag (e.g. `v0.1.2`) matches the `version` field in `package.json`, failing the workflow if they differ.
-- Update the project README with a build status badge pointing to the stabilized CI workflow.
+- Examine the latest CI logs for lockfile‐drift, `npm audit`, lint or test failures; reproduce locally, apply fixes (e.g. commit updated lockfile, adjust audit/lint rules), and push the corrections.  
+- Update the build‐status badge in `README.md` to point at the now‐stable workflow URL and branch.  
+- Add a build‐stage validation step that runs `dry-aged-deps --version` and checks its output matches the `package.json` version.
 
 ## LATER
-- Automate version tagging and changelog generation via `semantic-release` or GitHub Actions to enforce consistent release tags.
-- Integrate alerting or notification (Slack, email) for pipeline failures or post-publish smoke test failures.
-- Migrate dependency updates to Renovate with auto-merge for non-breaking changes once the CI pipeline is stable.
+- Replace the manual tag/version check with semantic‐release’s built‐in verification (`@semantic-release/verify‐release`).  
+- Configure GitHub Actions notifications (Slack/email) for CI or post‐publish smoke‐test failures.  
+- Introduce Renovate for automated dependency updates, auto‐merging non‐breaking changes once CI is fully stable.

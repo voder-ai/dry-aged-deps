@@ -2,6 +2,9 @@
 
 import { execFileSync } from 'child_process';
 import { printOutdated } from '../src/print-outdated.js';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 /*
  * dry-aged-deps CLI
@@ -15,6 +18,17 @@ if (args.includes('-h') || args.includes('--help')) {
   console.log('');
   console.log('Options:');
   console.log('  -h, --help    Show help');
+  console.log('  -v, --version Show version');
+  process.exit(0);
+}
+
+// Version flag
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+if (args.includes('-v') || args.includes('--version')) {
+  const pkgPath = path.join(__dirname, '..', 'package.json');
+  const pkgJson = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
+  console.log(pkgJson.version);
   process.exit(0);
 }
 
