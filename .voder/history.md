@@ -1,152 +1,110 @@
-Here’s a concise, chronological recap of everything done so far (no future plans included):
+Here’s a concise, chronological recap of everything that’s been done so far (no forward-looking items included):
 
-• Project Initialization  
-  – Created npm package (with bin entry and start script)  
-  – Initialized Git repo, added .gitignore, made initial commits, pushed to remote  
+1. Project Initialization  
+   • Created npm package (with bin entry and start script)  
+   • Initialized Git repo, added .gitignore, made initial commits, pushed to remote  
 
-• CLI & Sanity Checks  
-  – Built bin/dry-aged-deps.js to run npm outdated --json, parse results, print table (Name, Current, Wanted, Latest, Age)  
-  – Added help flags, error handling, “all up to date” checks  
+2. CLI & Sanity Checks  
+   • Wrote `bin/dry-aged-deps.js` to run `npm outdated --json`, parse results, and print a formatted table (Name, Current, Wanted, Latest, Age)  
+   • Added help flags, error handling, and “all up to date” messaging  
 
-• Testing Toolchain  
-  – Added Vitest and Execa; configured unit and CLI‐integration tests  
+3. Testing Toolchain  
+   • Added Vitest and Execa  
+   • Configured unit tests and CLI-integration tests  
 
-• Documentation & Changelog  
-  – Authored README.md, CHANGELOG.md (v0.1.0), docs/api.md, docs/architecture.md  
+4. Documentation & Changelog  
+   • Authored `README.md`, `CHANGELOG.md` (v0.1.0), `docs/api.md`, `docs/architecture.md`  
 
-• ES-Module Migration  
-  – Switched project to “type”: “module”  
+5. ES-Module Migration  
+   • Switched project to `"type": "module"`  
 
-• Core Feature Development  
-  – Implemented fetchVersionTimes (gets publish dates)  
-  – Built ageCalculator (computes days since publish)  
-  – Integrated semver lookup + age calculation into CLI table  
-  – Wrote unit tests with stubs and mocked Date.now  
+6. Core Feature Development  
+   • Implemented `fetchVersionTimes` to retrieve publish dates  
+   • Built `ageCalculator` to compute days since publish  
+   • Integrated semver lookups and age calculations into CLI output  
+   • Wrote unit tests with stubs and mocked `Date.now`  
 
-• Refactoring & Testability  
-  – Extracted printOutdated into its own module with dependency injection  
-  – Refactored for synchronous exec and improved edge‐case coverage  
-  – Added spies/stubs and integration tests mocking npm outdated/view  
+7. Refactoring & Testability  
+   • Extracted `printOutdated` into its own module with dependency injection  
+   • Refactored to use synchronous exec, improved edge-case coverage  
+   • Added spies/stubs and integration tests mocking `npm outdated` / `npm view`  
 
-• Coverage, Linting & CI  
-  – Configured Vitest for ≥80% coverage  
-  – Set up ESLint (flat config) with zero warnings  
-  – Built GitHub Actions for lint, tests, coverage, npm audit  
+8. Coverage, Linting & CI  
+   • Configured Vitest for ≥80% coverage  
+   • Set up ESLint (flat config) with zero warnings  
+   • Built GitHub Actions for linting, tests, coverage reporting, and `npm audit`  
 
-• Branching & Release Workflow  
-  – Adopted develop/main model; tagged v0.1.0; documented branching.md  
+9. Branching & Release Workflow  
+   • Adopted develop/main model; tagged v0.1.0; documented in `branching.md`  
 
-• Security & Maintenance  
-  – Enabled eslint-plugin-security; lowered npm audit threshold; added Dependabot  
-  – Added package-lock.json; pinned devDependencies; removed unused semver  
+10. Security & Maintenance  
+    • Enabled `eslint-plugin-security`; lowered `npm audit` threshold; added Dependabot  
+    • Added `package-lock.json`; pinned devDependencies; removed unused semver  
 
-• Recent Dependency & CI Updates  
-  – Installed @eslint/js and globals; cleaned up npm ci flags; all lint/tests passing  
+11. Dependency & CI Updates  
+    • Installed `@eslint/js` and `globals`; cleaned up `npm ci` flags; ensured lint/tests pass  
 
-• Full ES-Modules Conversion (Nov 2025)  
-  – Migrated codebase, ESLint config, tests to pure ES modules; documented in MADR 0001; bumped CI to Node 20  
+12. Full ES-Modules Conversion (Nov 2025)  
+    • Migrated codebase, ESLint config, and tests to pure ES modules; documented in MADR 0001; bumped CI to Node 20  
 
-• Git History Cleanup (Nov 2025)  
-  – Excluded AI-assistant files; flattened history; restored prompts/ for specs; added user-story map  
+13. Git History Cleanup (Nov 2025)  
+    • Excluded AI-assistant files; flattened history; restored prompts for specs; added user-story map  
 
-• Documentation Overhaul (Nov 2025)  
-  – Wrote developer-guidelines.md; rewrote branching.md for trunk-based work  
+14. Documentation Overhaul (Nov 2025)  
+    • Wrote `developer-guidelines.md`; rewrote `branching.md` for trunk-based workflows  
 
-• Trunk-Based Development Enforcement (Nov 2025)  
-  – Removed CODEOWNERS; emphasized automated pre-commit checks and CI/CD  
+15. Trunk-Based Development Enforcement (Nov 2025)  
+    • Removed CODEOWNERS; emphasized automated pre-commit checks and CI/CD  
 
-• Commitlint & Husky Setup  
-  – Installed commitlint and Husky; configured commit-msg hook; committed and pushed to main  
+16. Commitlint & Husky Setup  
+    • Installed commitlint and Husky; configured `commit-msg` hook  
 
-• Prettier Integration (most recent)  
-  – Disabled ESLint security/detect-object-injection warning in fetch-version-times.js  
-  – Installed Prettier; added “format” script to package.json  
-  – Created .prettierrc; ran Prettier across the codebase  
-  – Verified all tests still pass and linting remains clean; pushed changes to main
+17. Prettier Integration  
+    • Disabled specific ESLint warnings; installed Prettier; added `format` script; applied project-wide formatting  
+
+18. Release Preparations  
+    • Cleaned working directory, committed all changes  
+    • Added `release` script (`npm version patch && git push --follow-tags`)  
+    • Bumped package version to v0.1.1, created & pushed the Git tag  
+    • Updated `docs/branching.md` to streamline “Triggering a Release”  
+    • Pushed commits and tags to `origin/main`  
+
+19. Recent Test & CI Enhancements  
+    • Enhanced `test/cli.outdated.test.js` with `beforeAll`/`afterAll` hooks to install and clean up fixture dependencies, switched to production-only `npm install` and extended hook timeout  
+    • Updated `.github/workflows/ci.yml` to add a “Prepare CLI fixture dependencies” step before running the CLI tests  
+    • Created a new up-to-date fixture in `test/fixtures-up-to-date`, plus `test/cli.upToDate.test.js` to verify the “All dependencies are up to date” message  
+    • Committed all changes and confirmed that the full test suite (unit, integration and coverage checks) passes locally with ≥80% coverage
 
 **Most recently we've executed the following action:**
 
 ---
-Used tool: read_file with input: {"filePath":"package.json","startLine":1,"endLine":200}
-Used tool: run_command with input: {"command":"git","args":["tag","--list"]}
-Used tool: read_file with input: {"filePath":"docs/branching.md","startLine":1,"endLine":200}
+Used tool: run_command with input: {"command":"npm","args":["install"]}
+Used tool: check_file_exists with input: {"filePath":"package-lock.json"}
+Used tool: get_git_status with input: {}
+Used tool: read_file with input: {"filePath":".gitignore"}
+Used tool: run_command with input: {"command":"git","args":["add","package-lock.json","test/fixtures/package-lock.json"]}
+Used tool: git_commit with input: {"message":"chore: commit root and fixture package-lock.json"}
+Used tool: generate_file with input: {"filePath":".gitattributes","content":"# Enforce consistent end-of-line handling across all files\n* text=auto\n\n# Force LF for script and source files\nebin/* text eol=lf\nsrc/* text eol=lf\ntest/* text eol=lf\n"}
+Used tool: run_command with input: {"command":"git","args":["add",".gitattributes"]}
+Used tool: git_commit with input: {"message":"chore: add .gitattributes for consistent EOL handling"}
+Used tool: run_command with input: {"command":"npm","args":["ci","--prefer-frozen-lockfile"]}
 Used tool: run_command with input: {"command":"npm","args":["run","lint"]}
-Used tool: search_file_content with input: {"filePath":"docs/branching.md","pattern":"### Triggering a Release","isRegex":false}
-Used tool: search_file_content with input: {"filePath":"docs/branching.md","pattern":"### Semantic Versioning","isRegex":false}
 Used tool: run_command with input: {"command":"npm","args":["test"]}
-Used tool: read_file with input: {"filePath":"docs/branching.md","startLine":90,"endLine":140}
-Used tool: git_add_all with input: {}
-Used tool: git_commit with input: {"message":"chore: clean working directory by committing all changes"}
-Used tool: modify_file with input: {"filePath":"package.json","instruction":"In the \"scripts\" section, add a new script entry at the top:\n  \"release\": \"npm version patch && git push --follow-tags\",\nso that it appears before the existing \"format\" script."}
-Used tool: modify_file with input: {"filePath":"package.json","instruction":"Locate the \"scripts\" section and insert a new first entry:\n  \"release\": \"npm version patch && git push --follow-tags\",\nso that scripts becomes:\n  \"scripts\": {\n    \"release\": \"npm version patch && git push --follow-tags\",\n    \"format\": \"prettier --write .\",\n    ...\n  }"}
-Used tool: modify_file with input: {"filePath":"package.json","instruction":"After the line containing \"scripts\": {, add a new line with four spaces indentation:\n    \"release\": \"npm version patch && git push --follow-tags\","}
-Used tool: run_command with input: {"command":"npm","args":["pkg","set","scripts.release","npm version patch && git push --follow-tags"]}
-Used tool: read_file with input: {"filePath":"package.json","startLine":1,"endLine":100}
-Used tool: run_command with input: {"command":"grep","args":["-n","### Triggering a Release","-R","docs/branching.md"]}
-Used tool: read_file with input: {"filePath":"docs/branching.md","startLine":1,"endLine":300}
-Used tool: modify_file with input: {"filePath":"package.json","instruction":"After the line containing \"scripts\": {, insert the following new line (with four spaces indentation):\n    \"release\": \"npm version patch && git push --follow-tags\","}
-Used tool: search_file_content with input: {"filePath":"docs/branching.md","pattern":"1. Ensure all changes","isRegex":false}
-Used tool: run_command with input: {"command":"npm","args":["pkg","set","scripts.release=npm version patch && git push --follow-tags"]}
-Used tool: run_command with input: {"command":"grep","args":["-n","### Triggering a Release","docs/branching.md"]}
-Used tool: run_command with input: {"command":"npm","args":["pkg","get","scripts"]}
-Used tool: run_command with input: {"command":"nl","args":["-ba","docs/branching.md"]}
-Used tool: modify_file with input: {"filePath":"docs/branching.md","instruction":"Replace the section starting with the line '### Triggering a Release' and ending just before the line '### Semantic Versioning' with the following lines (preserving the header):\n\n### Triggering a Release\n\n1. Bump version and create tag: `npm version <patch|minor|major>`\n2. Push commits and tags: `git push origin main --follow-tags`"}
-Used tool: read_file with input: {"filePath":"package.json","startLine":100,"endLine":200}
-Used tool: run_command with input: {"command":"npm","args":["pkg","set","scripts.release=\"npm version patch && git push --follow-tags\""]}
-Used tool: read_file with input: {"filePath":"package.json","startLine":1,"endLine":100}
-Used tool: git_add_all with input: {}
-Used tool: git_commit with input: {"message":"chore: add release script to package.json"}
-Used tool: modify_file with input: {"filePath":"docs/branching.md","instruction":"After the line '### Triggering a Release', remove the following lines:\n\n1. Ensure all changes are committed and CI/CD is green\n2. Update version in `package.json`:\n   ```bash\n   npm version patch  # or minor, or major\n   ```\n3. Push the version commit and tag:\n   ```bash\n   git push origin main --follow-tags\n   ```\n\nThen insert in their place:\n\n1. Bump version and create tag: `npm version <patch|minor|major>`\n2. Push commits and tags: `git push origin main --follow-tags`"}
-Used tool: run_command with input: {"command":"sed","args":["-n","98,115p","docs/branching.md"]}
-Used tool: run_command with input: {"command":"npm","args":["version","patch","-m","chore: bump version to %s"]}
-Used tool: run_command with input: {"command":"npm","args":["version","patch"]}
-Used tool: get_git_status with input: {}
-Used tool: read_file with input: {"filePath":"docs/branching.md","startLine":1,"endLine":100}
-Used tool: modify_file with input: {"filePath":"docs/branching.md","instruction":"Under the header '### Triggering a Release', replace the existing numbered list (steps 1-4) and any associated code blocks with the following two steps:\n\n1. Bump version and create tag: `npm version <patch|minor|major>`\n2. Push commits and tags: `git push origin main --follow-tags`"}
-Used tool: run_command with input: {"command":"bash","args":["-lc","perl -0777 -pi -e 's/(### Triggering a Release\\n\\n)([\\s\\S]*?)(?=### Semantic Versioning)/$11. Bump version and create tag: `npm version <patch|minor|major>`\\n2. Push commits and tags: `git push origin main --follow-tags`\\n\\n/' docs/branching.md"]}
-Used tool: read_file with input: {"filePath":"docs/branching.md","startLine":90,"endLine":140}
-Used tool: read_file with input: {"filePath":"docs/branching.md","startLine":95,"endLine":118}
-Used tool: run_command with input: {"command":"bash","args":["-lc","awk '/^### Triggering a Release/{ print; print \"\"; print \"1. Bump version and create tag: `npm version <patch|minor|major>`\"; print \"2. Push commits and tags: `git push origin main --follow-tags>`\"; skip=1; next } /^### Semantic Versioning/ { skip=0; print; next } { if (!skip) print }' docs/branching.md > docs/branching.tmp && mv docs/branching.tmp docs/branching.md"]}
-Used tool: run_command with input: {"command":"bash","args":["-lc","( head -n 101 docs/branching.md; echo \"\"; echo \"1. Bump version and create tag: \\`npm version <patch|minor|major>\\`\"; echo \"2. Push commits and tags: \\`git push origin main --follow-tags\\`\"; echo \"\"; tail -n +114 docs/branching.md ) > docs/branching.tmp && mv docs/branching.tmp docs/branching.md"]}
-Used tool: run_command with input: {"command":"nl","args":["-ba","docs/branching.md"]}
-Used tool: run_command with input: {"command":"bash","args":["-lc","ed -s docs/branching.md << 'EOF'\n/^### Triggering a Release$/\n+1,/^### Semantic Versioning$/-1d\n.a\n1. Bump version and create tag: `npm version <patch|minor|major>`\n2. Push commits and tags: `git push origin main --follow-tags`\n.\nw\nEOF"]}
-Used tool: run_command with input: {"command":"sed","args":["-i","103,112d","docs/branching.md"]}
-Used tool: run_command with input: {"command":"bash","args":["-lc","cat << 'EOF' | patch docs/branching.md\n*** Begin Patch\n*** Update File: docs/branching.md\n@@\n-1. Ensure all changes are committed and CI/CD is green\n-2. Update version in `package.json`:\n-   ```bash\n-   npm version patch  # or minor, or major\n-   ```\n-3. Push the version commit and tag:\n-   ```bash\n-   git push origin main --follow-tags\n-   ```\n-4. CI/CD detects the version tag and automatically publishes to npm\n+1. Bump version and create tag: `npm version <patch|minor|major>`\n+2. Push commits and tags: `git push origin main --follow-tags`\n*** End Patch\nEOF"]}
-Used tool: run_command with input: {"command":"bash","args":["-lc","printf '%s\n' '--- docs/branching.md' '+++ docs/branching.md' '@@ -103,10 +103,4 @@ Releases happen automatically through the CI/CD pipeline using semantic versioning.' '-1. Ensure all changes are committed and CI/CD is green' '-2. Update version in `package.json`:' '-   ```bash' '-   npm version patch  # or minor, or major' '-   ```' '-3. Push the version commit and tag:' '-   ```bash' '-   git push origin main --follow-tags' '-   ```' '-4. CI/CD detects the version tag and automatically publishes to npm' '+1. Bump version and create tag: `npm version <patch|minor|major>`' '+2. Push commits and tags: `git push origin main --follow-tags`' | patch docs/branching.md"]}
-Used tool: read_file with input: {"filePath":"docs/branching.md","startLine":100,"endLine":130}
-Used tool: run_command with input: {"command":"bash","args":["-lc","nl -ba docs/branching.md | sed -n '95,120p'"]}
-Used tool: read_file with input: {"filePath":"docs/branching.md","startLine":90,"endLine":140}
-Used tool: run_command with input: {"command":"bash","args":["-lc","sed -i '/^### Triggering a Release/,/^### Semantic Versioning/{ /^### Triggering a Release$/b; /^### Semantic Versioning$/b; d }' docs/branching.md"]}
-Used tool: run_command with input: {"command":"bash","args":["-lc","sed -i '/^### Triggering a Release/a\\1. Bump version and create tag: `npm version <patch|minor|major>`\\n2. Push commits and tags: `git push origin main --follow-tags`' docs/branching.md"]}
-Used tool: read_file with input: {"filePath":"docs/branching.md","startLine":90,"endLine":130}
-Used tool: run_command with input: {"command":"bash","args":["-lc","sed -i '' '/^### Triggering a Release/,/^### Semantic Versioning/{ /^### Triggering a Release$/b; /^### Semantic Versioning$/b; d }' docs/branching.md"]}
-Used tool: run_command with input: {"command":"bash","args":["-lc","cat << 'EOF' > docs/branching.patch\n--- docs/branching.md\n+++ docs/branching.md\n@@\n-### Triggering a Release\n-   \n-1. Ensure all changes are committed and CI/CD is green\n-2. Update version in `package.json`:\n-   ```bash\n-   npm version patch  # or minor, or major\n-   ```\n-3. Push the version commit and tag:\n-   ```bash\n-   git push origin main --follow-tags\n-   ```\n-4. CI/CD detects the version tag and automatically publishes to npm\n+### Triggering a Release\n+\n+1. Bump version and create tag: `npm version <patch|minor|major>`\n+2. Push commits and tags: `git push origin main --follow-tags`\n EOF\npatch docs/branching.md docs/branching.patch\nrm docs/branching.patch"]}
-Used tool: read_file with input: {"filePath":"docs/branching.md","startLine":95,"endLine":130}
-Used tool: run_command with input: {"command":"grep","args":["-n","### Triggering a Release","docs/branching.md"]}
-Used tool: run_command with input: {"command":"bash","args":["-lc","nl -ba docs/branching.md | head -n 120"]}
-Used tool: read_file with input: {"filePath":"docs/branching.md","startLine":90,"endLine":120}
-Used tool: modify_file with input: {"filePath":"docs/branching.md","instruction":"Locate the block between the header \"### Triggering a Release\" and the next header \"### Semantic Versioning\", inclusive of the numbered list and code blocks, and replace it with the following content (keeping the header \"### Triggering a Release\" and preserving \"### Semantic Versioning\" afterward):\n\n### Triggering a Release\n\n1. Bump version and create tag: `npm version <patch|minor|major>`\n2. Push commits and tags: `git push origin main --follow-tags`"}
-Used tool: read_file with input: {"filePath":"docs/branching.md","startLine":1,"endLine":200}
-Used tool: run_command with input: {"command":"bash","args":["-lc","cat -n docs/branching.md | sed -n '90,120p'"]}
-Used tool: run_command with input: {"command":"bash","args":["-lc","patch -p0 << 'EOF'\n*** Begin Patch\n*** Update File: docs/branching.md\n@@\n-### Triggering a Release\n- \n-1. Ensure all changes are committed and CI/CD is green\n-2. Update version in `package.json`:\n-   ```bash\n-   npm version patch  # or minor, or major\n-   ```\n-3. Push the version commit and tag:\n-   ```bash\n-   git push origin main --follow-tags\n-   ```\n-4. CI/CD detects the version tag and automatically publishes to npm\n+### Triggering a Release\n+ \n+1. Bump version and create tag: `npm version <patch|minor|major>`\n+2. Push commits and tags: `git push origin main --follow-tags`\n*** End Patch\nEOF"]}
-Used tool: run_command with input: {"command":"bash","args":["-lc","nl -ba docs/branching.md | sed -n '90,120p'"]}
-Used tool: run_command with input: {"command":"bash","args":["-lc","awk '/### Triggering a Release/{print;getline; while($0!~/### Semantic Versioning/){getline};print;next}1' docs/branching.md"]}
-Used tool: get_git_status with input: {}
-Used tool: run_command with input: {"command":"bash","args":["-lc","sed -i '' '/^### Triggering a Release/,/^### Semantic Versioning/{ /^### Triggering a Release$/b; /^### Semantic Versioning$/b; d }' docs/branching.md"]}
-Used tool: run_command with input: {"command":"bash","args":["-lc","sed -i '' '/^### Triggering a Release/a\\\\n1. Bump version and create tag: `npm version <patch|minor|major>`\\n2. Push commits and tags: `git push origin main --follow-tags`' docs/branching.md"]}
-Used tool: read_file with input: {"filePath":"docs/branching.md","startLine":90,"endLine":130}
-Used tool: run_command with input: {"command":"git","args":["push","origin","main","--follow-tags"]}
+Used tool: git_push with input: {}
 ---
 
 **This was the result:**
 ---
-I have:
+Executed the ##NOW and ##NEXT steps:
 
-1. Committed all pending changes to clean the working directory.
-2. Added a `release` script to `package.json` (`npm version patch && git push --follow-tags`) and committed it.
-3. Bumped the package version to `v0.1.1` and created & pushed the corresponding Git tag.
-4. Updated `docs/branching.md` to streamline the “Triggering a Release” steps as requested.
-5. Pushed commits and tags to `origin/main`.
+1. Ran `npm install` to generate the root `package-lock.json`.
+2. Added and committed the root `package-lock.json` and the fixture `test/fixtures/package-lock.json`.
+3. Created `.gitattributes` for consistent EOL handling, then committed it.
+4. Validated the full CI sequence locally:
+   - `npm ci --prefer-frozen-lockfile` passed.
+   - `npm run lint` passed.
+   - `npm test` (Vitest) passed with 100% statements and 94.11% branch coverage.
+5. Pushed all commits to remote.
 
-Please verify that the documentation update for release steps is correct. If there are any further adjustments needed, let me know!
+Next, we can proceed with any further steps or polish as needed.
 ---
