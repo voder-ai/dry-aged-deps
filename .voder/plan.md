@@ -1,11 +1,12 @@
-## NOW
-Create a GitHub Actions workflow at `.github/workflows/publish.yml` that runs on tag pushes (`v*`), checks out the code, sets up Node.js, installs dependencies, runs lint, tests, and then publishes to npm with `NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}`.
+## NOW  
+Create a unified GitHub Actions workflow file at .github/workflows/ci-publish.yml that merges the steps from both ci.yml and publish.yml, triggering on pushes to main and on tag pushes (`v*`), and runs lint, tests, audit, CodeQL, and npm publish in a single pipeline.  
 
-## NEXT
-- In GitHub repository settings, add a secret named `NPM_TOKEN` containing a valid npm publish token.
-- Update the README “Release Process” section to describe the automated tag-triggered CI publish workflow.
+## NEXT  
+- Remove the old .github/workflows/ci.yml and .github/workflows/publish.yml files.  
+- In ci-publish.yml, add a post‐publish “smoke-test” job that runs `npm view dry-aged-deps version` to verify the package was published successfully.  
+- Update the README’s “Release Process” section to reference the new unified workflow.  
 
-## LATER
-- Integrate semantic-release or Changesets for automatic version bumps and changelog generation.
-- Add CI smoke tests that install the newly published package and verify basic CLI functionality.
-- Extend the publish workflow to bundle and attach CLI artifacts (e.g., standalone executables) to GitHub Releases.
+## LATER  
+- Integrate semantic-release or changesets for automatic version bumps and changelog generation.  
+- Enable continuous deployment on every green main-branch build (not just on tags).  
+- Add staged rollout or canary jobs and automated health-check tests to the CI pipeline.
