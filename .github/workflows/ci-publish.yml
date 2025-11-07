@@ -19,13 +19,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
+        uses: github/codeql-action/init@v3
         with:
           languages: javascript
       - name: Autobuild
-        uses: github/codeql-action/autobuild@v2
+        uses: github/codeql-action/autobuild@v3
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
+        uses: github/codeql-action/analyze@v3
 
   build:
     name: Build & Test
@@ -57,11 +57,11 @@ jobs:
         run: npm test
 
       - name: Prepare CLI fixture dependencies
-        run: npm ci --prefer-frozen-lockfile
+        run: npm install --ignore-scripts --no-audit --no-fund
         working-directory: test/fixtures
 
       - name: Prepare up-to-date CLI fixture dependencies
-        run: npm ci --prefer-frozen-lockfile
+        run: npm install --ignore-scripts --no-audit --no-fund
         working-directory: test/fixtures-up-to-date
 
       - name: Run CLI tests

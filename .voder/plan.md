@@ -1,21 +1,12 @@
-## NOW
+## NOW  
+Inspect the logs of the most recent failed CI run to pinpoint the exact step breaking in `.github/workflows/ci-publish.yml` (for example, via `gh run view --log --limit 1 --repo voder-ai/dry-aged-deps`).  
 
-Populate the root README.md with a “Getting Started” section that includes:
+## NEXT  
+- Update the failing step in `.github/workflows/ci-publish.yml` based on the log findings (e.g. adjust or conditionalize the lockfile drift check, version validation, or smoke-test commands).  
+- Commit and push the revised workflow to `main` and confirm that the CI pipeline now completes successfully.  
 
-- A project overview
-- Installation instructions (`npm install -g dry-aged-deps`)
-- Basic CLI usage examples showing `-h/--help`, `-v/--version`, and default run
-
-## NEXT
-
-- Add at the top of README.md a build-status badge pointing to the GitHub Actions “build” workflow on `main`.
-- Under “Getting Started,” link to `docs/api.md` and `docs/architecture.md` for advanced usage and architecture details.
-- Document the CLI options in a table (flags, descriptions) and include a brief “Troubleshooting” note.
-- Run `npm run format` to apply Prettier formatting to the updated README.md.
-
-## LATER
-
-- Introduce badges for coverage and npm version in README.md.
-- Generate and publish HTML docs from the `docs/` folder via GitHub Pages.
-- Add a “Contributing” section with links to issue and PR templates.
-- Automate parts of README assembly (e.g., version and badge injection) in future CI steps.
+## LATER  
+- Add branch protection requiring CI green before merges.  
+- Configure real-time CI failure notifications (Slack/email).  
+- Expand the GitHub Actions matrix to cover multiple Node.js versions.  
+- Periodically review and upgrade CI tool versions for security and reliability.
