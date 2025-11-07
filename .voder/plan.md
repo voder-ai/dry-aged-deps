@@ -1,17 +1,11 @@
 ## NOW  
-Add `@eslint/js` and `globals` to the `devDependencies` section of `package.json`.  
+Commit the pending AI assistant metadata files to clear the dirty working directory (git add .voder/history.md .voder/last-action.md && git commit -m "chore: persist AI assistant metadata state").
 
 ## NEXT  
-- In `.github/workflows/ci.yml`, remove the `--dry-run` flag so the install step reads:  
-  ```yaml
-  run: npm ci --prefer-frozen-lockfile
-  ```  
-- Run `npm install` to update `package-lock.json` with the new devDependencies.  
-- Commit the updated `package.json`, `package-lock.json`, and CI workflow, then verify that the CI pipeline’s lint step passes without missing‐plugin errors.  
+- Add a `.github/CODEOWNERS` file to require review approvals for changes to `src/`, `bin/`, and `docs/`.  
+- In GitHub branch protection settings for `main` and `develop`, require passing CI status checks and at least one approving review before merge.
 
 ## LATER  
-- Configure commitlint (conventional config) with a Husky `commit-msg` hook to enforce `feat:`, `fix:`, `chore:`-style messages.  
-- Set up lint-staged with a Husky `pre-commit` hook to run `npm run lint` and `npm test` on staged files.  
-- Integrate semantic-release (or changesets) in CI for automated version bumps and changelog generation on tag pushes.  
-- Add a GitHub Actions workflow (`.github/workflows/publish.yml`) to publish to npm when new tags are pushed.  
-- Enable Dependabot or Renovate to automatically update the lockfile and open pull requests.
+- Configure Husky with a `commit-msg` hook running commitlint to enforce conventional commit messages.  
+- Configure Husky with a `pre-commit` hook running lint-staged to lint and test only staged files.  
+- Integrate semantic-release (or changesets) in CI to automate version bumps and changelog updates on tag pushes.
