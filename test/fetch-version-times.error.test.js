@@ -2,30 +2,34 @@ import { describe, it, expect, vi, afterEach } from 'vitest';
 
 // Mock child_process at the module level
 vi.mock('child_process', () => ({
-  execFileSync: vi.fn(),
+  execFile: vi.fn(),
 }));
 
 import { fetchVersionTimes } from '../src/fetch-version-times.js';
-import { execFileSync } from 'child_process';
+import { execFile } from 'child_process';
 
 describe('fetchVersionTimes error paths', () => {
   afterEach(() => {
     vi.clearAllMocks();
   });
 
-  it('throws an error for invalid package names', () => {
-    expect(() => fetchVersionTimes('invalid$pkg')).toThrowError(
+  it('rejects for invalid package names', async () => {
+    await expect(fetchVersionTimes('invalid$pkg')).rejects.toThrowError(
       /Invalid package name/
     );
   });
 
-  it('throws a SyntaxError when npm view output is malformed JSON', () => {
-    execFileSync.mockReturnValue('not valid json');
-    expect(() => fetchVersionTimes('validpkg')).toThrow(SyntaxError);
-    expect(execFileSync).toHaveBeenCalledWith(
+  it('rejects with SyntaxError when npm view output is malformed JSON', async () => {
+    execFile.mockImplementation((cmd, args, options, callback) => {
+      callback(null, 'not valid json', '');
+    });
+
+    await expect(fetchVersionTimes('validpkg')).rejects.toThrow(SyntaxError);
+    expect(execFile).toHaveBeenCalledWith(
       'npm',
       ['view', 'validpkg', 'time', '--json'],
-      { encoding: 'utf8' }
+      { encoding: 'utf8' },
+      expect.any(Function)
     );
   });
 });
