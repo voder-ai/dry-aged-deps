@@ -5,7 +5,7 @@
  * @returns {Record<string,string>} A mapping of version to publish date string.
  */
 function fetchVersionTimes(packageName) {
-  const pkgNameRegex = /^[a-z0-9@\-\/_\.]+$/i;
+  const pkgNameRegex = /^[a-z0-9@\-_/.]+$/i;
   if (!pkgNameRegex.test(packageName)) {
     throw new Error(`Invalid package name: ${packageName}`);
   }

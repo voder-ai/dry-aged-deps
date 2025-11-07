@@ -31,7 +31,7 @@ function printOutdated(data, options = {}) {
       if (latestTime) {
         age = calculateAgeInDays(latestTime);
       }
-    } catch (err) {
+    } catch {
       // ignore errors fetching times
     }
 
