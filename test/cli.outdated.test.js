@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import { execa } from 'execa';
+import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -9,8 +10,12 @@ const fixturesDir = path.join(__dirname, 'fixtures');
 
 describe('dry-aged-deps CLI outdated output', () => {
   beforeAll(async () => {
+    // Clean up any existing install artifacts
+    await fs.rm(path.join(fixturesDir, 'node_modules'), { recursive: true, force: true });
+    await fs.rm(path.join(fixturesDir, 'package-lock.json'), { force: true });
+
     // Install production dependencies for fixture project
-    await execa('npm', ['ci', '--ignore-scripts', '--no-audit', '--no-fund', '--omit=dev', '--prefer-frozen-lockfile'], {
+    await execa('npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund', '--omit=dev'], {
       cwd: fixturesDir,
       env: process.env,
     });
