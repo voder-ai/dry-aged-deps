@@ -67,6 +67,17 @@ Run tests:
 npm test
 ```
 
+## Release Process
+
+Dry-aged-deps uses an automated release workflow triggered by Git tag pushes. To publish a new version:
+
+```sh
+git tag v<new-version>
+git push origin v<new-version>
+```
+
+This triggers the `Publish` GitHub Actions workflow (`.github/workflows/publish.yml`), which runs lint, tests, and publishes the package to npm. Ensure you have configured a repository secret named `NPM_TOKEN` with a valid npm authentication token.
+
 ## Contribution Guidelines
 
 1. Fork the repository
