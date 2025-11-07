@@ -8,7 +8,7 @@
     "start": "node ./bin/dry-aged-deps.js",
     "test": "vitest --coverage",
     "test:cli": "vitest --threads=false",
-    "lint": "eslint"
+    "lint": "eslint src bin test"
   },
   "devDependencies": {
     "eslint": "^9.39.1",
