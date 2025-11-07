@@ -1,13 +1,22 @@
 ## NOW
-Stage and commit all `.voder` state files to clean the working directory:  
+Push the pending local commits to the remote repository:
 ```bash
-git add .voder && git commit -m "chore: persist voder state files for clean working directory"
+git push origin main
 ```
 
 ## NEXT
-- Update `docs/branching.md` to remove any stale references to a `develop` branch and explicitly document that all work happens on `main` under a trunk-based model.  
-- Create a new `docs/branching-strategy.md` outlining ephemeral feature-branch naming conventions, PR workflow, and merge practices for the trunk-based approach.
+- Add the `.voder/` directory to `.gitignore` so that AI-assistant state files are not tracked.
+- Stage and commit the update:
+  ```bash
+  git add .gitignore
+  git commit -m "chore: ignore .voder directory"
+  ```
+- Push the new commit to `origin/main`.
 
 ## LATER
-- Implement a CI check or pre-commit hook that fails if there are unstaged or uncommitted changes outside of `src/`, `bin/`, `test/`, and docs directories to enforce working-directory hygiene.  
-- Extend developer guidelines with a section on branch hygiene, specifying when and how to create and delete feature branches under the trunk-based model.
+- Introduce a pre-commit hook (via Husky + lint-staged) to auto-run Prettier and ESLint on staged files.
+- Add unit tests to cover missing branches in `fetch-version-times.js` to achieve 100% branch coverage.
+- Update `README.md` to include links to deeper documentation (`docs/api.md`, etc.) and add a coverage badge.
+- Automate changelog generation (e.g. via conventional-changelog) to keep `CHANGELOG.md` in sync with `package.json`.
+- Refactor `fetchVersionTimes` to use an asynchronous API or concurrent fetches for performance improvements.
+- Plan and implement the next user stories: fetching version ages, maturity filtering, and security filtering.
