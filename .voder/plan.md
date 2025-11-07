@@ -1,12 +1,12 @@
 ## NOW
-Generate and commit a `package-lock.json` file to the repository to ensure reproducible dependency installs.
+Add `.voder/` to the project’s `.gitignore` so that all internal Voder files are ignored by Git.
 
 ## NEXT
-- Create and add a `LICENSE` file (MIT) at the project root, and update `package.json` to include `"license": "MIT"`.  
-- Add a “License” section to `README.md` linking to the new `LICENSE` file.  
-- Confirm the CI workflow continues to use `npm ci` against the committed lockfile.
+- Commit and push the updated `.gitignore`.  
+- Update `docs/branching.md` to note that `.voder/` is an internal directory and to reaffirm the `main`/`develop` branch and tag workflow.  
+- Verify `git status` shows a clean working directory (with only `.voder/` untracked but ignored).
 
 ## LATER
-- Introduce a GitHub Actions secret-scanning job (e.g. TruffleHog or GitHub Advanced Security).  
-- Integrate semantic-release (or changesets) for automated version bumps and changelog generation.  
-- Add CI guardrails for lockfile consistency (e.g. `npm ci --dry-run`) and explore caching/batching of `npm view` calls to boost CLI performance.
+- Configure GitHub branch protection rules to require pull-request reviews on `main` and `develop`.  
+- Integrate semantic-release (or changesets) for automated version bumps and changelog generation on tag pushes.  
+- Add CI checks for lockfile consistency (e.g. `npm ci --dry-run`) and investigate caching frequent `npm view` calls to speed up the CLI.

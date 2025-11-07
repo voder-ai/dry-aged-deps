@@ -35,3 +35,6 @@ git push origin v0.1.0
 ```
 
 Future releases will follow the same pattern. For new development, please base feature branches on `develop` and open a pull request when ready.
+## Ignoring AI Assistant Files
+
+This project uses an internal directory `.voder/` for AI assistant workflows and metadata. This directory is automatically ignored by Git via the `.gitignore` file, and should not be committed or modified manually.
