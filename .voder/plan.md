@@ -1,16 +1,12 @@
 ## NOW
-Update the CI workflow (`.github/workflows/ci.yml`) to add a **Commit Message Lint** step that runs commitlint against the pushed commits (for example, right before the existing “Lint code” step, invoke  
-```bash
-npx --no-install commitlint --config commitlint.config.cjs --from=origin/main --to=HEAD
-```  
-to ensure all commit messages in CI conform to your commitlint rules).
+Generate and commit the project root package-lock.json file to version control to ensure reproducible installs.
 
 ## NEXT
-- Create a pull-request template at `.github/pull_request_template.md` that includes a checklist item for “All CI checks passed (including commit message linting)”.  
-- Update **docs/developer-guidelines.md** (and optionally **docs/branching.md**) to document the new CI commit-message validation requirement and reference the PR template.  
-- Modify the existing checkout step in `ci.yml` to use `fetch-depth: 0` so that commitlint can see the full commit history for linting the range.
+- Add and commit `package-lock.json` files in **each** test fixture directory (`test/fixtures/` and `test/fixtures-up-to-date/`).
+- Update the fixture setup in `test/cli.outdated.test.js` and `test/cli.upToDate.test.js` to install dependencies with `npm ci --prefer-frozen-lockfile` instead of `npm install`.
+- Modify `.github/workflows/ci.yml` so that all dependency installs (root and fixtures) use `npm ci --prefer-frozen-lockfile` and fail immediately if the lockfile is out of sync.
 
 ## LATER
-- Automate branch-protection configuration (via GitHub’s REST API or a dedicated GitHub Action) to require the following status checks on `main` before merging: Commit Message Lint, ESLint, Vitest, and npm audit.  
-- Add a Husky **pre-push** hook to run `npm ci && npm run lint` locally before any push.  
-- Configure CI caching for the npm cache and `test/fixtures/node_modules` to speed up CI runs.
+- Configure GitHub Actions cache for `~/.npm` and fixture `node_modules` to speed up CI builds.
+- Add a CI validation step that runs `npm ci --prefer-frozen-lockfile` and checks for lockfile drift (e.g., fail if it would update the lockfile).
+- Introduce a Husky pre-push hook to automatically verify lockfile consistency before any push.
