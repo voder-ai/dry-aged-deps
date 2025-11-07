@@ -1,10 +1,22 @@
 version: 2
 updates:
-  - package-ecosystem: 'npm'
-    directory: '/'
+  # Weekly version updates for direct dependencies (prod & dev)
+  - package-ecosystem: "npm"
+    directory: "/"
     schedule:
-      interval: 'weekly'
-    open-pull-requests-limit: 5
+      interval: "weekly"
+    open-pull-requests-limit: 10
     commit-message:
-      prefix: 'chore'
-      include: 'scope'
+      prefix: "chore"
+      include: "scope"
+
+  # Daily security-only updates
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 20
+    security-updates-only: true
+    commit-message:
+      prefix: "fix"
+      include: "scope"

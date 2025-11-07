@@ -1,12 +1,12 @@
-## NOW  
-Delete the redundant `.github/workflows/codeql-analysis.yml` file from the repository.  
+## NOW
+Generate and commit the `package-lock.json` file to the repository (run `npm install` at the project root and add the resulting lockfile under version control).
 
-## NEXT  
-- Install `semantic-release` and `@semantic-release/npm` as devDependencies in `package.json`.  
-- Create a `.releaserc.json` file configuring `semantic-release` for the `main` branch with plugins: `@semantic-release/commit-analyzer`, `@semantic-release/release-notes-generator`, `@semantic-release/npm`, and `@semantic-release/github`.  
-- Update `.github/workflows/ci-publish.yml` to replace the manual `npm publish` step with a `npx semantic-release` step that runs on every push to `main`.  
+## NEXT
+- Update every CI job (build, test, E2E, audit) to install via `npm ci --prefer-frozen-lockfile`, ensuring the lockfile is respected.  
+- Enhance `.github/dependabot.yml` to watch both dependencies and devDependencies, adjust the update schedule/PR limits as needed, and enable security-only and version-bump PRs.  
+- Add a CI “lockfile drift” step that runs `npm ci --package-lock-only` after checkout and fails if the lockfile changes.
 
-## LATER  
-- Add staged-rollout/canary jobs and automated health-check tests in the CI pipeline.  
-- Expand the workflow matrix to test against multiple Node.js versions.  
-- Integrate notifications (e.g., Slack) and changelog generation plugins into `semantic-release`.
+## LATER
+- Evaluate migrating to Renovate for more granular grouping, auto-merge, and schedule control of dependency bumps.  
+- Configure auto-merge for non-breaking (patch/minor) dependency PRs once CI passes.  
+- Integrate deeper SCA tooling (e.g., Snyk or GitHub’s Advisory Database) for automated vulnerability remediation.
