@@ -1,14 +1,12 @@
 ## NOW
-Create a new module `src/fetch-version-times.js` that exports a function `fetchVersionTimes(packageName)` which uses `child_process.execSync('npm view <packageName> time --json')` to retrieve and parse a map of version→publish-date.
+Add a GitHub Actions workflow at `.github/workflows/ci.yml` that runs on `push`/`pull_request`, checks out the code, sets up Node.js, installs dependencies (`npm ci`), runs `npm test` and `npm run test:cli`, and performs a vulnerability scan with `npm audit --audit-level=moderate`.
 
 ## NEXT
-- Add a module `src/age-calculator.js` with `calculateAgeInDays(publishDate)` that computes days since publication.
-- In `bin/dry-aged-deps.js`, for each outdated package invoke `fetchVersionTimes`, filter to versions newer than `current`, compute their ages via `calculateAgeInDays`, and include an “Age” column in the printed table.
-- Write unit tests for `fetchVersionTimes` (mocking `child_process.execSync`) and `calculateAgeInDays` in the `test/` directory.
+- Modify all `execSync` invocations (in `src/fetch-version-times.js` and `bin/dry-aged-deps.js`) to validate `packageName` against a strict regex (e.g. `/^[a-z0-9@\-/_\.]+$/i`) and switch to `child_process.execFileSync` or `spawnSync` with argument arrays to eliminate shell‐injection risk.  
+- Enhance the CI workflow to fail on any audit errors by upgrading the audit step to `npm audit --audit-level=high`.  
+- Add a security-focused ESLint plugin (e.g. `eslint-plugin-security`) and include a lint step in the CI workflow.
 
 ## LATER
-- Format age into human-readable strings (e.g. “3 days ago”, “2 months ago”) with color-coded freshness indicators.
-- Implement the 7-day maturity filter to skip versions younger than the threshold and clearly indicate skipped packages.
-- Add a CLI option (e.g. `--min-age`) to configure the minimum age threshold.
-- Update README with examples showing the new “Age” column and flag usage.
-- Expand integration tests to cover end-to-end scenarios with mocked npm view data.
+- Integrate a third‐party security scanner (e.g. Snyk or GitHub CodeQL) into CI.  
+- Enable Dependabot or Renovate to auto-open PRs for dependency updates.  
+- Document the sanitization rules and CI security checks in the README and developer guide.
