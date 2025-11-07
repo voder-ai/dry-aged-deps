@@ -99,6 +99,8 @@ Use Markdown Architectural Decision Records (MADR) format for architectural deci
 
 ## CI/CD
 
+The CI pipeline includes a commit message lint step that verifies commit messages adhere to Conventional Commits. A pull request template is provided at `.github/pull_request_template.md`; please follow this template when creating PRs.
+
 All changes must pass CI checks:
 
 - Linting
