@@ -1,17 +1,12 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
+import { fetchVersionTimes } from '../src/fetch-version-times';
 
-// Mock child_process execSync before importing the module
-vi.mock('child_process', () => ({
-  execSync: vi.fn(),
-}));
-
-// Import the module under test
-import * as fetchModule from '../src/fetch-version-times';
-const { fetchVersionTimes } = fetchModule;
+// Use real child_process module and spy on execSync
+const cp = require('child_process');
 
 describe('fetchVersionTimes', () => {
   afterEach(() => {
-    vi.clearAllMocks();
+    vi.restoreAllMocks();
   });
 
   it('parses npm view output and excludes created and modified entries', () => {
@@ -21,12 +16,11 @@ describe('fetchVersionTimes', () => {
       '1.0.0': '2022-01-01T00:00:00Z',
       '2.0.0': '2023-01-01T00:00:00Z',
     });
-    // Get the mocked execSync
-    const { execSync } = require('child_process');
-    execSync.mockReturnValue(mockOutput);
+    // Spy on execSync to return mockOutput
+    vi.spyOn(cp, 'execSync').mockReturnValue(mockOutput);
 
     const result = fetchVersionTimes('mypackage');
-    expect(execSync).toHaveBeenCalledWith('npm view mypackage time --json', { encoding: 'utf8' });
+    expect(cp.execSync).toHaveBeenCalledWith('npm view mypackage time --json', { encoding: 'utf8' });
     expect(result).toEqual({
       '1.0.0': '2022-01-01T00:00:00Z',
       '2.0.0': '2023-01-01T00:00:00Z',
