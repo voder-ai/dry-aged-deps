@@ -126,3 +126,4 @@ docs/generated/
 # Package lock files (choose one based on package manager preference)
 # package-lock.json  # Uncomment if using yarn exclusively
 # yarn.lock         # Uncomment if using npm exclusively
+
