@@ -1,30 +1,33 @@
 ## NOW
-Run:
-```
-npm install --save-dev @commitlint/cli @commitlint/config-conventional husky
-```
+Add an inline ESLint disable comment in `src/fetch-version-times.js` to silence the `security/detect-object-injection` warning on the `versionTimes[version] = time;` line.
 
 ## NEXT
-- Initialize Husky hooks:  
+- Install Prettier as a dev dependency:  
+  ```bash
+  npm install --save-dev prettier
   ```
-  npx husky install
+- Create a `.prettierrc` at the project root with your style rules, for example:
+  ```json
+  {
+    "semi": true,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "es5"
+  }
   ```
-- Add a commit‐msg hook for commitlint:  
-  ```
-  npx husky add .husky/commit-msg "npx --no-install commitlint --edit $1"
-  ```
-- Create `commitlint.config.js` at the project root with:  
-  ```js
-  module.exports = { extends: ['@commitlint/config-conventional'] };
-  ```
-- Update `docs/developer-guidelines.md` to document the Conventional Commits format and enforce trunk-based branching (remove any “develop” branch references).
-- Remove the remote and local `develop` branches to align with trunk-based development:  
-  ```
-  git push origin --delete develop
-  git branch -d develop
+- Add a formatting script to `package.json`:
+  ```diff
+    "scripts": {
+  +   "format": "prettier --write .",
+      "start": "node ./bin/dry-aged-deps.js",
+      "test": "vitest --coverage",
+      "test:cli": "vitest",
+      "lint": "eslint"
+    },
   ```
 
 ## LATER
-- Add a `.gitattributes` file at the root to enforce consistent line endings and diff behavior.
-- Integrate `semantic-release` (or configured GitHub Action) for automated version bumping and changelog generation.
-- Create `CONTRIBUTING.md` with detailed guidelines on commit message conventions, branch naming, and repository history best practices.
+- Create a `.prettierignore` to exclude files and folders (e.g., `node_modules/`, `dist/`, `coverage/`).
+- Integrate Prettier into Husky via `lint-staged` for pre-commit auto-formatting.
+- Add a CI check (e.g., `npm run format -- --check`) to the GitHub Actions pipeline.
+- Document the project’s formatting conventions in `docs/developer-guidelines.md`.

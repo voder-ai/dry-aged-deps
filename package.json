@@ -9,6 +9,7 @@
     "node": ">=18.0.0"
   },
   "scripts": {
+    "format": "prettier --write .",
     "start": "node ./bin/dry-aged-deps.js",
     "test": "vitest --coverage",
     "test:cli": "vitest",
@@ -25,6 +26,7 @@
     "execa": "9.6.0",
     "globals": "^16.5.0",
     "husky": "^9.1.7",
+    "prettier": "^3.6.2",
     "vitest": "4.0.7"
   },
   "license": "MIT"
