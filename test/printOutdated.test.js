@@ -31,7 +31,10 @@ describe('printOutdated', () => {
     const data = {
       mypkg: { current: '1.0.0', wanted: '1.5.0', latest: '2.0.0' }
     };
-    printOutdated(data);
+    printOutdated(data, {
+      fetchVersionTimes: fetchModule.fetchVersionTimes,
+      calculateAgeInDays: ageModule.calculateAgeInDays,
+    });
 
     // Expect first console.log: header title
     expect(logSpy.mock.calls[0][0]).toBe('Outdated packages:');
@@ -46,11 +49,16 @@ describe('printOutdated', () => {
     vi.spyOn(fetchModule, 'fetchVersionTimes').mockImplementation(() => {
       throw new Error('failed');
     });
+    // Stub calculateAgeInDays to ensure it's not called when fetch fails
+    vi.spyOn(ageModule, 'calculateAgeInDays');
 
     const data = {
       otherpkg: { current: '0.1.0', wanted: '0.2.0', latest: '0.3.0' }
     };
-    printOutdated(data);
+    printOutdated(data, {
+      fetchVersionTimes: fetchModule.fetchVersionTimes,
+      calculateAgeInDays: ageModule.calculateAgeInDays,
+    });
 
     // Expect N/A age
     const lastCall = logSpy.mock.calls[2][0];
@@ -60,5 +68,7 @@ describe('printOutdated', () => {
     expect(cols[2]).toBe('0.2.0');
     expect(cols[3]).toBe('0.3.0');
     expect(cols[4]).toBe('N/A');
+    // calculateAgeInDays should not have been called
+    expect(ageModule.calculateAgeInDays).not.toHaveBeenCalled();
   });
 });
