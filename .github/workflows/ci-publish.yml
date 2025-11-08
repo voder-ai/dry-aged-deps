@@ -82,7 +82,7 @@ jobs:
           fi
 
       - name: Vulnerability scan
-        run: npm audit --audit-level=moderate
+        run: npm audit --audit-level=moderate --production
 
   publish:
     if: ${{ github.event_name == 'push' }}
