@@ -54,7 +54,8 @@ export async function fetchVersionTimes(packageName) {
       }
       if (attempt < maxRetries) {
         attempt++;
-        await new Promise((res) => setTimeout(res, retryDelayMs));
+        const delay = retryDelayMs * 2 ** attempt;
+        await new Promise((res) => setTimeout(res, delay));
         continue;
       }
       throw err;

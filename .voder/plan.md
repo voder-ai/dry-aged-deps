@@ -1,15 +1,16 @@
 ## NOW  
-Run the real‐fixture E2E test locally to reproduce the CI failure:  
+Run the real-fixture E2E test locally to reproduce the CI failure:  
 ```bash
 npm run test:cli -- test/cli.e2e.real-fixture.test.js
 ```
 
 ## NEXT  
-- Examine the failure output from that test to pinpoint flaky behavior (timeouts, network errors, assertion errors).  
-- Adjust the E2E test or its fixture (e.g. bump Vitest timeout, mock or stub network calls) so it reliably passes.  
-- Add a retry or timeout wrapper around the `execFile` call in `src/fetch-version-times.js` to guard against transient npm registry hiccups.
+- Examine the exact failure output (stack trace, timeout or network error) from the locally-run E2E test to pinpoint the root cause.  
+- Increase the Vitest timeout for that test: set `test.timeout` to `60000` in `vitest.config.js` and bump the `it(..., 30000)` call in `test/cli.e2e.real-fixture.test.js` to `60000`.  
+- Modify the E2E fixture install to use an offline-first command (`npm ci --prefer-offline --ignore-scripts --no-audit --omit=dev`) to remove external registry variability.  
+- Enhance `src/fetch-version-times.js` retry logic with exponential backoff (e.g. increase `retryDelayMs` and cap retries) to absorb transient npm registry hiccups.
 
 ## LATER  
-- Instrument CI to track and alert on test flakiness (e.g. record test durations, failure rates).  
-- Introduce caching or stubbing of npm registry responses in E2E tests to eliminate external dependencies.  
-- Regularly audit `.github/workflows/ci-publish.yml` and `.gitignore` to ensure only relevant files are checked and that CI stages remain fast and stable.
+- Introduce a local cache or lightweight private registry (e.g., Verdaccio) in CI to serve `npm outdated` and `npm view` responses deterministically.  
+- Add CI telemetry (e.g., test duration and failure‐rate metrics) and alerts for flakiness.  
+- Periodically review and prune or parallelize slow or brittle tests to keep the pipeline fast and stable.

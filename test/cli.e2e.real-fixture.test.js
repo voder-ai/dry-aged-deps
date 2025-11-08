@@ -20,7 +20,7 @@ describe('dry-aged-deps CLI E2E with real fixture', () => {
     // Install production dependencies for fixture project
     await execa(
       'npm',
-      ['install', '--ignore-scripts', '--no-audit', '--no-fund', '--omit=dev'],
+      ['install', '--prefer-offline', '--ignore-scripts', '--no-audit', '--no-fund', '--omit=dev'],
       {
         cwd: fixturesDir,
         env: process.env,
@@ -66,5 +66,5 @@ describe('dry-aged-deps CLI E2E with real fixture', () => {
       }
     }
     expect(foundPositive).toBe(true);
-  }, 30000);
+  }, 60000);
 });
