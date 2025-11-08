@@ -128,6 +128,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Publish to npm with provenance
+        run: npm publish --provenance --access public
+
       - name: Smoke test published package
         run: |
           echo "Smoke testing dry-aged-deps CLI"
