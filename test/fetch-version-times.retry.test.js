@@ -42,7 +42,9 @@ describe('fetchVersionTimes retry logic', () => {
       callback(new Error('Persistent error'), null, '');
     });
 
-    await expect(fetchVersionTimes('anotherpkg')).rejects.toThrow('Persistent error');
+    await expect(fetchVersionTimes('anotherpkg')).rejects.toThrow(
+      'Persistent error'
+    );
     // maxRetries = 2 + initial try = total of 3 calls
     expect(execFile).toHaveBeenCalledTimes(3);
   });
