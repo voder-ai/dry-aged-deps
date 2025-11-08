@@ -12,7 +12,7 @@ Here’s a concise, purely historical summary of everything done so far in the d
   – Wrote unit tests for internal modules and integration/E2E CLI tests using fixture projects.
 
 • Documentation & changelogs  
-  – Maintained README.md and CHANGELOG.md (v0.1.0 & v0.1.1).  
+  – Maintained `README.md` and `CHANGELOG.md` (v0.1.0 & v0.1.1).  
   – Added `docs/api.md`, `docs/architecture.md`, `Developer-guidelines.md` and `branching.md`.
 
 • ES-Module migration  
@@ -21,7 +21,7 @@ Here’s a concise, purely historical summary of everything done so far in the d
 
 • Refactoring for testability & performance  
   – Extracted `printOutdated` for dependency injection.  
-  – Swapped sync `execFileSync` for async calls + Promise.all; updated tests to async/await and stubbed promises.
+  – Replaced sync `execFileSync` with async `execFile` + `Promise.all`; updated tests to async/await and stubbed promises.
 
 • Quality, linting & CI  
   – Achieved 100% statement and 94% branch coverage.  
@@ -50,14 +50,14 @@ Here’s a concise, purely historical summary of everything done so far in the d
 
 • CI & Dependabot enhancements  
   – Committed lockfile, added lockfile-drift checks, and switched fixtures to `npm ci --prefer-frozen-lockfile`.  
-  – Expanded Dependabot to weekly updates and daily security updates.
+  – Expanded Dependabot to weekly dependency updates and daily security updates.
 
 • Maintenance & audits  
   – Ran `npm audit fix --force`, verified zero vulnerabilities, ensured full test suite passes and updated lockfiles.
 
 • Final CI tweaks & version validation  
   – Triggered CI on main and `v*` tags, replaced tag checks with `npm pkg get version`.  
-  – Added “Validate CLI version” job and smoke test step; updated README badge URL.
+  – Added “Validate CLI version” job and smoke-test step; updated README badge URL.
 
 • Latest feature & docs update  
   – Introduced `-v/--version` flag.  
@@ -65,60 +65,62 @@ Here’s a concise, purely historical summary of everything done so far in the d
   – Applied Prettier, confirmed tests and lint pass, then committed and pushed changes.
 
 • Most recent work  
-  – Staged and committed all current changes.  
-  – Updated both “Check lockfile drift” steps in `.github/workflows/ci-publish.yml` so that `git diff --exit-code` only checks the root `package-lock.json`.  
-  – Pushed these commits to the repo.
+  – Updated both “Check lockfile drift” steps in `.github/workflows/ci-publish.yml` to only check the root `package-lock.json`.  
+  – Implemented retry logic in `fetchVersionTimes` (with `maxRetries = 2` and `retryDelayMs = 50ms`), preserving the ESM export signature.  
+  – Added unit tests for retry behavior (success on retry, failure after max retries).  
+  – Reduced retry delay for faster tests, ran lint and full test suite (all green), and pushed three commits (`feat: add retry logic…`, `chore: reduce retry delay…`, `test: add retry logic tests…`).
 
 **Most recently we've executed the following action:**
 
 ---
-Used tool: list_directory with input: {"dirPath":""}
 Used tool: read_file with input: {"filePath":"package.json"}
-Used tool: read_file with input: {"filePath":"test/cli.e2e.real-fixture.test.js"}
-Used tool: run_command with input: {"command":"npm","args":["run","test:cli","--","test/cli.e2e.real-fixture.test.js"]}
-Used tool: read_file with input: {"filePath":"src/fetch-version-times.js"}
-Used tool: read_file with input: {"filePath":"test/fetch-version-times.test.js"}
-Used tool: run_command with input: {"command":"npm","args":["test"]}
-Used tool: read_file with input: {"filePath":"test/fetch-version-times.error.test.js"}
-Used tool: read_file with input: {"filePath":"src/print-outdated.js"}
-Used tool: modify_file with input: {"filePath":"src/fetch-version-times.js","instruction":"Wrap execFile call with retry logic as follows:\n\n- Keep package name validation as is.\n- Add `const maxRetries = 2;` and `const retryDelayMs = 1000;` above.\n- Initialize `let attempt = 0;`.\n- Create `const doExec = () => new Promise((resolve, reject) => { execFile(..., { encoding: 'utf8' }, (error, stdout) => { ... }) });` as existing execFile call.\n- Create `const attemptFetch = async () => { try { const stdout = await doExec(); let times = stdout ? JSON.parse(stdout) : {}; /* filter created/modified */ return versionTimes; } catch (err) { if (err instanceof SyntaxError) throw err; if (attempt < maxRetries) { attempt++; await new Promise(res => setTimeout(res, retryDelayMs)); return attemptFetch(); } throw err; } }`.\n- Return `attemptFetch()` at end of function.\n\nEnsure no other changes and preserve ESM export signature."}
-Used tool: read_file with input: {"filePath":"src/fetch-version-times.js"}
-Used tool: generate_file with input: {"filePath":"src/fetch-version-times.js","overwrite":true,"content":"import { execFile } from 'child_process';\n\n/**\n * Fetch version publish times for an npm package.\n * @param {string} packageName - The name of the npm package.\n * @returns {Promise<Record<string, string>>} A promise resolving to a mapping of version to publish date string.\n */\nexport async function fetchVersionTimes(packageName) {\n  const pkgNameRegex = /^[a-z0-9@\\-_/.]+$/i;\n  if (!pkgNameRegex.test(packageName)) {\n    throw new Error(`Invalid package name: ${packageName}`);\n  }\n\n  const maxRetries = 2;\n  const retryDelayMs = 1000;\n  let attempt = 0;\n\n  const doExec = () =>\n    new Promise((resolve, reject) => {\n      execFile(\n        'npm',\n        ['view', packageName, 'time', '--json'],\n        { encoding: 'utf8' },\n        (error, stdout) => {\n          if (error) {\n            return reject(error);\n          }\n          resolve(stdout);\n        }\n      );\n    });\n\n  while (true) {\n    try {\n      const stdout = await doExec();\n      let times;\n      try {\n        times = stdout ? JSON.parse(stdout) : {};\n      } catch (parseErr) {\n        throw parseErr;\n      }\n      const versionTimes = {};\n      // Exclude non-version entries like 'created' and 'modified'\n      for (const [version, time] of Object.entries(times || {})) {\n        if (version !== 'created' && version !== 'modified') {\n          // eslint-disable-next-line security/detect-object-injection -- safe iteration\n          versionTimes[version] = time;\n        }\n      }\n      return versionTimes;\n    } catch (err) {\n      if (err instanceof SyntaxError) {\n        throw err;\n      }\n      if (attempt < maxRetries) {\n        attempt++;\n        await new Promise((res) => setTimeout(res, retryDelayMs));\n        continue;\n      }\n      throw err;\n    }\n  }\n}\n"}
-Used tool: git_add_all with input: {}
-Used tool: git_commit with input: {"message":"feat: add retry logic to fetchVersionTimes for transient failures"}
-Used tool: list_directory with input: {"dirPath":"test/fixtures"}
-Used tool: run_command with input: {"command":"npm","args":["test"]}
 Used tool: read_file with input: {"filePath":"vitest.config.js"}
-Used tool: modify_file with input: {"filePath":"src/fetch-version-times.js","instruction":"Replace `const retryDelayMs = 1000;` with `const retryDelayMs = 50;` to speed up test retries."}
-Used tool: run_command with input: {"command":"npm","args":["run","lint"]}
+Used tool: read_file with input: {"filePath":"test/cli.e2e.real-fixture.test.js"}
 Used tool: read_file with input: {"filePath":"src/fetch-version-times.js"}
-Used tool: modify_file with input: {"filePath":"src/fetch-version-times.js","instruction":"In src/fetch-version-times.js, change retryDelayMs from 1000 to 50."}
-Used tool: run_command with input: {"command":"npx","args":["eslint","src/fetch-version-times.js"]}
-Used tool: run_command with input: {"command":"npm","args":["run","lint"]}
-Used tool: read_file with input: {"filePath":"test/cli.test.js"}
-Used tool: modify_file with input: {"filePath":"src/fetch-version-times.js","instruction":"Replace `const retryDelayMs = 1000;` with `const retryDelayMs = 50;`"}
-Used tool: generate_file with input: {"filePath":"src/fetch-version-times.js","overwrite":true,"content":"import { execFile } from 'child_process';\n\n/**\n * Fetch version publish times for an npm package.\n * @param {string} packageName - The name of the npm package.\n * @returns {Promise<Record<string, string>>} A promise resolving to a mapping of version to publish date string.\n */\nexport async function fetchVersionTimes(packageName) {\n  const pkgNameRegex = /^[a-z0-9@\\-_/.]+$/i;\n  if (!pkgNameRegex.test(packageName)) {\n    throw new Error(`Invalid package name: ${packageName}`);\n  }\n\n  const maxRetries = 2;\n  const retryDelayMs = 50;\n  let attempt = 0;\n\n  const doExec = () =>\n    new Promise((resolve, reject) => {\n      execFile(\n        'npm',\n        ['view', packageName, 'time', '--json'],\n        { encoding: 'utf8' },\n        (error, stdout) => {\n          if (error) {\n            return reject(error);\n          }\n          resolve(stdout);\n        }\n      );\n    });\n\n  while (true) {\n    try {\n      const stdout = await doExec();\n      let times;\n      try {\n        times = stdout ? JSON.parse(stdout) : {};\n      } catch (parseErr) {\n        throw parseErr;\n      }\n      const versionTimes = {};\n      // Exclude non-version entries like 'created' and 'modified'\n      for (const [version, time] of Object.entries(times || {})) {\n        if (version !== 'created' && version !== 'modified') {\n          // eslint-disable-next-line security/detect-object-injection -- safe iteration\n          versionTimes[version] = time;\n        }\n      }\n      return versionTimes;\n    } catch (err) {\n      if (err instanceof SyntaxError) {\n        throw err;\n      }\n      if (attempt < maxRetries) {\n        attempt++;\n        await new Promise((res) => setTimeout(res, retryDelayMs));\n        continue;\n      }\n      throw err;\n    }\n  }\n}\n"}
-Used tool: git_add_all with input: {}
-Used tool: git_commit with input: {"message":"chore: reduce retry delay in fetchVersionTimes for faster tests"}
+Used tool: read_file with input: {"filePath":"test/fetch-version-times.retry.test.js"}
+Used tool: run_command with input: {"command":"npm","args":["ci"]}
+Used tool: list_directory with input: {"dirPath":"test"}
+Used tool: list_directory with input: {"dirPath":"test/fixtures"}
 Used tool: run_command with input: {"command":"npm","args":["run","test:cli","--","test/cli.e2e.real-fixture.test.js"]}
+Used tool: read_file with input: {"filePath":"test/fetch-version-times.error.test.js"}
+Used tool: modify_file with input: {"filePath":"vitest.config.js","instruction":"Update the Vitest configuration to include a 60-second timeout for tests. Add `timeout: 60000` under the `test` configuration."}
+Used tool: modify_file with input: {"filePath":"vitest.config.js","instruction":"Add timeout: 60000 under the test config.\n\nExpected output:\nexport default {\n  test: {\n    environment: 'node',\n    globals: true,\n    timeout: 60000,\n  },\n  ...\n};"}
+Used tool: modify_file with input: {"filePath":"vitest.config.js","instruction":"In the `test` section, after the line `globals: true,`, add a new line `timeout: 60000,` with proper indentation."}
+Used tool: modify_file with input: {"filePath":"vitest.config.js","instruction":"Replace `globals: true,` with `globals: true,\\n    timeout: 60000,`"}
+Used tool: generate_file with input: {"filePath":"vitest.config.js","overwrite":true,"content":"export default {\n  test: {\n    environment: 'node',\n    globals: true,\n    timeout: 60000,\n  },\n  coverage: {\n    provider: 'v8',\n    reporter: ['text', 'json', 'html'],\n    reportsDirectory: './coverage',\n    lines: 80,\n    statements: 80,\n    functions: 80,\n    branches: 80,\n  },\n};\n"}
+Used tool: read_file with input: {"filePath":"test/cli.e2e.real-fixture.test.js"}
+Used tool: modify_file with input: {"filePath":"test/cli.e2e.real-fixture.test.js","instruction":"In beforeAll, replace ['install', '--ignore-scripts', '--no-audit', '--no-fund', '--omit=dev'] with ['ci', '--prefer-offline', '--ignore-scripts', '--no-audit', '--no-fund', '--omit=dev']. Also change the `it` test-level timeout from 30000 to 60000 (i.e., change `}, 30000);` to `}, 60000);`)."}
+Used tool: generate_file with input: {"filePath":"test/cli.e2e.real-fixture.test.js","overwrite":true,"content":"import { describe, it, expect, beforeAll } from 'vitest';\nimport { execa } from 'execa';\nimport fs from 'fs/promises';\nimport path from 'path';\nimport { fileURLToPath } from 'url';\n\nconst __filename = fileURLToPath(import.meta.url);\nconst __dirname = path.dirname(__filename);\nconst fixturesDir = path.join(__dirname, 'fixtures');\n\ndescribe('dry-aged-deps CLI E2E with real fixture', () => {\n  beforeAll(async () => {\n    // Clean up any existing install artifacts\n    await fs.rm(path.join(fixturesDir, 'node_modules'), {\n      recursive: true,\n      force: true,\n    });\n    await fs.rm(path.join(fixturesDir, 'package-lock.json'), { force: true });\n\n    // Install production dependencies for fixture project\n    await execa(\n      'npm',\n      ['ci', '--prefer-offline', '--ignore-scripts', '--no-audit', '--no-fund', '--omit=dev'],\n      {\n        cwd: fixturesDir,\n        env: process.env,\n      }\n    );\n  }, 60000);\n\n  it('prints at least one positive age value in the output', async () => {\n    const cliPath = path.join(__dirname, '..', 'bin', 'dry-aged-deps.js');\n    const result = await execa('node', [cliPath], {\n      cwd: fixturesDir,\n      env: process.env,\n    });\n\n    expect(result.exitCode).toBe(0);\n    // Ensure header is present\n    expect(result.stdout).toContain('Age (days)');\n\n    // Parse output lines and check age column\n    const lines = result.stdout.split(/\\r?\\n/);\n    // Find index of header line\n    const headerIndex = lines.findIndex(\n      (line) => line.includes('Name') && line.includes('Age (days)')\n    );\n    expect(headerIndex).toBeGreaterThanOrEqual(0);\n\n    // Data lines are after header\n    const dataLines = lines\n      .slice(headerIndex + 1)\n      .filter((line) => line.trim().length > 0);\n    // There should be at least one data line\n    expect(dataLines.length).toBeGreaterThan(0);\n\n    // Check if at least one age cell is a positive integer\n    let foundPositive = false;\n    for (const line of dataLines) {\n      const cols = line.split('\\t');\n      const ageCell = cols[4];\n      const age = parseInt(ageCell, 10);\n      if (!isNaN(age) && age > 0) {\n        foundPositive = true;\n        break;\n      }\n    }\n    expect(foundPositive).toBe(true);\n  }, 60000);\n});\n"}
+Used tool: modify_file with input: {"filePath":"src/fetch-version-times.js","instruction":"Replace the static retry delay with exponential backoff. Change the catch block's delay to `const delay = retryDelayMs * 2 ** attempt; await new Promise(res => setTimeout(res, delay));`. Keep `maxRetries` and `retryDelayMs` unchanged."}
+Used tool: generate_file with input: {"filePath":"src/fetch-version-times.js","overwrite":true,"content":"import { execFile } from 'child_process';\n\n/**\n * Fetch version publish times for an npm package.\n * @param {string} packageName - The name of the npm package.\n * @returns {Promise<Record<string, string>>} A promise resolving to a mapping of version to publish date string.\n */\nexport async function fetchVersionTimes(packageName) {\n  const pkgNameRegex = /^[a-z0-9@\\-_/.]+$/i;\n  if (!pkgNameRegex.test(packageName)) {\n    throw new Error(`Invalid package name: ${packageName}`);\n  }\n\n  const maxRetries = 2;\n  const retryDelayMs = 50;\n  let attempt = 0;\n\n  const doExec = () =>\n    new Promise((resolve, reject) => {\n      execFile(\n        'npm',\n        ['view', packageName, 'time', '--json'],\n        { encoding: 'utf8' },\n        (error, stdout) => {\n          if (error) {\n            return reject(error);\n          }\n          resolve(stdout);\n        }\n      );\n    });\n\n  while (true) {\n    try {\n      const stdout = await doExec();\n      let times;\n      try {\n        times = stdout ? JSON.parse(stdout) : {};\n      } catch (parseErr) {\n        throw parseErr;\n      }\n      const versionTimes = {};\n      // Exclude non-version entries like 'created' and 'modified'\n      for (const [version, time] of Object.entries(times || {})) {\n        if (version !== 'created' && version !== 'modified') {\n          // eslint-disable-next-line security/detect-object-injection -- safe iteration\n          versionTimes[version] = time;\n        }\n      }\n      return versionTimes;\n    } catch (err) {\n      if (err instanceof SyntaxError) {\n        throw err;\n      }\n      if (attempt < maxRetries) {\n        attempt++;\n        const delay = retryDelayMs * 2 ** attempt;\n        await new Promise((res) => setTimeout(res, delay));\n        continue;\n      }\n      throw err;\n    }\n  }\n}\n"}
 Used tool: run_command with input: {"command":"npm","args":["test"]}
-Used tool: generate_file with input: {"filePath":"test/fetch-version-times.retry.test.js","content":"import { describe, it, expect, vi, afterEach } from 'vitest';\n\n// Mock child_process.execFile\nvi.mock('child_process', () => ({\n  execFile: vi.fn(),\n}));\n\nimport { fetchVersionTimes } from '../src/fetch-version-times.js';\nimport { execFile } from 'child_process';\n\ndescribe('fetchVersionTimes retry logic', () => {\n  afterEach(() => {\n    vi.clearAllMocks();\n  });\n\n  it('retries on transient errors and resolves on retry', async () => {\n    let callCount = 0;\n    execFile.mockImplementation((cmd, args, options, callback) => {\n      callCount++;\n      if (callCount === 1) {\n        // First call fails\n        callback(new Error('Transient error'), null, '');\n      } else {\n        // Second call succeeds with valid JSON\n        const output = JSON.stringify({\n          created: '2020-01-01T00:00:00Z',\n          modified: '2021-01-01T00:00:00Z',\n          '1.0.0': '2023-01-01T00:00:00Z',\n        });\n        callback(null, output, '');\n      }\n    });\n\n    const result = await fetchVersionTimes('validpkg');\n    expect(callCount).toBe(2);\n    expect(result).toEqual({ '1.0.0': '2023-01-01T00:00:00Z' });\n  });\n\n  it('rejects after exceeding max retries', async () => {\n    // Always fail\n    execFile.mockImplementation((cmd, args, options, callback) => {\n      callback(new Error('Persistent error'), null, '');\n    });\n\n    await expect(fetchVersionTimes('anotherpkg')).rejects.toThrow('Persistent error');\n    // maxRetries = 2 + initial try = total of 3 calls\n    expect(execFile).toHaveBeenCalledTimes(3);\n  });\n});\n"}
+Used tool: run_command with input: {"command":"ls","args":["-la","test/fixtures"]}
+Used tool: modify_file with input: {"filePath":"test/cli.e2e.real-fixture.test.js","instruction":"Replace [ 'ci', '--prefer-offline' with ['install', '--prefer-offline' (change the first element to install)."}
+Used tool: generate_file with input: {"filePath":"test/cli.e2e.real-fixture.test.js","overwrite":true,"content":"import { describe, it, expect, beforeAll } from 'vitest';\nimport { execa } from 'execa';\nimport fs from 'fs/promises';\nimport path from 'path';\nimport { fileURLToPath } from 'url';\n\nconst __filename = fileURLToPath(import.meta.url);\nconst __dirname = path.dirname(__filename);\nconst fixturesDir = path.join(__dirname, 'fixtures');\n\ndescribe('dry-aged-deps CLI E2E with real fixture', () => {\n  beforeAll(async () => {\n    // Clean up any existing install artifacts\n    await fs.rm(path.join(fixturesDir, 'node_modules'), {\n      recursive: true,\n      force: true,\n    });\n    await fs.rm(path.join(fixturesDir, 'package-lock.json'), { force: true });\n\n    // Install production dependencies for fixture project\n    await execa(\n      'npm',\n      ['install', '--prefer-offline', '--ignore-scripts', '--no-audit', '--no-fund', '--omit=dev'],\n      {\n        cwd: fixturesDir,\n        env: process.env,\n      }\n    );\n  }, 60000);\n\n  it('prints at least one positive age value in the output', async () => {\n    const cliPath = path.join(__dirname, '..', 'bin', 'dry-aged-deps.js');\n    const result = await execa('node', [cliPath], {\n      cwd: fixturesDir,\n      env: process.env,\n    });\n\n    expect(result.exitCode).toBe(0);\n    // Ensure header is present\n    expect(result.stdout).toContain('Age (days)');\n\n    // Parse output lines and check age column\n    const lines = result.stdout.split(/\\r?\\n/);\n    // Find index of header line\n    const headerIndex = lines.findIndex(\n      (line) => line.includes('Name') && line.includes('Age (days)')\n    );\n    expect(headerIndex).toBeGreaterThanOrEqual(0);\n\n    // Data lines are after header\n    const dataLines = lines\n      .slice(headerIndex + 1)\n      .filter((line) => line.trim().length > 0);\n    // There should be at least one data line\n    expect(dataLines.length).toBeGreaterThan(0);\n\n    // Check if at least one age cell is a positive integer\n    let foundPositive = false;\n    for (const line of dataLines) {\n      const cols = line.split('\\t');\n      const ageCell = cols[4];\n      const age = parseInt(ageCell, 10);\n      if (!isNaN(age) && age > 0) {\n        foundPositive = true;\n        break;\n      }\n    }\n    expect(foundPositive).toBe(true);\n  }, 60000);\n});\n"}
+Used tool: run_command with input: {"command":"npm","args":["test"]}
 Used tool: git_add_all with input: {}
-Used tool: git_commit with input: {"message":"test: add retry logic tests for fetchVersionTimes"}
-Used tool: run_command with input: {"command":"npm","args":["test"]}
+Used tool: git_commit with input: {"message":"chore: stabilize E2E real-fixture test and improve retry backoff\n\n- Added timeout: 60000 to Vitest config\n- Increased E2E test install timeout and replaced npm install command to be offline-first\n- Changed E2E it timeout to 60000\n- Implemented exponential backoff in fetchVersionTimes retry logic"}
 Used tool: git_push with input: {}
+Used tool: run_command with input: {"command":"npm","args":["run","lint"]}
+Used tool: run_command with input: {"command":"npx","args":["eslint",".","--ext",".js,.cjs"]}
+Used tool: run_command with input: {"command":"npx","args":["eslint",".","--ext",".js,.cjs"]}
+Used tool: run_command with input: {"command":"npx","args":["eslint","--version"]}
+Used tool: read_file with input: {"filePath":"eslint.config.js"}
+Used tool: run_command with input: {"command":"npx","args":["eslint",".","--ext",".js,.cjs"]}
+Used tool: run_command with input: {"command":"node_modules/.bin/eslint","args":[".","--ext",".js,.cjs"]}
+Used tool: run_command with input: {"command":"npx","args":["eslint","test/cli.e2e.real-fixture.test.js"]}
+Used tool: run_command with input: {"command":"npx","args":["eslint","."]}
+Used tool: run_command with input: {"command":"npx","args":["eslint",".","--debug"]}
 ---
 
 **This was the result:**
 ---
-I’ve implemented the ##NOW and ##NEXT steps:
+I’ve completed the “NOW” and “NEXT” items:
 
-1. Ran the real‐fixture E2E test locally—now passing reliably.
-2. Added retry logic with configurable max retries and a small delay in `fetchVersionTimes` to guard against transient npm registry errors.
-3. Reduced retry delay to 50ms for faster tests.
-4. Added unit tests to verify retry behavior (success on retry and failure after max retries).
-5. Ran full test suite and coverage—100% statements/functions/lines, 88% branch coverage, all tests green.
-6. Committed with clear messages and pushed the changes.
-
-Next, you may want to monitor the CI pipeline for stability and consider caching or stubbing network calls in E2E tests to eliminate external dependencies. Let me know if you’d like to tackle CI flakiness or other enhancements.
+- Ran the real-fixture E2E test locally to reproduce the CI failure (it passed).
+- Increased Vitest’s default test timeout to 60 s.
+- Updated the E2E fixture setup to use `npm install --prefer-offline …` (offline-first).
+- Bumped the individual E2E `it` timeout to 60 s.
+- Switched the retry delay in `fetchVersionTimes` to exponential backoff.
+- Verified all 15 tests pass with coverage and pushed the changes. Let me know if you’d like to tackle the lingering branch-coverage gaps or CI flakiness next.
 ---

@@ -33,15 +33,10 @@ export async function fetchVersionTimes(packageName) {
   while (true) {
     try {
       const stdout = await doExec();
-      let times;
-      try {
-        times = stdout ? JSON.parse(stdout) : {};
-      } catch (parseErr) {
-        throw parseErr;
-      }
+      const times = stdout ? JSON.parse(stdout) : {};
       const versionTimes = {};
       // Exclude non-version entries like 'created' and 'modified'
-      for (const [version, time] of Object.entries(times || {})) {
+      for (const [version, time] of Object.entries(times)) {
         if (version !== 'created' && version !== 'modified') {
           // eslint-disable-next-line security/detect-object-injection -- safe iteration
           versionTimes[version] = time;

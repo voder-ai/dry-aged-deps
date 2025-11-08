@@ -1,140 +1,136 @@
 # Implementation Progress Assessment
 
-**Generated:** 2025-11-08T09:58:48.301Z
+**Generated:** 2025-11-08T10:12:41.784Z
 
 ![Progress Chart](./progress-chart.png)
 
 Projection: flat (no recent upward trend)
 
-## IMPLEMENTATION STATUS: INCOMPLETE (88.38% ± 5% COMPLETE)
+## IMPLEMENTATION STATUS: INCOMPLETE (90.25% ± 12% COMPLETE)
 
 ## OVERALL ASSESSMENT
-All assessment areas except execution meet required thresholds; execution scored 85% against the 90% threshold, resulting in an incomplete overall status. Stabilize the CI pipeline to improve reliable CLI execution.
+The project excels in functionality, code quality, testing, execution, documentation, dependencies, and security, but the version control area falls below the required threshold due to pipeline instability, resulting in an overall incomplete status.
 
 ## NEXT PRIORITY
-Stabilize the CI pipeline to eliminate intermittent execution failures and ensure reliable CLI runs.
+Stabilize the CI pipeline and refine version control workflows to eliminate instability and meet branching policy requirements.
 
 
 
-## FUNCTIONALITY ASSESSMENT (90% ± 17% COMPLETE)
-- The CLI and core modules are fully implemented and tested, with all tests passing and real‐world e2e scenarios validated. Minor enhancements (additional flags, output formats) could further improve flexibility.
-- CLI entry point bin/dry-aged-deps.js correctly implements help, version, and main functionality
-- printOutdated, fetchVersionTimes, and age-calculator modules are covered by unit tests at 100% statement and line coverage
-- All 15 Vitest tests (including e2e with real fixtures) passed successfully
-- Running the CLI on this repo produced sensible output showing outdated dependencies and ages
-
-**Next Steps:**
-- Add flags for specifying a target project directory or output format (e.g., JSON)
-- Consider options to include or exclude devDependencies
-- Enhance error messages and retry logic for network failures
-- Provide a programmatic API example in README or code samples
-
-## CODE_QUALITY ASSESSMENT (90% ± 16% COMPLETE)
-- The project exhibits a high level of code quality with comprehensive tooling, consistent style, modular organization, and robust error handling, with only minor gaps in branch coverage and local lint execution.
-- ESLint is configured using the new flat config (eslint.config.js) with recommended and security rules
-- Prettier is set up via .prettierrc and integrated into npm scripts
-- Husky and commitlint enforce conventional commit messages
-- Vitest tests cover all source files, achieving 100% statement and function coverage
-- Modules are small, single-responsibility, and named consistently (camelCase)
-- Error handling in fetch-version-times and the CLI script correctly handles JSON parsing and execution errors
-- Minimal branch coverage gaps in fetch-version-times (retries) and print-outdated warning paths
-- Well-structured project layout (bin, src, test, docs, CI workflows)
+## FUNCTIONALITY ASSESSMENT (90% ± 15% COMPLETE)
+- The CLI tool “dry-aged-deps” has its core functionality fully implemented and well tested. It installs, invokes npm commands, computes and prints dependency ages, and handles help, version, and error cases correctly.
+- Comprehensive Vitest suite (15 tests, 100% statements/functions/lines coverage in src) all passing
+- CLI entrypoint (`bin/dry-aged-deps.js`) supports `--help`, `--version`, default analysis, and error handling
+- Real‐fixture end-to-end test successfully installs a sample project and prints valid age values
+- fetch-version-times implements retries and filters non-version fields, and age-calculator computes days correctly
+- README documentation matches implemented features and tests
 
 **Next Steps:**
-- Address uncovered branches in fetch-version-times and print-outdated by adding tests for retry exhaustion and warning scenarios
-- Verify and document ESLint CLI usage to ensure lint commands succeed in all developer environments
-- Consider adding TypeScript or JSDoc type checks for stronger type safety
-- Expand error-handling tests to cover edge cases of CLI argument parsing and filesystem failures
+- Consider adding output formatting options (e.g., JSON or column alignment)
+- Support filtering or limiting which dependencies to analyze (e.g., by scope or age threshold)
+- Add workspace/monorepo support for multi‐package repositories
+- Introduce caching of version times to reduce repeated npm registry calls
 
-## TESTING ASSESSMENT (90% ± 18% COMPLETE)
-- The project has a comprehensive test suite with unit, integration, and end-to-end CLI tests, all passing in CI. Coverage is enforced via Vitest and meets the configured thresholds, though branch coverage is at 88%.
-- 11 test files covering core modules and CLI behavior
-- Vitest configured with coverage thresholds (80% for lines, branches, functions)
-- 100% statements/lines/functions covered and 88% branch coverage
-- GitHub Actions runs lint, unit tests, CLI tests, E2E tests, and version validation
-
-**Next Steps:**
-- Write additional tests to cover the remaining code branches to push branch coverage above 90%
-- Consider adding cross-platform/E2E tests (e.g., on Windows)
-- Publish or visualize coverage reports for easier tracking over time
-- Add negative/pathological scenarios to stress-test error handling logic
-
-## EXECUTION ASSESSMENT (85% ± 16% COMPLETE)
-- The CLI runs without errors, all tests pass with 100% coverage, and proper error handling is in place, but there is no build step and the CI pipeline shows intermittent failures.
-- All 15 Vitest tests passed and coverage is 100% on all source files
-- The CLI (`bin/dry-aged-deps.js`) starts successfully, handles `--help`/`--version`, and prints outdated dependencies as expected
-- Error handling covers both `npm outdated` execution failures and JSON parse errors
-- No runtime dependencies missing; project targets Node≥18 and only uses built-in modules
-- No build or bundling script is defined (though JavaScript modules run natively)
-- GitHub Actions CI & Publish workflow has had recent intermittent failures
+## CODE_QUALITY ASSESSMENT (90% ± 15% COMPLETE)
+- The project demonstrates strong code quality practices with clear module organization, comprehensive linting/formatting setup, and excellent test coverage. Minor refinements are possible around CLI lint integration in CI and small code deduplication.
+- ESLint flat config (eslint.config.js) and Prettier (.prettierrc) are present and cover the codebase.
+- package.json defines lint, format, test, and release scripts; commitlint and Husky are configured.
+- Source code is modular (src/age-calculator.js, fetch-version-times.js, print-outdated.js) with clear single-responsibility functions.
+- Error handling and retry logic in fetch-version-times.js is robust, and CLI parsing handles JSON errors and non-zero exit codes.
+- Vitest tests cover 100% of statements and functions, with >88% branch coverage and a dedicated lint-security test.
+- Minor duplication exists in JSON parsing logic within bin/dry-aged-deps.js catch blocks.
 
 **Next Steps:**
-- Investigate and fix flaky CI steps to ensure consistent pipeline success
-- Consider adding a build or prepublish step if future packaging or transpilation is needed
-- Add optional verbose or debug logging for deeper runtime troubleshooting
-- Include integration tests against a sample real-world project to catch edge-case execution issues
+- Add ESLint CLI invocation to the CI pipeline to ensure linting errors are caught automatically.
+- Consider extracting repeated JSON parsing logic in the CLI into a helper function to reduce duplication.
+- Integrate lint-staged (with Husky) to auto-format and lint staged files before commits.
+- Add input validation to calculateAgeInDays for non-ISO date strings to guard against invalid inputs.
 
-## DOCUMENTATION ASSESSMENT (85% ± 16% COMPLETE)
-- The project includes comprehensive user and developer documentation—README, API reference, architecture overview, changelog, and ADRs—with consistent code comments. Only minor alignment issues between documented programmatic API exports and actual package entrypoints remain.
-- README.md includes installation, usage, options, examples, advanced usage links, and troubleshooting guidance.
-- docs/api.md accurately describes fetchVersionTimes and calculateAgeInDays with examples matching source code.
-- docs/architecture.md outlines module layout, components, design decisions, and future considerations.
-- Source files in src/ contain JSDoc comments; CLI entrypoint bin/dry-aged-deps.js is self-documented.
-- CHANGELOG.md tracks versions with dates and change categories.
-- Developer guidelines (docs/developer-guidelines.md), branching docs, ESLint config docs, and ADRs in docs/decisions are present and up to date.
-
-**Next Steps:**
-- Add or configure package.json “exports” or main index.js to expose programmatic APIs as documented in docs/api.md.
-- Update documentation to reflect actual import paths if APIs are consumed from subpaths.
-- Review docs/stories and remove or link any incomplete or placeholder content.
-- Ensure README advanced usage section references correct file locations for API and architecture documents.
-
-## DEPENDENCIES ASSESSMENT (95% ± 18% COMPLETE)
-- Dependency management is solid: no runtime dependencies, lockfile present, zero vulnerabilities, and all imports are declared.
-- package.json has no runtime dependencies (only built-ins are used at runtime)
-- package-lock.json is present ensuring deterministic installs
-- DevDependencies are explicitly declared and cover all tooling (ESLint, Vitest, Husky, etc.)
-- npm audit reports zero vulnerabilities in prod and dev dependencies
-- All modules used in source code are either Node built-ins or declared in devDependencies
-- No missing or extraneous dependencies detected
+## TESTING ASSESSMENT (90% ± 17% COMPLETE)
+- The project has a well-structured test suite using Vitest with unit, integration, and CLI end-to-end tests, all passing locally and in CI. Coverage is excellent for statements, lines, and functions (100%) and acceptable for branches (88%), meeting configured thresholds. A comprehensive GitHub Actions workflow runs linting, security scans, unit tests, CLI tests, E2E tests, and version validation.
+- Found 11 test files covering core modules (age calculator, version fetcher, printOutdated, lintSecurity)
+- Vitest configured with coverage thresholds (80%) and running with V8 provider
+- All 15 tests pass locally; coverage report: 100% statements/lines/functions, 88% branches
+- GitHub Actions workflow runs unit, CLI, and E2E tests, plus lint, audit, CodeQL, and version validation
+- Coverage thresholds are enforced in vitest.config.js, and CI will fail if below minimum
 
 **Next Steps:**
-- Periodically run `npm outdated --depth=0` to surface any stale devDependencies
-- Consider automating dependency updates (e.g., Dependabot or Renovate) for devDependencies
-- Add a CI step to fail builds on vulnerable transitive dependencies (`npm audit --audit-level=moderate`)
-- Review and prune unused devDependencies over time to keep the toolchain lean
+- Add tests to cover uncovered branch logic in fetch-version-times (lines 38–44) to boost branch coverage
+- Consider additional edge-case tests for CLI error handling
+- Integrate automated coverage reporting (badge or upload) to track coverage over time
+- Review and expand E2E scenarios with more complex fixture setups
 
-## SECURITY ASSESSMENT (82% ± 15% COMPLETE)
-- The project demonstrates a solid security posture with integrated CodeQL analysis, Dependabot security updates, ESLint security rules, and CI vulnerability scanning. Input validation and safe use of child_process.execFile reduce injection risks. However, there is no specialized secret-scanning workflow, and coverage of runtime secret management could be improved.
-- GitHub Actions includes CodeQL analysis workflow for automated security scanning.
-- Dependabot configured for weekly dependency updates and daily security-only updates.
-- CI build runs `npm audit --audit-level=moderate` demonstrating zero reported vulnerabilities.
-- ESLint Flat Config includes eslint-plugin-security with recommended rules enabled.
-- fetchVersionTimes validates packageName against a safe regex before executing external commands.
-- No hardcoded credentials or secrets found in project source. Third-party modules contain example ‘secret’ strings but no configuration leaks.
-- Child process invocation uses execFile without a shell, reducing command-injection risk.
-
-**Next Steps:**
-- Add a GitHub Secret Scanning workflow (e.g., `github/codeql-action/upload-sarif` or built-in secret scanning) to catch accidental credential leaks.
-- Expand CI to include automated hardcoded credential detection (e.g., TruffleHog or GitHub secret-scanning).
-- Consider adding a dedicated security lint or static analyzer (e.g., npm ‘eslint-plugin-no-hardcoded-secrets’).
-- Document and enforce runtime secret management practices for any future feature requiring sensitive inputs.
-
-## VERSION_CONTROL ASSESSMENT (90% ± 15% COMPLETE)
-- The repository is well-managed under trunk-based development: working directory is clean (excluding .voder), on main branch, .voder is tracked and not ignored, commit history is clear and granular, and there is a single unified GitHub Actions workflow that covers CodeQL, linting, testing, security scanning, publishing, and smoke tests. A few recent pipeline failures indicate some flakiness to address.
-- Working directory is clean aside from .voder/ changes, which are correctly ignored for status checks
-- All commits are pushed (no ahead/behind indicator with origin/main)
-- Current branch is main, and commits are made directly to main
-- .gitignore is comprehensive and does not include .voder/ directory
-- .voder/ directory is tracked in Git and contains history and progress files
-- Commit history shows small, clear, conventional-style commits with no sensitive data
-- Single CI & Publish workflow in .github/workflows/ci-publish.yml integrates CodeQL, build, test, lint, audit, publishing, and smoke tests
-- Automated publishing via semantic-release triggers on push to main (and tags) without manual approval
-- Post-publish smoke test installs the package and verifies the CLI version
-- Pipeline history shows intermittent failures—needs stability improvements
+## EXECUTION ASSESSMENT (95% ± 18% COMPLETE)
+- The project executes reliably: it installs, tests, and runs without errors, has full test coverage, robust error handling, and a comprehensive CI pipeline including E2E and smoke tests.
+- npm install & npm ci succeed without vulnerabilities or errors
+- All 15 Vitest tests pass with 100% lines/statements/functions coverage
+- CLI commands (--help, --version, default run) execute without runtime errors
+- printOutdated handles empty data, parse failures, and logs warnings on fetch errors
+- fetchVersionTimes implements retries on network faults and excludes non-version fields
+- GitHub Actions pipeline runs lint, tests, E2E CLI tests, version validation, audit, and publish smoke test
 
 **Next Steps:**
-- Investigate and fix the root causes of recent CI & Publish failures to improve pipeline reliability
-- Consider removing or adjusting pull_request triggers if a strict trunk-based workflow without PR gating is desired
-- Add monitoring or dashboards for pipeline stability metrics to catch and resolve flakiness quickly
-- Review and document pipeline SLAs and error handling (e.g., retry logic for transient CI errors)
+- Add integration tests against a real npm registry in CI to catch potential network/API changes
+- Implement logging levels or verbose flag for easier troubleshooting in large projects
+- Consider caching fetched version times to reduce repeated network calls
+- Document offline or error-recovery modes for CI environments with no internet access
+
+## DOCUMENTATION ASSESSMENT (90% ± 18% COMPLETE)
+- Comprehensive and well-organized documentation with README, API reference, architecture overview, developer guidelines, branching policy, ESLint config guide, and changelog. Minor gaps in linking developer docs and test instructions from the README.
+- README.md provides installation, usage, options, examples, and links to API and architecture docs.
+- docs/api.md contains a clear public API reference with signatures, parameters, return values, and examples.
+- docs/architecture.md describes module layout, components, design decisions, and future considerations.
+- docs/developer-guidelines.md covers linting, testing, module conventions, ADRs, CI/CD, and version management.
+- CHANGELOG.md is present and up to date, documenting releases 0.1.0 and 0.1.1.
+- Inline JSDoc comments exist in source files (age-calculator.js, fetch-version-times.js, print-outdated.js, CLI).
+- docs/branching.md and docs/eslint-flat-config.md provide in-depth process and configuration guidelines.
+- Architectural Decision Record 0001 is committed under docs/decisions.
+
+**Next Steps:**
+- Add a “Contributing” or “Development” section in README.md linking to docs/developer-guidelines and explaining how to run tests and lint locally.
+- Include quick start instructions for development (e.g. `npm install`, `npm test`, `npm run lint`) in the README.
+- Consider adding a docs index or sidebar/navigation in README to help users discover all docs (branching, eslint config, ADRs, stories).
+
+## DEPENDENCIES ASSESSMENT (92% ± 16% COMPLETE)
+- The project’s dependency management is solid: there are no runtime dependencies declared (the code only uses built-in Node.js modules), devDependencies are clearly separated and pinned, a lockfile is present and enforced in CI, and vulnerability/audit checks pass with zero issues. Minor improvements around lockfile-only drift checks and outdated flags could push this to near-perfect.
+- package.json declares zero runtime dependencies (only built-in Node.js modules are used), and all tooling is in devDependencies.
+- package-lock.json is checked into source and CI runs npm install --package-lock-only then git diff to prevent drift.
+- CI uses npm ci --prefer-frozen-lockfile to ensure reproducible installs.
+- npm audit (audit-level moderate) reports 0 vulnerabilities for 713 audited packages.
+- Outdated dependency checks exist in tests and in the CLI code via npm outdated → JSON.
+- DevDependencies are version-pinned or caret-prefixed as appropriate; lockfile ensures exact versions in CI.
+
+**Next Steps:**
+- Consider applying the provided lockfile-drift.patch to limit drift checks to package-lock.json only, avoiding unintended diff failures.
+- Update any npm outdated invocations to use the modern --include=dev flag instead of the deprecated --dev.
+- Optionally introduce a dependabot or renovate configuration to automate regular dependency updates.
+- Add a periodic audit scan (e.g., GitHub Dependabot alerts) to catch new vulnerabilities between releases.
+
+## SECURITY ASSESSMENT (90% ± 15% COMPLETE)
+- The project demonstrates a strong security posture for a CLI tool: it integrates CodeQL, npm audit, ESLint security plugin, Dependabot security updates, and input validation against command injection. No hard-coded secrets were found. Minor enhancements around secret scanning, audit thresholds, and dependency-review could further harden the CI process.
+- GitHub Actions include CodeQL analysis and run “npm audit --audit-level=moderate” in CI with zero current vulnerabilities.
+- ESLint is configured with eslint-plugin-security recommended rules.
+- Dependabot is set up for weekly updates and daily security-only updates.
+- fetch-version-times.js validates package names against a regex before running npm view, preventing command injection.
+- No hard-coded secrets or .env files detected; CI uses GitHub secrets (NPM_TOKEN, GITHUB_TOKEN).
+
+**Next Steps:**
+- Add a secret-scanning workflow (e.g., GitHub’s secret scanning or TruffleHog) to catch accidental commits of sensitive data.
+- Consider raising the npm audit threshold to high or critical to focus on more severe vulnerabilities.
+- Add a dependency-review GitHub Action to gate PRs with dependency changes and flag new vulnerabilities.
+- Periodically review and update security lint rules and CodeQL queries to cover newly discovered threat patterns.
+
+## VERSION_CONTROL ASSESSMENT (85% ± 17% COMPLETE)
+- Solid trunk-based version control with a single unified CI/CD workflow and automated publishing, but pipeline instability on recent runs prevents a perfect score.
+- Git working directory is clean outside of .voder/ (only .voder/history.md and .voder/last-action.md are modified).
+- All commits are pushed and the current branch is main, confirming true trunk-based development.
+- .gitignore is appropriate; the .voder/ directory is not ignored and is tracked under version control.
+- Commit history shows frequent, granular commits with clear conventional messages and no feature branches or PRs.
+- A single GitHub Actions workflow ‘CI & Publish’ handles CodeQL, linting, tests, vulnerability scanning, publishing (semantic-release), and smoke tests, avoiding duplicate testing.
+- Continuous deployment is configured: semantic-release on push to main/tags with no manual approval, plus a post-publish smoke test.
+- CI pipeline health is unstable: multiple recent failures and the latest run on main is failing, breaking continuous integration requirements.
+
+**Next Steps:**
+- Investigate and resolve the causes of the recent CI failures to restore pipeline stability.
+- Implement monitoring or retry strategies for flaky tests or external dependencies in the CI workflow.
+- Add safeguards or alerts to quickly detect and fix broken pipelines on main.
+- Ensure any future changes maintain the unified workflow structure and keep .voder/ tracked in version control.
