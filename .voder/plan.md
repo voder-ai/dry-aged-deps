@@ -1,12 +1,14 @@
 ## NOW  
-Inspect the logs of the most recent failed CI run to pinpoint the exact step breaking in `.github/workflows/ci-publish.yml` (for example, via `gh run view --log --limit 1 --repo voder-ai/dry-aged-deps`).  
+Commit the updated test/fixtures/package-lock.json file to clean the working directory.
 
 ## NEXT  
-- Update the failing step in `.github/workflows/ci-publish.yml` based on the log findings (e.g. adjust or conditionalize the lockfile drift check, version validation, or smoke-test commands).  
-- Commit and push the revised workflow to `main` and confirm that the CI pipeline now completes successfully.  
+- Push the commit to `main` to trigger the CI pipeline and verify whether the “Check lockfile drift” step now passes without errors.  
+- If the drift check still fails, inspect the CI logs for `.github/workflows/ci-publish.yml`, focusing on the lockfile-drift and version-validation steps.  
+- Modify the “Check lockfile drift” step in `ci-publish.yml` to only diff the root `package-lock.json` (for example, `git diff --exit-code package-lock.json`) so fixture lockfiles are ignored.  
+- Commit and push the updated workflow and confirm a successful CI run.
 
 ## LATER  
-- Add branch protection requiring CI green before merges.  
-- Configure real-time CI failure notifications (Slack/email).  
-- Expand the GitHub Actions matrix to cover multiple Node.js versions.  
-- Periodically review and upgrade CI tool versions for security and reliability.
+- Enable branch protection to require CI green before merges.  
+- Configure real-time CI failure notifications (e.g., Slack or email).  
+- Expand the GitHub Actions matrix to cover multiple Node.js LTS versions.  
+- Periodically review and upgrade CI tool and action versions for security and reliability.
