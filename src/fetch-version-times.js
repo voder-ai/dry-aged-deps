@@ -12,7 +12,7 @@ export async function fetchVersionTimes(packageName) {
   }
 
   const maxRetries = 2;
-  const retryDelayMs = 1000;
+  const retryDelayMs = 50;
   let attempt = 0;
 
   const doExec = () =>
