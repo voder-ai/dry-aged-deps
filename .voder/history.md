@@ -74,7 +74,7 @@ Here’s a concise history of what’s been done so far in the dry-aged-deps pro
 
 ---
 
-Used tool: get*github_pipeline_status with input: {}
+Used tool: get\*github_pipeline_status with input: {}
 Used tool: read_file with input: {"filePath":".github/workflows/ci-publish.yml","startLine":1,"endLine":200}
 Used tool: wait_for_github_workflow with input: {"workflowName":"CI & Publish","timeout":600000}
 Used tool: get_github_pipeline_status with input: {}
@@ -92,7 +92,7 @@ Used tool: read_file with input: {"filePath":"src/fetch-version-times.js","start
 Used tool: modify_file with input: {"filePath":"src/fetch-version-times.js","instruction":"In the try block, replace the lines:\n`\n      let times;\n      try {\n        times = stdout ? JSON.parse(stdout) : {};\n      } catch (parseErr) {\n        throw parseErr;\n      }\n`\nwith:\n`\n      const times = stdout ? JSON.parse(stdout) : {};\n`"}
 Used tool: modify_file with input: {"filePath":"src/fetch-version-times.js","instruction":"Locate the block starting at line 25 (the `let times` and its try/catch) and replace it with:\n`\n      const times = stdout ? JSON.parse(stdout) : {};\n`"}
 Used tool: modify_file with input: {"filePath":"src/fetch-version-times.js","instruction":"Replace the code block:\n`\n      let times;\n      try {\n        times = stdout ? JSON.parse(stdout) : {};\n      } catch (parseErr) {\n        throw parseErr;\n      }\n`\nwith:\n`\n      const times = stdout ? JSON.parse(stdout) : {};\n`"}
-Used tool: generate_file with input: {"filePath":"src/fetch-version-times.js","overwrite":true,"content":"import { execFile } from 'child_process';\n\n/\**\n * Fetch version publish times for an npm package.\n * @param {string} packageName - The name of the npm package.\n * @returns {Promise<Record<string, string>>} A promise resolving to a mapping of version to publish date string.\n \*/\nexport async function fetchVersionTimes(packageName) {\n const pkgNameRegex = /^[a-z0-9@\\-*/.]+$/i;\n if (!pkgNameRegex.test(packageName)) {\n throw new Error(`Invalid package name: ${packageName}`);\n }\n\n const maxRetries = 2;\n const retryDelayMs = 50;\n let attempt = 0;\n\n const doExec = () =>\n new Promise((resolve, reject) => {\n execFile(\n 'npm',\n ['view', packageName, 'time', '--json'],\n { encoding: 'utf8' },\n (error, stdout) => {\n if (error) {\n return reject(error);\n }\n resolve(stdout);\n }\n );\n });\n\n while (true) {\n try {\n const stdout = await doExec();\n const times = stdout ? JSON.parse(stdout) : {};\n const versionTimes = {};\n // Exclude non-version entries like 'created' and 'modified'\n for (const [version, time] of Object.entries(times)) {\n if (version !== 'created' && version !== 'modified') {\n // eslint-disable-next-line security/detect-object-injection -- safe iteration\n versionTimes[version] = time;\n }\n }\n return versionTimes;\n } catch (err) {\n if (err instanceof SyntaxError) {\n throw err;\n }\n if (attempt < maxRetries) {\n attempt++;\n const delay = retryDelayMs \* 2 \*\* attempt;\n await new Promise((res) => setTimeout(res, delay));\n continue;\n }\n throw err;\n }\n }\n}\n"}
+Used tool: generate_file with input: {"filePath":"src/fetch-version-times.js","overwrite":true,"content":"import { execFile } from 'child_process';\n\n/\*_\n _ Fetch version publish times for an npm package.\n _ @param {string} packageName - The name of the npm package.\n _ @returns {Promise<Record<string, string>>} A promise resolving to a mapping of version to publish date string.\n \*/\nexport async function fetchVersionTimes(packageName) {\n const pkgNameRegex = /^[a-z0-9@\\-*/.]+$/i;\n if (!pkgNameRegex.test(packageName)) {\n throw new Error(`Invalid package name: ${packageName}`);\n }\n\n const maxRetries = 2;\n const retryDelayMs = 50;\n let attempt = 0;\n\n const doExec = () =>\n new Promise((resolve, reject) => {\n execFile(\n 'npm',\n ['view', packageName, 'time', '--json'],\n { encoding: 'utf8' },\n (error, stdout) => {\n if (error) {\n return reject(error);\n }\n resolve(stdout);\n }\n );\n });\n\n while (true) {\n try {\n const stdout = await doExec();\n const times = stdout ? JSON.parse(stdout) : {};\n const versionTimes = {};\n // Exclude non-version entries like 'created' and 'modified'\n for (const [version, time] of Object.entries(times)) {\n if (version !== 'created' && version !== 'modified') {\n // eslint-disable-next-line security/detect-object-injection -- safe iteration\n versionTimes[version] = time;\n }\n }\n return versionTimes;\n } catch (err) {\n if (err instanceof SyntaxError) {\n throw err;\n }\n if (attempt < maxRetries) {\n attempt++;\n const delay = retryDelayMs \* 2 \*\* attempt;\n await new Promise((res) => setTimeout(res, delay));\n continue;\n }\n throw err;\n }\n }\n}\n"}
 Used tool: run_command with input: {"command":"npm","args":["run","lint"]}
 Used tool: run_command with input: {"command":"npm","args":["test"]}
 Used tool: git_add_all with input: {}
@@ -117,3 +117,22 @@ Used tool: git_push with input: {}
  – Ran `npm run format` to fix Prettier formatting violations.  
  – Fixed `test/cli.e2e.real-fixture.test.js` and `test/fetch-version-times.retry.test.js`.  
  – Verified linting passes and all 15 tests pass with 100% statement coverage.
+
+**Package Integrity and Security Resolution (2025-11-09):**
+
+• Assessment and critical findings  
+ – Full assessment identified package version mismatch: @semantic-release/npm installed as 12.0.2 but package.json required ^13.1.1.  
+ – Discovered that upgrading to 13.1.1 introduces 3 moderate severity vulnerabilities (GHSA-29xp-372q-xqph affecting transitive tar@7.5.1 dependency).  
+ – Applied Smart Version Selection Algorithm: identified fresh packages (< 7 days old) and documented maturity timeline.
+
+• Security fix  
+ – Updated package.json to specify @semantic-release/npm ^12.0.2 (downgrade from ^13.1.1).  
+ – Ran `npm install` to update package-lock.json and align with secure version.  
+ – Verified: npm ls shows no "invalid" packages, npm audit reports 0 vulnerabilities.
+
+• Code quality validation  
+ – Re-ran `npm run format` to ensure all test files comply with Prettier configuration.  
+ – Verified: lint passes, all 15 tests pass with 100% statement/function/line coverage (91.3% branch coverage).  
+ – Confirmed both package integrity and code quality gates pass.
+
+```
