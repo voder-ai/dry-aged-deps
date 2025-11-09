@@ -2,17 +2,20 @@
 
 import { fetchVersionTimes as defaultFetchVersionTimes } from './fetch-version-times.js';
 import { calculateAgeInDays as defaultCalculateAgeInDays } from './age-calculator.js';
+import { checkVulnerabilities as defaultCheckVulnerabilities } from './check-vulnerabilities.js';
 
 /**
  * Print outdated dependencies information with age
  * @param {Record<string, { current: string; wanted: string; latest: string }>} data
- * @param {{ fetchVersionTimes?: function, calculateAgeInDays?: function }} [options]
+ * @param {{ fetchVersionTimes?: function, calculateAgeInDays?: function, checkVulnerabilities?: function }} [options]
  */
 export async function printOutdated(data, options = {}) {
   const fetchVersionTimes =
     options.fetchVersionTimes || defaultFetchVersionTimes;
   const calculateAgeInDays =
     options.calculateAgeInDays || defaultCalculateAgeInDays;
+  const checkVulnerabilities =
+    options.checkVulnerabilities || defaultCheckVulnerabilities;
 
   const entries = Object.entries(data);
   if (entries.length === 0) {
@@ -60,7 +63,32 @@ export async function printOutdated(data, options = {}) {
     return;
   }
 
+  // Check vulnerabilities for mature packages and filter out vulnerable ones
+  const safeRows = [];
   for (const row of matureRows) {
+    const [name, , , latest] = row;
+    try {
+      const vulnCount = await checkVulnerabilities(name, latest);
+      if (vulnCount === 0) {
+        safeRows.push(row);
+      }
+    } catch (err) {
+      console.error(
+        `Warning: failed to check vulnerabilities for ${name}@${latest}: ${err.message}`
+      );
+      // On error, include the package (fail-open for availability)
+      safeRows.push(row);
+    }
+  }
+
+  if (safeRows.length === 0) {
+    console.log(
+      'No outdated packages with safe, mature versions (>= 7 days old, no vulnerabilities) found.'
+    );
+    return;
+  }
+
+  for (const row of safeRows) {
     console.log(row.join('	'));
   }
 }

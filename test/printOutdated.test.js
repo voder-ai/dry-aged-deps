@@ -2,6 +2,7 @@ import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { printOutdated } from '../src/print-outdated.js';
 import * as fetchModule from '../src/fetch-version-times.js';
 import * as ageModule from '../src/age-calculator.js';
+import * as vulnModule from '../src/check-vulnerabilities.js';
 
 describe('printOutdated', () => {
   let logSpy, errorSpy;
@@ -9,6 +10,8 @@ describe('printOutdated', () => {
   beforeEach(() => {
     logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
     errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    // Mock checkVulnerabilities to return 0 (no vulnerabilities) by default
+    vi.spyOn(vulnModule, 'checkVulnerabilities').mockResolvedValue(0);
   });
 
   afterEach(() => {
@@ -29,6 +32,8 @@ describe('printOutdated', () => {
     });
     // Stub calculateAgeInDays to return a fixed value
     vi.spyOn(ageModule, 'calculateAgeInDays').mockReturnValue(10);
+    // Mock no vulnerabilities
+    vi.spyOn(vulnModule, 'checkVulnerabilities').mockResolvedValue(0);
 
     const data = {
       mypkg: { current: '1.0.0', wanted: '1.5.0', latest: '2.0.0' },
@@ -36,6 +41,7 @@ describe('printOutdated', () => {
     await printOutdated(data, {
       fetchVersionTimes: fetchModule.fetchVersionTimes,
       calculateAgeInDays: ageModule.calculateAgeInDays,
+      checkVulnerabilities: vulnModule.checkVulnerabilities,
     });
 
     expect(logSpy.mock.calls[0][0]).toBe('Outdated packages:');
@@ -55,6 +61,8 @@ describe('printOutdated', () => {
     });
     // Stub calculateAgeInDays to ensure it's not called when fetch fails
     vi.spyOn(ageModule, 'calculateAgeInDays');
+    // Mock no vulnerabilities (won't be called since package is filtered)
+    vi.spyOn(vulnModule, 'checkVulnerabilities').mockResolvedValue(0);
 
     const data = {
       otherpkg: { current: '0.1.0', wanted: '0.2.0', latest: '0.3.0' },
@@ -62,6 +70,7 @@ describe('printOutdated', () => {
     await printOutdated(data, {
       fetchVersionTimes: fetchModule.fetchVersionTimes,
       calculateAgeInDays: ageModule.calculateAgeInDays,
+      checkVulnerabilities: vulnModule.checkVulnerabilities,
     });
 
     // Package with N/A age should be filtered out (not mature)
@@ -83,6 +92,7 @@ describe('printOutdated', () => {
       '2.0.0': '2023-01-01T00:00:00Z',
     });
     vi.spyOn(ageModule, 'calculateAgeInDays').mockReturnValue(3); // Too fresh
+    vi.spyOn(vulnModule, 'checkVulnerabilities').mockResolvedValue(0);
 
     const data = {
       freshpkg: { current: '1.0.0', wanted: '1.5.0', latest: '2.0.0' },
@@ -90,6 +100,7 @@ describe('printOutdated', () => {
     await printOutdated(data, {
       fetchVersionTimes: fetchModule.fetchVersionTimes,
       calculateAgeInDays: ageModule.calculateAgeInDays,
+      checkVulnerabilities: vulnModule.checkVulnerabilities,
     });
 
     expect(logSpy.mock.calls[0][0]).toBe('Outdated packages:');
@@ -115,6 +126,7 @@ describe('printOutdated', () => {
       const callCount = ageModule.calculateAgeInDays.mock.calls.length;
       return callCount === 1 ? 10 : 3; // First call: mature, second call: fresh
     });
+    vi.spyOn(vulnModule, 'checkVulnerabilities').mockResolvedValue(0);
 
     const data = {
       'mature-pkg': { current: '1.0.0', wanted: '1.5.0', latest: '2.0.0' },
@@ -123,6 +135,7 @@ describe('printOutdated', () => {
     await printOutdated(data, {
       fetchVersionTimes: fetchModule.fetchVersionTimes,
       calculateAgeInDays: ageModule.calculateAgeInDays,
+      checkVulnerabilities: vulnModule.checkVulnerabilities,
     });
 
     expect(logSpy.mock.calls[0][0]).toBe('Outdated packages:');
@@ -134,5 +147,55 @@ describe('printOutdated', () => {
       ['mature-pkg', '1.0.0', '1.5.0', '2.0.0', 10].join('	')
     );
     expect(logSpy.mock.calls[3]).toBeUndefined(); // fresh-pkg should be filtered out
+  });
+
+  it('filters out packages with vulnerabilities', async () => {
+    vi.spyOn(fetchModule, 'fetchVersionTimes').mockResolvedValue({
+      '2.0.0': '2023-01-01T00:00:00Z',
+    });
+    vi.spyOn(ageModule, 'calculateAgeInDays').mockReturnValue(10); // Mature
+    vi.spyOn(vulnModule, 'checkVulnerabilities').mockResolvedValue(3); // Has vulnerabilities
+
+    const data = {
+      'vuln-pkg': { current: '1.0.0', wanted: '1.5.0', latest: '2.0.0' },
+    };
+    await printOutdated(data, {
+      fetchVersionTimes: fetchModule.fetchVersionTimes,
+      calculateAgeInDays: ageModule.calculateAgeInDays,
+      checkVulnerabilities: vulnModule.checkVulnerabilities,
+    });
+
+    expect(logSpy.mock.calls[0][0]).toBe('Outdated packages:');
+    expect(logSpy.mock.calls[1][0]).toBe(
+      ['Name', 'Current', 'Wanted', 'Latest', 'Age (days)'].join('	')
+    );
+    expect(logSpy.mock.calls[2][0]).toBe(
+      'No outdated packages with safe, mature versions (>= 7 days old, no vulnerabilities) found.'
+    );
+  });
+
+  it('shows packages without vulnerabilities', async () => {
+    vi.spyOn(fetchModule, 'fetchVersionTimes').mockResolvedValue({
+      '2.0.0': '2023-01-01T00:00:00Z',
+    });
+    vi.spyOn(ageModule, 'calculateAgeInDays').mockReturnValue(10); // Mature
+    vi.spyOn(vulnModule, 'checkVulnerabilities').mockResolvedValue(0); // No vulnerabilities
+
+    const data = {
+      'safe-pkg': { current: '1.0.0', wanted: '1.5.0', latest: '2.0.0' },
+    };
+    await printOutdated(data, {
+      fetchVersionTimes: fetchModule.fetchVersionTimes,
+      calculateAgeInDays: ageModule.calculateAgeInDays,
+      checkVulnerabilities: vulnModule.checkVulnerabilities,
+    });
+
+    expect(logSpy.mock.calls[0][0]).toBe('Outdated packages:');
+    expect(logSpy.mock.calls[1][0]).toBe(
+      ['Name', 'Current', 'Wanted', 'Latest', 'Age (days)'].join('	')
+    );
+    expect(logSpy.mock.calls[2][0]).toBe(
+      ['safe-pkg', '1.0.0', '1.5.0', '2.0.0', 10].join('	')
+    );
   });
 });
