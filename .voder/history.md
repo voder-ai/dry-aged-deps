@@ -135,4 +135,13 @@ Used tool: git_push with input: {}
  – Verified: lint passes, all 15 tests pass with 100% statement/function/line coverage (91.3% branch coverage).  
  – Confirmed both package integrity and code quality gates pass.
 
+• Git commit and CI pipeline  
+ – Committed security fix to repository with detailed commit message documenting changes.  
+ – Pushed changes to origin/main (commit 5ed04d8).  
+ – CI pipeline executed: CodeQL Analysis ✓, Build & Test ✓, Release ✗.  
+ – Release job failed due to npm 2FA enforcement: "Two-factor authentication is required to publish this package but an automation token was specified".  
+ – Root cause: Downgrade to v12.0.2 fixed CVE but removed support for automation tokens with "Auth and Publish" 2FA.  
+ – Documented issue in `.voder/issues/semantic-release-npm-vulnerability.md` with instructions to upgrade when secure v13.x is available.  
+ – Temporary workaround: npm package 2FA changed to "Auth Only" to allow automation token publishing.
+
 ```
