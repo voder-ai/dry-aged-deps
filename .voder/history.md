@@ -179,8 +179,44 @@ Used tool: git_push with input: {}
  – Commit and push Story 003.0 implementation.  
  – Re-run assessment to validate remaining stories (001.0, 002.0).  
  – Proceed to Story 004.0 (Filter Vulnerable Versions) when all current stories validated.
+
+**Story 004.0 Specification Update (2025-11-10):**
+
+• Assessment cycle and traceability validation  
+ – Executed comprehensive 11-phase assessment following fail-fast validation approach.  
+ – Phase 1-9 (Technical): All passed ✓ (zero security vulnerabilities, 100% test pass rate, clean code quality, successful CI/CD).  
+ – Phase 10 (Traceability): Created traceability infrastructure with `scripts/setup-traceability.sh`.  
+ – Generated JSON tracking files for all specifications in `.voder/traceability/`.  
+ – Validated in reverse alphabetical order per fail-fast protocol.  
+ – Identified Story 004.0-DEV-FILTER-VULNERABLE-VERSIONS as FAILED (not implemented).
+
+• Story 004.0 critical gap identified  
+ – Issue raised: Specification did not explicitly require checking transitive dependencies for vulnerabilities.  
+ – Real-world example: `@semantic-release/npm@13.1.1` has vulnerability in transitive dependency `tar@7.5.1` (GHSA-29xp-372q-xqph).  
+ – Original story would miss this type of vulnerability by only checking direct package.
+
+• Story 004.0 specification enhancement  
+ – Updated acceptance criteria to explicitly require "direct and transitive dependencies" vulnerability checking.  
+ – Added REQ-TRANSITIVE-DEPS requirement: "Check the entire dependency tree for vulnerabilities".  
+ – Enhanced implementation notes with explicit comments about checking "entire dependency tree".  
+ – Updated vulnerability check example to show detection of `tar@7.5.1` in `@semantic-release/npm@13.1.1`.  
+ – Added test cases for transitive dependency vulnerabilities with specific example.  
+ – Added story note explaining why transitive dependency checking is critical with real-world example.  
+ – Removed duplicate content (age calculation story) that was accidentally merged into 004.0 file.
+
+• Traceability and documentation  
+ – Updated traceability file for 004.0 with FAILED status and detailed evidence of missing implementation.  
+ – Generated comprehensive assessment report in `.voder/implementation-progress.md`.  
+ – Created implementation plan documenting the story update and rationale.
+
+• Code quality validation  
+ – All quality gates still passing (linting, formatting, tests, security).  
+ – No implementation changes in this cycle - specification clarification only.  
+ – Ready for next cycle to implement Story 004.0 with updated requirements.
+
 ````
 
 ```
 
 ```
+````
