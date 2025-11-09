@@ -1,0 +1,14 @@
+{
+  "specification_path": "prompts/003.0-DEV-IDENTIFY-OUTDATED.md",
+  "status": "FAILED",
+  "last_validated": "2025-11-09T22:05:00Z",
+  "evidence": [
+    "FAILURE: Core acceptance criteria NOT implemented",
+    "AC: 'Filters out versions < 7 days old' - MISSING: Code shows ALL outdated packages regardless of age",
+    "AC: 'Smart filtering' - MISSING: No filtering logic found in src/print-outdated.js",
+    "AC: 'Skip Current: Don't show package if mature version <= current version' - MISSING: No version comparison logic",
+    "Current behavior: printOutdated() displays all npm outdated results with ages, no filtering applied",
+    "Evidence: src/print-outdated.js lines 17-49 - shows all entries without age-based filtering",
+    "Required work: Implement 7-day maturity filter and smart filtering algorithm per specification"
+  ]
+}

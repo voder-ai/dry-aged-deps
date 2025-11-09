@@ -1,0 +1,9 @@
+{
+  "specification_path": "prompts/dry-aged-deps-user-story-map.md",
+  "status": "NOT_SPEC",
+  "last_validated": "2025-11-09T22:00:00Z",
+  "evidence": [
+    "File is a user story map, not a user story specification with acceptance criteria",
+    "Provides high-level planning and iteration structure, not testable requirements"
+  ]
+}

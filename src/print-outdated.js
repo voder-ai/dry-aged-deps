@@ -45,7 +45,22 @@ export async function printOutdated(data, options = {}) {
 
   const rows = await Promise.all(tasks);
 
-  for (const row of rows) {
+  // Filter to only show packages with mature versions (>= 7 days old)
+  const MIN_AGE_DAYS = 7;
+  const matureRows = rows.filter((row) => {
+    const age = row[4]; // age is the 5th element (index 4)
+    // Include if age is a number >= 7, exclude 'N/A' and ages < 7
+    return typeof age === 'number' && age >= MIN_AGE_DAYS;
+  });
+
+  if (matureRows.length === 0) {
+    console.log(
+      'No outdated packages with mature versions (>= 7 days old) found.'
+    );
+    return;
+  }
+
+  for (const row of matureRows) {
     console.log(row.join('	'));
   }
 }
