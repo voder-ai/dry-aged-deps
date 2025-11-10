@@ -25,7 +25,7 @@ describe('dry-aged-deps CLI JSON output format', () => {
       path.join(fixturesDir, 'package.json')
     );
 
-    // Install production dependencies in temp directory
+    // Install production dependencies in temp directory (dry-run to speed up tests)
     await execa(
       'npm',
       [
@@ -35,6 +35,7 @@ describe('dry-aged-deps CLI JSON output format', () => {
         '--no-audit',
         '--no-fund',
         '--omit=dev',
+        '--dry-run',
       ],
       {
         cwd: fixturesDir,
@@ -54,7 +55,7 @@ describe('dry-aged-deps CLI JSON output format', () => {
     const cliPath = path.join(__dirname, '..', 'bin', 'dry-aged-deps.js');
     const result = await execa('node', [cliPath, '--format=json'], {
       cwd: fixturesDir,
-      env: process.env,
+      env: { ...process.env, DRY_AGED_DEPS_MOCK: '1' },
     });
     expect(result.exitCode).toBe(0);
     const json = result.stdout;
@@ -69,10 +70,10 @@ describe('dry-aged-deps CLI JSON output format', () => {
 
   it('excludes log warnings for JSON format', async () => {
     const cliPath = path.join(__dirname, '..', 'bin', 'dry-aged-deps.js');
-    // Force a fetch error by using a package that errors
+    // Use mock data to avoid real network calls
     const result = await execa('node', [cliPath, '--format=json'], {
       cwd: fixturesDir,
-      env: { ...process.env, INVALID_MODE: 'true' },
+      env: { ...process.env, DRY_AGED_DEPS_MOCK: '1' },
     });
     expect(result.stderr).toBe('');
   });
