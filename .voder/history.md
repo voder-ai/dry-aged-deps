@@ -254,7 +254,6 @@ Used tool: git_push with input: {}
  – Ready for enhancement with backward search in future iterations.  
  – MVP complete: dry-aged-deps now filters for both maturity AND security.
 
-
 ````
 
 ```

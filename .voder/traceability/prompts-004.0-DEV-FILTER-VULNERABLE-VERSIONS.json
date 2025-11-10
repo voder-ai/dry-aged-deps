@@ -1,22 +1,6 @@
 {
   "specificationPath": "prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md",
-  "status": "FAILED",
-  "lastValidated": "2025-11-10T07:22:00Z",
-  "evidence": [
-    "FAILED: Vulnerability filtering is NOT implemented",
-    "Current CLI output does not show security/vulnerability information",
-    "No vulnerability checking code found in src/ directory",
-    "No tests for vulnerability filtering found in test/ directory",
-    "Acceptance criteria NOT met:",
-    "  - Core Functionality: No vulnerability checking implemented",
-    "  - Smart Checking: No backward search for safe versions",
-    "  - Eliminate Vulnerable: No filtering of vulnerable versions",
-    "  - Final Output: Output does not show security status",
-    "  - No Safe Version: No handling of this scenario",
-    "Missing implementation:",
-    "  - REQ-AUDIT-CHECK: npm audit or registry API integration",
-    "  - REQ-SMART-SEARCH: Backward search algorithm",
-    "  - REQ-SAFE-ONLY: Safe version recommendation logic",
-    "  - REQ-CLEAR-OUTPUT: Security status in output"
-  ]
+  "status": "TODO",
+  "lastValidated": null,
+  "evidence": []
 }

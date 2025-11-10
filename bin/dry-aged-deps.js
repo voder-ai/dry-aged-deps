@@ -11,14 +11,19 @@ import { fileURLToPath } from 'url';
  * Lists outdated npm dependencies and shows how long they have been outdated.
  */
 
-// Parse CLI arguments for help flag
+// CLI arguments
 const args = process.argv.slice(2);
+
+// Help flag
 if (args.includes('-h') || args.includes('--help')) {
   console.log('Usage: dry-aged-deps [options]');
   console.log('');
   console.log('Options:');
-  console.log('  -h, --help    Show help');
-  console.log('  -v, --version Show version');
+  console.log('  -h, --help             Show help');
+  console.log('  -v, --version          Show version');
+  console.log(
+    '  --format=<format>      Output format: table (default), json, xml'
+  );
   process.exit(0);
 }
 
@@ -32,9 +37,31 @@ if (args.includes('-v') || args.includes('--version')) {
   process.exit(0);
 }
 
-// Helper to print results and exit successfully or handle errors
+// Format flag parsing
+const validFormats = ['table', 'json', 'xml'];
+let format = 'table';
+// Support --format=value
+const formatArg = args.find((arg) => arg.startsWith('--format='));
+if (formatArg) {
+  format = formatArg.split('=')[1];
+} else {
+  // Support --format value
+  const idx = args.indexOf('--format');
+  if (idx !== -1 && args.length > idx + 1) {
+    format = args[idx + 1];
+  }
+}
+// Validate format
+if (!validFormats.includes(format)) {
+  console.error(
+    `Invalid format: ${format}. Valid values are: ${validFormats.join(', ')}`
+  );
+  process.exit(2);
+}
+
+// Helper to print results and handle exit codes
 function handleOutdatedOutput(data) {
-  printOutdated(data)
+  printOutdated(data, { format })
     .then(() => process.exit(0))
     .catch((err) => {
       console.error(err.message);
@@ -56,7 +83,7 @@ try {
   }
   handleOutdatedOutput(data);
 } catch (err) {
-  // npm outdated exits with non-zero code if outdated packages found
+  // npm outdated exits non-zero if updates exist
   if (err.stdout) {
     let data;
     try {
