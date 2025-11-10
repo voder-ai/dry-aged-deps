@@ -1,12 +1,11 @@
 ## NOW  
-Short-circuit JSON/XML modes in `print-outdated.js`: before any `fetchVersionTimes` or vulnerability checks, detect if `options.format` is `json` or `xml`, build rows directly from the incoming `data`, assemble a minimal summary, call `jsonFormatter`/`xmlFormatter`, and `console.log()` the result, then return immediately.  
+Create a new Vitest test file at `test/cli.outdated.mock.test.js` that imports `test/helpers/cli.outdated.mock.js`, invokes `node ./bin/dry-aged-deps.js` with no flags via Execa, and asserts `stdout` contains “Outdated packages:” and a single row for `fakepkg` with its mocked current, wanted, and latest values.  
 
 ## NEXT  
-- Update `jsonFormatter` and `xmlFormatter` (in `src/json-formatter.js` and `src/xml-formatter.js`) to ensure they output all required fields (packages array, summary.totalOutdated, summary.safeUpdates, summary.filteredByAge, summary.filteredBySecurity, thresholds, timestamp) according to stories 008 and 009.  
-- Revise the CLI entrypoint (`bin/dry-aged-deps.js`) help text and `README.md` to document `--format=json` and `--format=xml` options with examples.  
-- Re-run and verify the JSON/XML integration tests (`test/cli.format-json.test.js` and `test/cli.format-xml.test.js`) now pass promptly with no stderr and valid machine-readable output.  
+- Run `npm test` and update `src/print-outdated.js` or `bin/dry-aged-deps.js` so the CLI correctly parses the stubbed `npm outdated` and `npm view … time` outputs and prints the expected table row.  
+- Ensure the new mock-based CLI test and existing real-fixture table-mode tests (`test/cli.outdated.test.js`, `test/cli.upToDate.test.js`) pass without network or install calls.  
 
 ## LATER  
-- Restore the true network-backed logic under JSON/XML modes, fetching version times and auditing vulnerabilities in parallel, adding caching where necessary to keep performance within CI timeouts.  
-- Introduce proper exit-code handling (0/1/2) and structured error output for JSON/XML.  
-- Extend JSON/XML schemas to include detailed vulnerability counts, per-environment thresholds (prod/dev), and make the age/security thresholds fully configurable via CLI flags and config files.
+- Refactor `print-outdated` to support dependency injection or a “test mode” flag to cleanly bypass real network calls in tests.  
+- Implement structured JSON/XML error handling and proper exit codes for core CLI before re-enabling full fetch/audit logic under machine-readable modes.  
+- Optimize auditing performance (caching/parallelism) and expand tests to cover maturity and vulnerability filtering across formats.
