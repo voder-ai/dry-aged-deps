@@ -1,48 +1,38 @@
 ### FILE MANAGEMENT ASSESSMENT
 
-**Generated:** 2025-11-10T12:07:28.562Z
+**Generated:** 2025-11-10T12:10:32.821Z
 
-## FILE MANAGEMENT STATUS: INCOMPLETE (65% COMPLETE)
+## FILE MANAGEMENT STATUS: INCOMPLETE (90% COMPLETE)
 
 ## LARGEST FILE CONTRIBUTORS
-- **Lockfiles**: 298 KB (`package-lock.json`) + 157 KB (`test/fixtures/package-lock.json`)  
-  Both manifest tens of thousands of dependency entries in JSON, massively inflating token count.
-- **Test suites & fixtures**: ~50 KB of `.js` test files + 157 KB fixture JSON  
-  Roughly 45 Vitest specs plus supporting fixture data.
-- **Documentation**: ~30 KB of `.md` under `docs/`  
-  Architecture, API, branching guides—all useful but add hundreds of lines.
-- **Source code**: ~15 KB of `src/` + `bin/` scripts  
-  Core logic and CLI entrypoint (small footprint).
+- **node_modules**: Thousands of files (~50 MB) – all third-party dependencies  
+- **test/fixtures & test/fixtures-up-to-date**: ~100 files (~200 KB) – local project fixtures used by E2E tests  
+- **docs/**: 6 Markdown files (~20 KB) – architecture, API, guidelines, etc.  
+- **bin/, src/, test/**: ~40 JS files (~30 KB) – core CLI code, helpers, unit tests  
 
 ## IGNORE RECOMMENDATIONS
 
 ### TO ADD TO .gitignore:
 ```gitignore
-# Exclude large lockfiles and fixture JSON when not needed
+# Hide lockfile if using yarn or pnpm (lockfiles bloat LLM context)
 package-lock.json
-test/fixtures/**/*.json
+
+# Hide additional test fixtures folder not covered by existing patterns
+test/fixtures-up-to-date/
 ```
 
 ### TO ADD TO .voderignore:
-```gitignore
-# Hide non-essential content from AI context to reduce tokens
-package-lock.json
-test/
-docs/
-.github/
+```text
+# No new negations needed—these patterns safely hide large fixtures and lockfiles.
 ```
 
 ## NEXT PRIORITY FOR FILE MANAGEMENT
-Define and commit a `.voderignore` so that the AI assistant entirely skips `package-lock.json`, the `test/` directory (including fixtures), the `docs/` tree and CI workflows in `.github/`.
+Add `test/fixtures-up-to-date/` and `package-lock.json` to `.gitignore` to ensure all bulky fixtures and lockfiles are excluded from the model’s context.
 
 ## COMPLETION CRITERIA
-File management will be 100 % complete when:
-- All large JSON lockfiles & fixtures are ignored in AI context (`.voderignore` applied).
-- Entire `test/` and `docs/` directories are hidden from LLM context.
-- Only essential source files (`src/`, `bin/`, `package.json`, CI configs) remain visible.
-- Total token footprint for visible files is sustainably under 150 000 tokens.
+File management will be 100% complete when:
+- All generated/build artifacts, dependency caches, and test fixtures are ignored
+- Only essential source files, configs, and documentation remain visible
+- Total token footprint for LLM context is under 150 000 (with a 50 000-token safety margin)
 
-## Previous History
-• `.gitignore` already covers caches, build output, logs, node_modules, temp files.  
-• `.voderignore` is currently empty.  
-• No large custom artifacts beyond lockfiles & fixtures have been hidden so far.
+> **IMPORTANT:** Mark as COMPLETE (100%) only when ongoing token usage remains sustainably under the 150 000-token threshold.

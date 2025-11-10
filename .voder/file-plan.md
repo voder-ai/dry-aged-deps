@@ -1,40 +1,19 @@
-## NOW
-Add a `.voderignore` file (or update it if it already exists) with these patterns to hide the biggest token-sinks from the assistant’s context:
-
+## NOW  
+Append the following to `.voderignore` to hide all test code and dramatically cut context size:  
 ```
-# Hide large generated and cache files
-package-lock.json
-node_modules/**
-coverage/**
-dist/**
-build/**
-.cache/**
-.parcel-cache/**
-docs/generated/**
-*.log
+# Hide all test files
+test/**
+```  
 
-# Hide large test fixtures
-test/fixtures/**
+## NEXT  
+Append to `.voderignore` to hide repository metadata and documentation:  
 ```
+# Hide GitHub metadata and workflows
+.github/**
 
-## NEXT
-Add ignore rules for IDE/editor files, environment files and auxiliary tool configs:
+# Hide all documentation
+docs/**
+```  
 
-```
-# Env and secrets
-.env*
-  
-# Editor settings and swap files
-.vscode/**
-.idea/**
-*.swp
-*.swo
-  
-# Husky hooks and GitHub assistant prompts
-.husky/**
-.github/instructions/**
-.github/prompts/**
-```
-
-## LATER
-Evaluate breaking out very large fixtures or documentation (e.g. move to a separate repo or archive) and prune any other seldom-used files to further slim the context.
+## LATER  
+Evaluate moving large fixtures, docs or seldom‐used configs into a separate archive or repo and prune any other rarely accessed files to further slim the assistant’s context.

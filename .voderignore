@@ -25,3 +25,12 @@ test/fixtures/**
 .husky/**
 .github/instructions/**
 .github/prompts/**
+
+# Hide all test files
+test/**
+
+# Hide GitHub metadata and workflows
+.github/**
+
+# Hide all documentation
+docs/**
