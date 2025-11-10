@@ -49,6 +49,14 @@ export default [
     plugins: { security },
     rules: {
       ...security.configs.recommended.rules,
+      // Allow unused vars if they start with underscore
+      'no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+        },
+      ],
     },
   },
 

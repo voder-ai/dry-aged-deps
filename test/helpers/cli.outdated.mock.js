@@ -6,7 +6,7 @@ export const outdatedData = {
 };
 
 // Stub fetchVersionTimes to return publish dates in the past
-export async function fetchVersionTimes(packageName) {
+export async function fetchVersionTimes(_packageName) {
   return {
     '1.0.0': '2020-01-01T00:00:00Z',
     '1.1.0': '2020-06-01T00:00:00Z',
@@ -15,6 +15,6 @@ export async function fetchVersionTimes(packageName) {
 }
 
 // Stub checkVulnerabilities to always return 0 (no vulnerabilities)
-export async function checkVulnerabilities(packageName, version) {
+export async function checkVulnerabilities(_packageName, _version) {
   return 0;
 }
