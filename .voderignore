@@ -1,0 +1,27 @@
+# Hide large generated and cache files
+package-lock.json
+node_modules/**
+coverage/**
+dist/**
+build/**
+.cache/**
+.parcel-cache/**
+docs/generated/**
+*.log
+
+# Hide large test fixtures
+test/fixtures/**
+
+# Env and secrets
+.env*
+
+# Editor settings and swap files
+.vscode/**
+.idea/**
+*.swp
+*.swo
+
+# Husky hooks and GitHub assistant prompts
+.husky/**
+.github/instructions/**
+.github/prompts/**
