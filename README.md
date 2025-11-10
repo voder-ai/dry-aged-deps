@@ -77,4 +77,4 @@ If you're using AI development assistants (like Voder), you can configure them b
 
 ## Attribution
 
-This project was created by [Voder](https://voder.ai) - an AI-powered development assistant.
+This project was created by [Voder - AI Coding Without the Slop](https://voder.ai).

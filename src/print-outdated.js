@@ -4,6 +4,7 @@ import { fetchVersionTimes as defaultFetchVersionTimes } from './fetch-version-t
 import { calculateAgeInDays as defaultCalculateAgeInDays } from './age-calculator.js';
 import { checkVulnerabilities as defaultCheckVulnerabilities } from './check-vulnerabilities.js';
 import { xmlFormatter } from './xml-formatter.js';
+import { jsonFormatter } from './json-formatter.js';
 
 /**
  * Print outdated dependencies information with age
@@ -37,10 +38,27 @@ export async function printOutdated(data, options = {}) {
         timestamp,
       });
       console.log(xml);
+      return;
+    } else if (format === 'json') {
+      const timestamp = new Date().toISOString();
+      const summary = {
+        totalOutdated: 0,
+        safeUpdates: 0,
+        filteredByAge: 0,
+        filteredBySecurity: 0,
+        minAge: 7,
+      };
+      const jsonOutput = jsonFormatter({
+        rows: [],
+        summary,
+        timestamp,
+      });
+      console.log(jsonOutput);
+      return;
     } else {
       console.log('All dependencies are up to date.');
+      return;
     }
-    return;
   }
 
   // Build rows [name, current, wanted, latest, age]
@@ -54,7 +72,7 @@ export async function printOutdated(data, options = {}) {
           age = calculateAgeInDays(latestTime);
         }
       } catch (err) {
-        if (format !== 'xml') {
+        if (format !== 'xml' && format !== 'json') {
           console.error(
             `Warning: failed to fetch version times for ${name}: ${err.message}`
           );
@@ -82,17 +100,37 @@ export async function printOutdated(data, options = {}) {
         include = false;
       }
     } catch (err) {
-      if (format !== 'xml') {
+      if (format !== 'xml' && format !== 'json') {
         console.error(
           `Warning: failed to check vulnerabilities for ${name}@${latest}: ${err.message}`
         );
       }
-      // Fail-open: include on error
       include = true;
     }
     if (include) {
       safeRows.push(row);
     }
+  }
+
+  if (format === 'json') {
+    const totalOutdated = rows.length;
+    const filteredByAge = totalOutdated - matureRows.length;
+    const filteredBySecurity = matureRows.length - safeRows.length;
+    const summary = {
+      totalOutdated,
+      safeUpdates: safeRows.length,
+      filteredByAge,
+      filteredBySecurity,
+      minAge: MIN_AGE_DAYS,
+    };
+    const timestamp = new Date().toISOString();
+    const jsonOutput = jsonFormatter({
+      rows: safeRows,
+      summary,
+      timestamp,
+    });
+    console.log(jsonOutput);
+    return;
   }
 
   if (format === 'xml') {
@@ -130,6 +168,6 @@ export async function printOutdated(data, options = {}) {
   }
 
   for (const row of safeRows) {
-    console.log(row.join('	'));
+    console.log(row.join('\t'));
   }
 }

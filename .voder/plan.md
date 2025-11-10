@@ -1,17 +1,14 @@
 ## NOW
-
-Modify `bin/dry-aged-deps.js` to parse a new `--format=<value>` argument (validating against `table|json|xml`), store it in a `format` variable, and forward that option into the call to `printOutdated` (e.g. `printOutdated(data, { format })`).
+Create a new module `src/json-formatter.js` that exports a `jsonFormatter` function to serialize the packages data, summary, and timestamp into a single JSON string matching the story-008 schema.
 
 ## NEXT
-
-- Create a new module `src/xml-formatter.js` that takes the processed package data and generates well-formed XML according to the schema in `prompts/009.0-DEV-XML-OUTPUT.md`.
-- Update `src/print-outdated.js` (or a new dispatcher) to invoke the XML formatter when `options.format === 'xml'` (falling back to table/JSON otherwise).
-- Add unit tests for the XML formatter (valid XML, correct element names, proper escaping) and integration tests for `dry-aged-deps --format=xml` to verify exit codes and output.
-- Enhance the CLI help text in `bin/dry-aged-deps.js` to document the `--format` option and valid values.
+- In `src/print-outdated.js`, add a `format === 'json'` branch that calls `jsonFormatter` and `console.log(...)` the JSON output.  
+- Write unit tests in `test/json-formatter.test.js` to verify valid JSON, full data, and summary fields.  
+- Add a CLI integration test `test/cli.format-json.test.js` using Execa to run `dry-aged-deps --format=json` and assert valid, parseable JSON and correct exit code.  
+- Update `bin/dry-aged-deps.js` help text and `README.md` to document `--format=json` usage and show an example JSON output.
 
 ## LATER
-
-- Update `README.md` and `docs/api.md` with examples of XML output and the `--format` flag.
-- Add schema validation in tests (e.g. via `xmllint`) to ensure output remains well-formed.
-- Consider adding an XSLT stylesheet reference or support for custom XML namespaces.
-- Refine performance by streaming XML generation for large dependency sets.
+- Implement proper exit codes for JSON mode (0 = no updates, 1 = safe updates available, 2 = error).  
+- Suppress any non-JSON console output when `--format=json` is used.  
+- Add JSON-formatted error output (with `error` and `timestamp` fields).  
+- Extend the JSON schema to include vulnerability counts/detail and configuration thresholds.
