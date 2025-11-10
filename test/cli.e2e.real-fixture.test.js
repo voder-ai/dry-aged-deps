@@ -12,29 +12,29 @@ const fixturesSourceDir = path.join(__dirname, 'fixtures');
 let tempDir;
 let fixturesDir;
 
-describe('dry-aged-deps CLI E2E with real fixture', () => {
+describe('dry-aged-deps CLI E2E with real fixture (mocked)', () => {
   beforeAll(async () => {
     // Create a unique temporary directory for this test suite
     tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'dry-aged-deps-test-e2e-'));
     fixturesDir = path.join(tempDir, 'fixtures');
 
-    // Copy fixture files to temp directory
+    // Copy fixture package.json to temp directory
     await fs.mkdir(fixturesDir, { recursive: true });
     await fs.copyFile(
       path.join(fixturesSourceDir, 'package.json'),
       path.join(fixturesDir, 'package.json')
     );
 
-    // Install production dependencies for fixture project in temp directory
+    // Dry-run npm install to validate package.json
     await execa(
       'npm',
       [
         'install',
-        '--prefer-offline',
         '--ignore-scripts',
         '--no-audit',
         '--no-fund',
         '--omit=dev',
+        '--dry-run',
       ],
       {
         cwd: fixturesDir,
@@ -54,7 +54,7 @@ describe('dry-aged-deps CLI E2E with real fixture', () => {
     const cliPath = path.join(__dirname, '..', 'bin', 'dry-aged-deps.js');
     const result = await execa('node', [cliPath], {
       cwd: fixturesDir,
-      env: process.env,
+      env: { ...process.env, DRY_AGED_DEPS_MOCK: '1' },
     });
 
     expect(result.exitCode).toBe(0);
@@ -79,7 +79,7 @@ describe('dry-aged-deps CLI E2E with real fixture', () => {
     // Check if at least one age cell is a positive integer
     let foundPositive = false;
     for (const line of dataLines) {
-      const cols = line.split('	');
+      const cols = line.split('  ');
       const ageCell = cols[4];
       const age = parseInt(ageCell, 10);
       if (!isNaN(age) && age > 0) {
