@@ -55,7 +55,7 @@ describe('xmlFormatter object-style package entries', () => {
     expect(xml).toContain('<vulnerabilities>');
     expect(xml.match(/<vulnerability>/g)?.length).toBe(2);
     expect(xml).toContain('<title>Title &amp; Info</title>');
-    expect(xml).toContain('<url>http://example.com/?q=&lt;script></url>');
+    expect(xml).toContain('<url>http://example.com/?q=&lt;script&gt;</url>');
     expect(xml).toContain("<url>http://example.com/?q=&apos;test&apos;</url>");
 
     // Check dependencyType and filtered fields
