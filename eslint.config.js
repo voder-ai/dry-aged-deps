@@ -11,7 +11,7 @@
  * - File patterns are more explicit and powerful than legacy format
  *
  * Configuration layers (in order):
- * 1. Global ignores (dist/, build/, coverage/, node_modules/, test/fixtures/)
+ * 1. Global ignores (dist/, build/, coverage/, node_modules/, test/fixtures/, .voder/, *.patch, *.diff)
  * 2. Base ESLint recommended rules
  * 3. Enable ESLint Security plugin recommended rules
  * 4. All source files use ES modules (src/**, bin/**, test/**, config files)
@@ -35,6 +35,9 @@ export default [
       'node_modules/',
       'test/fixtures/',
       'commitlint.config.cjs',
+      '.voder/',
+      '*.patch',
+      '*.diff',
     ],
   },
 
