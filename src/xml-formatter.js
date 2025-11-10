@@ -17,7 +17,12 @@ function escapeXml(unsafe) {
 
 /**
  * Format data into XML string
- * @param {{ rows: Array<any>, summary: { totalOutdated: number, safeUpdates: number, filteredByAge: number, filteredBySecurity: number, minAge?: number }, thresholds?: { prod?: { minAge?: number, minSeverity?: string }, dev?: { minAge?: number, minSeverity?: string } }, timestamp: string }} params
+ * @param {Object} params
+ * @param {Array<any>} [params.rows]
+ * @param {Object} [params.summary]
+ * @param {Object} [params.thresholds]
+ * @param {string} [params.timestamp]
+ * @param {Error} [params.error]
  * @returns {string} XML string
  */
 export function xmlFormatter({
@@ -25,9 +30,23 @@ export function xmlFormatter({
   summary = {},
   thresholds = {},
   timestamp = '',
-}) {
+  error = null,
+} = {}) {
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
   xml += `<outdated-packages timestamp="${escapeXml(timestamp)}">\n`;
+
+  // Error output
+  if (error) {
+    xml += '  <error>\n';
+    xml += `    <message>${escapeXml(error.message)}</message>\n`;
+    xml += `    <code>${escapeXml(error.code || '')}</code>\n`;
+    if (error.details) {
+      xml += `    <details>${escapeXml(error.details)}</details>\n`;
+    }
+    xml += '  </error>\n';
+    xml += '</outdated-packages>';
+    return xml;
+  }
 
   // Packages
   xml += '  <packages>\n';

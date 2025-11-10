@@ -5,6 +5,7 @@ import path from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
 import { execFileSync } from 'child_process';
 import { printOutdated } from '../src/print-outdated.js';
+import { xmlFormatter } from '../src/xml-formatter.js';
 
 /**
  * dry-aged-deps CLI
@@ -69,7 +70,7 @@ async function main() {
   const minAgeEq = args.find((a) => a.startsWith('--min-age='));
   if (minAgeEq) {
     const v = minAgeEq.split('=')[1];
-    if (!/^\d+$/.test(v)) {
+    if (!/^[0-9]+$/.test(v)) {
       console.error(
         `Invalid min-age: ${v}. Must be an integer between 1 and 365.`
       );
@@ -87,7 +88,7 @@ async function main() {
     if (idx !== -1) {
       if (args.length > idx + 1) {
         const v = args[idx + 1];
-        if (!/^\d+$/.test(v)) {
+        if (!/^[0-9]+$/.test(v)) {
           console.error(
             `Invalid min-age: ${v}. Must be an integer between 1 and 365.`
           );
@@ -166,6 +167,11 @@ async function main() {
       if (err.stdout) {
         outputStr = err.stdout.toString();
       } else {
+        if (format === 'xml') {
+          const timestamp = new Date().toISOString();
+          console.log(xmlFormatter({ timestamp, error: err }));
+          process.exit(2);
+        }
         console.error('Error running npm outdated:', err.message);
         process.exit(1);
       }
@@ -174,6 +180,11 @@ async function main() {
     try {
       data = outputStr ? JSON.parse(outputStr) : {};
     } catch (parseErr) {
+      if (format === 'xml') {
+        const timestamp = new Date().toISOString();
+        console.log(xmlFormatter({ timestamp, error: parseErr }));
+        process.exit(2);
+      }
       console.error('Failed to parse npm outdated output:', parseErr.message);
       process.exit(1);
     }
@@ -190,8 +201,13 @@ async function main() {
     });
     process.exit(0);
   } catch (err) {
+    if (format === 'xml') {
+      const timestamp = new Date().toISOString();
+      console.log(xmlFormatter({ timestamp, error: err }));
+      process.exit(2);
+    }
     console.error(err.message);
-    process.exit(1);
+    process.exit(2);
   }
 }
 

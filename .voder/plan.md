@@ -1,30 +1,12 @@
 ## NOW
-
-In `test/cli.e2e.real-fixture.test.js`, change the row-splitting line from
-
-```js
-const cols = line.split('  ');
-```
-
-to
-
-```js
-const cols = line.split('\t');
-```
-
-so the test correctly parses the tab-separated columns.
+Extend the XML formatter to support error output: in `src/xml-formatter.js`, modify the `xmlFormatter` function signature to accept an optional `error` object and, when provided, emit an `<error>` element (with `<message>`, `<code>`, `<details>`) inside the `<outdated-packages>` root per the XML Error Output schema.
 
 ## NEXT
-
-- Run the full test suite (`npm test`) and fix any remaining failures.
-- Verify that the E2E real-fixture CLI test now passes consistently under `DRY_AGED_DEPS_MOCK=1`.
-- Ensure no other tests rely on two-space splits and that all table-mode tests still pass.
+- Update the CLI (`bin/dry-aged-deps.js`) catch handlers to detect `--format=xml`, call the enhanced `xmlFormatter({ error, timestamp })`, and then `process.exit(2)`.
+- Adjust the post-print exit logic to inspect the returned `summary.safeUpdates` and use `process.exit(1)` when safe updates exist, otherwise `process.exit(0)`.
+- Add unit tests for the new XML error formatting in `test/xml-formatter.test.js` and integration tests in `test/cli.format-xml.test.js` to verify both error output and exit codes.
 
 ## LATER
-
-- Implement Story 007.0: separate production vs. development thresholds:
-  - Add `--prod-min-age`, `--dev-min-age`, `--prod-severity`, and `--dev-severity` flags in `bin/dry-aged-deps.js`.
-  - In `src/print-outdated.js`, detect each dependency’s type (`prod` vs. `dev`), apply the appropriate thresholds, and propagate `dependencyType`.
-  - Add unit and CLI tests to cover the new flags and behavior.
-- Update documentation (`README.md`, `--help` text) to describe the prod/dev threshold flags.
-- Once prod/dev thresholds are in place, resume work on post-MVP enhancements (caching, parallel fetches, async refactor).
+- Expand XML formatter coverage with tests for thresholds sections, vulnerability details, object‐style packages, and edge-case escaping.
+- Update `README.md` and `docs/api.md` to document the XML error format and new exit-code semantics.
+- Enforce the new exit-code behavior in CI pipelines and ensure coverage stays above the 80% thresholds.
