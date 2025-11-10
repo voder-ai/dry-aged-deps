@@ -9,7 +9,7 @@ Retrieve the publish timestamps of all versions for a given npm package.
 ### Signature
 
 ```js
-const { fetchVersionTimes } = require('dry-aged-deps');
+import { fetchVersionTimes } from 'dry-aged-deps';
 
 /**
  * Fetch version publish times for an npm package.
@@ -22,7 +22,7 @@ function fetchVersionTimes(packageName)
 
 ### Parameters
 
-- `packageName` (string): The name of the npm package. Must match `/^[a-z0-9@\-\/_\.]+$/i`.
+- `packageName` (string): The name of the npm package. Must match `/^[a-z0-9@\-\/\_.]+$/i`.
 
 ### Returns
 
@@ -31,6 +31,8 @@ An object mapping each published version (e.g., `"1.2.3"`) to its publish date a
 ### Example
 
 ```js
+import { fetchVersionTimes } from 'dry-aged-deps';
+
 const times = fetchVersionTimes('lodash');
 console.log(times['4.17.21']);
 // => "2020-04-02T21:31:34.000Z"
@@ -43,7 +45,7 @@ Calculate how many days have passed since a given publish date.
 ### Signature
 
 ```js
-const { calculateAgeInDays } = require('dry-aged-deps');
+import { calculateAgeInDays } from 'dry-aged-deps';
 
 /**
  * Calculate the age in days since the publish date.
@@ -64,6 +66,8 @@ An integer representing the number of full days between the given date and the c
 ### Example
 
 ```js
+import { calculateAgeInDays } from 'dry-aged-deps';
+
 const age = calculateAgeInDays('2020-01-01T00:00:00.000Z');
 console.log(age);
 // => e.g., 900 (depending on current date)
