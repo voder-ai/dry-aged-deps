@@ -1,10 +1,10 @@
-# dry-aged-deps
+# 🥩 dry-aged-deps
 
 > Like a fine steak, some dependencies are better aged. Unlike a fine steak, malicious ones won't just give you food poisoning.
 
 [![Build Status](https://github.com/voder-ai/dry-aged-deps/actions/workflows/ci-publish.yml/badge.svg?branch=main)](https://github.com/voder-ai/dry-aged-deps/actions/workflows/ci-publish.yml)
 
-## The Problem
+## ⚠️ The Problem
 
 Running `npm outdated` shows you _every_ available update, but that's a bit like drinking wine straight from the fermenting vat. Not all updates are ready for consumption:
 
@@ -13,7 +13,7 @@ Running `npm outdated` shows you _every_ available update, but that's a bit like
 
 You need time to let the community kick the tires, spot the issues, and validate that a new version is actually safe to use.
 
-## The Solution
+## ✨ The Solution
 
 `dry-aged-deps` wraps `npm outdated` and filters results to only show updates that are both:
 
@@ -22,7 +22,7 @@ You need time to let the community kick the tires, spot the issues, and validate
 
 Think of it as `npm outdated` with a patience and a security guard.
 
-## Getting Started
+## 🚀 Getting Started
 
 ### Installation
 

@@ -1,12 +1,14 @@
-## NOW
-Extend the XML formatter to support error output: in `src/xml-formatter.js`, modify the `xmlFormatter` function signature to accept an optional `error` object and, when provided, emit an `<error>` element (with `<message>`, `<code>`, `<details>`) inside the `<outdated-packages>` root per the XML Error Output schema.
+## NOW  
+Create a new unit test `test/xml-formatter.error.test.js` that calls `xmlFormatter({ error: new Error('Test failure'), code: 'E_TEST', details: 'detail text', timestamp: '2025-01-01T00:00:00Z' })` and asserts the output contains a well-formed `<error>` block with `<message>`, `<code>`, `<details>`, and the closing `</outdated-packages>` tag.
 
-## NEXT
-- Update the CLI (`bin/dry-aged-deps.js`) catch handlers to detect `--format=xml`, call the enhanced `xmlFormatter({ error, timestamp })`, and then `process.exit(2)`.
-- Adjust the post-print exit logic to inspect the returned `summary.safeUpdates` and use `process.exit(1)` when safe updates exist, otherwise `process.exit(0)`.
-- Add unit tests for the new XML error formatting in `test/xml-formatter.test.js` and integration tests in `test/cli.format-xml.test.js` to verify both error output and exit codes.
+## NEXT  
+- Add unit tests for the XML formatter’s thresholds section (prod/dev min-age and min-severity tags).  
+- Write tests for object-style `<package>` entries in `xmlFormatter`, covering vulnerability `<details>` and correct escaping of special characters.  
+- Expand `printOutdated` tests to cover the XML branch with empty rows and verify exit codes when safe updates exist or on error.  
+- Add integration tests in `test/cli.format-xml.test.js` to simulate an error in mock mode and confirm the CLI emits the XML error block and exits with code 2.
 
-## LATER
-- Expand XML formatter coverage with tests for thresholds sections, vulnerability details, object‐style packages, and edge-case escaping.
-- Update `README.md` and `docs/api.md` to document the XML error format and new exit-code semantics.
-- Enforce the new exit-code behavior in CI pipelines and ensure coverage stays above the 80% thresholds.
+## LATER  
+- Introduce coverage thresholds in CI to fail if overall coverage falls below 80%.  
+- Review and add missing tests for JSON formatter edge cases and table output branches.  
+- Update `README.md` and docs to document the XML error format and new CLI exit-code semantics.  
+- Continue filling coverage gaps for `printOutdated` logic (maturity filtering, vulnerability filtering, “all up to date” messages).
