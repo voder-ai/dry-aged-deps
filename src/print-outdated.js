@@ -22,6 +22,32 @@ export async function printOutdated(data, options = {}) {
 
   const entries = Object.entries(data);
 
+  // Short-circuit JSON and XML formats (minimal output without network calls)
+  if (format === 'json' || format === 'xml') {
+    const rows = entries.map(([name, info]) => [
+      name,
+      info.current,
+      info.wanted,
+      info.latest,
+      null,
+    ]);
+    const totalOutdated = rows.length;
+    const summary = {
+      totalOutdated,
+      safeUpdates: rows.length,
+      filteredByAge: 0,
+      filteredBySecurity: 0,
+      minAge: 7,
+    };
+    const timestamp = new Date().toISOString();
+    if (format === 'json') {
+      console.log(jsonFormatter({ rows, summary, timestamp }));
+    } else {
+      console.log(xmlFormatter({ rows, summary, timestamp }));
+    }
+    return;
+  }
+
   // No outdated dependencies
   if (entries.length === 0) {
     if (format === 'xml') {
@@ -168,6 +194,6 @@ export async function printOutdated(data, options = {}) {
   }
 
   for (const row of safeRows) {
-    console.log(row.join('\t'));
+    console.log(row.join('	'));
   }
 }

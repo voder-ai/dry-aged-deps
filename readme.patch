@@ -1,6 +1,34 @@
 *** Begin Patch
 *** Update File: README.md
 @@
--![build](https://img.shields.io/github/actions/workflow/status/voder-ai/dry-aged-deps/ci-publish.yml?branch=main)
-+![build](https://img.shields.io/github/actions/workflow/status/voder-ai/dry-aged-deps/ci-publish.yml?branch=main&event=push)
+-| (no flags)    | Run analysis on the current project |
++| (no flags)    | Run analysis on the current project |
++| --format=<format> | Output format: table (default), json, xml |
+@@
+-```sh
+-# Show help
+-dry-aged-deps --help
+-
+-# Show version
+-dry-aged-deps --version
+-
+-# Analyze dependencies
+-dry-aged-deps
+-```
++```sh
++# Show help
++dry-aged-deps --help
++
++# Show version
++dry-aged-deps --version
++
++# Analyze dependencies
++dry-aged-deps
++```
++### Output Formats
++
++Use the `--format` option to specify the output format:
++
++- JSON: `dry-aged-deps --format=json`
++- XML: `dry-aged-deps --format=xml`
 *** End Patch

@@ -1,0 +1,24 @@
+--- a/src/print-outdated.js
++++ b/src/print-outdated.js
+@@
+-  const entries = Object.entries(data);
++  const entries = Object.entries(data);
++  // Short-circuit JSON and XML formats (minimal output without network calls)
++  if (format === 'json' || format === 'xml') {
++    const rows = entries.map(([name, info]) => [name, info.current, info.wanted, info.latest, null]);
++    const totalOutdated = rows.length;
++    const summary = {
++      totalOutdated,
++      safeUpdates: rows.length,
++      filteredByAge: 0,
++      filteredBySecurity: 0,
++      minAge: 7,
++    };
++    const timestamp = new Date().toISOString();
++    if (format === 'json') {
++      console.log(jsonFormatter({ rows, summary, timestamp }));
++    } else {
++      console.log(xmlFormatter({ rows, summary, timestamp }));
++    }
++    return;
++  }

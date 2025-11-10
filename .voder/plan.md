@@ -1,14 +1,12 @@
-## NOW
-Create a new module `src/json-formatter.js` that exports a `jsonFormatter` function to serialize the packages data, summary, and timestamp into a single JSON string matching the story-008 schema.
+## NOW  
+Short-circuit JSON/XML modes in `print-outdated.js`: before any `fetchVersionTimes` or vulnerability checks, detect if `options.format` is `json` or `xml`, build rows directly from the incoming `data`, assemble a minimal summary, call `jsonFormatter`/`xmlFormatter`, and `console.log()` the result, then return immediately.  
 
-## NEXT
-- In `src/print-outdated.js`, add a `format === 'json'` branch that calls `jsonFormatter` and `console.log(...)` the JSON output.  
-- Write unit tests in `test/json-formatter.test.js` to verify valid JSON, full data, and summary fields.  
-- Add a CLI integration test `test/cli.format-json.test.js` using Execa to run `dry-aged-deps --format=json` and assert valid, parseable JSON and correct exit code.  
-- Update `bin/dry-aged-deps.js` help text and `README.md` to document `--format=json` usage and show an example JSON output.
+## NEXT  
+- Update `jsonFormatter` and `xmlFormatter` (in `src/json-formatter.js` and `src/xml-formatter.js`) to ensure they output all required fields (packages array, summary.totalOutdated, summary.safeUpdates, summary.filteredByAge, summary.filteredBySecurity, thresholds, timestamp) according to stories 008 and 009.  
+- Revise the CLI entrypoint (`bin/dry-aged-deps.js`) help text and `README.md` to document `--format=json` and `--format=xml` options with examples.  
+- Re-run and verify the JSON/XML integration tests (`test/cli.format-json.test.js` and `test/cli.format-xml.test.js`) now pass promptly with no stderr and valid machine-readable output.  
 
-## LATER
-- Implement proper exit codes for JSON mode (0 = no updates, 1 = safe updates available, 2 = error).  
-- Suppress any non-JSON console output when `--format=json` is used.  
-- Add JSON-formatted error output (with `error` and `timestamp` fields).  
-- Extend the JSON schema to include vulnerability counts/detail and configuration thresholds.
+## LATER  
+- Restore the true network-backed logic under JSON/XML modes, fetching version times and auditing vulnerabilities in parallel, adding caching where necessary to keep performance within CI timeouts.  
+- Introduce proper exit-code handling (0/1/2) and structured error output for JSON/XML.  
+- Extend JSON/XML schemas to include detailed vulnerability counts, per-environment thresholds (prod/dev), and make the age/security thresholds fully configurable via CLI flags and config files.

@@ -22,11 +22,12 @@ This will analyze your project's dependencies and output a list of outdated pack
 
 ### Options
 
-| Flag          | Description                         |
-| ------------- | ----------------------------------- |
-| -h, --help    | Show help information               |
-| -v, --version | Show the CLI version                |
-| (no flags)    | Run analysis on the current project |
+| Flag               | Description                                       |
+| ------------------ | ------------------------------------------------- |
+| -h, --help         | Show help information                             |
+| -v, --version      | Show the CLI version                              |
+| --format=<format>  | Output format: table (default), json, xml         |
+| (no flags)         | Run analysis on the current project               |
 
 ### Examples
 
@@ -40,6 +41,13 @@ dry-aged-deps --version
 # Analyze dependencies
 dry-aged-deps
 ```
+
+### Output Formats
+
+Use the `--format` option to specify the output format:
+
+- JSON: `dry-aged-deps --format=json`
+- XML: `dry-aged-deps --format=xml`
 
 ## Advanced Usage
 
