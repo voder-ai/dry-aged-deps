@@ -2,7 +2,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { fileURLToFile, fileURLToPath, pathToFileURL } from 'url';
+import { fileURLToPath, pathToFileURL } from 'url';
 import { execFileSync } from 'child_process';
 import { printOutdated } from '../src/print-outdated.js';
 
