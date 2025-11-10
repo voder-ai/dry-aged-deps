@@ -25,7 +25,7 @@ describe('dry-aged-deps CLI XML output format', () => {
       path.join(fixturesDir, 'package.json')
     );
 
-    // Install production dependencies in temp directory
+    // Install production dependencies in temp directory (dry-run for speed)
     await execa(
       'npm',
       [
@@ -35,6 +35,7 @@ describe('dry-aged-deps CLI XML output format', () => {
         '--no-audit',
         '--no-fund',
         '--omit=dev',
+        '--dry-run',
       ],
       {
         cwd: fixturesDir,
