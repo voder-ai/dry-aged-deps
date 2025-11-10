@@ -1,8 +1,8 @@
 # dry-aged-deps
 
-[![Build Status](https://github.com/voder-ai/dry-aged-deps/actions/workflows/ci-publish.yml/badge.svg?branch=main)](https://github.com/voder-ai/dry-aged-deps/actions/workflows/ci-publish.yml)
-
 > Like a fine steak, some dependencies are better aged. Unlike a fine steak, malicious ones won't just give you food poisoning.
+
+[![Build Status](https://github.com/voder-ai/dry-aged-deps/actions/workflows/ci-publish.yml/badge.svg?branch=main)](https://github.com/voder-ai/dry-aged-deps/actions/workflows/ci-publish.yml)
 
 ## The Problem
 
