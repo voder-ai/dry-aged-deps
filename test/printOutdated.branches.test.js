@@ -1,6 +1,7 @@
 import { printOutdated } from '../src/print-outdated.js';
 import { vi, describe, test, expect, beforeEach, afterEach } from 'vitest';
 
+// Table output edge cases
 describe('printOutdated unit tests - table output edge cases', () => {
   let logSpy;
   let errorSpy;
@@ -25,7 +26,6 @@ describe('printOutdated unit tests - table output edge cases', () => {
     const data = {
       pkgA: { current: '1.0.0', wanted: '1.1.0', latest: '1.1.0' },
     };
-    // Stub fetchVersionTimes and calculateAgeInDays to return age below threshold
     const fetchStub = vi.fn().mockResolvedValue({ '1.1.0': '2020-01-01T00:00:00.000Z' });
     const ageStub = vi.fn().mockReturnValue(5);
     const summary = await printOutdated(data, {
@@ -38,7 +38,6 @@ describe('printOutdated unit tests - table output edge cases', () => {
     });
     expect(summary).toBeUndefined();
     expect(logSpy).toHaveBeenCalled();
-    // Should include mature version message
     expect(logSpy).toHaveBeenLastCalledWith(
       expect.stringContaining('No outdated packages with mature versions found')
     );
@@ -82,7 +81,6 @@ describe('printOutdated unit tests - table output edge cases', () => {
       prodMinAge: 7,
       devMinAge: 7,
     });
-    // For error branch, one warning and then table with header and row
     expect(errorSpy).toHaveBeenCalledWith(
       expect.stringContaining('Warning: failed to check vulnerabilities for pkgC@3.1.0')
     );
@@ -90,18 +88,21 @@ describe('printOutdated unit tests - table output edge cases', () => {
     expect(logSpy).toHaveBeenCalledWith(
       ['Name', 'Current', 'Wanted', 'Latest', 'Age (days)', 'Type'].join('	')
     );
-    // Row: name, current, wanted, latest, age, type
     expect(logSpy).toHaveBeenCalledWith('pkgC	3.0.0	3.1.0	3.1.0	15	dev');
   });
 });
 
+// JSON empty output
 describe('printOutdated unit tests - json output empty', () => {
   let logSpy;
 
   beforeEach(() => {
     logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
   });
-  afterEach(() => vi.restoreAllMocks());
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
 
   test('empty data with json format prints valid JSON summary', async () => {
     const result = await printOutdated({}, { format: 'json' });
@@ -125,5 +126,108 @@ describe('printOutdated unit tests - json output empty', () => {
       filteredBySecurity: 0,
       thresholds: { prod: { minAge: 7, minSeverity: 'none' }, dev: { minAge: 7, minSeverity: 'none' } },
     });
+  });
+});
+
+// XML output tests
+describe('printOutdated unit tests - xml output', () => {
+  let logSpy;
+  beforeEach(() => {
+    logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  test('empty data with xml format prints empty XML and returns summary', async () => {
+    const summary = await printOutdated({}, { format: 'xml' });
+    expect(summary).toEqual({
+      totalOutdated: 0,
+      safeUpdates: 0,
+      filteredByAge: 0,
+      filteredBySecurity: 0,
+    });
+    expect(logSpy).toHaveBeenCalledTimes(1);
+    const output = logSpy.mock.calls[0][0];
+    expect(output).toContain('<?xml version="1.0" encoding="UTF-8"?>');
+    expect(output).toContain('<outdated-packages');
+    expect(output).toContain('<summary>');
+    expect(output).toContain('<total-outdated>0</total-outdated>');
+  });
+
+  test('single entry with xml format prints package element and summary', async () => {
+    const data = {
+      pkgX: { current: '0.1.0', wanted: '0.2.0', latest: '0.2.0' },
+    };
+    const fetchStub = vi.fn().mockResolvedValue({ '0.2.0': '2020-01-01T00:00:00.000Z' });
+    const ageStub = vi.fn().mockReturnValue(10);
+    const vulnStub = vi.fn().mockResolvedValue(0);
+    const summary = await printOutdated(data, {
+      format: 'xml',
+      fetchVersionTimes: fetchStub,
+      calculateAgeInDays: ageStub,
+      checkVulnerabilities: vulnStub,
+      prodMinAge: 5,
+      devMinAge: 5,
+    });
+    expect(summary).toEqual({
+      totalOutdated: 1,
+      safeUpdates: 1,
+      filteredByAge: 0,
+      filteredBySecurity: 0,
+    });
+    expect(logSpy).toHaveBeenCalledTimes(1);
+    const output = logSpy.mock.calls[0][0];
+    expect(output).toContain('<package>');
+    expect(output).toContain('<name>pkgX</name>');
+    expect(output).toContain('<age>10</age>');
+    expect(output).toContain('<filtered>false</filtered>');
+    expect(output).toContain('<total-outdated>1</total-outdated>');
+  });
+});
+
+// JSON non-empty data tests
+describe('printOutdated unit tests - json output with data', () => {
+  let logSpy;
+  beforeEach(() => {
+    logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  test('data with json format prints valid JSON with packages and thresholds', async () => {
+    const data = {
+      pkgY: { current: '1.0.0', wanted: '1.1.0', latest: '1.1.0' },
+    };
+    const summary = await printOutdated(data, {
+      format: 'json',
+      prodMinAge: 3,
+      devMinAge: 3,
+      prodMinSeverity: 'low',
+      devMinSeverity: 'high',
+    });
+    expect(summary).toEqual({
+      totalOutdated: 1,
+      safeUpdates: 1,
+      filteredByAge: 0,
+      filteredBySecurity: 0,
+    });
+    expect(logSpy).toHaveBeenCalledTimes(1);
+    const output = logSpy.mock.calls[0][0];
+    const parsed = JSON.parse(output);
+    expect(parsed.summary).toEqual({
+      totalOutdated: 1,
+      safeUpdates: 1,
+      filteredByAge: 0,
+      filteredBySecurity: 0,
+      thresholds: { prod: { minAge: 3, minSeverity: 'low' }, dev: { minAge: 3, minSeverity: 'high' } },
+    });
+    expect(Array.isArray(parsed.packages)).toBe(true);
+    expect(parsed.packages).toEqual([
+      { name: 'pkgY', current: '1.0.0', wanted: '1.1.0', latest: '1.1.0', age: null },
+    ]);
   });
 });
