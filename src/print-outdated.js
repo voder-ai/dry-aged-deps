@@ -12,17 +12,14 @@ import { jsonFormatter } from './json-formatter.js';
  * @param {{ fetchVersionTimes?: function, calculateAgeInDays?: function, checkVulnerabilities?: function, format?: string, minAge?: number, minSeverity?: string }} [options]
  */
 export async function printOutdated(data, options = {}) {
-  const fetchVersionTimes =
-    options.fetchVersionTimes || defaultFetchVersionTimes;
-  const calculateAgeInDays =
-    options.calculateAgeInDays || defaultCalculateAgeInDays;
-  const checkVulnerabilities =
-    options.checkVulnerabilities || defaultCheckVulnerabilities;
+  const fetchVersionTimes = options.fetchVersionTimes || defaultFetchVersionTimes;
+  const calculateAgeInDays = options.calculateAgeInDays || defaultCalculateAgeInDays;
+  const checkVulnerabilities = options.checkVulnerabilities || defaultCheckVulnerabilities;
   const format = options.format || 'table';
 
   // Configurable thresholds
   const minAge = typeof options.minAge === 'number' ? options.minAge : 7;
-  // const minSeverity = options.minSeverity || 'none'; // currently not applied
+  // const minSeverity = options.minSeverity || 'none'; // not implemented for now
 
   const entries = Object.entries(data);
 
@@ -56,34 +53,35 @@ export async function printOutdated(data, options = {}) {
   if (entries.length === 0) {
     if (format === 'xml') {
       const timestamp = new Date().toISOString();
-      const xml = xmlFormatter({
-        rows: [],
-        summary: {
-          totalOutdated: 0,
-          safeUpdates: 0,
-          filteredByAge: 0,
-          filteredBySecurity: 0,
-          minAge,
-        },
-        timestamp,
-      });
-      console.log(xml);
+      console.log(
+        xmlFormatter({
+          rows: [],
+          summary: {
+            totalOutdated: 0,
+            safeUpdates: 0,
+            filteredByAge: 0,
+            filteredBySecurity: 0,
+            minAge,
+          },
+          timestamp,
+        })
+      );
       return;
     } else if (format === 'json') {
       const timestamp = new Date().toISOString();
-      const summary = {
-        totalOutdated: 0,
-        safeUpdates: 0,
-        filteredByAge: 0,
-        filteredBySecurity: 0,
-        minAge,
-      };
-      const jsonOutput = jsonFormatter({
-        rows: [],
-        summary,
-        timestamp,
-      });
-      console.log(jsonOutput);
+      console.log(
+        jsonFormatter({
+          rows: [],
+          summary: {
+            totalOutdated: 0,
+            safeUpdates: 0,
+            filteredByAge: 0,
+            filteredBySecurity: 0,
+            minAge,
+          },
+          timestamp,
+        })
+      );
       return;
     } else {
       console.log('All dependencies are up to date.');
@@ -113,7 +111,7 @@ export async function printOutdated(data, options = {}) {
   );
   const rows = await Promise.all(tasks);
 
-  // Filter by configurable age threshold
+  // Filter by age threshold
   const matureRows = rows.filter((row) => {
     const age = row[4];
     return typeof age === 'number' && age >= minAge;
@@ -154,12 +152,7 @@ export async function printOutdated(data, options = {}) {
       minAge,
     };
     const timestamp = new Date().toISOString();
-    const jsonOutput = jsonFormatter({
-      rows: safeRows,
-      summary,
-      timestamp,
-    });
-    console.log(jsonOutput);
+    console.log(jsonFormatter({ rows: safeRows, summary, timestamp }));
     return;
   }
 
@@ -175,8 +168,7 @@ export async function printOutdated(data, options = {}) {
       minAge,
     };
     const timestamp = new Date().toISOString();
-    const xml = xmlFormatter({ rows: safeRows, summary, timestamp });
-    console.log(xml);
+    console.log(xmlFormatter({ rows: safeRows, summary, timestamp }));
     return;
   }
 

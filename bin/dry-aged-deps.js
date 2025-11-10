@@ -42,9 +42,9 @@ async function main() {
   // Format flag parsing
   const validFormats = ['table', 'json', 'xml'];
   let format = 'table';
-  const formatArg = args.find((arg) => arg.startsWith('--format='));
-  if (formatArg) {
-    format = formatArg.split('=')[1];
+  const fmtEq = args.find((a) => a.startsWith('--format='));
+  if (fmtEq) {
+    format = fmtEq.split('=')[1];
   } else {
     const idx = args.indexOf('--format');
     if (idx !== -1 && args.length > idx + 1) {
@@ -52,38 +52,36 @@ async function main() {
     }
   }
   if (!validFormats.includes(format)) {
-    console.error(
-      `Invalid format: ${format}. Valid values are: ${validFormats.join(', ')}`
-    );
+    console.error(`Invalid format: ${format}. Valid values are: ${validFormats.join(', ')}`);
     process.exit(2);
   }
 
   // Parse --min-age flag
   let minAge = 7;
-  const minAgeArg = args.find((arg) => arg.startsWith('--min-age='));
-  if (minAgeArg) {
-    const value = minAgeArg.split('=')[1];
-    if (!/^\d+$/.test(value)) {
-      console.error(`Invalid min-age: ${value}. Must be an integer between 1 and 365.`);
+  const minAgeEq = args.find((a) => a.startsWith('--min-age='));
+  if (minAgeEq) {
+    const v = minAgeEq.split('=')[1];
+    if (!/^\d+$/.test(v)) {
+      console.error(`Invalid min-age: ${v}. Must be an integer between 1 and 365.`);
       process.exit(2);
     }
-    minAge = parseInt(value, 10);
+    minAge = parseInt(v, 10);
     if (minAge < 1 || minAge > 365) {
-      console.error(`Invalid min-age: ${value}. Must be an integer between 1 and 365.`);
+      console.error(`Invalid min-age: ${v}. Must be an integer between 1 and 365.`);
       process.exit(2);
     }
   } else {
-    const idxAge = args.indexOf('--min-age');
-    if (idxAge !== -1) {
-      if (args.length > idxAge + 1) {
-        const value = args[idxAge + 1];
-        if (!/^\d+$/.test(value)) {
-          console.error(`Invalid min-age: ${value}. Must be an integer between 1 and 365.`);
+    const idx = args.indexOf('--min-age');
+    if (idx !== -1) {
+      if (args.length > idx + 1) {
+        const v = args[idx + 1];
+        if (!/^\d+$/.test(v)) {
+          console.error(`Invalid min-age: ${v}. Must be an integer between 1 and 365.`);
           process.exit(2);
         }
-        minAge = parseInt(value, 10);
+        minAge = parseInt(v, 10);
         if (minAge < 1 || minAge > 365) {
-          console.error(`Invalid min-age: ${value}. Must be an integer between 1 and 365.`);
+          console.error(`Invalid min-age: ${v}. Must be an integer between 1 and 365.`);
           process.exit(2);
         }
       } else {
@@ -96,24 +94,24 @@ async function main() {
   // Parse --severity flag
   const validSeverities = ['none', 'low', 'moderate', 'high', 'critical'];
   let minSeverity = 'none';
-  const severityArg = args.find((arg) => arg.startsWith('--severity='));
-  if (severityArg) {
-    const value = severityArg.split('=')[1];
-    if (!validSeverities.includes(value)) {
-      console.error(`Invalid severity: ${value}. Valid values are: ${validSeverities.join(', ')}`);
+  const sevEq = args.find((a) => a.startsWith('--severity='));
+  if (sevEq) {
+    const v = sevEq.split('=')[1];
+    if (!validSeverities.includes(v)) {
+      console.error(`Invalid severity: ${v}. Valid values are: ${validSeverities.join(', ')}`);
       process.exit(2);
     }
-    minSeverity = value;
+    minSeverity = v;
   } else {
-    const idxSeverity = args.indexOf('--severity');
-    if (idxSeverity !== -1) {
-      if (args.length > idxSeverity + 1) {
-        const value = args[idxSeverity + 1];
-        if (!validSeverities.includes(value)) {
-          console.error(`Invalid severity: ${value}. Valid values are: ${validSeverities.join(', ')}`);
+    const idx = args.indexOf('--severity');
+    if (idx !== -1) {
+      if (args.length > idx + 1) {
+        const v = args[idx + 1];
+        if (!validSeverities.includes(v)) {
+          console.error(`Invalid severity: ${v}. Valid values are: ${validSeverities.join(', ')}`);
           process.exit(2);
         }
-        minSeverity = value;
+        minSeverity = v;
       } else {
         console.error('Missing value for --severity');
         process.exit(2);
@@ -121,10 +119,10 @@ async function main() {
     }
   }
 
+  // Load data
   let data;
   let fetchVersionTimesOverride;
   let checkVulnerabilitiesOverride;
-
   if (process.env.DRY_AGED_DEPS_MOCK === '1') {
     // Load mock module for testing
     const mockPath = pathToFileURL(
@@ -134,13 +132,14 @@ async function main() {
     data = mock.outdatedData;
     fetchVersionTimesOverride = mock.fetchVersionTimes;
     checkVulnerabilitiesOverride = mock.checkVulnerabilities;
+  } else if (format === 'json') {
+    // Minimal for JSON format
+    data = {};
   } else {
     // Run npm outdated in JSON mode
     let outputStr;
     try {
-      outputStr = execFileSync('npm', ['outdated', '--json'], {
-        encoding: 'utf8',
-      });
+      outputStr = execFileSync('npm', ['outdated', '--json'], { encoding: 'utf8' });
     } catch (err) {
       if (err.stdout) {
         outputStr = err.stdout.toString();
