@@ -7,7 +7,7 @@
  * @returns {string}
  */
 function escapeXml(unsafe) {
-  return unsafe
+  return String(unsafe)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
@@ -17,34 +17,96 @@ function escapeXml(unsafe) {
 
 /**
  * Format data into XML string
- * @param {{ rows: Array<Array<any>>, summary: { totalOutdated: number, safeUpdates: number, filteredByAge: number, filteredBySecurity: number, minAge: number }, timestamp: string }} params
+ * @param {{ rows: Array<any>, summary: { totalOutdated: number, safeUpdates: number, filteredByAge: number, filteredBySecurity: number, minAge?: number }, thresholds?: { prod?: { minAge?: number, minSeverity?: string }, dev?: { minAge?: number, minSeverity?: string } }, timestamp: string }} params
  * @returns {string} XML string
  */
-export function xmlFormatter({ rows, summary, timestamp }) {
+export function xmlFormatter({ rows = [], summary = {}, thresholds = {}, timestamp = '' }) {
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
   xml += `<outdated-packages timestamp="${escapeXml(timestamp)}">\n`;
+
+  // Packages
   xml += '  <packages>\n';
-  for (const row of rows) {
-    const [name, current, wanted, latest, age] = row;
+  for (const item of rows) {
     xml += '    <package>\n';
-    xml += `      <name>${escapeXml(String(name))}</name>\n`;
-    xml += `      <current>${escapeXml(String(current))}</current>\n`;
-    xml += `      <wanted>${escapeXml(String(wanted))}</wanted>\n`;
-    xml += `      <latest>${escapeXml(String(latest))}</latest>\n`;
-    xml += `      <age>${age}</age>\n`;
+    if (Array.isArray(item)) {
+      const [name, current, wanted, latest, age] = item;
+      xml += `      <name>${escapeXml(name)}</name>\n`;
+      xml += `      <current>${escapeXml(current)}</current>\n`;
+      xml += `      <wanted>${escapeXml(wanted)}</wanted>\n`;
+      xml += `      <latest>${escapeXml(latest)}</latest>\n`;
+      xml += `      <age>${escapeXml(age)}</age>\n`;
+    } else {
+      // object-style item
+      xml += `      <name>${escapeXml(item.name)}</name>\n`;
+      xml += `      <current>${escapeXml(item.current)}</current>\n`;
+      xml += `      <wanted>${escapeXml(item.wanted)}</wanted>\n`;
+      xml += `      <latest>${escapeXml(item.latest)}</latest>\n`;
+      xml += `      <age>${escapeXml(item.age)}</age>\n`;
+      xml += `      <recommended>${escapeXml(item.recommended)}</recommended>\n`;
+      // Vulnerabilities block
+      xml += '      <vulnerabilities>\n';
+      const vuln = item.vulnerabilities || {};
+      const count = vuln.count != null ? vuln.count : '';
+      const maxSeverity = vuln.maxSeverity || '';
+      xml += `        <count>${escapeXml(count)}</count>\n`;
+      xml += `        <max-severity>${escapeXml(maxSeverity)}</max-severity>\n`;
+      xml += '        <details>\n';
+      if (Array.isArray(vuln.details)) {
+        for (const detail of vuln.details) {
+          xml += '          <vulnerability>\n';
+          xml += `            <name>${escapeXml(detail.name)}</name>\n`;
+          xml += `            <severity>${escapeXml(detail.severity)}</severity>\n`;
+          xml += `            <title>${escapeXml(detail.title)}</title>\n`;
+          xml += `            <url>${escapeXml(detail.url)}</url>\n`;
+          xml += '          </vulnerability>\n';
+        }
+      }
+      xml += '        </details>\n';
+      xml += '      </vulnerabilities>\n';
+      xml += `      <filtered>${item.filtered === true}</filtered>\n`;
+      xml += `      <filter-reason>${escapeXml(item.filterReason || '')}</filter-reason>\n`;
+      xml += `      <dependency-type>${escapeXml(item.dependencyType || '')}</dependency-type>\n`;
+    }
     xml += '    </package>\n';
   }
   xml += '  </packages>\n';
 
+  // Summary
   xml += '  <summary>\n';
-  xml += `    <total-outdated>${summary.totalOutdated}</total-outdated>\n`;
-  xml += `    <safe-updates>${summary.safeUpdates}</safe-updates>\n`;
-  xml += `    <filtered-by-age>${summary.filteredByAge}</filtered-by-age>\n`;
-  xml += `    <filtered-by-security>${summary.filteredBySecurity}</filtered-by-security>\n`;
-  xml += '    <threshold>\n';
-  xml += `      <min-age>${summary.minAge}</min-age>\n`;
-  xml += '    </threshold>\n';
+  xml += `    <total-outdated>${escapeXml(summary.totalOutdated ?? 0)}</total-outdated>\n`;
+  xml += `    <safe-updates>${escapeXml(summary.safeUpdates ?? 0)}</safe-updates>\n`;
+  xml += `    <filtered-by-age>${escapeXml(summary.filteredByAge ?? 0)}</filtered-by-age>\n`;
+  xml += `    <filtered-by-security>${escapeXml(summary.filteredBySecurity ?? 0)}</filtered-by-security>\n`;
+  if (summary.minAge != null) {
+    xml += `    <min-age>${escapeXml(summary.minAge)}</min-age>\n`;
+  }
   xml += '  </summary>\n';
+
+  // Thresholds
+  if (thresholds && (thresholds.prod || thresholds.dev)) {
+    xml += '  <thresholds>\n';
+    if (thresholds.prod) {
+      xml += '    <prod>\n';
+      if (thresholds.prod.minAge != null) {
+        xml += `      <min-age>${escapeXml(thresholds.prod.minAge)}</min-age>\n`;
+      }
+      if (thresholds.prod.minSeverity != null) {
+        xml += `      <min-severity>${escapeXml(thresholds.prod.minSeverity)}</min-severity>\n`;
+      }
+      xml += '    </prod>\n';
+    }
+    if (thresholds.dev) {
+      xml += '    <dev>\n';
+      if (thresholds.dev.minAge != null) {
+        xml += `      <min-age>${escapeXml(thresholds.dev.minAge)}</min-age>\n`;
+      }
+      if (thresholds.dev.minSeverity != null) {
+        xml += `      <min-severity>${escapeXml(thresholds.dev.minSeverity)}</min-severity>\n`;
+      }
+      xml += '    </dev>\n';
+    }
+    xml += '  </thresholds>\n';
+  }
 
   xml += '</outdated-packages>';
   return xml;

@@ -15,7 +15,8 @@
  * 2. Base ESLint recommended rules
  * 3. Enable ESLint Security plugin recommended rules
  * 4. All source files use ES modules (src/**, bin/**, test/**, config files)
- * 5. Test files with additional testing globals
+ * 5. CLI scripts override (console allowed)
+ * 6. Test files with additional testing globals
  *
  * See docs/eslint-flat-config.md for detailed safety guidelines and common pitfalls.
  */
@@ -63,6 +64,14 @@ export default [
       globals: {
         ...globals.node,
       },
+    },
+  },
+
+  // CLI scripts - allow console usage
+  {
+    files: ['bin/**/*.js'],
+    rules: {
+      'no-console': 'off',
     },
   },
 
