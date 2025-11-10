@@ -2,7 +2,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath, pathToFileURL } from 'url';
+import { fileURLToFile, fileURLToPath, pathToFileURL } from 'url';
 import { execFileSync } from 'child_process';
 import { printOutdated } from '../src/print-outdated.js';
 
@@ -25,9 +25,7 @@ async function main() {
     console.log('Options:');
     console.log('  -h, --help             Show help');
     console.log('  -v, --version          Show version');
-    console.log(
-      '  --format=<format>      Output format: table (default), json, xml'
-    );
+    console.log('  --format=<format>      Output format: table (default), json, xml');
     process.exit(0);
   }
 
@@ -42,18 +40,15 @@ async function main() {
   // Format flag parsing
   const validFormats = ['table', 'json', 'xml'];
   let format = 'table';
-  // Support --format=value
   const formatArg = args.find((arg) => arg.startsWith('--format='));
   if (formatArg) {
     format = formatArg.split('=')[1];
   } else {
-    // Support --format value
     const idx = args.indexOf('--format');
     if (idx !== -1 && args.length > idx + 1) {
       format = args[idx + 1];
     }
   }
-  // Validate format
   if (!validFormats.includes(format)) {
     console.error(
       `Invalid format: ${format}. Valid values are: ${validFormats.join(', ')}`
@@ -76,27 +71,25 @@ async function main() {
     checkVulnerabilitiesOverride = mock.checkVulnerabilities;
   } else {
     // Run npm outdated in JSON mode
+    let outputStr;
     try {
-      const outputStr = execFileSync('npm', ['outdated', '--json'], {
+      outputStr = execFileSync('npm', ['outdated', '--json'], {
         encoding: 'utf8',
       });
-      data = outputStr ? JSON.parse(outputStr) : {};
     } catch (err) {
-      // npm outdated exits non-zero if updates exist
       if (err.stdout) {
-        try {
-          data = JSON.parse(err.stdout.toString() || '{}');
-        } catch (parseErr) {
-          console.error(
-            'Failed to parse npm outdated output:',
-            parseErr.message
-          );
-          process.exit(1);
-        }
+        outputStr = err.stdout.toString();
       } else {
         console.error('Error running npm outdated:', err.message);
         process.exit(1);
       }
+    }
+    // Parse JSON output
+    try {
+      data = outputStr ? JSON.parse(outputStr) : {};
+    } catch (parseErr) {
+      console.error('Failed to parse npm outdated output:', parseErr.message);
+      process.exit(1);
     }
   }
 
