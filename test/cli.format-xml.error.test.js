@@ -21,11 +21,11 @@ describe('dry-aged-deps CLI XML error output', () => {
     const cliPath = path.join(process.cwd(), 'bin', 'dry-aged-deps.js');
     // Run CLI with fake npm in PATH
     const env = { ...process.env, PATH: `${fakeNpmDir}:${process.env.PATH}` };
-    const result = await execa(
-      'node',
-      [cliPath, '--format=xml'],
-      { cwd: tempDir, env, reject: false }
-    );
+    const result = await execa('node', [cliPath, '--format=xml'], {
+      cwd: tempDir,
+      env,
+      reject: false,
+    });
 
     expect(result.exitCode).toBe(2);
     const xml = result.stdout;

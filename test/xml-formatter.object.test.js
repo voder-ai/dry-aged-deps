@@ -5,7 +5,7 @@ describe('xmlFormatter object-style package entries', () => {
   it('should format object-style rows with vulnerabilities and escape special characters', () => {
     const rows = [
       {
-        name: "pkg&<>\"'",
+        name: 'pkg&<>"\'',
         current: '1.0.0',
         wanted: '1.2.0',
         latest: '2.0.0',
@@ -56,7 +56,7 @@ describe('xmlFormatter object-style package entries', () => {
     expect(xml.match(/<vulnerability>/g)?.length).toBe(2);
     expect(xml).toContain('<title>Title &amp; Info</title>');
     expect(xml).toContain('<url>http://example.com/?q=&lt;script&gt;</url>');
-    expect(xml).toContain("<url>http://example.com/?q=&apos;test&apos;</url>");
+    expect(xml).toContain('<url>http://example.com/?q=&apos;test&apos;</url>');
 
     // Check dependencyType and filtered fields
     expect(xml).toContain('<filtered>false</filtered>');

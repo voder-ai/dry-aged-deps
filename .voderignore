@@ -32,10 +32,5 @@ test/**
 # Hide GitHub metadata and workflows
 .github/**
 
-# Hide all documentation
-docs/**
-
-# Hide all Markdown docs
-*.md
 # Hide patch files
 *.patch
