@@ -26,7 +26,6 @@ describe('printOutdated XML empty rows', () => {
       safeUpdates: 0,
       filteredByAge: 0,
       filteredBySecurity: 0,
-      minAge: 7,
     });
 
     formatSpy.mockRestore();

@@ -1,6 +1,12 @@
 {
   "specificationPath": "prompts/008.0-DEV-JSON-OUTPUT.md",
-  "status": "TODO",
-  "lastValidated": null,
-  "evidence": []
+  "status": "PASSED",
+  "lastValidated": "2025-11-10T18:54:00Z",
+  "evidence": [
+    "JSON formatter module exists at src/json-formatter.js",
+    "Help text documents --format=json option",
+    "Test suite includes JSON formatter tests (cli.format-json.test.js, json-formatter.test.js)",
+    "All 45 tests pass including JSON output tests",
+    "CLI accepts --format=json flag as shown in help output"
+  ]
 }

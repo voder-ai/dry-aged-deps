@@ -1,6 +1,10 @@
 {
   "specificationPath": "prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md",
-  "status": "TODO",
-  "lastValidated": null,
-  "evidence": []
+  "status": "FAILED",
+  "lastValidated": "2025-11-10T18:54:00Z",
+  "evidence": [
+    "Help output does not show --prod-min-age, --dev-min-age, --prod-severity, or --dev-severity flags",
+    "No implementation found in source code for prod/dev specific thresholds",
+    "Story acceptance criteria are not met"
+  ]
 }

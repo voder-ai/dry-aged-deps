@@ -12,10 +12,13 @@ describe('jsonFormatter', () => {
       safeUpdates: 2,
       filteredByAge: 0,
       filteredBySecurity: 0,
-      minAge: 7,
+    };
+    const thresholds = {
+      prod: { minAge: 7, minSeverity: 'none' },
+      dev: { minAge: 7, minSeverity: 'none' },
     };
     const timestamp = '2024-01-01T00:00:00.000Z';
-    const json = jsonFormatter({ rows, summary, timestamp });
+    const json = jsonFormatter({ rows, summary, thresholds, timestamp });
     // Should be parseable JSON
     let obj;
     expect(() => {
@@ -34,7 +37,10 @@ describe('jsonFormatter', () => {
       age: 10,
     });
     expect(obj).toHaveProperty('summary');
-    expect(obj.summary).toEqual(summary);
+    expect(obj.summary).toEqual({
+      ...summary,
+      thresholds,
+    });
     // Ensure formatted with indentation
     expect(json.startsWith('{\n  "timestamp"')).toBe(true);
   });

@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+import fs from 'fs';
+import path from 'path';
 import { fetchVersionTimes as defaultFetchVersionTimes } from './fetch-version-times.js';
 import { calculateAgeInDays as defaultCalculateAgeInDays } from './age-calculator.js';
 import { checkVulnerabilities as defaultCheckVulnerabilities } from './check-vulnerabilities.js';
@@ -9,7 +11,7 @@ import { xmlFormatter } from './xml-formatter.js';
 /**
  * Print outdated dependencies information with age
  * @param {Record<string, { current: string; wanted: string; latest: string }>} data
- * @param {{ fetchVersionTimes?: function, calculateAgeInDays?: function, checkVulnerabilities?: function, format?: string, minAge?: number, minSeverity?: string }} [options]
+ * @param {{ fetchVersionTimes?: function, calculateAgeInDays?: function, checkVulnerabilities?: function, format?: string, prodMinAge?: number, devMinAge?: number, prodMinSeverity?: string, devMinSeverity?: string }} [options]
  * @returns {Object|undefined} summary for xml mode
  */
 export async function printOutdated(data, options = {}) {
@@ -21,9 +23,31 @@ export async function printOutdated(data, options = {}) {
     options.checkVulnerabilities || defaultCheckVulnerabilities;
   const format = options.format || 'table';
 
-  // Configurable thresholds
-  const minAge = typeof options.minAge === 'number' ? options.minAge : 7;
-  const minSeverity = options.minSeverity || 'none';
+  // Configurable thresholds - support both old and new parameter names
+  const prodMinAge =
+    typeof options.prodMinAge === 'number' ? options.prodMinAge : 7;
+  const devMinAge =
+    typeof options.devMinAge === 'number' ? options.devMinAge : 7;
+  const prodMinSeverity = options.prodMinSeverity || 'none';
+  const devMinSeverity = options.devMinSeverity || 'none';
+
+  // Read package.json to determine dependency types
+  let packageJson = { dependencies: {}, devDependencies: {} };
+  try {
+    const pkgPath = path.join(process.cwd(), 'package.json');
+    const pkgContent = fs.readFileSync(pkgPath, 'utf8');
+    packageJson = JSON.parse(pkgContent);
+  } catch {
+    // If we can't read package.json, treat all as dev dependencies
+  }
+
+  // Helper to determine if a package is prod or dev
+  const getDependencyType = (packageName) => {
+    if (packageJson.dependencies && packageName in packageJson.dependencies) {
+      return 'prod';
+    }
+    return 'dev';
+  };
 
   const entries = Object.entries(data);
 
@@ -42,10 +66,13 @@ export async function printOutdated(data, options = {}) {
       safeUpdates: totalOutdated,
       filteredByAge: 0,
       filteredBySecurity: 0,
-      minAge,
+    };
+    const thresholds = {
+      prod: { minAge: prodMinAge, minSeverity: prodMinSeverity },
+      dev: { minAge: devMinAge, minSeverity: devMinSeverity },
     };
     const timestamp = new Date().toISOString();
-    console.log(jsonFormatter({ rows, summary, timestamp }));
+    console.log(jsonFormatter({ rows, summary, thresholds, timestamp }));
     return summary;
   }
 
@@ -58,11 +85,10 @@ export async function printOutdated(data, options = {}) {
         safeUpdates: 0,
         filteredByAge: 0,
         filteredBySecurity: 0,
-        minAge,
       };
       const thresholds = {
-        prod: { minAge, minSeverity },
-        dev: { minAge, minSeverity },
+        prod: { minAge: prodMinAge, minSeverity: prodMinSeverity },
+        dev: { minAge: devMinAge, minSeverity: devMinSeverity },
       };
       console.log(xmlFormatter({ rows: [], summary, thresholds, timestamp }));
       return summary;
@@ -75,6 +101,7 @@ export async function printOutdated(data, options = {}) {
   const ageTasks = entries.map(([name, info]) =>
     (async () => {
       let age = 'N/A';
+      const depType = getDependencyType(name);
       try {
         const versionTimes = await fetchVersionTimes(name);
         const latestTime = versionTimes[info.latest];
@@ -88,22 +115,24 @@ export async function printOutdated(data, options = {}) {
           );
         }
       }
-      return [name, info.current, info.wanted, info.latest, age];
+      return [name, info.current, info.wanted, info.latest, age, depType];
     })()
   );
   const rows = await Promise.all(ageTasks);
 
-  // Filter by age threshold
-  const matureRows = rows.filter(
-    ([, , , , age]) => typeof age === 'number' && age >= minAge
-  );
+  // Filter by age threshold (using appropriate threshold per dependency type)
+  const matureRows = rows.filter(([_name, , , , age, depType]) => {
+    const minAge = depType === 'prod' ? prodMinAge : devMinAge;
+    return typeof age === 'number' && age >= minAge;
+  });
 
   // Vulnerability filtering
   const safeRows = [];
   const vulnMap = new Map();
   const filterReasonMap = new Map();
   for (const row of matureRows) {
-    const [name, , , latest] = row;
+    const [name, , , latest, , depType] = row;
+    const minSeverity = depType === 'prod' ? prodMinSeverity : devMinSeverity;
     let include = true;
     let vulnCount = 0;
     try {
@@ -138,17 +167,17 @@ export async function printOutdated(data, options = {}) {
     safeUpdates: safeRows.length,
     filteredByAge,
     filteredBySecurity,
-    minAge,
   };
   const timestamp = new Date().toISOString();
 
   // XML output (enriched)
   if (format === 'xml') {
     const thresholds = {
-      prod: { minAge, minSeverity },
-      dev: { minAge, minSeverity },
+      prod: { minAge: prodMinAge, minSeverity: prodMinSeverity },
+      dev: { minAge: devMinAge, minSeverity: devMinSeverity },
     };
-    const items = rows.map(([name, current, wanted, latest, age]) => {
+    const items = rows.map(([name, current, wanted, latest, age, depType]) => {
+      const minAge = depType === 'prod' ? prodMinAge : devMinAge;
       const filteredByAge = typeof age !== 'number' || age < minAge;
       const vulnInfo = vulnMap.get(name) || {
         count: 0,
@@ -159,7 +188,6 @@ export async function printOutdated(data, options = {}) {
       const filtered = filteredByAge || filteredBySecurity;
       const filterReason =
         filterReasonMap.get(name) || (filteredByAge ? 'age' : '');
-      const dependencyType = '';
       return {
         name,
         current,
@@ -170,7 +198,7 @@ export async function printOutdated(data, options = {}) {
         vulnerabilities: vulnInfo,
         filtered,
         filterReason,
-        dependencyType,
+        dependencyType: depType,
       };
     });
     console.log(xmlFormatter({ rows: items, summary, thresholds, timestamp }));
@@ -179,22 +207,24 @@ export async function printOutdated(data, options = {}) {
 
   // Table output (default)
   console.log('Outdated packages:');
-  console.log(['Name', 'Current', 'Wanted', 'Latest', 'Age (days)'].join('	'));
+  console.log(
+    ['Name', 'Current', 'Wanted', 'Latest', 'Age (days)', 'Type'].join('\t')
+  );
 
   if (matureRows.length === 0) {
     console.log(
-      `No outdated packages with mature versions (>= ${minAge} days old) found.`
+      `No outdated packages with mature versions found (prod >= ${prodMinAge} days, dev >= ${devMinAge} days).`
     );
     return;
   }
   if (safeRows.length === 0) {
     console.log(
-      `No outdated packages with safe, mature versions (>= ${minAge} days old, no vulnerabilities) found.`
+      `No outdated packages with safe, mature versions (>= ${prodMinAge}/${devMinAge} days old, no vulnerabilities) found.`
     );
     return;
   }
 
   for (const row of safeRows) {
-    console.log(row.join('	'));
+    console.log(row.join('\t'));
   }
 }

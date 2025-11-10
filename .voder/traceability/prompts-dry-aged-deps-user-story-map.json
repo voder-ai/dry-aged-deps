@@ -1,6 +1,8 @@
 {
   "specificationPath": "prompts/dry-aged-deps-user-story-map.md",
-  "status": "TODO",
-  "lastValidated": null,
-  "evidence": []
+  "status": "NOT_SPEC",
+  "lastValidated": "2025-11-10T18:54:00Z",
+  "evidence": [
+    "File is a user story map for planning purposes, not a specification with acceptance criteria"
+  ]
 }

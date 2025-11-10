@@ -38,7 +38,8 @@ describe('CLI --min-age flag', () => {
     });
     expect(result.exitCode).toBe(0);
     const obj = JSON.parse(result.stdout);
-    expect(obj.summary.minAge).toBe(7);
+    expect(obj.summary.thresholds.prod.minAge).toBe(7);
+    expect(obj.summary.thresholds.dev.minAge).toBe(7);
   });
 
   it('overrides default value when provided', async () => {
@@ -49,7 +50,8 @@ describe('CLI --min-age flag', () => {
     );
     expect(result.exitCode).toBe(0);
     const obj = JSON.parse(result.stdout);
-    expect(obj.summary.minAge).toBe(10);
+    expect(obj.summary.thresholds.prod.minAge).toBe(10);
+    expect(obj.summary.thresholds.dev.minAge).toBe(10);
   });
 });
 
@@ -71,7 +73,8 @@ describe('CLI --severity flag', () => {
     expect(result.exitCode).toBe(0);
     // No direct output for severity, but CLI should not error
     const obj = JSON.parse(result.stdout);
-    expect(obj.summary.minAge).toBe(7);
+    expect(obj.summary.thresholds.prod.minAge).toBe(7);
+    expect(obj.summary.thresholds.prod.minSeverity).toBe('none');
   });
 
   it('accepts valid severity values', async () => {
@@ -84,7 +87,8 @@ describe('CLI --severity flag', () => {
       ]);
       expect(result.exitCode).toBe(0);
       const obj = JSON.parse(result.stdout);
-      expect(obj.summary).toHaveProperty('minAge');
+      expect(obj.summary.thresholds.prod.minSeverity).toBe(level);
+      expect(obj.summary.thresholds.dev.minSeverity).toBe(level);
     }
   });
 });

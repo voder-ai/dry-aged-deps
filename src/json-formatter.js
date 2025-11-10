@@ -3,10 +3,10 @@
 
 /**
  * Format data into JSON string
- * @param {{ rows: Array<Array<any>>, summary: { totalOutdated: number, safeUpdates: number, filteredByAge: number, filteredBySecurity: number, minAge: number }, timestamp: string }} params
+ * @param {{ rows: Array<Array<any>>, summary: { totalOutdated: number, safeUpdates: number, filteredByAge: number, filteredBySecurity: number }, thresholds?: { prod: { minAge: number, minSeverity: string }, dev: { minAge: number, minSeverity: string } }, timestamp: string }} params
  * @returns {string} JSON string
  */
-export function jsonFormatter({ rows, summary, timestamp }) {
+export function jsonFormatter({ rows, summary, thresholds, timestamp }) {
   const packages = rows.map(([name, current, wanted, latest, age]) => ({
     name,
     current,
@@ -22,8 +22,13 @@ export function jsonFormatter({ rows, summary, timestamp }) {
       safeUpdates: summary.safeUpdates,
       filteredByAge: summary.filteredByAge,
       filteredBySecurity: summary.filteredBySecurity,
-      minAge: summary.minAge,
     },
   };
+
+  // Add thresholds if provided
+  if (thresholds) {
+    output.summary.thresholds = thresholds;
+  }
+
   return JSON.stringify(output, null, 2);
 }

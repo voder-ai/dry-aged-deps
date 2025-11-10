@@ -33,7 +33,19 @@ async function main() {
       '  --min-age=<days>       Minimum age in days (1-365) for including versions (default: 7)'
     );
     console.log(
+      '  --prod-min-age=<days>  Minimum age for production dependencies (falls back to --min-age)'
+    );
+    console.log(
+      '  --dev-min-age=<days>   Minimum age for development dependencies (falls back to --min-age)'
+    );
+    console.log(
       '  --severity=<level>     Vulnerability severity threshold: none, low, moderate, high, critical (default: none)'
+    );
+    console.log(
+      '  --prod-severity=<lvl>  Severity threshold for production dependencies (falls back to --severity)'
+    );
+    console.log(
+      '  --dev-severity=<lvl>   Severity threshold for development dependencies (falls back to --severity)'
     );
     process.exit(0);
   }
@@ -140,6 +152,154 @@ async function main() {
     }
   }
 
+  // Parse --prod-min-age flag (falls back to minAge)
+  let prodMinAge = minAge;
+  const prodMinAgeEq = args.find((a) => a.startsWith('--prod-min-age='));
+  if (prodMinAgeEq) {
+    const v = prodMinAgeEq.split('=')[1];
+    if (!/^[0-9]+$/.test(v)) {
+      console.error(
+        `Invalid prod-min-age: ${v}. Must be an integer between 1 and 365.`
+      );
+      process.exit(2);
+    }
+    prodMinAge = parseInt(v, 10);
+    if (prodMinAge < 1 || prodMinAge > 365) {
+      console.error(
+        `Invalid prod-min-age: ${v}. Must be an integer between 1 and 365.`
+      );
+      process.exit(2);
+    }
+  } else {
+    const idx = args.indexOf('--prod-min-age');
+    if (idx !== -1) {
+      if (args.length > idx + 1) {
+        const v = args[idx + 1];
+        if (!/^[0-9]+$/.test(v)) {
+          console.error(
+            `Invalid prod-min-age: ${v}. Must be an integer between 1 and 365.`
+          );
+          process.exit(2);
+        }
+        prodMinAge = parseInt(v, 10);
+        if (prodMinAge < 1 || prodMinAge > 365) {
+          console.error(
+            `Invalid prod-min-age: ${v}. Must be an integer between 1 and 365.`
+          );
+          process.exit(2);
+        }
+      } else {
+        console.error('Missing value for --prod-min-age');
+        process.exit(2);
+      }
+    }
+  }
+
+  // Parse --dev-min-age flag (falls back to minAge)
+  let devMinAge = minAge;
+  const devMinAgeEq = args.find((a) => a.startsWith('--dev-min-age='));
+  if (devMinAgeEq) {
+    const v = devMinAgeEq.split('=')[1];
+    if (!/^[0-9]+$/.test(v)) {
+      console.error(
+        `Invalid dev-min-age: ${v}. Must be an integer between 1 and 365.`
+      );
+      process.exit(2);
+    }
+    devMinAge = parseInt(v, 10);
+    if (devMinAge < 1 || devMinAge > 365) {
+      console.error(
+        `Invalid dev-min-age: ${v}. Must be an integer between 1 and 365.`
+      );
+      process.exit(2);
+    }
+  } else {
+    const idx = args.indexOf('--dev-min-age');
+    if (idx !== -1) {
+      if (args.length > idx + 1) {
+        const v = args[idx + 1];
+        if (!/^[0-9]+$/.test(v)) {
+          console.error(
+            `Invalid dev-min-age: ${v}. Must be an integer between 1 and 365.`
+          );
+          process.exit(2);
+        }
+        devMinAge = parseInt(v, 10);
+        if (devMinAge < 1 || devMinAge > 365) {
+          console.error(
+            `Invalid dev-min-age: ${v}. Must be an integer between 1 and 365.`
+          );
+          process.exit(2);
+        }
+      } else {
+        console.error('Missing value for --dev-min-age');
+        process.exit(2);
+      }
+    }
+  }
+
+  // Parse --prod-severity flag (falls back to minSeverity)
+  let prodMinSeverity = minSeverity;
+  const prodSevEq = args.find((a) => a.startsWith('--prod-severity='));
+  if (prodSevEq) {
+    const v = prodSevEq.split('=')[1];
+    if (!validSeverities.includes(v)) {
+      console.error(
+        `Invalid prod-severity: ${v}. Valid values are: ${validSeverities.join(', ')}`
+      );
+      process.exit(2);
+    }
+    prodMinSeverity = v;
+  } else {
+    const idx = args.indexOf('--prod-severity');
+    if (idx !== -1) {
+      if (args.length > idx + 1) {
+        const v = args[idx + 1];
+        if (!validSeverities.includes(v)) {
+          console.error(
+            `Invalid prod-severity: ${v}. Valid values are: ${validSeverities.join(', ')}`
+          );
+          process.exit(2);
+        }
+        prodMinSeverity = v;
+      } else {
+        console.error('Missing value for --prod-severity');
+        process.exit(2);
+      }
+    }
+  }
+
+  // Parse --dev-severity flag (falls back to minSeverity)
+  let devMinSeverity = minSeverity;
+  const devSevEq = args.find((a) => a.startsWith('--dev-severity='));
+  if (devSevEq) {
+    const v = devSevEq.split('=')[1];
+    if (!validSeverities.includes(v)) {
+      console.error(
+        `Invalid dev-severity: ${v}. Valid values are: ${validSeverities.join(', ')}`
+      );
+      process.exit(2);
+    }
+    devMinSeverity = v;
+  } else {
+    const idx = args.indexOf('--dev-severity');
+    if (idx !== -1) {
+      if (args.length > idx + 1) {
+        const v = args[idx + 1];
+        if (!validSeverities.includes(v)) {
+          console.error(
+            `Invalid dev-severity: ${v}. Valid values are: ${validSeverities.join(', ')}`
+          );
+          process.exit(2);
+        }
+        devMinSeverity = v;
+      } else {
+        console.error('Missing value for --dev-severity');
+        process.exit(2);
+      }
+    }
+  }
+
   // Load data
   let data;
   let fetchVersionTimesOverride;
@@ -196,8 +356,10 @@ async function main() {
       format,
       fetchVersionTimes: fetchVersionTimesOverride,
       checkVulnerabilities: checkVulnerabilitiesOverride,
-      minAge,
-      minSeverity,
+      prodMinAge,
+      devMinAge,
+      prodMinSeverity,
+      devMinSeverity,
     });
     process.exit(0);
   } catch (err) {
