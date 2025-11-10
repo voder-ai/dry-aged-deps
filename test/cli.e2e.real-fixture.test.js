@@ -15,7 +15,9 @@ let fixturesDir;
 describe('dry-aged-deps CLI E2E with real fixture (mocked)', () => {
   beforeAll(async () => {
     // Create a unique temporary directory for this test suite
-    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'dry-aged-deps-test-e2e-'));
+    tempDir = await fs.mkdtemp(
+      path.join(os.tmpdir(), 'dry-aged-deps-test-e2e-')
+    );
     fixturesDir = path.join(tempDir, 'fixtures');
 
     // Copy fixture package.json to temp directory
@@ -79,7 +81,7 @@ describe('dry-aged-deps CLI E2E with real fixture (mocked)', () => {
     // Check if at least one age cell is a positive integer
     let foundPositive = false;
     for (const line of dataLines) {
-      const cols = line.split('  ');
+      const cols = line.split('	');
       const ageCell = cols[4];
       const age = parseInt(ageCell, 10);
       if (!isNaN(age) && age > 0) {

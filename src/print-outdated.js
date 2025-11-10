@@ -13,9 +13,12 @@ import { xmlFormatter } from './xml-formatter.js';
  * @returns {Object|undefined} summary for xml mode
  */
 export async function printOutdated(data, options = {}) {
-  const fetchVersionTimes = options.fetchVersionTimes || defaultFetchVersionTimes;
-  const calculateAgeInDays = options.calculateAgeInDays || defaultCalculateAgeInDays;
-  const checkVulnerabilities = options.checkVulnerabilities || defaultCheckVulnerabilities;
+  const fetchVersionTimes =
+    options.fetchVersionTimes || defaultFetchVersionTimes;
+  const calculateAgeInDays =
+    options.calculateAgeInDays || defaultCalculateAgeInDays;
+  const checkVulnerabilities =
+    options.checkVulnerabilities || defaultCheckVulnerabilities;
   const format = options.format || 'table';
 
   // Configurable thresholds
@@ -26,7 +29,13 @@ export async function printOutdated(data, options = {}) {
 
   // JSON output (minimal)
   if (format === 'json') {
-    const rows = entries.map(([name, info]) => [name, info.current, info.wanted, info.latest, null]);
+    const rows = entries.map(([name, info]) => [
+      name,
+      info.current,
+      info.wanted,
+      info.latest,
+      null,
+    ]);
     const totalOutdated = rows.length;
     const summary = {
       totalOutdated,
@@ -51,7 +60,10 @@ export async function printOutdated(data, options = {}) {
         filteredBySecurity: 0,
         minAge,
       };
-      const thresholds = { prod: { minAge, minSeverity }, dev: { minAge, minSeverity } };
+      const thresholds = {
+        prod: { minAge, minSeverity },
+        dev: { minAge, minSeverity },
+      };
       console.log(xmlFormatter({ rows: [], summary, thresholds, timestamp }));
       return summary;
     }
@@ -71,7 +83,9 @@ export async function printOutdated(data, options = {}) {
         }
       } catch (err) {
         if (format !== 'xml' && format !== 'json') {
-          console.error(`Warning: failed to fetch version times for ${name}: ${err.message}`);
+          console.error(
+            `Warning: failed to fetch version times for ${name}: ${err.message}`
+          );
         }
       }
       return [name, info.current, info.wanted, info.latest, age];
@@ -80,7 +94,9 @@ export async function printOutdated(data, options = {}) {
   const rows = await Promise.all(ageTasks);
 
   // Filter by age threshold
-  const matureRows = rows.filter(([, , , , age]) => typeof age === 'number' && age >= minAge);
+  const matureRows = rows.filter(
+    ([, , , , age]) => typeof age === 'number' && age >= minAge
+  );
 
   // Vulnerability filtering
   const safeRows = [];
@@ -98,11 +114,17 @@ export async function printOutdated(data, options = {}) {
       }
     } catch (err) {
       if (format !== 'xml' && format !== 'json') {
-        console.error(`Warning: failed to check vulnerabilities for ${name}@${latest}: ${err.message}`);
+        console.error(
+          `Warning: failed to check vulnerabilities for ${name}@${latest}: ${err.message}`
+        );
       }
       // treat failures as safe
     }
-    vulnMap.set(name, { count: vulnCount, maxSeverity: vulnCount > 0 ? minSeverity : 'none', details: [] });
+    vulnMap.set(name, {
+      count: vulnCount,
+      maxSeverity: vulnCount > 0 ? minSeverity : 'none',
+      details: [],
+    });
     if (include) {
       safeRows.push(row);
     }
@@ -122,13 +144,21 @@ export async function printOutdated(data, options = {}) {
 
   // XML output (enriched)
   if (format === 'xml') {
-    const thresholds = { prod: { minAge, minSeverity }, dev: { minAge, minSeverity } };
+    const thresholds = {
+      prod: { minAge, minSeverity },
+      dev: { minAge, minSeverity },
+    };
     const items = rows.map(([name, current, wanted, latest, age]) => {
       const filteredByAge = typeof age !== 'number' || age < minAge;
-      const vulnInfo = vulnMap.get(name) || { count: 0, maxSeverity: 'none', details: [] };
+      const vulnInfo = vulnMap.get(name) || {
+        count: 0,
+        maxSeverity: 'none',
+        details: [],
+      };
       const filteredBySecurity = vulnInfo.count > 0;
       const filtered = filteredByAge || filteredBySecurity;
-      const filterReason = filterReasonMap.get(name) || (filteredByAge ? 'age' : '');
+      const filterReason =
+        filterReasonMap.get(name) || (filteredByAge ? 'age' : '');
       const dependencyType = '';
       return {
         name,

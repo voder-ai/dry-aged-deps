@@ -15,7 +15,9 @@ let fixturesDir;
 describe('dry-aged-deps CLI up-to-date output', () => {
   beforeAll(async () => {
     // Create a unique temporary directory for this test suite
-    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'dry-aged-deps-test-uptodate-'));
+    tempDir = await fs.mkdtemp(
+      path.join(os.tmpdir(), 'dry-aged-deps-test-uptodate-')
+    );
     fixturesDir = path.join(tempDir, 'fixtures');
 
     // Copy fixture files to temp directory

@@ -20,7 +20,12 @@ function escapeXml(unsafe) {
  * @param {{ rows: Array<any>, summary: { totalOutdated: number, safeUpdates: number, filteredByAge: number, filteredBySecurity: number, minAge?: number }, thresholds?: { prod?: { minAge?: number, minSeverity?: string }, dev?: { minAge?: number, minSeverity?: string } }, timestamp: string }} params
  * @returns {string} XML string
  */
-export function xmlFormatter({ rows = [], summary = {}, thresholds = {}, timestamp = '' }) {
+export function xmlFormatter({
+  rows = [],
+  summary = {},
+  thresholds = {},
+  timestamp = '',
+}) {
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
   xml += `<outdated-packages timestamp="${escapeXml(timestamp)}">\n`;
 

@@ -18,13 +18,21 @@ describe('jsonFormatter', () => {
     const json = jsonFormatter({ rows, summary, timestamp });
     // Should be parseable JSON
     let obj;
-    expect(() => { obj = JSON.parse(json); }).not.toThrow();
+    expect(() => {
+      obj = JSON.parse(json);
+    }).not.toThrow();
 
     expect(obj).toHaveProperty('timestamp', timestamp);
     expect(obj).toHaveProperty('packages');
     expect(Array.isArray(obj.packages)).toBe(true);
     expect(obj.packages.length).toBe(2);
-    expect(obj.packages[0]).toEqual({ name: 'pkg1', current: '1.0.0', wanted: '1.1.0', latest: '1.1.0', age: 10 });
+    expect(obj.packages[0]).toEqual({
+      name: 'pkg1',
+      current: '1.0.0',
+      wanted: '1.1.0',
+      latest: '1.1.0',
+      age: 10,
+    });
     expect(obj).toHaveProperty('summary');
     expect(obj.summary).toEqual(summary);
     // Ensure formatted with indentation

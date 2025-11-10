@@ -15,9 +15,9 @@ describe('CLI --min-age flag', () => {
   });
 
   it('rejects out-of-range values (0)', async () => {
-    await expect(
-      execa('node', [cliPath, '--min-age=0'])
-    ).rejects.toMatchObject({ exitCode: 2 });
+    await expect(execa('node', [cliPath, '--min-age=0'])).rejects.toMatchObject(
+      { exitCode: 2 }
+    );
   });
 
   it('rejects out-of-range values (>365)', async () => {
@@ -27,20 +27,26 @@ describe('CLI --min-age flag', () => {
   });
 
   it('rejects missing value for --min-age', async () => {
-    await expect(
-      execa('node', [cliPath, '--min-age'])
-    ).rejects.toMatchObject({ exitCode: 2 });
+    await expect(execa('node', [cliPath, '--min-age'])).rejects.toMatchObject({
+      exitCode: 2,
+    });
   });
 
   it('defaults to 7 when not provided', async () => {
-    const result = await execa('node', [cliPath, '--format=json'], { cwd: process.cwd() });
+    const result = await execa('node', [cliPath, '--format=json'], {
+      cwd: process.cwd(),
+    });
     expect(result.exitCode).toBe(0);
     const obj = JSON.parse(result.stdout);
     expect(obj.summary.minAge).toBe(7);
   });
 
   it('overrides default value when provided', async () => {
-    const result = await execa('node', [cliPath, '--format=json', '--min-age=10'], { cwd: process.cwd() });
+    const result = await execa(
+      'node',
+      [cliPath, '--format=json', '--min-age=10'],
+      { cwd: process.cwd() }
+    );
     expect(result.exitCode).toBe(0);
     const obj = JSON.parse(result.stdout);
     expect(obj.summary.minAge).toBe(10);
@@ -55,9 +61,9 @@ describe('CLI --severity flag', () => {
   });
 
   it('rejects missing value for --severity', async () => {
-    await expect(
-      execa('node', [cliPath, '--severity'])
-    ).rejects.toMatchObject({ exitCode: 2 });
+    await expect(execa('node', [cliPath, '--severity'])).rejects.toMatchObject({
+      exitCode: 2,
+    });
   });
 
   it('defaults to "none" when not provided', async () => {
@@ -71,7 +77,11 @@ describe('CLI --severity flag', () => {
   it('accepts valid severity values', async () => {
     const valid = ['none', 'low', 'moderate', 'high', 'critical'];
     for (const level of valid) {
-      const result = await execa('node', [cliPath, '--format=json', `--severity=${level}`]);
+      const result = await execa('node', [
+        cliPath,
+        '--format=json',
+        `--severity=${level}`,
+      ]);
       expect(result.exitCode).toBe(0);
       const obj = JSON.parse(result.stdout);
       expect(obj.summary).toHaveProperty('minAge');

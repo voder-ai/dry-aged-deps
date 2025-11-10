@@ -15,7 +15,9 @@ let fixturesDir;
 describe('dry-aged-deps CLI outdated output', () => {
   beforeAll(async () => {
     // Create a unique temporary directory for this test suite
-    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'dry-aged-deps-test-outdated-'));
+    tempDir = await fs.mkdtemp(
+      path.join(os.tmpdir(), 'dry-aged-deps-test-outdated-')
+    );
     fixturesDir = path.join(tempDir, 'fixtures');
 
     // Copy fixture files to temp directory
@@ -28,7 +30,14 @@ describe('dry-aged-deps CLI outdated output', () => {
     // Install production dependencies for fixture project in temp directory (dry-run)
     await execa(
       'npm',
-      ['install', '--ignore-scripts', '--no-audit', '--no-fund', '--omit=dev', '--dry-run'],
+      [
+        'install',
+        '--ignore-scripts',
+        '--no-audit',
+        '--no-fund',
+        '--omit=dev',
+        '--dry-run',
+      ],
       {
         cwd: fixturesDir,
         env: process.env,

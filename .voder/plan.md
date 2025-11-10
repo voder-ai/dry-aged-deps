@@ -1,10 +1,23 @@
 ## NOW  
-Update `src/xml-formatter.js` to emit the complete XML schema from 009.0: for each `<package>` include `<recommended>`, a full `<vulnerabilities>` block (with `<count>`, `<max-severity>`, `<details>`), `<filtered>`, and `<filter-reason>` elements, and in the `<summary>` emit `<thresholds>` with nested `<prod>` and `<dev>` sections as specified.
+In `test/cli.e2e.real-fixture.test.js`, change the row-splitting line from  
+```js
+const cols = line.split('  ');
+```  
+to  
+```js
+const cols = line.split('\t');
+```  
+so the test correctly parses the tab-separated columns.
 
 ## NEXT  
-- In `src/print-outdated.js`, change the XML branch to assemble and pass the enriched package objects (including recommended version, vulnerability details, filter flags, filter reasons, and dependency type) plus the full thresholds config into `xmlFormatter`, and adjust exit codes (1 for updates available, 2 for errors) in XML mode.  
-- Expand `test/xml-formatter.test.js` and `test/cli.format-xml.test.js` (or add new tests) to assert presence and correctness of all new XML elements, proper error‐output formatting (`<error>` element), and that no console noise is emitted.
+- Run the full test suite (`npm test`) and fix any remaining failures.  
+- Verify that the E2E real-fixture CLI test now passes consistently under `DRY_AGED_DEPS_MOCK=1`.  
+- Ensure no other tests rely on two-space splits and that all table-mode tests still pass.
 
 ## LATER  
-- Update CLI help text in `bin/dry-aged-deps.js` and examples in `README.md` to document the new XML schema fields, exit‐code semantics, and usage.  
-- Add CI validation (e.g. using `xmllint` or a custom validator) to verify XML output against the schema on each run, and integrate XML output into reporting or dashboards.
+- Implement Story 007.0: separate production vs. development thresholds:  
+  - Add `--prod-min-age`, `--dev-min-age`, `--prod-severity`, and `--dev-severity` flags in `bin/dry-aged-deps.js`.  
+  - In `src/print-outdated.js`, detect each dependency’s type (`prod` vs. `dev`), apply the appropriate thresholds, and propagate `dependencyType`.  
+  - Add unit and CLI tests to cover the new flags and behavior.  
+- Update documentation (`README.md`, `--help` text) to describe the prod/dev threshold flags.  
+- Once prod/dev thresholds are in place, resume work on post-MVP enhancements (caching, parallel fetches, async refactor).
