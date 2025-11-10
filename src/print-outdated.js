@@ -9,7 +9,7 @@ import { jsonFormatter } from './json-formatter.js';
 /**
  * Print outdated dependencies information with age
  * @param {Record<string, { current: string; wanted: string; latest: string }>} data
- * @param {{ fetchVersionTimes?: function, calculateAgeInDays?: function, checkVulnerabilities?: function, format?: string }} [options]
+ * @param {{ fetchVersionTimes?: function, calculateAgeInDays?: function, checkVulnerabilities?: function, format?: string, minAge?: number, minSeverity?: string }} [options]
  */
 export async function printOutdated(data, options = {}) {
   const fetchVersionTimes =
@@ -19,6 +19,10 @@ export async function printOutdated(data, options = {}) {
   const checkVulnerabilities =
     options.checkVulnerabilities || defaultCheckVulnerabilities;
   const format = options.format || 'table';
+
+  // Configurable thresholds
+  const minAge = typeof options.minAge === 'number' ? options.minAge : 7;
+  // const minSeverity = options.minSeverity || 'none'; // currently not applied
 
   const entries = Object.entries(data);
 
@@ -37,7 +41,7 @@ export async function printOutdated(data, options = {}) {
       safeUpdates: rows.length,
       filteredByAge: 0,
       filteredBySecurity: 0,
-      minAge: 7,
+      minAge,
     };
     const timestamp = new Date().toISOString();
     if (format === 'json') {
@@ -59,7 +63,7 @@ export async function printOutdated(data, options = {}) {
           safeUpdates: 0,
           filteredByAge: 0,
           filteredBySecurity: 0,
-          minAge: 7,
+          minAge,
         },
         timestamp,
       });
@@ -72,7 +76,7 @@ export async function printOutdated(data, options = {}) {
         safeUpdates: 0,
         filteredByAge: 0,
         filteredBySecurity: 0,
-        minAge: 7,
+        minAge,
       };
       const jsonOutput = jsonFormatter({
         rows: [],
@@ -109,10 +113,10 @@ export async function printOutdated(data, options = {}) {
   );
   const rows = await Promise.all(tasks);
 
-  const MIN_AGE_DAYS = 7;
+  // Filter by configurable age threshold
   const matureRows = rows.filter((row) => {
     const age = row[4];
-    return typeof age === 'number' && age >= MIN_AGE_DAYS;
+    return typeof age === 'number' && age >= minAge;
   });
 
   // Vulnerability filtering
@@ -147,7 +151,7 @@ export async function printOutdated(data, options = {}) {
       safeUpdates: safeRows.length,
       filteredByAge,
       filteredBySecurity,
-      minAge: MIN_AGE_DAYS,
+      minAge,
     };
     const timestamp = new Date().toISOString();
     const jsonOutput = jsonFormatter({
@@ -168,7 +172,7 @@ export async function printOutdated(data, options = {}) {
       safeUpdates: safeRows.length,
       filteredByAge,
       filteredBySecurity,
-      minAge: MIN_AGE_DAYS,
+      minAge,
     };
     const timestamp = new Date().toISOString();
     const xml = xmlFormatter({ rows: safeRows, summary, timestamp });
@@ -182,13 +186,13 @@ export async function printOutdated(data, options = {}) {
 
   if (matureRows.length === 0) {
     console.log(
-      'No outdated packages with mature versions (>= 7 days old) found.'
+      `No outdated packages with mature versions (>= ${minAge} days old) found.`
     );
     return;
   }
   if (safeRows.length === 0) {
     console.log(
-      'No outdated packages with safe, mature versions (>= 7 days old, no vulnerabilities) found.'
+      `No outdated packages with safe, mature versions (>= ${minAge} days old, no vulnerabilities) found.`
     );
     return;
   }

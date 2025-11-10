@@ -1,16 +1,31 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { execa } from 'execa';
-import fs from 'fs';
+import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import os from 'os';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const fixturesDir = path.join(__dirname, 'fixtures-up-to-date');
+const fixturesSourceDir = path.join(__dirname, 'fixtures-up-to-date');
+
+let tempDir;
+let fixturesDir;
 
 describe('dry-aged-deps CLI up-to-date output', () => {
   beforeAll(async () => {
-    // Install dependencies for up-to-date fixture project
+    // Create a unique temporary directory for this test suite
+    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'dry-aged-deps-test-uptodate-'));
+    fixturesDir = path.join(tempDir, 'fixtures');
+
+    // Copy fixture files to temp directory
+    await fs.mkdir(fixturesDir, { recursive: true });
+    await fs.copyFile(
+      path.join(fixturesSourceDir, 'package.json'),
+      path.join(fixturesDir, 'package.json')
+    );
+
+    // Install dependencies for up-to-date fixture project in temp directory
     await execa(
       'npm',
       ['install', '--ignore-scripts', '--no-audit', '--no-fund'],
@@ -19,15 +34,13 @@ describe('dry-aged-deps CLI up-to-date output', () => {
         env: process.env,
       }
     );
-  });
+  }, 60000);
 
-  afterAll(() => {
-    // Clean up installed dependencies
-    fs.rmSync(path.join(fixturesDir, 'node_modules'), {
-      recursive: true,
-      force: true,
-    });
-    fs.rmSync(path.join(fixturesDir, 'package-lock.json'), { force: true });
+  afterAll(async () => {
+    // Clean up temporary directory
+    if (tempDir) {
+      await fs.rm(tempDir, { recursive: true, force: true });
+    }
   });
 
   it('prints message when all dependencies are up to date', async () => {

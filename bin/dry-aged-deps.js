@@ -26,6 +26,8 @@ async function main() {
     console.log('  -h, --help             Show help');
     console.log('  -v, --version          Show version');
     console.log('  --format=<format>      Output format: table (default), json, xml');
+    console.log('  --min-age=<days>       Minimum age in days (1-365) for including versions (default: 7)');
+    console.log('  --severity=<level>     Vulnerability severity threshold: none, low, moderate, high, critical (default: none)');
     process.exit(0);
   }
 
@@ -54,6 +56,69 @@ async function main() {
       `Invalid format: ${format}. Valid values are: ${validFormats.join(', ')}`
     );
     process.exit(2);
+  }
+
+  // Parse --min-age flag
+  let minAge = 7;
+  const minAgeArg = args.find((arg) => arg.startsWith('--min-age='));
+  if (minAgeArg) {
+    const value = minAgeArg.split('=')[1];
+    if (!/^\d+$/.test(value)) {
+      console.error(`Invalid min-age: ${value}. Must be an integer between 1 and 365.`);
+      process.exit(2);
+    }
+    minAge = parseInt(value, 10);
+    if (minAge < 1 || minAge > 365) {
+      console.error(`Invalid min-age: ${value}. Must be an integer between 1 and 365.`);
+      process.exit(2);
+    }
+  } else {
+    const idxAge = args.indexOf('--min-age');
+    if (idxAge !== -1) {
+      if (args.length > idxAge + 1) {
+        const value = args[idxAge + 1];
+        if (!/^\d+$/.test(value)) {
+          console.error(`Invalid min-age: ${value}. Must be an integer between 1 and 365.`);
+          process.exit(2);
+        }
+        minAge = parseInt(value, 10);
+        if (minAge < 1 || minAge > 365) {
+          console.error(`Invalid min-age: ${value}. Must be an integer between 1 and 365.`);
+          process.exit(2);
+        }
+      } else {
+        console.error('Missing value for --min-age');
+        process.exit(2);
+      }
+    }
+  }
+
+  // Parse --severity flag
+  const validSeverities = ['none', 'low', 'moderate', 'high', 'critical'];
+  let minSeverity = 'none';
+  const severityArg = args.find((arg) => arg.startsWith('--severity='));
+  if (severityArg) {
+    const value = severityArg.split('=')[1];
+    if (!validSeverities.includes(value)) {
+      console.error(`Invalid severity: ${value}. Valid values are: ${validSeverities.join(', ')}`);
+      process.exit(2);
+    }
+    minSeverity = value;
+  } else {
+    const idxSeverity = args.indexOf('--severity');
+    if (idxSeverity !== -1) {
+      if (args.length > idxSeverity + 1) {
+        const value = args[idxSeverity + 1];
+        if (!validSeverities.includes(value)) {
+          console.error(`Invalid severity: ${value}. Valid values are: ${validSeverities.join(', ')}`);
+          process.exit(2);
+        }
+        minSeverity = value;
+      } else {
+        console.error('Missing value for --severity');
+        process.exit(2);
+      }
+    }
   }
 
   let data;
@@ -99,6 +164,8 @@ async function main() {
       format,
       fetchVersionTimes: fetchVersionTimesOverride,
       checkVulnerabilities: checkVulnerabilitiesOverride,
+      minAge,
+      minSeverity,
     });
     process.exit(0);
   } catch (err) {
