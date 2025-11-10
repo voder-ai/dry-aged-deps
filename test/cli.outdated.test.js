@@ -25,10 +25,10 @@ describe('dry-aged-deps CLI outdated output', () => {
       path.join(fixturesDir, 'package.json')
     );
 
-    // Install production dependencies for fixture project in temp directory
+    // Install production dependencies for fixture project in temp directory (dry-run)
     await execa(
       'npm',
-      ['install', '--ignore-scripts', '--no-audit', '--no-fund', '--omit=dev'],
+      ['install', '--ignore-scripts', '--no-audit', '--no-fund', '--omit=dev', '--dry-run'],
       {
         cwd: fixturesDir,
         env: process.env,
