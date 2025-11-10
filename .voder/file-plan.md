@@ -1,19 +1,18 @@
 ## NOW  
-Append the following to `.voderignore` to hide all test code and dramatically cut context size:  
+Append the following single line to `.voderignore` to hide all Markdown files (README, CHANGELOG, etc.):  
+```diff
+ .voderignore
++# Hide all Markdown docs
+ *.md
 ```
-# Hide all test files
-test/**
-```  
 
 ## NEXT  
-Append to `.voderignore` to hide repository metadata and documentation:  
+Append the following single line to `.voderignore` to hide any patch files:  
+```diff
+ .voderignore
++# Hide patch files
+ *.patch
 ```
-# Hide GitHub metadata and workflows
-.github/**
-
-# Hide all documentation
-docs/**
-```  
 
 ## LATER  
-Evaluate moving large fixtures, docs or seldom‐used configs into a separate archive or repo and prune any other rarely accessed files to further slim the assistant’s context.
+Consider archiving or relocating large or infrequently used assets (fixtures, generated configs, example repos) into a separate archive or repo to further reduce context size.

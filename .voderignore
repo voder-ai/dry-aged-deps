@@ -34,3 +34,8 @@ test/**
 
 # Hide all documentation
 docs/**
+
+# Hide all Markdown docs
+*.md
+# Hide patch files
+*.patch

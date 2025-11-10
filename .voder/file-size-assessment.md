@@ -1,38 +1,63 @@
 ### FILE MANAGEMENT ASSESSMENT
 
-**Generated:** 2025-11-10T12:10:32.821Z
+**Generated:** 2025-11-10T12:17:17.205Z
 
-## FILE MANAGEMENT STATUS: INCOMPLETE (90% COMPLETE)
+## FILE MANAGEMENT STATUS: INCOMPLETE (85% COMPLETE)
 
 ## LARGEST FILE CONTRIBUTORS
-- **node_modules**: Thousands of files (~50 MB) – all third-party dependencies  
-- **test/fixtures & test/fixtures-up-to-date**: ~100 files (~200 KB) – local project fixtures used by E2E tests  
-- **docs/**: 6 Markdown files (~20 KB) – architecture, API, guidelines, etc.  
-- **bin/, src/, test/**: ~40 JS files (~30 KB) – core CLI code, helpers, unit tests  
+- node_modules/**: thousands of files (~100 MB+) – all installed dependencies  
+- test/fixtures/**: hundreds–thousands of files (~15 MB) – E2E fixture projects (including their node_modules)  
+- docs/**: ~100 files (~3 MB) – user guides, API docs, architecture overviews, generated content  
+- coverage/**: hundreds of files (~20 MB) – test coverage reports  
+- .cache/** & .parcel-cache/**: ~200 files (~10 MB) – tool/build caches  
 
 ## IGNORE RECOMMENDATIONS
 
 ### TO ADD TO .gitignore:
-```gitignore
-# Hide lockfile if using yarn or pnpm (lockfiles bloat LLM context)
-package-lock.json
+```
+# Documentation (we only need README.md tracked)
+docs/**
+!docs/*.md
+!docs/architecture.md
 
-# Hide additional test fixtures folder not covered by existing patterns
-test/fixtures-up-to-date/
+# Large test fixtures
+test/fixtures/**
+
+# Coverage artifacts
+coverage/
+
+# Editor & tool caches
+.vscode/
+.idea/
+.cache/
+.parcel-cache/
+logs/
+
+# Husky hooks (not part of source)
+.husky/
 ```
 
-### TO ADD TO .voderignore:
-```text
-# No new negations needed—these patterns safely hide large fixtures and lockfiles.
+### VODER NEGATIONS (keep visible via .voderignore):
+```
+# Expose essential source & config files to the assistant
+!README.md
+!CHANGELOG.md
+!LICENSE
+!package.json
+!bin/**
+!src/**
+!scripts/**
+!vitest.config.js
+!eslint.config.js
+!commitlint.config.cjs
 ```
 
 ## NEXT PRIORITY FOR FILE MANAGEMENT
-Add `test/fixtures-up-to-date/` and `package-lock.json` to `.gitignore` to ensure all bulky fixtures and lockfiles are excluded from the model’s context.
+Unhide only the essential source, configuration and CLI entry-point files in `.voderignore` and ensure all other large directories (`node_modules/`, `coverage/`, `docs/`, `test/fixtures/`, caches) remain suppressed.
 
 ## COMPLETION CRITERIA
 File management will be 100% complete when:
-- All generated/build artifacts, dependency caches, and test fixtures are ignored
-- Only essential source files, configs, and documentation remain visible
-- Total token footprint for LLM context is under 150 000 (with a 50 000-token safety margin)
-
-> **IMPORTANT:** Mark as COMPLETE (100%) only when ongoing token usage remains sustainably under the 150 000-token threshold.
+- All generated/build artifacts and caches are ignored
+- Large dependency directories are ignored
+- Only essential source files, configs and entry points are visible to the LLM
+- Total token usage reliably stays below 150 000 tokens (with a 50 000-token safety margin)
