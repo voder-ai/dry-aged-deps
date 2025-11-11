@@ -18,7 +18,7 @@ Used tool: check_file_exists with input: {"filePath":"update-readme-check-mode.p
 Used tool: read_file with input: {"filePath":"prompts/009.0-DEV-XML-OUTPUT.md"}
 Used tool: read_file with input: {"filePath":"prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md"}
 Used tool: find_files with input: {"pattern":"WARNING","directory":"prompts"}
-Used tool: generate_file with input: {"filePath":"test/xml-formatter.summary.test.js","content":"// Story: prompts/009.0-DEV-XML-OUTPUT.md\nimport { describe, it, expect } from 'vitest';\nimport { xmlFormatter } from '../src/xml-formatter.js';\n\ndescribe('xmlFormatter summary section', () => {\n  it('should include <min-age> element when summary.minAge is provided', () => {\n    const summary = {\n      totalOutdated: 2,\n      safeUpdates: 1,\n      filteredByAge: 0,\n      filteredBySecurity: 1,\n      minAge: 7,\n    };\n    // Only summary provided; other params default\n    const xml = xmlFormatter({ summary });\n\n    // Expect the <min-age> element within the <summary> block\n    expect(xml).toMatch(/<summary>[\\s\\S]*<min-age>7<\\/min-age>[\\s\\S]*<\\/summary>/);\n  });\n});\n"}
+Used tool: generate_file with input: {"filePath":"test/xml-formatter.summary.test.js","content":"// Story: prompts/009.0-DEV-XML-OUTPUT.md\nimport { describe, it, expect } from 'vitest';\nimport { xmlFormatter } from '../src/xml-formatter.js';\n\ndescribe('xmlFormatter summary section', () => {\n it('should include <min-age> element when summary.minAge is provided', () => {\n const summary = {\n totalOutdated: 2,\n safeUpdates: 1,\n filteredByAge: 0,\n filteredBySecurity: 1,\n minAge: 7,\n };\n // Only summary provided; other params default\n const xml = xmlFormatter({ summary });\n\n // Expect the <min-age> element within the <summary> block\n expect(xml).toMatch(/<summary>[\\s\\S]_<min-age>7<\\/min-age>[\\s\\S]_<\\/summary>/);\n });\n});\n"}
 Used tool: read_file with input: {"filePath":"test/check-vulnerabilities.test.js"}
 Used tool: read_file with input: {"filePath":"docs/decisions/0004-check-mode-behavior.md"}
 Used tool: modify_file with input: {"filePath":"test/check-vulnerabilities.test.js","instruction":"Add a new test case at the end of the describe block to simulate npm install errors with WARN in stderr and ensure that checkVulnerabilities does not reject. Include reference to the story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md."}
@@ -61,23 +61,23 @@ Used tool: git_commit with input: {"message":"docs(decision): fix file extension
 Used tool: run_command with input: {"command":"git","args":["status","--porcelain"]}
 Used tool: run_command with input: {"command":"npx","args":["vitest","run","test/xml-formatter.summary.test.js","test/check-vulnerabilities.test.js"]}
 Used tool: run_command with input: {"command":"npx","args":["eslint","src","bin","test","--ext",".js,.cjs"]}
-Used tool: find_files with input: {"pattern":"*.patch","directory":"."}
+Used tool: find_files with input: {"pattern":"\*.patch","directory":"."}
 
 **Response:**
 
 ```
 I’ve completed the “NOW” and “NEXT” steps:
 
-1. **Added missing xmlFormatter branch test**  
+1. **Added missing xmlFormatter branch test**
    – New `test/xml-formatter.summary.test.js` covering `summary.minAge` (refs prompts/009.0-DEV-XML-OUTPUT.md).
 
-2. **Enhanced checkVulnerabilities tests**  
+2. **Enhanced checkVulnerabilities tests**
    – Added a case to ensure npm install WARNs in stderr don’t reject (refs prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md).
 
-3. **Updated CHANGELOG.md**  
+3. **Updated CHANGELOG.md**
    – Added v0.1.2 entry documenting JSON/XML output and `--check` flag with standardized exit codes.
 
-4. **Removed stale patch tracking**  
+4. **Removed stale patch tracking**
    – `update-readme-check-mode.patch` is no longer in the repo and `*.patch` is covered by `.gitignore`.
 
 All new tests pass, linting shows only existing security-rule warnings in fixtures (no new errors), and commits have been pushed.

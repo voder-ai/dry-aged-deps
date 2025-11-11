@@ -272,3 +272,4 @@ const xml = xmlFormatter({
   timestamp: new Date().toISOString(),
 });
 console.log(xml);
+```

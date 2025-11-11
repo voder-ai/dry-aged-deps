@@ -44,17 +44,17 @@ dry-aged-deps
 
 ### Options
 
-| Flag                    | Description                                                                           |
-| ----------------------- | ------------------------------------------------------------------------------------- |
-| -h, --help              | Show help information                                                                 |
-| -v, --version           | Show the CLI version                                                                  |
-| --format=<format>       | Output format: table (default), json, xml                                             |
-| --min-age=<days>        | Minimum age in days (1-365) for including versions (default: 7)                       |
-| --prod-min-age=<days>   | Minimum age for production dependencies (falls back to --min-age)                     |
-| --dev-min-age=<days>    | Minimum age for development dependencies (falls back to --min-age)                    |
-| --severity=<level>      | Vulnerability severity threshold: none, low, moderate, high, critical (default: none) |
-| --prod-severity=<level> | Severity threshold for production dependencies (falls back to --severity)             |
-| --dev-severity=<level>  | Severity threshold for development dependencies (falls back to --severity)            |
+| Flag                    | Description                                                                            |
+| ----------------------- | -------------------------------------------------------------------------------------- |
+| -h, --help              | Show help information                                                                  |
+| -v, --version           | Show the CLI version                                                                   |
+| --format=<format>       | Output format: table (default), json, xml                                              |
+| --min-age=<days>        | Minimum age in days (1-365) for including versions (default: 7)                        |
+| --prod-min-age=<days>   | Minimum age for production dependencies (falls back to --min-age)                      |
+| --dev-min-age=<days>    | Minimum age for development dependencies (falls back to --min-age)                     |
+| --severity=<level>      | Vulnerability severity threshold: none, low, moderate, high, critical (default: none)  |
+| --prod-severity=<level> | Severity threshold for production dependencies (falls back to --severity)              |
+| --dev-severity=<level>  | Severity threshold for development dependencies (falls back to --severity)             |
 | --check                 | Check mode: exit code 1 if safe updates available, 0 if none, 2 on error (coming soon) |
 
 ### Examples

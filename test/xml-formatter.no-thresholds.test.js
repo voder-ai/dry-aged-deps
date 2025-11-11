@@ -11,7 +11,7 @@ describe('xmlFormatter without thresholds', () => {
       totalOutdated: 0,
       safeUpdates: 0,
       filteredByAge: 0,
-      filteredBySecurity: 0
+      filteredBySecurity: 0,
     };
     const timestamp = '';
 

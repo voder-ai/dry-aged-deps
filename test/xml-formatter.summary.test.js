@@ -15,6 +15,8 @@ describe('xmlFormatter summary section', () => {
     const xml = xmlFormatter({ summary });
 
     // Expect the <min-age> element within the <summary> block
-    expect(xml).toMatch(/<summary>[\s\S]*<min-age>7<\/min-age>[\s\S]*<\/summary>/);
+    expect(xml).toMatch(
+      /<summary>[\s\S]*<min-age>7<\/min-age>[\s\S]*<\/summary>/
+    );
   });
 });

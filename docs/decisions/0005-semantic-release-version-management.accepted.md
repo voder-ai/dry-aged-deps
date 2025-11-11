@@ -162,6 +162,7 @@ Since semantic-release automatically generates detailed release notes on GitHub 
 All notable changes to this project are documented in [GitHub Releases](https://github.com/voder-ai/dry-aged-deps/releases).
 
 Each release includes:
+
 - Version number and date
 - Categorized changes (Features, Bug Fixes, etc.)
 - Links to commits and comparison views
