@@ -55,6 +55,7 @@ dry-aged-deps
 | --severity=<level>      | Vulnerability severity threshold: none, low, moderate, high, critical (default: none) |
 | --prod-severity=<level> | Severity threshold for production dependencies (falls back to --severity)             |
 | --dev-severity=<level>  | Severity threshold for development dependencies (falls back to --severity)            |
+| --check                 | Check mode: exit code 1 if safe updates available, 0 if none, 2 on error               |
 
 ### Examples
 
@@ -79,6 +80,11 @@ dry-aged-deps --prod-severity=none --dev-severity=moderate
 
 # Combine age and severity thresholds
 dry-aged-deps --prod-min-age=30 --prod-severity=none --dev-min-age=7 --dev-severity=high
+
+# Enforce no safe updates accumulate, failing CI on available updates
+
+# Enforce no safe updates accumulate, failing CI on available updates
+dry-aged-deps --check
 ```
 
 ### Output Formats

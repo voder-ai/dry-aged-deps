@@ -128,3 +128,7 @@ docs/generated/
 # yarn.lock         # Uncomment if using npm exclusively
 
 
+# Ignore temporary and patch files
+*.patch
+*.tmp
+*.diff
