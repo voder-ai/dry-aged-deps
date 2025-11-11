@@ -6,30 +6,35 @@ This document provides an overview of the core architecture and module layout of
 
 ```
 bin/
-  dry-aged-deps.js       # CLI entrypoint
+  dry-aged-deps.js          # CLI entrypoint
 src/
-  fetch-version-times.js # Fetch npm package version publish times
-  age-calculator.js      # Calculate age in days since publish time
+  fetch-version-times.js    # Fetch npm package version publish times
+  age-calculator.js         # Calculate age in days since publish time
+  check-vulnerabilities.js  # Check package vulnerabilities with npm audit
+  json-formatter.js         # JSON output formatter
+  xml-formatter.js          # XML output formatter
+  print-outdated.js         # Outdated dependencies printer logic
+  index.js                  # Programmatic API exports
 docs/
-  api.md                 # API reference for public functions
-  architecture.md        # This architecture overview
-  stories/               # User stories and planning documents
+  api.md                    # Public API documentation
+  architecture.md           # This architecture overview
+  developer-guidelines.md   # Development guidelines
+  branching.md              # Branching strategies
+  eslint-flat-config.md     # ESLint config details
+  decisions/                # Architectural Decision Records
 test/
-  fetch-version-times.test.js
-  age-calculator.test.js
-  cli.test.js
-  helpers/cli-helper.js
+  *.test.js                 # Unit and integration tests for modules and CLI
+  fixtures/                 # Test fixtures (mock projects, configs, etc.)
 ```
 
 ## Components
 
 ### CLI (`bin/dry-aged-deps.js`)
 
-- Parses command-line arguments (`--help` flag).
+- Parses command-line arguments (`--help`, `--version`, `--format`, `--check`, etc.).
 - Executes `npm outdated --json` via `child_process.execFileSync`.
-- Delegates to `printOutdated` to format output.
-- Handles both zero-exit (`npm outdated` returns code 0) and non-zero exit codes (packages outdated).
-- Gracefully handles JSON parsing errors and missing outdated data.
+- Delegates to `printOutdated` to filter and format output.
+- Handles exit codes based on normal and check modes, and error conditions.
 
 ### Version Time Fetcher (`src/fetch-version-times.js`)
 
@@ -45,18 +50,39 @@ test/
 - Converts ISO date strings to epoch times and computes difference from current time.
 - Returns the integer number of days.
 
+### Vulnerability Checker (`src/check-vulnerabilities.js`)
+
+- Exposes `checkVulnerabilities(packageName, version)`.
+- Creates a temporary `package.json` and runs `npm audit --json`.
+- Parses audit output and counts vulnerabilities of all severities.
+- Cleans up temporary files after check.
+
+### Output Formatters
+
+- **JSON**: `src/json-formatter.js` formats data into a JSON string.
+- **XML**: `src/xml-formatter.js` formats data into an XML string with escape handling.
+
+### Print Logic (`src/print-outdated.js`)
+
+- Exposes `printOutdated(data, options)` for table, JSON, or XML output.
+- Fetches version times and ages, filters by threshold and security.
+- Formats output according to `--format` and handles filtering statistics.
+
+### Programmatic API (`src/index.js`)
+
+- Aggregates and re-exports all public functions for library use:
+  `fetchVersionTimes`, `calculateAgeInDays`, `checkVulnerabilities`, `jsonFormatter`, `xmlFormatter`, `printOutdated`.
+
 ## Design Decisions
 
-- **Incremental CLI Design:** The CLI wraps existing npm commands (`outdated`, `view`) rather than re-implementing registry API calls, reducing maintenance.
-- **Synchronous Execution:** Uses synchronous child processes for simplicity and predictable output in a CLI context.
-- **Modularity:** Core logic is split into discrete, testable modules (`fetchVersionTimes`, `calculateAgeInDays`).
-- **Resilience:** Each version time fetch is wrapped in `try/catch` to prevent a single failure from aborting the entire output.
-- **Testing:** Modules have unit tests via Vitest. CLI has integration-like tests mocking subprocesses.
+- **ES Modules**: Unified on ESM for consistency and modern tooling support (see [0001-use-es-modules.md](decisions/0001-use-es-modules.md)).
+- **Synchronous CLI**: Uses sync child processes for predictable CLI behavior.
+- **Modular**: Small, focused modules for easy testing and maintenance.
+- **Check Mode**: Adds CI enforcement mode without changing default behavior.
 
 ## Future Considerations
 
-- **Asynchronous Refactor:** Migrate to async child processes and promise-based flows for improved performance and non-blocking behavior.
-- **Parallel Fetching:** Fetch version times concurrently for multiple packages to reduce overall runtime.
-- **Caching:** Introduce a cache to avoid repeated registry calls for the same package/version within a session.
-- **Customizable Output:** Support JSON or CSV output formats and adjustable date formats.
-- **TypeScript Migration:** Add static typing for improved developer experience and reduced runtime errors.
+- **Async Refactor**: Migrate to async child processes for performance.
+- **Parallel Fetch**: Fetch version times concurrently.
+- **Caching**: Implement caching of version data.
+- **TypeScript**: Add static typing for improved developer experience.
