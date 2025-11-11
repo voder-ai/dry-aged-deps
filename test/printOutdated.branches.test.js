@@ -26,7 +26,9 @@ describe('printOutdated unit tests - table output edge cases', () => {
     const data = {
       pkgA: { current: '1.0.0', wanted: '1.1.0', latest: '1.1.0' },
     };
-    const fetchStub = vi.fn().mockResolvedValue({ '1.1.0': '2020-01-01T00:00:00.000Z' });
+    const fetchStub = vi
+      .fn()
+      .mockResolvedValue({ '1.1.0': '2020-01-01T00:00:00.000Z' });
     const ageStub = vi.fn().mockReturnValue(5);
     const summary = await printOutdated(data, {
       format: 'table',
@@ -47,7 +49,9 @@ describe('printOutdated unit tests - table output edge cases', () => {
     const data = {
       pkgB: { current: '2.0.0', wanted: '2.1.0', latest: '2.1.0' },
     };
-    const fetchStub = vi.fn().mockResolvedValue({ '2.1.0': '2020-01-01T00:00:00.000Z' });
+    const fetchStub = vi
+      .fn()
+      .mockResolvedValue({ '2.1.0': '2020-01-01T00:00:00.000Z' });
     const ageStub = vi.fn().mockReturnValue(10);
     const vulnStub = vi.fn().mockResolvedValue(3);
     const summary = await printOutdated(data, {
@@ -69,7 +73,9 @@ describe('printOutdated unit tests - table output edge cases', () => {
     const data = {
       pkgC: { current: '3.0.0', wanted: '3.1.0', latest: '3.1.0' },
     };
-    const fetchStub = vi.fn().mockResolvedValue({ '3.1.0': '2020-01-01T00:00:00.000Z' });
+    const fetchStub = vi
+      .fn()
+      .mockResolvedValue({ '3.1.0': '2020-01-01T00:00:00.000Z' });
     const ageStub = vi.fn().mockReturnValue(15);
     const vulnError = new Error('network failure');
     const vulnStub = vi.fn().mockRejectedValue(vulnError);
@@ -82,7 +88,9 @@ describe('printOutdated unit tests - table output edge cases', () => {
       devMinAge: 7,
     });
     expect(errorSpy).toHaveBeenCalledWith(
-      expect.stringContaining('Warning: failed to check vulnerabilities for pkgC@3.1.0')
+      expect.stringContaining(
+        'Warning: failed to check vulnerabilities for pkgC@3.1.0'
+      )
     );
     expect(logSpy).toHaveBeenCalledWith('Outdated packages:');
     expect(logSpy).toHaveBeenCalledWith(
@@ -124,7 +132,10 @@ describe('printOutdated unit tests - json output empty', () => {
       safeUpdates: 0,
       filteredByAge: 0,
       filteredBySecurity: 0,
-      thresholds: { prod: { minAge: 7, minSeverity: 'none' }, dev: { minAge: 7, minSeverity: 'none' } },
+      thresholds: {
+        prod: { minAge: 7, minSeverity: 'none' },
+        dev: { minAge: 7, minSeverity: 'none' },
+      },
     });
   });
 });
@@ -160,7 +171,9 @@ describe('printOutdated unit tests - xml output', () => {
     const data = {
       pkgX: { current: '0.1.0', wanted: '0.2.0', latest: '0.2.0' },
     };
-    const fetchStub = vi.fn().mockResolvedValue({ '0.2.0': '2020-01-01T00:00:00.000Z' });
+    const fetchStub = vi
+      .fn()
+      .mockResolvedValue({ '0.2.0': '2020-01-01T00:00:00.000Z' });
     const ageStub = vi.fn().mockReturnValue(10);
     const vulnStub = vi.fn().mockResolvedValue(0);
     const summary = await printOutdated(data, {
@@ -223,11 +236,20 @@ describe('printOutdated unit tests - json output with data', () => {
       safeUpdates: 1,
       filteredByAge: 0,
       filteredBySecurity: 0,
-      thresholds: { prod: { minAge: 3, minSeverity: 'low' }, dev: { minAge: 3, minSeverity: 'high' } },
+      thresholds: {
+        prod: { minAge: 3, minSeverity: 'low' },
+        dev: { minAge: 3, minSeverity: 'high' },
+      },
     });
     expect(Array.isArray(parsed.packages)).toBe(true);
     expect(parsed.packages).toEqual([
-      { name: 'pkgY', current: '1.0.0', wanted: '1.1.0', latest: '1.1.0', age: null },
+      {
+        name: 'pkgY',
+        current: '1.0.0',
+        wanted: '1.1.0',
+        latest: '1.1.0',
+        age: null,
+      },
     ]);
   });
 });

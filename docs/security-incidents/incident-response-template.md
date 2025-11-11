@@ -52,4 +52,4 @@ This document provides a template for responding to security incidents affecting
 
 ---
 
-*This document is a template and should be updated with incident-specific details.*
+_This document is a template and should be updated with incident-specific details._

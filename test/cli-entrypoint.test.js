@@ -23,7 +23,9 @@ describe('CLI entrypoint', () => {
   });
 
   test('invalid format flag exits with code 2 and prints error', async () => {
-    const result = await execa('node', [cliPath, '--format=invalid'], { reject: false });
+    const result = await execa('node', [cliPath, '--format=invalid'], {
+      reject: false,
+    });
     expect(result.exitCode).toBe(2);
     expect(result.stderr).toContain('Invalid format: invalid');
   });

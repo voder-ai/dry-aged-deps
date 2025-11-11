@@ -157,7 +157,7 @@ async function printOutdated(data, options)
 import { printOutdated } from 'dry-aged-deps';
 
 const outdated = {
-  lodash: { current: '4.17.20', wanted: '4.17.21', latest: '4.17.21' }
+  lodash: { current: '4.17.20', wanted: '4.17.21', latest: '4.17.21' },
 };
 await printOutdated(outdated, { format: 'json', prodMinAge: 7 });
 ```
@@ -201,9 +201,17 @@ import { jsonFormatter } from 'dry-aged-deps';
 
 const output = jsonFormatter({
   rows: [['lodash', '4.17.20', '4.17.21', '4.17.21', 365]],
-  summary: { totalOutdated: 1, safeUpdates: 1, filteredByAge: 0, filteredBySecurity: 0 },
-  thresholds: { prod: { minAge: 7, minSeverity: 'none' }, dev: { minAge: 7, minSeverity: 'none' } },
-  timestamp: new Date().toISOString()
+  summary: {
+    totalOutdated: 1,
+    safeUpdates: 1,
+    filteredByAge: 0,
+    filteredBySecurity: 0,
+  },
+  thresholds: {
+    prod: { minAge: 7, minSeverity: 'none' },
+    dev: { minAge: 7, minSeverity: 'none' },
+  },
+  timestamp: new Date().toISOString(),
 });
 console.log(output);
 ```
@@ -249,9 +257,17 @@ import { xmlFormatter } from 'dry-aged-deps';
 
 const xml = xmlFormatter({
   rows: [],
-  summary: { totalOutdated: 0, safeUpdates: 0, filteredByAge: 0, filteredBySecurity: 0 },
-  thresholds: { prod: { minAge: 7, minSeverity: 'none' }, dev: { minAge: 7, minSeverity: 'none' } },
-  timestamp: new Date().toISOString()
+  summary: {
+    totalOutdated: 0,
+    safeUpdates: 0,
+    filteredByAge: 0,
+    filteredBySecurity: 0,
+  },
+  thresholds: {
+    prod: { minAge: 7, minSeverity: 'none' },
+    dev: { minAge: 7, minSeverity: 'none' },
+  },
+  timestamp: new Date().toISOString(),
 });
 console.log(xml);
 ```

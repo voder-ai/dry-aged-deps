@@ -46,4 +46,4 @@ See `docs/security-incidents/incident-response-template.md` for detailed triage 
 
 ---
 
-*This policy may be updated periodically. See version history in `CHANGELOG.md` for changes.*
+_This policy may be updated periodically. See version history in `CHANGELOG.md` for changes._
