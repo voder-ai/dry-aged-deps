@@ -1,6 +1,6 @@
 # API Reference
 
-This document describes the public API exposed by dry-aged-deps for programmatic use.
+This document describes the public API exposed by `dry-aged-deps` for programmatic use.
 
 ## fetchVersionTimes(packageName)
 
@@ -71,4 +71,187 @@ import { calculateAgeInDays } from 'dry-aged-deps';
 const age = calculateAgeInDays('2020-01-01T00:00:00.000Z');
 console.log(age);
 // => e.g., 900 (depending on current date)
+```
+
+## checkVulnerabilities(packageName, version)
+
+Check if a specific package version has known vulnerabilities.
+
+### Signature
+
+```js
+import { checkVulnerabilities } from 'dry-aged-deps';
+
+/**
+ * Check if a specific package version has known vulnerabilities.
+ * @param {string} packageName - The name of the npm package.
+ * @param {string} version - The version to check.
+ * @returns {Promise<number>} The total number of vulnerabilities found (0 = safe).
+ * @throws {Error} If the packageName is invalid or audit fails unexpectedly.
+ */
+async function checkVulnerabilities(packageName, version)
+```
+
+### Parameters
+
+- `packageName` (string): The name of the npm package.
+- `version` (string): The package version to check (e.g., `"1.2.3"`).
+
+### Returns
+
+A promise that resolves to the number of vulnerabilities found (info, low, moderate, high, critical).
+
+### Example
+
+```js
+import { checkVulnerabilities } from 'dry-aged-deps';
+
+const vulnCount = await checkVulnerabilities('lodash', '4.17.21');
+console.log(vulnCount);
+// => 0
+```
+
+## printOutdated(data, options)
+
+Print and/or format outdated dependencies with age thresholds and security checks.
+
+### Signature
+
+```js
+import { printOutdated } from 'dry-aged-deps';
+
+/**
+ * Print outdated dependencies information with age thresholds and security checks.
+ * @param {Record<string, { current: string; wanted: string; latest: string }>} data
+ * @param {object} [options] - Configuration overrides and output formatting.
+ * @param {function} [options.fetchVersionTimes] - Custom fetchVersionTimes function.
+ * @param {function} [options.calculateAgeInDays] - Custom calculateAgeInDays function.
+ * @param {function} [options.checkVulnerabilities] - Custom checkVulnerabilities function.
+ * @param {string} [options.format] - Output format: "table", "json", or "xml".
+ * @param {number} [options.prodMinAge] - Minimum age in days for production dependencies.
+ * @param {number} [options.devMinAge] - Minimum age in days for dev dependencies.
+ * @param {string} [options.prodMinSeverity] - Severity threshold for production dependencies.
+ * @param {string} [options.devMinSeverity] - Severity threshold for dev dependencies.
+ * @returns {Object|undefined} Returns a summary object in JSON/XML modes; undefined in table mode.
+ */
+async function printOutdated(data, options)
+```
+
+### Parameters
+
+- `data` (object): Mapping of package names to outdated info (`current`, `wanted`, `latest`).
+- `options` (object, optional): Overrides and format settings.
+
+### Returns
+
+- In JSON/XML modes, returns a summary object:
+  - `totalOutdated` (number)
+  - `safeUpdates` (number)
+  - `filteredByAge` (number)
+  - `filteredBySecurity` (number)
+- In table mode, logs to console and returns `undefined`.
+
+### Example
+
+```js
+import { printOutdated } from 'dry-aged-deps';
+
+const outdated = {
+  lodash: { current: '4.17.20', wanted: '4.17.21', latest: '4.17.21' }
+};
+await printOutdated(outdated, { format: 'json', prodMinAge: 7 });
+```
+
+## jsonFormatter({ rows, summary, thresholds, timestamp })
+
+Format outdated data into a JSON string.
+
+### Signature
+
+```js
+import { jsonFormatter } from 'dry-aged-deps';
+
+/**
+ * Format outdated dependencies data into a JSON string.
+ * @param {object} params
+ * @param {Array<Array<any>>} params.rows - Array of rows: [name, current, wanted, latest, age].
+ * @param {object} params.summary - Summary of filtering: totalOutdated, safeUpdates, filteredByAge, filteredBySecurity.
+ * @param {object} [params.thresholds] - Threshold settings for prod and dev.
+ * @param {string} params.timestamp - ISO timestamp of the report.
+ * @returns {string} JSON string.
+ */
+function jsonFormatter({ rows, summary, thresholds, timestamp })
+```
+
+### Parameters
+
+- `rows` (Array): List of package entries.
+- `summary` (object): Filtering summary.
+- `thresholds` (object, optional): Threshold settings.
+- `timestamp` (string): ISO-formatted timestamp.
+
+### Returns
+
+A formatted JSON string.
+
+### Example
+
+```js
+import { jsonFormatter } from 'dry-aged-deps';
+
+const output = jsonFormatter({
+  rows: [['lodash', '4.17.20', '4.17.21', '4.17.21', 365]],
+  summary: { totalOutdated: 1, safeUpdates: 1, filteredByAge: 0, filteredBySecurity: 0 },
+  thresholds: { prod: { minAge: 7, minSeverity: 'none' }, dev: { minAge: 7, minSeverity: 'none' } },
+  timestamp: new Date().toISOString()
+});
+console.log(output);
+```
+
+## xmlFormatter({ rows, summary, thresholds, timestamp, error })
+
+Format outdated data into an XML string.
+
+### Signature
+
+```js
+import { xmlFormatter } from 'dry-aged-deps';
+
+/**
+ * Format outdated dependencies data into an XML string.
+ * @param {object} params
+ * @param {Array<any>} [params.rows] - Outdated package entries as array or object rows.
+ * @param {object} params.summary - Summary of filtering results.
+ * @param {object} [params.thresholds] - Threshold settings for prod and dev.
+ * @param {string} [params.timestamp] - ISO timestamp of the report.
+ * @param {Error} [params.error] - Optional error object to include.
+ * @returns {string} XML string.
+ */
+function xmlFormatter({ rows, summary, thresholds, timestamp, error })
+```
+
+### Parameters
+
+- `rows` (Array): Entries for packages; can be array or object structures.
+- `summary` (object): Filtering summary.
+- `thresholds` (object, optional): Threshold settings.
+- `timestamp` (string, optional): ISO-formatted timestamp.
+- `error` (Error, optional): Error details to include.
+
+### Returns
+
+A formatted XML string.
+
+### Example
+
+```js
+import { xmlFormatter } from 'dry-aged-deps';
+
+const xml = xmlFormatter({
+  rows: [],
+  summary: { totalOutdated: 0, safeUpdates: 0, filteredByAge: 0, filteredBySecurity: 0 },
+  thresholds: { prod: { minAge: 7, minSeverity: 'none' }, dev: { minAge: 7, minSeverity: 'none' } },
+  timestamp: new Date().toISOString()
+});
+console.log(xml);
 ```

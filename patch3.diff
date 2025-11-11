@@ -1,0 +1,101 @@
+*** Begin Patch
+*** Update File: src/print-outdated.js
+@@
+-  // No outdated dependencies
+-  if (entries.length === 0) {
+-    if (format === 'xml') {
+-      const timestamp = new Date().toISOString();
+-      const summary = {
+-        totalOutdated: 0,
+-        safeUpdates: 0,
+-        filteredByAge: 0,
+-        filteredBySecurity: 0,
+-      };
+-      const thresholds = {
+-        prod: { minAge: prodMinAge, minSeverity: prodMinSeverity },
+-        dev: { minAge: devMinAge, minSeverity: devMinSeverity },
+-      };
+-      console.log(xmlFormatter({ rows: [], summary, thresholds, timestamp }));
+-      return summary;
+-    }
+-    console.log('All dependencies are up to date.');
+-    return;
+-  }
++  // No outdated dependencies
++  if (entries.length === 0) {
++    // Prepare summary for no outdated dependencies
++    const summary = {
++      totalOutdated: 0,
++      safeUpdates: 0,
++      filteredByAge: 0,
++      filteredBySecurity: 0,
++    };
++    const thresholds = {
++      prod: { minAge: prodMinAge, minSeverity: prodMinSeverity },
++      dev: { minAge: devMinAge, minSeverity: devMinSeverity },
++    };
++    const timestamp = new Date().toISOString();
++    if (format === 'xml') {
++      console.log(xmlFormatter({ rows: [], summary, thresholds, timestamp }));
++      return summary;
++    }
++    // Default (table) output
++    console.log('All dependencies are up to date.');
++    return summary;
++  }
+@@
+-  if (matureRows.length === 0) {
+-    console.log(
+-      `No outdated packages with mature versions found (prod >= ${prodMinAge} days, dev >= ${devMinAge} days).`
+-    );
+-    return;
+-  }
++  if (matureRows.length === 0) {
++    console.log(
++      `No outdated packages with mature versions found (prod >= ${prodMinAge} days, dev >= ${devMinAge} days).`
++    );
++    return summary;
++  }
+@@
+-  if (safeRows.length === 0) {
+-    console.log(
+-      `No outdated packages with safe, mature versions (>= ${prodMinAge}/${devMinAge} days old, no vulnerabilities) found.`
+-    );
+-    return;
+-  }
++  if (safeRows.length === 0) {
++    console.log(
++      `No outdated packages with safe, mature versions (>= ${prodMinAge}/${devMinAge} days old, no vulnerabilities) found.`
++    );
++    return summary;
++  }
+@@
+-  for (const row of safeRows) {
+-    console.log(row.join('	'));
+-  }
++  for (const row of safeRows) {
++    console.log(row.join('	'));
++  }
++  return summary;
+*** End Patch
+*** Begin Patch
+*** Update File: bin/dry-aged-deps.js
+@@
+-  try {
+-    await printOutdated(data, {
++  try {
++    // Run outdated check and capture summary
++    const summary = await printOutdated(data, {
+       format,
+       fetchVersionTimes: fetchVersionTimesOverride,
+       checkVulnerabilities: checkVulnerabilitiesOverride,
+       prodMinAge,
+       devMinAge,
+       prodMinSeverity,
+       devMinSeverity,
+-    });
+-    process.exit(0);
++    });
++    // Exit: 1 if safe updates available, else 0
++    process.exit(summary.safeUpdates > 0 ? 1 : 0);
+*** End Patch

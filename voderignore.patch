@@ -1,0 +1,8 @@
+--- a/.voderignore
++++ b/.voderignore
+@@
+-# Hide all test files
+-test/**
++# Hide test fixtures only
++# test/** lines removed to avoid hiding test code
++test/fixtures/**
