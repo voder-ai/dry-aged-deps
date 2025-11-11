@@ -147,32 +147,45 @@ Update package.json in CI but don't commit (current approach).
 With this approach to version management:
 
 1. **CHANGELOG.md is NOT auto-generated** by semantic-release
-2. **Manual maintenance required** for CHANGELOG.md entries
-3. **GitHub Releases are authoritative** for detailed release notes
-4. **CHANGELOG.md should be high-level**, focusing on user-facing changes
-5. **Update timing**: Update CHANGELOG.md when merging features/fixes, not tied to version numbers
-6. **Use `## Unreleased` section**: Document changes before they're released
+2. **GitHub Releases are authoritative** and auto-generated with full release notes
+3. **CHANGELOG.md becomes redundant** - semantic-release already creates comprehensive changelogs
 
-### Recommended CHANGELOG Format
+### Recommendation: Simplify CHANGELOG.md
+
+Since semantic-release automatically generates detailed release notes on GitHub Releases (including version links, categorized changes, commit links), maintaining a separate CHANGELOG.md creates duplicate effort with no added value.
+
+**Recommended approach**: Replace CHANGELOG.md with a pointer to GitHub Releases.
 
 ```markdown
 # Changelog
 
-## Unreleased
+All notable changes to this project are documented in [GitHub Releases](https://github.com/voder-ai/dry-aged-deps/releases).
 
-### Added
-- New features not yet released
+Each release includes:
+- Version number and date
+- Categorized changes (Features, Bug Fixes, etc.)
+- Links to commits and comparison views
+- Automated generation from conventional commits
 
-### Fixed
-- Bug fixes not yet released
-
-## [0.4.7] - 2025-11-11
-### Fixed
-- Vulnerability scan step updated
-
-## [0.4.6] - 2025-11-10
-...
+For historical context, see the [Releases page](https://github.com/voder-ai/dry-aged-deps/releases).
 ```
+
+### Why This Makes Sense
+
+1. **Single Source of Truth**: GitHub Releases are already comprehensive
+2. **No Duplication**: Avoid maintaining two changelogs
+3. **Auto-Generated Quality**: Semantic-release creates better changelogs than manual updates
+4. **Always Current**: Never gets out of sync with actual releases
+5. **Rich Features**: GitHub UI provides filtering, searching, and RSS feeds
+6. **Standard Practice**: Many projects using semantic-release follow this pattern
+
+### If You Must Maintain CHANGELOG.md
+
+If project requirements mandate a CHANGELOG.md file (e.g., for npm package consumers who don't use GitHub):
+
+1. Consider adding `@semantic-release/changelog` plugin to auto-generate it
+2. Or use `@semantic-release/git` to commit both version and changelog updates
+3. Accept the trade-off of automated commits in git history
 
 ## References
 
