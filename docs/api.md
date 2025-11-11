@@ -1,5 +1,7 @@
 # API Reference
 
+> **Note:** The `--check` CLI flag and `.dry-aged-deps.json` configuration-file support are coming soon and not yet implemented.
+
 This document describes the public API exposed by `dry-aged-deps` for programmatic use.
 
 ## fetchVersionTimes(packageName)
@@ -270,4 +272,3 @@ const xml = xmlFormatter({
   timestamp: new Date().toISOString(),
 });
 console.log(xml);
-```
