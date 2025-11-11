@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<traceability>
+  <specification>prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md</specification>
+  <status>FAILED</status>
+  <last_validated>2025-11-11T08:54:01.228Z</last_validated>
+  <last_modified>2025-11-09T23:02:37.596Z</last_modified>
+  <evidence>In src/print-outdated.js, the vulnerability‐filtering loop only ever invokes checkVulnerabilities(name, latest) for the single “latest” mature version. There is no logic to fall back to the next‐oldest mature version if that latest one is vulnerable:
+
+  // Vulnerability filtering
+  for (const row of matureRows) {
+    const [name, , , latest, , depType] = row;
+    vulnCount = await checkVulnerabilities(name, latest);
+    if (vulnCount !== 0) {
+      include = false;
+    }
+    if (include) safeRows.push(row);
+  }
+
+This satisfies core audit checks, transitive coverage, elimination of vulnerable versions, clear output, and a “no safe version” message—but it does not implement the “smart checking” requirement of iterating backwards through mature versions until finding a safe one.</evidence>
+  <notes>All other acceptance criteria are implemented, but the key REQ-SMART-SEARCH (check newest mature first and then work backwards through older mature versions until a non-vulnerable one is found) is missing.</notes>
+</traceability>

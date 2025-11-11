@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<traceability>
+  <specification>prompts/008.0-DEV-JSON-OUTPUT.md</specification>
+  <status>FAILED</status>
+  <last_validated>2025-11-11T08:55:42.894Z</last_validated>
+  <last_modified>2025-11-09T23:04:54.331Z</last_modified>
+  <evidence>The `jsonFormatter` (src/json-formatter.js) only outputs name, current, wanted, latest, age, and summary stats; it omits vulnerabilities (count, maxSeverity, details), dependency type, recommended version, filtered flags, and filterReason as defined in the spec’s example schema. Additionally, in JSON mode the CLI always exits with code 0 (`process.exit(0)` after printing) and does not return exit code 1 when updates are available, nor does it emit errors as JSON objects with an `error` field. These acceptance criteria (Complete Data, Exit Codes, Error Handling) are not met.</evidence>
+  <notes>While basic JSON output and flag parsing are implemented and tests pass for minimal JSON output, the implementation does not satisfy the full spec: the JSON schema is incomplete and exit/error handling in JSON mode is missing. You should enhance `jsonFormatter`, adjust exit codes based on summary.safeUpdates, and implement JSON-formatted error output.</notes>
+</traceability>

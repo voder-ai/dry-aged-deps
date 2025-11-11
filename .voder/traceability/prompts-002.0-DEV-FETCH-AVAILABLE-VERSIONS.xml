@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<traceability>
+  <specification>prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md</specification>
+  <status>FAILED</status>
+  <last_validated>2025-11-11T08:55:20.706Z</last_validated>
+  <last_modified>2025-11-09T23:01:54.797Z</last_modified>
+  <evidence>1. The core fetch (src/fetch-version-times.js) returns all version→timestamp mappings, and calculateAgeInDays (src/age-calculator.js) correctly computes days since publication.
+2. In src/print-outdated.js the CLI only looks up and displays the age for the single “latest” version (one age per package), not for all available newer versions.
+3. There is no code anywhere that filters the fetched versions to those newer than the current installed version (REQ-OPTIMIZATION).
+4. No tests exist for listing/presenting ages for every available version or for limiting fetch to newer versions (the existing tests only assert that at least one age value appears for the latest version).</evidence>
+  <notes>While version‐time fetching and age calculation are implemented and the CLI prints the age of the latest update, the story requires fetching and displaying ages for each available version newer than current, and an optimization to skip older versions. Neither per‐version display nor smart fetching by version > current has been implemented.</notes>
+</traceability>

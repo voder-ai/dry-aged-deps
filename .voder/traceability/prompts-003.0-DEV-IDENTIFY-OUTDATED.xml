@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<traceability>
+  <specification>prompts/003.0-DEV-IDENTIFY-OUTDATED.md</specification>
+  <status>FAILED</status>
+  <last_validated>2025-11-11T08:54:31.833Z</last_validated>
+  <last_modified>2025-11-09T23:02:10.889Z</last_modified>
+  <evidence>In src/print-outdated.js at the age-filtering step, the code filters only on the age of info.latest:
+
+  // Filter by age threshold
+  const matureRows = rows.filter(([_name, , , , age, depType]) => {
+    const minAge = depType === 'prod' ? prodMinAge : devMinAge;
+    return typeof age === 'number' && age >= minAge;
+  });
+
+This only checks the latest version’s age and does not implement the “smart filtering” requirement to iterate backwards through published versions until finding the first one ≥7 days old. Consequently, if the very latest version is too new but an earlier version is mature, it won’t be selected. No code handles selecting a non-latest mature version.</evidence>
+  <notes>The core story requires iterating from latest backwards to find the newest version at least 7 days old (REQ-SMART-SEARCH). The implementation only tests the latest version, so it fails the smart-filtering acceptance criterion.</notes>
+</traceability>

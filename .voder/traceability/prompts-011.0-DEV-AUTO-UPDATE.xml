@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<traceability>
+  <specification>prompts/011.0-DEV-AUTO-UPDATE.md</specification>
+  <status>FAILED</status>
+  <last_validated>2025-11-11T08:53:07.735Z</last_validated>
+  <last_modified>2025-11-11T08:04:07.327Z</last_modified>
+  <evidence>Searches in bin/dry-aged-deps.js and src for '--update' and '--yes' flags returned no occurrences. The CLI help text lists options but does not mention --update or --yes. No code exists to read or write package.json, perform backups, preview or apply updates, or prompt for confirmation.</evidence>
+  <notes>The feature to auto-update package.json as specified in prompts/011.0-DEV-AUTO-UPDATE.md is not implemented. No CLI handling nor supporting logic for updating dependencies exists.</notes>
+</traceability>

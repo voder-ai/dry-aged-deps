@@ -1,15 +1,13 @@
 ## NOW
-
-Create a new file at the project root named **SECURITY.md** that contains a draft security policy outlining scope, vulnerability reporting procedures, and an incident response process.
+git push origin main
 
 ## NEXT
-
-- Add an **incident response template** in a new `docs/security-incidents/incident-response-template.md` file with triage steps, roles, and communication guidelines.
-- Update the CI workflow (`.github/workflows/ci-publish.yml`) to include an `npm audit --audit-level=moderate` step (failing on vulnerabilities) and enable GitHub CodeQL scanning.
-- Link the new **SECURITY.md** from `README.md` under a “Security Policy” section and update `docs/developer-guidelines.md` to reference it.
+- Delete the untracked patch files (`patchfile`, `bin.patch`, `cli-check.patch`, `print-outdated.patch`) and commit their removal.
+- Update `README.md` under **Options** and **Examples** to document the `--check` flag and clarify exit codes (0 = no updates, 1 = updates available, 2 = error).
+- Enhance the CLI help text in `bin/dry-aged-deps.js` to include `--check` description and exit-code semantics.
+- Update `docs/api.md` to describe the `--check` mode and its exit-code behavior.
 
 ## LATER
-
-- Integrate automated Dependabot PR reviews and merges for approved patch-level fixes.
-- Schedule periodic security drills and policy reviews (e.g., annually).
-- Explore adding third-party security scanners (e.g., Snyk) and secret-scanning actions to the CI pipeline.
+- Add a GitHub Actions step in `.github/workflows/ci-publish.yml` to run `dry-aged-deps --check` and fail the build when safe updates exist.
+- Create a JSON Schema file (e.g. `dry-aged-deps.schema.json`) for `.dry-aged-deps.json` to enable editor validation and autocomplete.
+- Explore adding finer-grained enforcement flags (e.g. `--check-prod`, `--check-dev`) in a subsequent enhancement.
