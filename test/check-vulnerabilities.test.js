@@ -114,4 +114,34 @@ describe('checkVulnerabilities', () => {
     // Should not create temp directory for invalid input
     expect(fs.mkdtemp).not.toHaveBeenCalled();
   });
+
+  it('continues despite WARN in stderr during npm install (see story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md)', async () => {
+    // Simulate npm install warning in stderr (see story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md)
+    execFile.mockImplementationOnce((cmd, args, opts, callback) => {
+      callback(null, '', 'npm WARN deprecated package');
+    });
+
+    // Mock npm audit --json with zero vulnerabilities
+    execFile.mockImplementationOnce((cmd, args, opts, callback) => {
+      const auditResult = {
+        metadata: {
+          vulnerabilities: {
+            info: 0,
+            low: 0,
+            moderate: 0,
+            high: 0,
+            critical: 0,
+          },
+        },
+      };
+      callback(null, JSON.stringify(auditResult), '');
+    });
+
+    const vulnCount = await checkVulnerabilities('some-package', '1.2.3');
+    expect(vulnCount).toBe(0);
+    expect(fs.rm).toHaveBeenCalledWith(mockTempDir, {
+      recursive: true,
+      force: true,
+    });
+  });
 });
