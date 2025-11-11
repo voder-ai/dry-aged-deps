@@ -27,7 +27,6 @@ test/fixtures/**
 .github/prompts/**
 
 # Hide all test files
-test/**
 
 # Hide GitHub metadata and workflows
 .github/**
