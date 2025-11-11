@@ -1,0 +1,18 @@
+*** Begin Patch
+*** Update File: README.md
+@@ ### Options
+-| --dev-severity=<level>  | Severity threshold for development dependencies (falls back to --severity)            |
++| --dev-severity=<level>  | Severity threshold for development dependencies (falls back to --severity)            |
++| --check                 | Fail CI/CD build if safe updates are available (exit code 1 if updates, 0 if none, 2 on error) |
+@@
+-### Examples
++#### Exit Codes
++
++| Code | Meaning                                                         |
++| ---- | --------------------------------------------------------------- |
++| 0    | Success; no safe updates available, or CLI operation completed. |
++| 1    | Safe updates available (exit informational in normal mode/CI failure in check mode). |
++| 2    | Error occurred (invalid input or execution error). |
++
++### Examples
+*** End Patch
