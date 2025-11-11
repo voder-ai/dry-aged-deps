@@ -1,14 +1,22 @@
 ## NOW  
-Create a new Vitest integration test file `test/cli-entrypoint.test.js` that runs the CLI binary (`bin/dry-aged-deps.js`) with `--help` and `--version`, asserting the correct exit codes and output strings.
+Modify `bin/dry-aged-deps.js` so that after `await printOutdated(data, options)` it captures the returned `summary` and then calls  
+```js
+process.exit(summary.safeUpdates > 0 ? 1 : 0);
+```  
+instead of unconditionally exiting 0 (continue using exit code 2 for errors).
 
 ## NEXT  
-- Add Vitest tests for untested branches in `print-outdated.js` (e.g. simulate `npm outdated` JSON parse errors, age filtering edge cases, vulnerability-check failures) to push branch coverage above 80%.  
-- Add tests for JSON (`--format=json`) and XML (`--format=xml`) error and edge-case outputs (invalid format values, audit failures).  
-- Update `docs/api.md` to use ESM `import` syntax and correct the package’s main entry reference.  
-- Revise `README.md` to align options/flags with the implemented CLI (e.g. clarify or remove config-file support mentions).
+- Update the CLI help text and README to document the new exit codes:  
+  • 0 = no safe updates  
+  • 1 = safe updates available  
+  • 2 = error occurred  
+- Add Vitest integration tests covering all exit‐code scenarios in normal mode:  
+  • No outdated packages → exit 0  
+  • Outdated but none safe → exit 0  
+  • Safe updates available → exit 1  
+  • npm outdated failure or invalid flags/config → exit 2  
 
 ## LATER  
-- Enforce branch-coverage thresholds in CI (fail build if < 80% branches).  
-- Introduce static type checking (TypeScript or JSDoc validation).  
-- Resolve remaining ESLint security warnings and tighten plugin configs.  
-- Configure Husky pre-commit hooks to run `npm run lint` and `npm test` before commits.
+- Extend tests to verify exit codes under `--format=json` and `--format=xml`.  
+- Add a CI workflow step that fails the build on exit code 1 (safe updates).  
+- Document exit‐code semantics and examples in `docs/api.md` and expand CI/CD examples in the README.

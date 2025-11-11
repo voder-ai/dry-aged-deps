@@ -1,0 +1,7 @@
+--- a/bin/dry-aged-deps.js
++++ b/bin/dry-aged-deps.js
+@@ async function main() {
+-  const args = process.argv.slice(2);
++  const args = process.argv.slice(2);
++  // Check mode flag
++  const checkMode = args.includes('--check');

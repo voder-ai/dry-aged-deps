@@ -1,0 +1,21 @@
+--- bin/dry-aged-deps.js
++++ bin/dry-aged-deps.js
+@@
+-  // Print results
+-  try {
+-    await printOutdated(data, {
++  // Print results
++  try {
++    const summary = await printOutdated(data, {
+@@
+-    });
+-    process.exit(0);
++    });
++    if (checkMode) {
++      if (summary && summary.safeUpdates > 0) {
++        process.exit(1);
++      } else {
++        process.exit(0);
++      }
++    }
++    process.exit(0);

@@ -18,8 +18,6 @@ async function main() {
 
   // CLI arguments
   const args = process.argv.slice(2);
-  // Check mode flag
-  const checkMode = args.includes('--check');
 
   // Help flag
   if (args.includes('-h') || args.includes('--help')) {

@@ -1,0 +1,5 @@
+--- a/bin/dry-aged-deps.js
++++ b/bin/dry-aged-deps.js
+@@ -353,1 +353,1 @@
+-  // Print results
++  // Print results CHECK

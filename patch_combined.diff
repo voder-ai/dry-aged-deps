@@ -1,0 +1,41 @@
+*** Begin Patch
+*** Update File: bin/dry-aged-deps.js
+@@
+-  const args = process.argv.slice(2);
++  const args = process.argv.slice(2);
++  // Check mode flag
++  const checkMode = args.includes('--check');
+*** End Patch
+*** Begin Patch
+*** Update File: bin/dry-aged-deps.js
+@@
+-    console.log(
+-      '  --dev-severity=<lvl>   Severity threshold for development dependencies (falls back to --severity)'
+-    );
++    console.log(
++      '  --dev-severity=<lvl>   Severity threshold for development dependencies (falls back to --severity)'
++    );
++    console.log(
++      '  --check               Check mode: exit with code 1 if updates available, exit 0 if none, exit 2 on errors'
++    );
+*** End Patch
+*** Begin Patch
+*** Update File: bin/dry-aged-deps.js
+@@
+-  try {
+-    await printOutdated(data, {
++  try {
++    const summary = await printOutdated(data, {
+@@
+-    });
+-    process.exit(0);
++    });
++    if (checkMode) {
++      if (summary.safeUpdates > 0) {
++        process.exit(1);
++      } else {
++        process.exit(0);
++      }
++    }
++    process.exit(0);
+*** End Patch
