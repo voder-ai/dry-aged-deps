@@ -1,136 +1,134 @@
 # Implementation Progress Assessment
 
-**Generated:** 2025-11-11T04:45:17.382Z
+**Generated:** 2025-11-11T06:53:23.186Z
 
 ![Progress Chart](./progress-chart.png)
 
 Projection: flat (no recent upward trend)
 
-## IMPLEMENTATION STATUS: INCOMPLETE (71% ± 5% COMPLETE)
+## IMPLEMENTATION STATUS: INCOMPLETE (81.5% ± 5% COMPLETE)
 
 ## OVERALL ASSESSMENT
-Core CLI, testing, execution, and dependency management are strong and meet criteria, but documentation accuracy (55%), security evaluation (0%), and version control practices (65%) lag significantly, resulting in an overall incomplete status.
+Overall status is INCOMPLETE because Testing (75%), Documentation (75%), Security (65%), and Version Control (75%) are below required thresholds. Focus on improving tests, documentation, and security processes.
 
 ## NEXT PRIORITY
-Update documentation to reflect the current implementation and correct outdated sections.
+Enhance security by adding a formal security policy, documenting incident response, and integrating CI/CD security checks.
 
 
 
-## CODE_QUALITY ASSESSMENT (85% ± 15% COMPLETE)
-- The project exhibits a solid modular structure, meaningful comments, and comprehensive, purposeful tests with high coverage. ESLint and Prettier are configured correctly, but a handful of lint warnings and formatting violations remain. There are also some leftover artifacts (empty files, patch/diff files) cluttering the repo. Overall code quality is strong but would benefit from cleaning up and enforcing existing tools more strictly.
-- ESLint (flat config) runs cleanly on src with no errors, but reports 6 security warnings in test files.
-- Prettier check found style violations in 12 files (docs, scripts, tests) indicating formatting not applied consistently.
-- No TypeScript or static type checking is present (JS only), so no type-error coverage.
-- A stray empty file (bin/tmp.js) and .orig backup remain in the bin directory.
-- Numerous patch and .diff files in the repo root clutter source; these appear to be development artifacts.
-- Tests are meaningful and verify actual functionality (no placeholder tests), with 99.6% statement coverage.
-- Documentation is specific, accurate, and adds real value; no generic or placeholder comments detected.
-- Husky hooks directory exists but contains no visible hook scripts; pre-commit lint/format enforcement is not configured.
-- CI pipeline status indicates builds passing on main, but inability to inspect workflow makes enforcement uncertain.
+## CODE_QUALITY ASSESSMENT (85% ± 18% COMPLETE)
+- The codebase is well-structured with meaningful implementations, comprehensive tests, and clean ESLint results, but formatting inconsistencies (particularly in docs and some test files) and missing/pre-commit hook enforcement prevent a top score.
+- ESLint (v9 flat config) reports zero errors across src, bin, and test folders (only justified security warnings suppressed).
+- Vitest test suite passes 59 tests with 99.6% statement coverage and 100% function coverage in source files.
+- Prettier --check flags 13 files (markdown, docs, scripts, and certain test files) as unformatted.
+- No Husky hooks detected in .husky directory, so lint/format aren’t auto-enforced on commits.
+- Commitlint is configured but pre-commit Git hooks are not set up to enforce it.
+- CI & Publish workflow on GitHub shows recent build failures, indicating CI enforcement gaps.
 
 **Next Steps:**
-- Run `npm run format` to apply Prettier formatting across all files and eliminate style warnings.
-- Either remove or ignore dynamic FS operations in tests or disable the security rule for those cases to clear ESLint warnings.
-- Delete or relocate leftover artifacts (bin/tmp.js, .orig, patch*.diff files) to keep the repository clean.
-- Configure Husky pre-commit hooks to enforce linting and formatting before commits.
-- Consider adding a lint rule (e.g. `--max-warnings 0`) in CI or local scripts to treat warnings as failures.
-- If stronger guarantees are desired, introduce TypeScript or a JS type-checking tool (e.g. JSDoc with TypeScript checking).
-- Expose and verify CI workflow files (un-ignore .github/workflows) to confirm lint/format gated in CI.
+- Run prettier --write to fix formatting issues and commit the changes.
+- Add a Prettier check step in the CI pipeline to prevent unformatted code from merging.
+- Configure Husky pre-commit hooks to run lint and format before commits.
+- Ensure commitlint is hooked into the commit lifecycle (via Husky) to enforce commit message standards.
+- Investigate and stabilize recent CI & Publish failures to ensure quality gates always pass.
 
-## TESTING ASSESSMENT (85% ± 16% COMPLETE)
-- Comprehensive Vitest-based test suite with unit, integration, and E2E tests. All tests pass non‐interactively and use temporary directories for isolation. Coverage is excellent for statements, functions, and lines, but branch coverage (79.74%) falls just below the 80% threshold.
-- 26 test files, 59 tests executed; all passed under vitest run --coverage
-- Tests execute in non-interactive mode (vitest run) and complete successfully
-- Filesystem tests use fs.mkdtemp, fs.rm, and clean up temporary resources in before/after blocks
-- No tests modify repository contents; they operate exclusively in OS temp directories
-- Error scenarios and edge cases are well covered (invalid JSON, retry logic, CLI error codes)
-- Coverage metrics: statements 99.57%, functions 100%, lines 99.57%, but branches 79.74% (threshold 80%)
+## TESTING ASSESSMENT (75% ± 15% COMPLETE)
+- The project has a comprehensive, non-interactive Vitest test suite that isolates filesystem operations with temporary directories and covers happy paths and error scenarios, but global branch coverage (79.74%) falls just below the configured 80% threshold.
+- All 26 test files (59 tests) run under “vitest run --coverage” and pass without failures.
+- Test scripts are configured non-interactively (no watch mode) via “vitest run” and complete automatically.
+- Filesystem operations in tests use fs.mkdtemp/fs.rm in temp dirs and clean up after themselves; repository files are not modified.
+- Error and edge cases are well covered (CLI errors, XML formatting errors, retry logic, vulnerability checks).
+- Coverage report shows 99.57% statements and 100% functions, but 79.74% branch coverage—below the 80% threshold set in vitest.config.js.
 
 **Next Steps:**
-- Add or extend tests to cover conditional branches in xml-formatter and other modules to bump branch coverage above 80%
-- Consider auditing uncovered branch locations (lines 29 in xml-formatter, 36 in fetch-version-times, etc.)
-- Enable/enforce coverage threshold failure in CI so branch coverage shortfalls block merges
-- Review and test any remaining edge cases around command‐line flags and error handling to further solidify branch coverage
+- Add tests to cover missing branch paths (e.g. uncovered error branches in xml‐formatter, check‐vulnerabilities, print‐outdated) to raise branch coverage above 80%.
+- Verify that the Vitest coverage thresholds are enforced in CI and fail the build on threshold violations.
+- Review and tighten coverage assertions for critical modules to ensure all logical branches are exercised.
 
-## EXECUTION ASSESSMENT (95% ± 15% COMPLETE)
-- The CLI has a solid, fully passing test suite with high coverage, and manual runs confirm correct behavior and exit codes. Core functionality including help/version flags, JSON/XML formats, and E2E real-fixture scenarios all succeed without errors.
-- All 59 tests across 26 files passed under `npm test`, including E2E real-fixture scenarios.
-- Coverage is 99.57% of statements with branches at 79.74% in core code, meeting thresholds.
-- Manual invocations of `--help`, `--version`, and `--format=json` produced correct outputs and exit codes.
-- CLI handles invalid flags, missing values, and JSON/XML formatting as expected, as verified by tests.
-- No build step is needed; module runs directly under Node ≥18 and dependencies are resolved at runtime.
+## EXECUTION ASSESSMENT (90% ± 12% COMPLETE)
+- The CLI runs correctly under Node 18+, with all 59 tests (including a real-fixture E2E) passing and >99% coverage. Core functionality (flags, formatting, error handling) is exercised at runtime, and the tool requires no build step.
+- ‘npm test’ (vitest run --coverage) passes 26 test files (59 tests) in ~11 s with 99.57% overall coverage
+- A real-fixture E2E test invokes the CLI on a sample project and passes, verifying end-to-end behavior
+- CLI flags (--help, --version, format, min-age, severity, etc.) work as expected when invoked directly
+- No build step is required; the tool runs untranspiled under Node >=18 and tests verify runtime behavior
 
 **Next Steps:**
-- Add cross-platform (Windows) CI jobs to ensure path and shell behavior consistency.
-- Include a smoke test of global npm install usage (e.g., `npm install -g`) to verify the published binary.
-- Expand branch coverage in XML formatter and vulnerability checks to cover more error paths.
-- Document runtime requirements and environment variables more explicitly (e.g., DRY_AGED_DEPS_MOCK).
+- Ensure lint pipeline passes (fix or disable failing eslint run)
+- Add performance benchmarks or timing tests for large projects
+- Increase branch coverage by testing some untested error paths in formatters
+- Include CI step to smoke-test the published binary (npm install dry-aged-deps && dry-aged-deps)
 
-## DOCUMENTATION ASSESSMENT (55% ± 12% COMPLETE)
-- Documentation is generally present and well‐organized (README, prompts, developer guidelines), but there are several mismatches with the actual implementation, missing or outdated sections, and incomplete API/decision records.
-- README.md is clear and up-to-date with installation, usage, options, and references to docs/api.md and docs/architecture.md.
-- docs/api.md only documents fetchVersionTimes and calculateAgeInDays but omits other public APIs (checkVulnerabilities, printOutdated, jsonFormatter, xmlFormatter).
-- docs/architecture.md refers to a missing cli.test.js and a test/helpers directory layout that does not match the repository, indicating stale content.
-- The single ADR in docs/decisions (0001-use-es-modules.md) is dated 2025-11-07 (future date) and does not cover other major decisions (JSON/XML support, vulnerability checks, flag design).
-- Prompts describe config-file support (story 010.0) and a .dry-aged-deps.json file, but neither CLI nor docs implement or describe configuration file usage.
-- Developer guidelines reference docs/decisions and test directories inconsistently, and there’s no ADR for testing approach or CI-related decisions.
-
-**Next Steps:**
-- Expand docs/api.md to cover all exported functions and their parameters/behavior (checkVulnerabilities, printOutdated, formatters, etc.).
-- Update docs/architecture.md to reflect the real test files and directory structure, or remove obsolete references (cli.test.js).
-- Add ADRs for other significant architectural decisions (format support, vulnerability strategy, flag handling) and correct the dates/status in existing ADRs.
-- Sync prompt/user-story documentation with actual implementation: either implement config-file support or remove that story from prompts/docs.
-- Review developer-guidelines and CHANGELOG to ensure dates, file paths, and process steps match the current codebase and CI/CD pipeline.
-
-## DEPENDENCIES ASSESSMENT (90% ± 15% COMPLETE)
-- All dependencies are properly managed with no mature updates available; one fresh dev‐dependency update exists but is excluded by the 7-day maturity threshold.
-- No production dependencies are declared in package.json.
-- DevDependencies are locked in package-lock.json and installed cleanly with zero audit vulnerabilities.
-- dry-aged-deps CLI reports zero outdated mature packages under the default 7-day threshold.
-- A fresh dev-dependency update exists (vitest 4.0.8) but is only ~4 days old and filtered by the maturity policy.
-- package.json and lock file follow best practices; CI scripts for lint, test, and format are in place.
+## DOCUMENTATION ASSESSMENT (75% ± 16% COMPLETE)
+- The project has comprehensive documentation covering installation, API, architecture, and development guidelines, with code-level JSDoc and ADRs in place. However, there are currency and completeness issues: the CLI’s `--check` flag and exit-code behavior aren’t documented in README, ADR dates are future-dated and not fully integrated, and leftover `.tmp` files clutter the repo.
+- README.md does not mention the `--check` flag or its exit-code semantics despite implementation and ADR 0004
+- ADR 0004 is dated 2025-11-10 (in the future) and its guidance hasn’t been propagated into user-facing docs
+- Temporary files (`README.tmp`, `developer-guidelines.md.tmp`) remain in the root, creating noise
+- CLI reference is limited to a brief section in README; no dedicated CLI documentation beyond API docs
+- User-story and prompt markdown exist under `prompts/` but are not consolidated into formal requirements documentation
 
 **Next Steps:**
-- Schedule a dev-dependency upgrade for vitest@4.0.8 once it reaches 7 days old.
-- Incorporate dry-aged-deps into CI to automatically alert on mature updates.
-- Periodically review devDependencies for security‐driven overrides if critical issues arise.
-- Maintain the package-lock.json up to date when new dependencies are added.
+- Update README and/or a dedicated CLI reference in docs/ to document `--check`, its usage, and exit codes
+- Adjust ADR dates to reflect actual decision timeline and link them into main documentation
+- Remove or integrate `.tmp` files and patch leftovers from the repository
+- Enhance technical docs with a full CLI reference or augment docs/api.md to cover CLI flags
+- Consider consolidating prompts/user-story artifacts into a formal Requirements or Roadmap document for easier tracking
 
-## SECURITY ASSESSMENT (0% ± 20% COMPLETE)
-- Assessment failed due to error: 400 This model's maximum context length is 200000 tokens. However, your messages resulted in 202638 tokens (201439 in the messages, 1199 in the functions). Please reduce the length of the messages or functions.
-- Error occurred during SECURITY assessment: 400 This model's maximum context length is 200000 tokens. However, your messages resulted in 202638 tokens (201439 in the messages, 1199 in the functions). Please reduce the length of the messages or functions.
-
-**Next Steps:**
-- Check assessment system configuration
-- Verify project accessibility
-
-## VERSION_CONTROL ASSESSMENT (65% ± 15% COMPLETE)
-- The project follows trunk-based development on main with a single unified CI & Publish workflow and clear commit history, but the working directory is cluttered with untracked files outside of .voder/ and one local commit is not pushed, reducing repository health.
-- Working directory has untracked files outside of .voder/ (bin/tmp.js, multiple patch*.diff files, scripts/ directory).
-- Git status indicates branch 'main' is ahead of origin/main by 1 commit (not pushed).
-- .gitignore does not ignore temporary patch files (*.diff) or the bin directory, leading to noise.
-- Current branch is 'main', confirming trunk-based development with direct commits.
-- Recent commit history shows small, descriptive messages (feat, chore, docs, refactor).
-- A single GitHub Actions workflow (ci-publish.yml) performs CodeQL analysis, build, test, lint, security scans, publish, and post-publish smoke test.
-- Recent CI & Publish runs on main have succeeded consistently.
+## DEPENDENCIES ASSESSMENT (95% ± 18% COMPLETE)
+- Dependencies are well managed: no outdated or vulnerable packages, lock file present, and clean installs/tests pass.
+- package.json declares no runtime dependencies and a comprehensive set of devDependencies.
+- A package-lock.json file is present and up to date (generated via npm install --package-lock-only).
+- npx dry-aged-deps reported no outdated packages with mature (>=7 days) versions.
+- npm ci completes cleanly; npm audit reports 0 vulnerabilities.
+- npm ls --depth=0 shows no version conflicts or unmet dependencies.
+- All tests pass (59 tests) and there are no breakages after dependency installation.
 
 **Next Steps:**
-- Decide whether the untracked patch/diff and bin files should be committed or added to .gitignore.
-- Commit or remove legitimate changes and ensure unwanted files are ignored.
-- Push the local commit to origin to synchronize main.
-- Update .gitignore to cover generated or temporary artifacts (e.g., *.diff, bin/).
-- Maintain a clean working directory and continue direct commits to main.
+- Schedule regular CI runs of dry-aged-deps to detect new mature updates automatically.
+- Include npm audit in CI pipeline to catch future vulnerabilities early.
+- Review fresh (<7d) releases manually when critical security fixes emerge.
+- Consider adding a GitHub Action to warn on new dependency releases for proactive maintenance.
 
-## FUNCTIONALITY ASSESSMENT (90% ± 17% COMPLETE)
-- The core CLI functionality is solid—tests pass, outputs work, and the majority of user stories (001–012) are implemented—but the newest story (013.0: --check mode) is not implemented and thus fails validation.
-- Traceability file prompts-013.0-DEV-CHECK-MODE.status=TOD O → code review shows --check flag parsed but never used to alter exit behavior.
-- No code branch handles checkMode to exit with code 1 when safe updates are available or exit 0 when none are found.
-- Acceptance criteria for clear output on failure and JSON/XML support in check mode are unfulfilled.
-- No unit or integration tests target the --check flag behavior.
+## SECURITY ASSESSMENT (65% ± 12% COMPLETE)
+- No actual code or dependency vulnerabilities detected, and secrets are properly ignored, but the project lacks formal security incident documentation, a security policy, and clear CI/CD security checks.
+- npm audit reports zero vulnerabilities across all severity levels
+- No hardcoded API keys, tokens, or credentials found in source files
+- .env is properly git-ignored and an .env.example template is provided
+- No docs/security-incidents directory or existing security incident files present
+- No visible security policy or documented vulnerability management process in the repository
+- CI/CD workflow definitions are hidden; it’s unclear if automated dependency/secret scanning is configured
 
 **Next Steps:**
-- Implement the --check flag behavior in bin/dry-aged-deps.js: when checkMode is true and safe updates exist, exit with code 1; exit 0 when none.
-- Ensure clear listing of packages needing updates before failing.
-- Extend printOutdated or wrap it so JSON/XML outputs work correctly in check mode.
-- Add unit and e2e tests to verify exit codes and output in check mode.
-- Update README and CLI help to document --check usage with CI/CD examples.
+- Create a docs/security-incidents folder and draft initial incident templates
+- Add a SECURITY.md or equivalent security policy outlining vulnerability management procedures
+- Ensure GitHub Actions workflows include automated npm audit and secret scanning steps
+- Review and commit the content of .env.example to confirm no real secrets are included
+- Establish a documented process for triaging and resolving new vulnerabilities
+- Expose or document CI/CD pipeline YAML to verify security gates are in place
+
+## VERSION_CONTROL ASSESSMENT (75% ± 15% COMPLETE)
+- The repository follows trunk-based development with a clean working directory, unified CI/CD workflow, and appropriate .gitignore settings, but the CI pipeline is currently unstable with recent failures and lacks visible post-deployment verification.
+- Working directory is clean (only .voder/ files are modified)
+- All local commits are pushed and current branch is main
+- .gitignore is appropriate and does not ignore the .voder/ directory
+- Commit history consists of small, direct commits to main with clear, descriptive messages
+- There is a single unified GitHub Actions workflow (“CI & Publish”) handling build, test, and release
+- Recent runs of the CI & Publish workflow on main have failed, indicating pipeline instability
+
+**Next Steps:**
+- Investigate and fix the failing CI jobs to restore pipeline health
+- Implement post-deployment or post-publication smoke tests to verify release integrity
+- Monitor dependency updates (Dependabot) to prevent secondary pipeline failures
+- Ensure pipeline stability by adding retry logic or pinning failing dependencies in the workflow
+
+## FUNCTIONALITY ASSESSMENT (92% ± 12% COMPLETE)
+- All user stories up through security filtering are implemented, but the CI/CD check-mode story (#013) is missing its core logic.
+- Story 013.0 (DEV-CHECK-MODE) parsed --check flag but never uses it to change exit codes or CI behavior
+- No code branch fails with exit code 1 when safe updates are available under --check
+- Documentation and tests around --check exist but underlying logic is unhooked
+
+**Next Steps:**
+- Implement `--check` mode branching in bin/dry-aged-deps.js: detect safe updates and exit with code 1 when they exist
+- Add unit and CLI integration tests to verify exit codes (0, 1, 2) under various scenarios
+- Update printOutdated or wrapper to return a flag/summary indicating safe updates exist to drive CI exit logic
+- Ensure JSON and XML output modes also respect check mode and return appropriate exit codes
+- Add usage example for --check in README and CI workflow docs

@@ -1,12 +1,12 @@
-## NOW  
-Add detailed documentation for the remaining public API functions—`checkVulnerabilities`, `printOutdated`, `jsonFormatter`, and `xmlFormatter`—to `docs/api.md`.
+## NOW
+Create a new file at the project root named **SECURITY.md** that contains a draft security policy outlining scope, vulnerability reporting procedures, and an incident response process.
 
-## NEXT  
-- Revise `docs/architecture.md` to match the real directory layout (including `src/index.js`, `src/print-outdated.js`, and test folders) and remove references to missing files.  
-- Update `README.md` to remove stale config-file content and add the standardized exit-code descriptions under “Options.”  
-- Create new ADRs in `docs/decisions/` for JSON/XML output support, exit-code standardization, and check-mode behavior.
+## NEXT
+- Add an **incident response template** in a new `docs/security-incidents/incident-response-template.md` file with triage steps, roles, and communication guidelines.  
+- Update the CI workflow (`.github/workflows/ci-publish.yml`) to include an `npm audit --audit-level=moderate` step (failing on vulnerabilities) and enable GitHub CodeQL scanning.  
+- Link the new **SECURITY.md** from `README.md` under a “Security Policy” section and update `docs/developer-guidelines.md` to reference it.
 
-## LATER  
-- Synchronize `docs/developer-guidelines.md` with the updated docs and code changes (module exports, CLI flags).  
-- If config-file support is reintroduced, document the `.dry-aged-deps.json` schema and precedence rules; otherwise remove any residual references.  
-- Add a JSON schema (`.dry-aged-deps.schema.json`) for editor validation/autocomplete (optional enhancement).
+## LATER
+- Integrate automated Dependabot PR reviews and merges for approved patch-level fixes.  
+- Schedule periodic security drills and policy reviews (e.g., annually).  
+- Explore adding third-party security scanners (e.g., Snyk) and secret-scanning actions to the CI pipeline.
