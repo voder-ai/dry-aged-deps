@@ -33,9 +33,21 @@ describe('filterBySecurity', () => {
     ]);
 
     // vulnMap should contain entries for all rows
-    expect(vulnMap.get('pkg1')).toEqual({ count: 0, maxSeverity: 'none', details: [] });
-    expect(vulnMap.get('pkg2')).toEqual({ count: 3, maxSeverity: 'low', details: [] });
-    expect(vulnMap.get('pkg3')).toEqual({ count: 0, maxSeverity: 'none', details: [] });
+    expect(vulnMap.get('pkg1')).toEqual({
+      count: 0,
+      maxSeverity: 'none',
+      details: [],
+    });
+    expect(vulnMap.get('pkg2')).toEqual({
+      count: 3,
+      maxSeverity: 'low',
+      details: [],
+    });
+    expect(vulnMap.get('pkg3')).toEqual({
+      count: 0,
+      maxSeverity: 'none',
+      details: [],
+    });
 
     // filterReasonMap should only have pkg2 with reason 'security'
     expect(filterReasonMap.has('pkg1')).toBe(false);
