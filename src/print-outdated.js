@@ -188,6 +188,7 @@ export async function printOutdated(data, options = {}) {
     try {
       const pkgContent = fs.readFileSync(pkgPath, 'utf8');
       const pkgData = JSON.parse(pkgContent);
+      /* eslint-disable security/detect-object-injection */
       for (const [name, , wanted, , , depType] of safeRows) {
         if (depType === 'prod') {
           if (!pkgData.dependencies) pkgData.dependencies = {};
@@ -197,6 +198,7 @@ export async function printOutdated(data, options = {}) {
           pkgData.devDependencies[name] = wanted;
         }
       }
+      /* eslint-enable security/detect-object-injection */
       fs.writeFileSync(
         pkgPath,
         JSON.stringify(pkgData, null, 2) + '\n',
