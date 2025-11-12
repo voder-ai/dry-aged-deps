@@ -57,6 +57,8 @@ dry-aged-deps
 | --dev-severity=<level>  | Severity threshold for development dependencies (falls back to --severity)             |
 | --check                 | Check mode: exit code 1 if safe updates available, 0 if none, 2 on error (coming soon) |
 
+> **Note:** The `--check` CLI flag and configuration-file support (`.dry-aged-deps.json`) are coming soon and not yet implemented.
+
 ### Examples
 
 ```sh
@@ -81,10 +83,7 @@ dry-aged-deps --prod-severity=none --dev-severity=moderate
 # Combine age and severity thresholds
 dry-aged-deps --prod-min-age=30 --prod-severity=none --dev-min-age=7 --dev-severity=high
 
-# Enforce no safe updates accumulate, failing CI on available updates
-
-# Enforce no safe updates accumulate, failing CI on available updates # coming soon
-# dry-aged-deps --check # coming soon
+# dry-aged-deps --check (coming soon)
 ```
 
 ### Output Formats
