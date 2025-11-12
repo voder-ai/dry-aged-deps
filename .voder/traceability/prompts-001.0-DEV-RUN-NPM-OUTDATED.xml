@@ -2,11 +2,12 @@
 <traceability>
   <specification>prompts/001.0-DEV-RUN-NPM-OUTDATED.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-11T08:55:18.906Z</last_validated>
+  <last_validated>2025-11-11T23:10:04.416Z</last_validated>
   <last_modified>2025-11-09T23:01:40.301Z</last_modified>
-  <evidence>1) The CLI entrypoint (bin/dry-aged-deps.js) invokes `execFileSync('npm',['outdated','--json'])`, catches errors, and parses the JSON output.
-2) The `printOutdated` function in src/print-outdated.js formats and displays results (table, JSON, XML) and handles the 'no updates' case by printing "All dependencies are up to date.".
-3) Tests covering core functionality, JSON/XML formatting, error scenarios (npm command failures, invalid JSON), no‐update case, and an end-to-end fixture all pass (59 tests, 26 files, 100% on most modules, 99.57% overall coverage).
-4) README.md and CLI help text document usage and options.</evidence>
-  <notes>All acceptance criteria for story 001.0-DEV-RUN-NPM-OUTDATED are satisfied. The code runs `npm outdated --json`, parses output, displays results, handles errors and the up-to-date case, with comprehensive unit and integration tests and documentation in place.</notes>
+  <evidence>• All 62 Vitest tests passed, including cli.outdated.test.js, cli.upToDate.test.js, cli.error-cmd.test.js, cli.outdated.mock.test.js, and the real‐fixture E2E test (cli.e2e.real-fixture.test.js).
+• bin/dry-aged-deps.js invokes execFileSync('npm',['outdated','--json']), catches errors, parses JSON, and calls printOutdated.
+• printOutdated handles empty data by printing “All dependencies are up to date.” and errors by exiting with appropriate codes.
+• CLI help and version flags implemented and tested (cli-entrypoint.test.js).
+• README and CLI help text document usage examples and options.</evidence>
+  <notes>The foundation story “Run npm outdated” is fully implemented. Core functionality runs npm outdated --json, parses output, displays results, handles errors and the no-updates case; all related tests pass. Additional features (format flags, age/security filters) are extensions beyond this story and do not interfere with the requirements.</notes>
 </traceability>
