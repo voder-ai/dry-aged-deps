@@ -17,7 +17,11 @@ describe('printOutdated auto-update backup error handling', () => {
     tmpDir = await fsp.mkdtemp(path.join(os.tmpdir(), 'print-outdated-test-'));
     process.chdir(tmpDir);
     // create initial package.json
-    const pkg = { name: 'test-backup-error', version: '1.0.0', dependencies: { foo: '1.0.0' } };
+    const pkg = {
+      name: 'test-backup-error',
+      version: '1.0.0',
+      dependencies: { foo: '1.0.0' },
+    };
     await fsp.writeFile('package.json', JSON.stringify(pkg, null, 2), 'utf8');
     // simulate existing backup directory to cause backup error
     await fsp.mkdir('package.json.backup');
@@ -32,8 +36,12 @@ describe('printOutdated auto-update backup error handling', () => {
   });
 
   it('logs error when backup creation fails and does not create backup or modify package.json', async () => {
-    const data = { foo: { current: '1.0.0', wanted: '1.1.0', latest: '1.1.0' } };
-    const tenDays = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString();
+    const data = {
+      foo: { current: '1.0.0', wanted: '1.1.0', latest: '1.1.0' },
+    };
+    const tenDays = new Date(
+      Date.now() - 10 * 24 * 60 * 60 * 1000
+    ).toISOString();
     const fetchVersionTimes = async () => ({ '1.1.0': tenDays });
     const calculateAgeInDays = () => 10;
     const checkVulnerabilities = async () => 0;

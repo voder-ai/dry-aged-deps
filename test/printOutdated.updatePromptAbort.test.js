@@ -24,7 +24,11 @@ describe('printOutdated auto-update prompt abort', () => {
     tmpDir = await fsp.mkdtemp(path.join(os.tmpdir(), 'print-outdated-test-'));
     process.chdir(tmpDir);
     // create initial package.json
-    const pkg = { name: 'test-prompt-abort', version: '1.0.0', dependencies: { foo: '1.0.0' } };
+    const pkg = {
+      name: 'test-prompt-abort',
+      version: '1.0.0',
+      dependencies: { foo: '1.0.0' },
+    };
     await fsp.writeFile('package.json', JSON.stringify(pkg, null, 2), 'utf8');
     consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
   });
@@ -36,8 +40,12 @@ describe('printOutdated auto-update prompt abort', () => {
   });
 
   it('aborts when user answers no and does not apply updates', async () => {
-    const data = { foo: { current: '1.0.0', wanted: '1.2.0', latest: '1.2.0' } };
-    const tenDays = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString();
+    const data = {
+      foo: { current: '1.0.0', wanted: '1.2.0', latest: '1.2.0' },
+    };
+    const tenDays = new Date(
+      Date.now() - 10 * 24 * 60 * 60 * 1000
+    ).toISOString();
     const fetchVersionTimes = async () => ({ '1.2.0': tenDays });
     const calculateAgeInDays = () => 10;
     const checkVulnerabilities = async () => 0;
