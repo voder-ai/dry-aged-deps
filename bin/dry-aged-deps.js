@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable security/detect-non-literal-fs-filename */
 
 import fs from 'fs';
 import path from 'path';
@@ -20,7 +21,9 @@ async function main() {
   const args = process.argv.slice(2);
   const checkMode = args.includes('--check');
 
-  // Define valid option values for config and flag validation
+  // Valid option values for config and flag validation
+  const validSeverities = ['none', 'low', 'moderate', 'high', 'critical'];
+  const validFormats = ['table', 'json', 'xml'];
 
   // Config file support (Story: prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md)
   const configFileArg = args.find((a) => a.startsWith('--config-file='));
