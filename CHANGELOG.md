@@ -2,12 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- `--check` flag for CI/CD enforcement with standardized exit codes (coming soon)
+- Configuration-file support (`.dry-aged-deps.json`) (coming soon)
+
 ## [0.1.2] - 2025-11-11
 
 ### Added
 
 - Support for JSON output format (`--format=json`) and XML output format (`--format=xml`).
-- `--check` flag for CI/CD enforcement with standardized exit codes.
 
 ### Changed
 

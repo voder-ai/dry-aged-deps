@@ -47,6 +47,12 @@ async function main() {
     console.log(
       '  --dev-severity=<lvl>   Severity threshold for development dependencies (falls back to --severity)'
     );
+    console.log(
+      '  --check                 Check mode: exit code 1 if safe updates available, 0 if none, 2 on error (coming soon)'
+    );
+    console.log(
+      '  --config-file=<file>    Configuration-file support (coming soon)'
+    );
     process.exit(0);
   }
 
