@@ -160,7 +160,10 @@ export async function printOutdated(data, options = {}) {
     }
     if (!skipConfirmation) {
       const { createInterface } = await import('readline');
-      const rl = createInterface({ input: process.stdin, output: process.stdout });
+      const rl = createInterface({
+        input: process.stdin,
+        output: process.stdout,
+      });
       const answer = await new Promise((resolve) => {
         rl.question('Update package.json? [y/N] ', (ans) => {
           rl.close();
@@ -181,8 +184,29 @@ export async function printOutdated(data, options = {}) {
       console.error(`Failed to create backup: ${err.message}`);
       return summary;
     }
-    // TODO: apply updates to package.json (not implemented in this scaffold)
-    console.log(`Backup complete. Preview only, auto-update not applied yet.`);
+    // Apply updates to package.json
+    try {
+      const pkgContent = fs.readFileSync(pkgPath, 'utf8');
+      const pkgData = JSON.parse(pkgContent);
+      for (const [name, , wanted, , , depType] of safeRows) {
+        if (depType === 'prod') {
+          if (!pkgData.dependencies) pkgData.dependencies = {};
+          pkgData.dependencies[name] = wanted;
+        } else {
+          if (!pkgData.devDependencies) pkgData.devDependencies = {};
+          pkgData.devDependencies[name] = wanted;
+        }
+      }
+      fs.writeFileSync(
+        pkgPath,
+        JSON.stringify(pkgData, null, 2) + '\n',
+        'utf8'
+      );
+      console.log(`Updated package.json with ${safeRows.length} safe packages`);
+      console.log("Run 'npm install' to install the updates");
+    } catch (err) {
+      console.error(`Failed to update package.json: ${err.message}`);
+    }
     return summary;
   }
 

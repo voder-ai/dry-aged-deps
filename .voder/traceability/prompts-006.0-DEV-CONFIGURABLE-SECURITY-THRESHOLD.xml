@@ -2,8 +2,8 @@
 <traceability>
   <specification>prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-12T16:55:33.878Z</last_validated>
+  <last_validated>2025-11-12T17:32:43.689Z</last_validated>
   <last_modified>2025-11-09T23:03:30.864Z</last_modified>
-  <evidence>The CLI and config correctly parse and propagate severity flags (bin/dry-aged-deps.js lines ~200–300), but filterBySecurity (src/filter-by-security.js) unconditionally blocks any package with vulnCount > 0, ignoring the configured prodMinSeverity/devMinSeverity thresholds. There is no logic comparing actual vulnerability severities to the threshold, nor are there tests covering severity-level behavior (no tests reference "severity").</evidence>
-  <notes>Severity thresholds are parsed but never applied: all vulnerabilities are blocked regardless of the configured level. Filtering logic and tests for configurable severity are missing.</notes>
+  <evidence>In src/filter-by-security.js the code always does `if (vulnCount !== 0) include = false`, completely ignoring the configured `prodMinSeverity`/`devMinSeverity`. There is no logic that compares the actual vulnerability severities against the threshold, and no tests cover conditional allowance of low/moderate issues when the threshold is higher.</evidence>
+  <notes>The story’s core acceptance criterion—only blocking vulnerabilities at or above a user-specified severity threshold—is not implemented. The filterBySecurity helper never uses the configured severity levels to distinguish low/moderate/high/critical, so any non-zero vulnerability count is always blocked regardless of the threshold.</notes>
 </traceability>

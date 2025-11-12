@@ -2,14 +2,8 @@
 <traceability>
   <specification>prompts/003.0-DEV-IDENTIFY-OUTDATED.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-12T16:57:05.487Z</last_validated>
+  <last_validated>2025-11-12T17:30:01.931Z</last_validated>
   <last_modified>2025-11-09T23:02:10.889Z</last_modified>
-  <evidence>In src/print-outdated.js, the implementation always checks only the single 'latest' version timestamp:
-
-  const latestTime = versionTimes[info.latest];
-  // ...
-  const matureRows = filterByAge(rows, { prodMinAge, devMinAge });
-
-There is no logic to iterate backwards through earlier versions to find the first mature one (REQ-SMART-SEARCH), nor any version comparison to ensure the selected mature version is strictly greater than the current version (REQ-COMPARISON). Furthermore, no tests cover selecting an intermediate mature version when the very latest is too young, or skipping when the mature version is <= current. These omissions mean smart filtering and comparison criteria are not met.</evidence>
-  <notes>Core age filtering works (filterByAge covers REQ-AGE-THRESHOLD) and UI messages for no mature versions exist, but the smart search and version comparison requirements are not implemented, so the story is not satisfied.</notes>
+  <evidence>The current implementation in src/filter-by-age.js simply filters the rows for age ≥ threshold on the latest version; it does not implement the “smart filtering” requirement of walking backwards through earlier versions until a mature one is found. In src/print-outdated.js the code calls fetchVersionTimes(name) and only looks up versionTimes[info.latest] (never iterating over prior versions). There are no tests exercising smart‐search behavior or the “skip current” criterion when a mature version ≤ current exists.</evidence>
+  <notes>The story’s core acceptance criterion of “Smart Filtering: start from the latest and work backwards until finding mature version” is not implemented. The code only filters the latest version by age. To pass, logic must be added to inspect earlier versions when the latest is too fresh and tests must be added to cover that scenario.</notes>
 </traceability>

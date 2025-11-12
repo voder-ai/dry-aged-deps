@@ -2,15 +2,15 @@
 <traceability>
   <specification>prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-12T17:02:19.654Z</last_validated>
+  <last_validated>2025-11-12T17:33:42.606Z</last_validated>
   <last_modified>2025-11-09T23:04:08.953Z</last_modified>
-  <evidence>1. CLI parsing in bin/dry-aged-deps.js includes handling of --prod-min-age, --dev-min-age, --prod-severity, --dev-severity with validation and fallback to general flags.  
-2. Config file support: bin/dry-aged-deps.js reads `prod` and `dev` objects, validates nested keys (`minAge`/`minSeverity`), and unit tests in test/cli.config-file.test.js verify reading prod/dev config and CLI flags overriding config.  
-3. Dependency type detection in src/print-outdated.js via getDependencyType, with unit test test/printOutdated.prodDependency.test.js verifying 'prod' vs 'dev' labels, and printOutdated.table tests confirming the “Type” column in output.  
-4. Fallback and default behavior: test/cli.flags.test.js confirms --min-age and --severity fall back to both prod and dev when specific flags are not provided, defaulting to 7 days/‘none’.  
-5. Validation: CLI rejects non-integer or out-of-range values for all min-age flags and invalid severities; tests in test/cli.flags.test.js cover general flags, and code applies the same pattern to prod/dev flags.  
-6. Output indication: printOutdated and formatters include a “Type” column or `<dependency-type>` element; tests across test/printOutdated.* and xml-formatter.thresholds.* confirm correct output.  
-7. End-to-end coverage: test/cli.e2e.real-fixture.test.js runs the full CLI in mock mode, verifying integration and age values.  
-All 89 Vitest tests passed in non-interactive mode with ≥98% coverage.</evidence>
-  <notes>The implementation fully satisfies the story’s acceptance criteria: production and development thresholds are configurable via CLI flags and config file, styling, validation, dependency type detection, fallback/default behavior, and output indication are all in place and well-tested. The README and help text include the new flags, ensuring documentation is up to date.</notes>
+  <evidence>1. CLI flags parsed and validated in bin/dry-aged-deps.js (lines 337–650) including --prod-min-age, --dev-min-age, --prod-severity, --dev-severity with regex and range checks.
+2. Config file support for nested {prod, dev} objects implemented (lines 42–140), with unit tests in test/cli.config-file.test.js verifying prod.minAge, prod.minSeverity, dev.minAge, dev.minSeverity and flag precedence.
+3. Dependency type detection via getDependencyType in src/print-outdated.js (lines 37–52), with printOutdated.unit tests test/printOutdated.prodDependency.test.js and test/printOutdated.extra.test.js verifying the "Type" column shows 'prod' or 'dev'.
+4. Fallback behavior: general --min-age/--severity applied to both when no prefixed flags (tested in test/cli.flags.test.js 'defaults to 7 when not provided').
+5. Default behavior: same thresholds for prod and dev if no distinction (defaults minAge=7, severity='none').
+6. Precedence rules tested: --min-age + --prod-min-age yields prod=20, dev=10 (manual run), flags override config (cli.config-file.test.js).
+7. Output indication: table output includes a "Type" column (tests in printOutdated.*.test.js), XML output includes <dependencyType> (covered by xml-formatter and xml output tests).
+8. All related Vitest tests (89 total) pass; manual CLI runs with combinations of prefixed flags produce expected JSON threshold outputs.</evidence>
+  <notes>All acceptance criteria for story 007.0 have concrete implementation and verification: CLI flags, config file support, dependency-type detection, fallback and default behavior, validation, output indication, and precedence. The existing test suite covers each aspect and all tests pass.</notes>
 </traceability>

@@ -1,14 +1,12 @@
 ## NOW  
-Add parsing for the `--update` and `--yes` flags in `bin/dry-aged-deps.js`, setting `updateMode` and `skipConfirmation` variables for the CLI.
+Implement the auto-update write-back in the `updateMode` block of `src/print-outdated.js`: after creating the backup, read and parse `package.json`, update each package in `safeRows` under `dependencies` or `devDependencies` to its `wanted` version, then write the file back with 2-space indentation, replacing the existing preview/“TODO” placeholder.
 
 ## NEXT  
-- Extend the CLI to pass `updateMode` and `skipConfirmation` into `printOutdated` (or a new update handler).  
-- Scaffold a “preview” step that computes the safe updates and shows the diff against `package.json` without writing.  
-- Implement a non-interactive confirmation prompt (skipped when `--yes` is present).  
-- Create a backup of `package.json` (e.g. `package.json.backup`) before applying any changes.
+- Add unit tests for the `--update` and `--yes` flows: verify backup creation, package.json modifications, confirmation prompt behavior, and error handling.  
+- Extend `bin/dry-aged-deps.js` help text and `README.md` to document `--update` and `--yes` flags, including examples.  
+- In `src/print-outdated.js`, print a summary report after applying updates and remind users to run `npm install`.
 
 ## LATER  
-- Write the updated versions into `package.json`, preserving formatting and key order.  
-- Display a post-update summary and remind the user to run `npm install`.  
-- Add unit and integration tests for the `--update`/`--yes` flows, including backup and error handling.  
-- Update README, API docs, and CLI help text to document the `--update` and `--yes` flags.
+- Create end-to-end tests that run `dry-aged-deps --update --yes` against a real fixture, verify package.json was updated and backup exists, and then restore state.  
+- Add an ADR in `docs/decisions/` to capture the architectural decision for auto-update behavior.  
+- Optionally support updating `package-lock.json` and/or running `npm install` automatically behind a new flag.

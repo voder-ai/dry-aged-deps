@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <traceability>
   <specification>prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md</specification>
-  <status>PASSED</status>
-  <last_validated>2025-11-12T16:58:08.565Z</last_validated>
+  <status>FAILED</status>
+  <last_validated>2025-11-12T17:29:57.160Z</last_validated>
   <last_modified>2025-11-09T23:01:54.797Z</last_modified>
-  <evidence>- fetch-version-times.js implements REQ-NPM-VIEW by calling `npm view <pkg> time --json` (tested in fetch-version-times.test.js and fetch-version-times.retry.test.js)
-- age-calculator.js implements REQ-AGE-CALC and is validated in age-calculator.test.js
-- print-outdated.js integrates fetchVersionTimes and calculateAgeInDays, displays age in table, JSON, and XML modes (covered by printOutdated.test.js, printOutdated.json.test.js, printOutdated.xml*.test.js)
-- filter-by-age.js enforces smart age filtering (tested in filter-by-age.test.js and printOutdated tests for filtering by age)
-- All 89 Vitest tests pass with 98.4% coverage for this feature, confirming Core Functionality, Calculate Age, Display Ages, and optimization behavior.</evidence>
-  <notes>Implementation aligns with the story’s acceptance criteria: publish dates are fetched via npm view, ages are calculated, displayed alongside each package’s latest version, and only mature (newer-than-threshold) versions are shown. No missing requirements detected.</notes>
+  <evidence>Implementation inspects version times via npm view and calculates age only for the “latest” version for each package, not for all versions newer than the current:
+
+• fetch-version-times.js returns a map of all version→date but print-outdated.js only does:
+    const latestTime = versionTimes[info.latest];
+    age = calculateAgeInDays(latestTime);
+
+• No code enumerates every version > current or prints their individual ages.
+• No optimization to only fetch newer versions is implemented (npm view always returns all).
+• Tests cover fetchVersionTimes parsing/retries and that the CLI prints an Age column for the latest version, but there are no tests for multiple-version ages or smart fetching.</evidence>
+  <notes>The core plumbing (npm view, age calculation, CLI age column) is in place, but the story’s acceptance criteria to fetch, age–calculate, and display every version newer than current — and to optimize fetching only those versions — are not implemented or tested. Thus the story is incomplete.</notes>
 </traceability>

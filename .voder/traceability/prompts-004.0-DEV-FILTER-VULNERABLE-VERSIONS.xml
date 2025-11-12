@@ -2,11 +2,8 @@
 <traceability>
   <specification>prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-12T16:55:44.931Z</last_validated>
+  <last_validated>2025-11-12T17:27:59.276Z</last_validated>
   <last_modified>2025-11-09T23:02:37.596Z</last_modified>
-  <evidence>- The core smart-search requirement (“start from the newest mature version and work backwards until finding a safe one”) is not implemented. Both print-outdated.js and filter-by-security.js only ever check the single “latest” version for each package, with no logic to iterate over older mature versions.
-- filterBySecurity.js ignores the configurable severity thresholds (prodMinSeverity/devMinSeverity) and simply filters out any package with vulnCount !== 0, rather than comparing against a threshold.
-- No tests exist covering the fallback-to-older-version behavior or severity‐threshold logic; the filter-by-security.test.js only asserts filtering of single-version rows.
-</evidence>
-  <notes>While vulnerability checking (via npm audit) and basic filtering are in place, the story’s acceptance criteria around smart iteration through mature versions and configurable severity thresholds have not been implemented.</notes>
+  <evidence>The implementation provides a filterBySecurity helper and integrates it into printOutdated to remove vulnerable rows, and check-vulnerabilities.js calls npm audit to catch transitive vulnerabilities. However there is no code to implement “smart checking” by iterating through multiple mature versions (newest-to-oldest) until a safe one is found. Both filterBySecurity and printOutdated only operate on a single “latest” version per package. No logic exists to fetch earlier versions or stop at the first safe version, and no tests cover this requirement.</evidence>
+  <notes>While vulnerability filtering is implemented and tested, the key acceptance criterion “Smart Checking: Checks newest mature first, works backwards until finding safe version” is missing. The feature does not iterate through version histories to select an alternate safe version when the latest is vulnerable.</notes>
 </traceability>

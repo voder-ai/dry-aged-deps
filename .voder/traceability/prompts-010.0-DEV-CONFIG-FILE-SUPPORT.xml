@@ -2,8 +2,11 @@
 <traceability>
   <specification>prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-12T16:56:32.898Z</last_validated>
+  <last_validated>2025-11-12T17:29:40.163Z</last_validated>
   <last_modified>2025-11-10T21:23:22.067Z</last_modified>
-  <evidence>1) bin/dry-aged-deps.js contains a block under “Story: prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md” that: reads .dry-aged-deps.json from CWD (REQ-CONFIG-LOCATION), parses JSON, validates top-level keys [minAge,severity,prod,dev,format], validates prod/dev sub-keys and ranges, merges config with built-in defaults, and applies CLI flags with precedence CLI > config > defaults (REQ-PRECEDENCE). 2) test/cli.config-file.test.js (89 total Vitest tests) covers: applying default config values, CLI-override behavior, invalid JSON exit code/message, unknown key exit code/message, invalid values, custom config-file name support, and missing custom config-file error. 3) README.md includes `--config-file` flag in options table and an example .dry-aged-deps.json snippet demonstrating all supported fields and usage. 4) No schema file was added (schema support was optional).</evidence>
-  <notes>All mandatory acceptance criteria for config-file support are satisfied: the tool automatically reads and validates a JSON config in project root, merges it correctly with defaults, respects CLI overrides, handles errors cleanly, remains optional if absent, and is documented in README. The optional JSON-schema file was not added, but that was non-blocking.</notes>
+  <evidence>• bin/dry-aged-deps.js includes config-file support (lines 30–50) with default path '.dry-aged-deps.json', JSON parsing, schema validation (allowed keys, type checks, range checks), merge and precedence logic (CLI > config > defaults).
+• test/cli.config-file.test.js covers all acceptance scenarios: reading defaults from config, CLI override precedence, invalid JSON exit code/message, unknown keys, value validations, custom config-file name, missing file errors—all tests pass.
+• README.md documents the .dry-aged-deps.json format (example block under “Example: using a configuration file”) and lists the --config-file option along with all relevant flags.
+• Existing tests (89 Vitest tests) including E2E, unit, and CLI tests all pass with coverage >80%, confirming optional behavior when config is absent.</evidence>
+  <notes>The implementation fulfills all mandatory acceptance criteria: config location, full schema support for thresholds and format, correct precedence, validation with clear errors, optional use, sensible defaults, and documentation. The JSON schema file is not present but was only a non‐mandatory recommendation.</notes>
 </traceability>

@@ -2,8 +2,8 @@
 <traceability>
   <specification>prompts/008.0-DEV-JSON-OUTPUT.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-12T16:58:41.844Z</last_validated>
+  <last_validated>2025-11-12T17:28:36.956Z</last_validated>
   <last_modified>2025-11-09T23:04:54.331Z</last_modified>
-  <evidence>The JSON formatter and CLI JSON branch only emit minimal fields (name, current, wanted, latest, age) and summary, but do not include vulnerabilities, dependency type, recommended version, filtered flags or filterReason as specified in prompts/008.0-DEV-JSON-OUTPUT.md. Furthermore, error handling in JSON mode prints plain-text errors to stderr instead of emitting an error object with an “error” field and timestamp in JSON. See src/json-formatter.js and the JSON branch in src/print-outdated.js for the incomplete output, and bin/dry-aged-deps.js error handlers for plain-text stderr output.</evidence>
-  <notes>While existing tests expect minimal JSON, the implemented JSON output does not satisfy the story’s acceptance criteria for “Complete Data” or “Error Handling” as defined in prompts/008.0-DEV-JSON-OUTPUT.md.</notes>
+  <evidence>In src/print-outdated.js the JSON branch (format === 'json') is implemented as a "minimal" stub: it only collects rows as [name,current,wanted,latest,null] and invokes jsonFormatter, which emits an array of {name,current,wanted,latest,age} and a bare summary + thresholds. The story’s example schema and acceptance criteria require each package object to include fields for vulnerabilities (count, maxSeverity, details), filtered flags, filterReason, recommended version, dependency type, etc., and error output must be JSON-formatted with an "error" field. There is no code path that wraps CLI errors into a JSON error object. search in bin/dry-aged-deps.js shows that on error (format==='json') it falls back to console.error and a non-JSON exit, not the JSON-error schema. </evidence>
+  <notes>The code only implements a minimal JSON formatter (name, current, wanted, latest, age) to satisfy a basic test suite, but does not provide the full, structured JSON schema (vulnerabilities, severity thresholds, filter metadata, recommended versions) nor JSON-formatted error objects as required by the spec. All acceptance criteria around "Complete Data" and "Error Handling" in JSON mode remain unimplemented.</notes>
 </traceability>

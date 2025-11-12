@@ -2,11 +2,15 @@
 <traceability>
   <specification>prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-12T16:59:13.795Z</last_validated>
+  <last_validated>2025-11-12T17:29:26.783Z</last_validated>
   <last_modified>2025-11-11T08:04:07.339Z</last_modified>
-  <evidence>1) Vitest run: 89 tests passed (including all CLI exit‐code scenarios: invalid format (exit 2), invalid config (exit 2), npm outdated JSON parse error (exit 1 for table/JSON, exit 2 for XML), --check mode across table/JSON/XML (exit 0/1/2 as specified), up-to-date (exit 0), updates available (exit 1)).
-2) README.md lists --check behavior: “exit code 1 if safe updates available, 0 if none, 2 on error”.
-3) bin/dry-aged-deps.js implements process.exit(0|1|2) according to no-updates, updates, and error branches, consistently across --format=table|json|xml.
-4) --help output (tested in cli-entrypoint.test.js) documents exit codes exit 0 for help, exit 2 for invalid flags, and describes --check exit codes.</evidence>
-  <notes>All specified exit codes (0,1,2) are implemented and covered by tests; behavior is consistent across output formats; documentation in README and --help aligns; no acceptance criterion remains unmet.</notes>
+  <evidence>- bin/dry-aged-deps.js implements process.exit(0|1|2) for no-updates, updates-available and error paths (see lines ~540–560).
+- CLI tests verify exit codes:
+  • test/cli.upToDate.test.js asserts exitCode 0 when dependencies up-to-date.
+  • test/cli.check-mode.test.js asserts exitCode 1 for safe updates in table, JSON and XML, and exitCode 2 on invalid format.
+  • test/cli.error-cmd.test.js and test/cli.format-xml.error.test.js assert exit codes for parse errors (1 in default, 2 in XML).
+  • test/cli.config-file.test.js covers exitCode 2 on invalid config scenarios.
+- Documentation in README.md documents --check exit code semantics (0=none, 1=updates, 2=error).
+- --help output (bin/dry-aged-deps.js) includes: “Check mode: exit code 1 if safe updates available, 0 if none, 2 on error.”</evidence>
+  <notes>All acceptance criteria for standardized exit codes are met: the CLI emits the three required exit codes across formats, tests cover all scenarios, and the behavior is documented in README and help. Existing non-check behavior remains backward compatible.</notes>
 </traceability>

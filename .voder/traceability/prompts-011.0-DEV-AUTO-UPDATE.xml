@@ -2,8 +2,8 @@
 <traceability>
   <specification>prompts/011.0-DEV-AUTO-UPDATE.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-12T16:56:04.010Z</last_validated>
+  <last_validated>2025-11-12T17:27:59.276Z</last_validated>
   <last_modified>2025-11-11T08:04:07.327Z</last_modified>
-  <evidence>Search of bin/dry-aged-deps.js and src/**/*.js shows no handling of `--update` or `--yes` flags. CLI help text does not list `--update` or `--yes`. No tests reference update behavior or backup creation. No code for preview/confirmation, package.json modification, or summary post-update.</evidence>
-  <notes>The story 011.0-DEV-AUTO-UPDATE is not implemented: none of the acceptance criteria for auto-updating package.json (flags, preview, confirmation, backup, install prompt, summary, error handling) are present.</notes>
+  <evidence>In src/print-outdated.js (line 184) the updateMode block ends with a TODO: “apply updates to package.json (not implemented in this scaffold)” and only logs “Backup complete. Preview only, auto-update not applied yet.” No code modifies package.json. Additionally, there are no Vitest tests covering --update or --yes behavior, and README.md still lacks documentation of the new flags.</evidence>
+  <notes>The CLI recognizes --update and --yes flags and prompts/backs up correctly, but never applies changes to package.json, omits the post-update install reminder and summary report, and lacks tests and documentation. Core acceptance criteria remain unfulfilled.</notes>
 </traceability>

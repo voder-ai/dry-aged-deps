@@ -57,6 +57,8 @@ dry-aged-deps
 | --dev-severity=<level>  | Severity threshold for development dependencies (falls back to --severity)                     |
 | --config-file=<file>    | Path to JSON config file (default: .dry-aged-deps.json). CLI flags override config file values |
 | --check                 | Check mode: exit code 1 if safe updates available, 0 if none, 2 on error                       |
+| --update                | Update dependencies to latest safe versions                                                    |
+| -y, --yes               | Skip confirmation prompts (assume yes)                                                         |
 
 ### Examples
 

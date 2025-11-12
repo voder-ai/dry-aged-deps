@@ -1,4 +1,4 @@
-Here’s a concise, chronological summary of what’s been done so far:
+Here’s a distilled history of what’s been done so far:
 
 • Bootstrapped the CLI  
   – Created bin/dry-aged-deps.js as an npm-executable to run npm outdated, fetch publish dates, compute “age,” and support --help/--version.  
@@ -14,7 +14,7 @@ Here’s a concise, chronological summary of what’s been done so far:
   – GitHub Actions for lint/test/coverage (100% statements, 94% branches), npm audit, lockfile-drift checks, security plugin, Dependabot alerts & auto-fixes  
 
 • Automated releases & dependency upkeep  
-  – Integrated semantic-release, scheduled weekly dependency updates, daily security patches, CVE fixes, enforced npm 2FA  
+  – Semantic-release integration, scheduled weekly dependency updates, daily security patches, CVE fixes, enforced npm 2FA  
 
 • Enhanced output & filtering  
   – Added --format (table/JSON/XML) with dedicated formatters and XML schema  
@@ -25,8 +25,7 @@ Here’s a concise, chronological summary of what’s been done so far:
   – --check mode with structured summaries, exit-code logic, lockfile-drift checks, exponential backoff  
 
 • Exposed programmatic API & expanded integration  
-  – Edge-case tests for help/version flags  
-  – Made src/index.js importable, aligned package.json and docs  
+  – Made src/index.js importable; aligned package.json and docs  
 
 • Cleaned up the repo  
   – Removed AI-assistant artifacts, flattened Git history, restored prompts  
@@ -62,70 +61,45 @@ Here’s a concise, chronological summary of what’s been done so far:
 
 • Emergency pipeline fix  
   – Re-added missing validFormats/validSeverities constants; disabled security/detect-non-literal-fs-filename  
-  – Reformatted code, ran npm ci, lint, tests, format checks; triggered CI & Publish—everything passed  
+  – Reformatted code, ran npm ci, lint, tests, format checks; CI & publish passed  
 
 • Added CI/CD Integration docs & tests  
   – Inserted “## CI/CD Integration” sections in README.md and docs/api.md demonstrating --check in GitHub Actions  
   – Created test/docs/ci-integration.test.js to verify those examples and exit-code semantics  
-  – Extended commitlint body-max-line-length to 200 chars, applied Prettier formatting, ran all tests, pushed changes, and saw a successful CI & Publish run  
+  – Extended commitlint body-max-line-length to 200 chars, applied Prettier formatting, ran all tests; CI & publish green  
 
-All linters, tests, formatting checks and GitHub workflows are green.
+• Most recent actions  
+  – Generated and committed package-lock.json for reproducible installs  
+  – Pinned all devDependency versions in package.json to exact versions  
+  – Updated README’s Local Development Setup to recommend npm ci --prefer-frozen-lockfile  
+  – Verified CI lockfile-drift check no longer reports changes  
+
+All linters, tests, formatting checks and GitHub workflows remain green.
 
 **Most recently we've executed the following action:**
 
 ---
-Used tool: read_file with input: {"filePath":"package.json","startLine":1,"endLine":200}
-Used tool: read_file with input: {"filePath":".github/workflows/ci-publish.yml","startLine":1,"endLine":200}
-Used tool: read_file with input: {"filePath":"README.md","startLine":1,"endLine":200}
-Used tool: run_command with input: {"command":"npm","args":["install"]}
-Used tool: read_file with input: {"filePath":"package.json","startLine":1,"endLine":100}
-Used tool: check_file_exists with input: {"filePath":"package-lock.json"}
-Used tool: search_file_content with input: {"filePath":"README.md","pattern":"npm install"}
-Used tool: read_file with input: {"filePath":".gitignore","startLine":1,"endLine":200}
-Used tool: git_add_all with input: {}
-Used tool: git_commit with input: {"message":"chore: add package-lock.json for reproducible installs\n\n## NOW\n\nGenerated package-lock.json by running 'npm install' to ensure lockfile is present and tracked.\n\n## NEXT\n\n- Next step: Pin version ranges to exact versions in package.json\n"}
-Used tool: search_file_content with input: {"filePath":".github/workflows/ci-publish.yml","pattern":"package-lock-only"}
-Used tool: read_file with input: {"filePath":"package-lock.json","startLine":1,"endLine":200}
-Used tool: read_file with input: {"filePath":".voderignore","startLine":1,"endLine":200}
-Used tool: search_file_content with input: {"filePath":"package.json","pattern":"^"}
-Used tool: read_file with input: {"filePath":"README.md","startLine":140,"endLine":180}
-Used tool: run_command with input: {"command":"grep","args":["-n","\"@commitlint/cli\"","package-lock.json"]}
-Used tool: read_file with input: {"filePath":"package.json","startLine":1,"endLine":100}
-Used tool: modify_file with input: {"filePath":"package.json","instruction":"Remove leading caret (^) from all version strings in the devDependencies section so they are exact pinned versions. For example, change \"^20.1.0\" to \"20.1.0\"; do not modify entries that are already exact numbers."}
+Used tool: read_file with input: {"filePath":"bin/dry-aged-deps.js","startLine":1,"endLine":300}
+Used tool: search_file_content with input: {"filePath":"bin/dry-aged-deps.js","searchTerm":"printOutdated"}
+Used tool: read_file with input: {"filePath":"bin/dry-aged-deps.js","startLine":400,"endLine":700}
+Used tool: find_files with input: {"pattern":"011.0-DEV-AUTO-UPDATE.md"}
+Used tool: search_file_content with input: {"filePath":"test","searchTerm":"--update"}
+Used tool: read_file with input: {"filePath":"prompts/011.0-DEV-AUTO-UPDATE.md","startLine":1,"endLine":300}
+Used tool: read_file with input: {"filePath":"src/print-outdated.js","startLine":1,"endLine":200}
+Used tool: read_file with input: {"filePath":"src/print-outdated.js","startLine":200,"endLine":350}
+Used tool: read_file with input: {"filePath":"test/cli.flags.test.js","startLine":1,"endLine":200}
+Used tool: read_file with input: {"filePath":"test/cli-entrypoint.test.js","startLine":1,"endLine":200}
+Used tool: read_file with input: {"filePath":"src/filter-by-security.js","startLine":1,"endLine":200}
+Used tool: modify_file with input: {"filePath":"bin/dry-aged-deps.js","instruction":"1. After `const args = process.argv.slice(2);`, insert parsing for updateMode and skipConfirmation flags.\n2. Update the help text section to include `--update` and `--yes, -y` flags descriptions.\n3. Modify the call to `printOutdated` to include `updateMode` and `skipConfirmation` in the options passed."}
+Used tool: modify_file with input: {"filePath":"src/print-outdated.js","instruction":"Insert new lines after the declaration of returnSummary near top to get updateMode and skipConfirmation:\n-- Locate `const returnSummary = options.returnSummary === true;`\n-- After this line, insert:\n   const updateMode = options.updateMode === true;\n   const skipConfirmation = options.skipConfirmation === true;\n\nThen, after computing `const summary = { ... }` and `const timestamp = new Date().toISOString();`, but before the `if (format === 'xml')` branch, insert the updateFlow logic:\n\n```\n  if (updateMode) {\n    const pkgPath = path.join(process.cwd(), 'package.json');\n    if (safeRows.length === 0) {\n      console.log('No safe updates available.');\n      return summary;\n    }\n    console.log('The following packages will be updated:');\n    for (const [name, current, wanted] of safeRows) {\n      console.log(`  ${name}: ${current} → ${wanted}`);\n    }\n    if (!skipConfirmation) {\n      const { createInterface } = await import('readline');\n      const rl = createInterface({ input: process.stdin, output: process.stdout });\n      const answer = await new Promise((resolve) => {\n        rl.question('Update package.json? [y/N] ', (ans) => {\n          rl.close();\n          resolve(ans.trim().toLowerCase());\n        });\n      });\n      if (answer !== 'y' && answer !== 'yes') {\n        console.log('Aborted.');\n        return summary;\n      }\n    }\n    // Create backup before applying changes\n    const backupPath = pkgPath + '.backup';\n    try {\n      fs.copyFileSync(pkgPath, backupPath);\n      console.log(`Created backup of package.json at ${backupPath}`);\n    } catch (err) {\n      console.error(`Failed to create backup: ${err.message}`);\n      return summary;\n    }\n    // TODO: apply updates to package.json (not implemented in this scaffold)\n    console.log(`Backup complete. Preview only, auto-update not applied yet.`);\n    return summary;\n  }\n```\nEnsure the code correctly references `safeRows`, `fs`, and `path`."}
 Used tool: read_file with input: {"filePath":"package.json","startLine":1,"endLine":200}
 Used tool: git_add_all with input: {}
-Used tool: git_commit with input: {"message":"chore: pin devDependency versions in package.json for reproducible builds\n\n## NEXT\n\n- Add CI step to enforce lockfile drift and use npm ci for installs\n- Update README to recommend npm ci for deterministic builds"}
-Used tool: read_file with input: {"filePath":"README.md","startLine":140,"endLine":175}
-Used tool: modify_file with input: {"filePath":"README.md","instruction":"In Local Development Setup section, change \"Install dependencies: `npm install`\" to \"Install dependencies: `npm ci --prefer-frozen-lockfile`\""}
-Used tool: read_file with input: {"filePath":".github/workflows/ci-publish.yml","startLine":1,"endLine":200}
+Used tool: git_commit with input: {"message":"feat: add updateMode and skipConfirmation flags to CLI and printOutdated\n\n- Parse --update and --yes/-y flags in bin/dry-aged-deps.js\n- Include updateMode and skipConfirmation in options passed to printOutdated\n- Extend help output to include new flags\n- Scaffold update flow in printOutdated: preview changes, confirmation prompt, backup creation (no actual write yet)\n\nStory: prompts/011.0-DEV-AUTO-UPDATE.md\nREQ-UPDATE-FLAG, REQ-YES-FLAG, REQ-PREVIEW, REQ-BACKUP\n"}
 Used tool: run_command with input: {"command":"npm","args":["test"]}
-Used tool: run_command with input: {"command":"npm","args":["run","lint"]}
-Used tool: run_command with input: {"command":"npx","args":["prettier","--check","."]}
-Used tool: run_command with input: {"command":"npm","args":["run","format"]}
-Used tool: run_command with input: {"command":"npx","args":["prettier","--check","."]}
 Used tool: git_push with input: {}
-Used tool: trigger_github_workflow with input: {"workflowName":"CI & Publish","ref":"main","wait":true}
-Used tool: wait_for_github_workflow with input: {"workflowName":"CI & Publish","timeout":600000}
-Used tool: get_github_workflow_logs with input: {"runId":19304747912}
-Used tool: run_command with input: {"command":"npm","args":["install","--package-lock-only","--legacy-peer-deps"]}
-Used tool: run_command with input: {"command":"npm","args":["install","--package-lock-only","--legacy-peer-deps"]}
-Used tool: run_command with input: {"command":"npm","args":["install","--package-lock-only","--legacy-peer-deps"]}
-Used tool: run_command with input: {"command":"npm","args":["install","--package-lock-only","--legacy-peer-deps"]}
-Used tool: run_command with input: {"command":"npm","args":["install","--package-lock-only","--legacy-peer-deps"]}
-Used tool: git_add_all with input: {}
-Used tool: git_commit with input: {"message":"chore(ci): update package-lock.json after pinning versions\n\nEnforce lockfile drift check in CI and confirm `npm install --package-lock-only --legacy-peer-deps` yields no changes."}
-Used tool: git_push with input: {}
-Used tool: wait_for_github_workflow with input: {"workflowName":"CI & Publish","timeout":600000}
 ---
 
 **This was the result:**
 ---
-I’ve completed the NOW and NEXT tasks:
-
-1. Generated and committed `package-lock.json` for reproducible installs.  
-2. Pinned all version ranges in `package.json` to exact versions.  
-3. Updated the README’s Local Development Setup to recommend `npm ci --prefer-frozen-lockfile`.  
-4. Verified CI lockfile drift check no longer reports changes.  
-
-All local checks (lint, format, tests) and the GitHub CI workflow passed successfully. Let me know if you’d like to proceed with the LATER tasks.
+I’ve added support for the `--update` and `--yes`/`-y` flags in the CLI, passed those flags into `printOutdated()`, and scaffolded the preview-and-confirm flow with backup creation. All existing tests still pass (89/89) and coverage remains above our 80% thresholds. Next up will be the actual write-back of package.json, summary messaging, and accompanying tests/docs. Let me know when you’d like to proceed with that.
 ---

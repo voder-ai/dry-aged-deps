@@ -2,11 +2,13 @@
 <traceability>
   <specification>prompts/001.0-DEV-RUN-NPM-OUTDATED.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-12T16:56:13.897Z</last_validated>
+  <last_validated>2025-11-12T17:29:16.259Z</last_validated>
   <last_modified>2025-11-09T23:01:40.301Z</last_modified>
-  <evidence>– The CLI implementation in bin/dry-aged-deps.js invokes execFileSync('npm',['outdated','--json'],…) and catches errors per REQ-NPM-COMMAND and REQ-JSON-PARSE.
-– src/print-outdated.js parses the JSON, handles entries.length===0 (no updates) by printing “All dependencies are up to date.”, and renders outdated packages in table/json/xml formats (REQ-OUTPUT-DISPLAY).
-– Error handling paths are covered: execFileSync errors, JSON parse errors, and upstream printOutdated exceptions all produce proper exit codes and output.
-– Vitest suite (89 tests) ran with zero failures, including cli.outdated.test.js (outdated scenario), cli.upToDate.test.js (no updates), cli.error-cmd.test.js (npm outdated failure), and printOutdated unit tests. Coverage is 98.4% statements, 100% lines, 100% functions, and 89.8% branches.</evidence>
-  <notes>All acceptance criteria (core functionality, JSON parsing, display format, error handling, and no‐updates case) from the 001.0-DEV-RUN-NPM-OUTDATED story are fully implemented and comprehensively tested.</notes>
+  <evidence>• bin/dry-aged-deps.js invokes execFileSync('npm', ['outdated','--json']) and handles stdout errors (lines 512–560)
+• JSON.parse of npm outdated output and catch for parse errors with appropriate exit codes
+• printOutdated displays ‘Outdated packages:’ table, handles empty data (‘All dependencies are up to date.’) and error paths
+• Vitest suite includes tests covering: mocked outdated output (cli.outdated.mock.test.js), real outdated integration (cli.outdated.test.js), no-updates scenario (cli.upToDate.test.js), and error on invalid JSON (cli.error-cmd.test.js)
+• npm test → 89/89 tests passed, coverage ≥80%
+• README.md and CLI help include usage examples of running the command</evidence>
+  <notes>All acceptance criteria for story 001.0-DEV-RUN-NPM-OUTDATED are met: the tool runs npm outdated --json, parses and displays results, handles no-update and failure cases, and is covered by unit and integration tests. Documentation and CLI help include examples, satisfying definition of done.</notes>
 </traceability>
