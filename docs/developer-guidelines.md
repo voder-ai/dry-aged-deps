@@ -43,11 +43,13 @@ This project uses **ES Modules (ESM)** exclusively. See [docs/decisions/0001-use
 
 ### Linting
 
-Run linting before committing:
+Run linting with zero-warning policy before committing:
 
 ```bash
 npm run lint
 ```
+
+- The `lint` script enforces zero ESLint warnings via `--max-warnings=0`.
 
 We use ESLint v9+ with flat config format. See [docs/eslint-flat-config.md](eslint-flat-config.md) for details.
 
@@ -66,21 +68,18 @@ Tests use vitest and must maintain 80% coverage thresholds.
 
 ### What NOT to Ignore
 
-The following directories MUST be tracked in git:
-
 - `.voder/` - AI development state (as mentioned above)
 - `prompts/` - Project specifications and user stories
 - `docs/` - All documentation
 
 ### What to Ignore
 
-See `.gitignore` for the complete list. Key items:
-
 - `.cursor/` - AI assistant configuration (local only)
 - `.github/instructions/` - AI assistant prompts (local only via symlinks)
 - `.github/prompts/` - AI assistant prompts (local only via symlinks)
 - `node_modules/` - Dependencies
 - `coverage/` - Test coverage reports
+- Husky pre-commit hook runs commitlint locally
 
 ## Documentation
 

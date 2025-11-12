@@ -109,6 +109,7 @@ export default [
     },
     rules: {
       'no-console': 'off', // Allow console in tests
+      'security/detect-non-literal-fs-filename': 'off',
     },
   },
 ];

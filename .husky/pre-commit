@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+# Husky pre-commit hook to lint commit messages locally
+# This ensures commit messages adhere to Conventional Commits
+npx --no-install commitlint --config commitlint.config.cjs --edit "$1"

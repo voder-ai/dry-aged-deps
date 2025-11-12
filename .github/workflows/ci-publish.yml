@@ -52,6 +52,9 @@ jobs:
       - name: Install dependencies
         run: npm ci --prefer-frozen-lockfile
 
+      - name: Lint commit messages
+        run: npx --no-install commitlint --from=HEAD~1 --to=HEAD
+
       - name: Lint code
         run: npm run lint
 

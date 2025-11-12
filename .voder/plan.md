@@ -1,15 +1,20 @@
-## NOW  
-Review the latest GitHub Actions `build` job logs to pinpoint the first failing step in the CI pipeline (e.g. lockfile drift, lint error, or test failure).
+## Plan to Improve Version Control Processes (Commit Quality & CI Enhancements)
 
-## NEXT  
-- Locally reproduce and fix the identified failure:  
-  • If it’s lockfile drift, run `npm install --package-lock-only`, commit the updated `package-lock.json`, and push.  
-  • If it’s a lint or formatting error, run `npm run lint`/`npm run format`, apply fixes, and commit.  
-  • If it’s a test failure, debug and correct the test or underlying code.  
-- Push the changes and verify that the GitHub Actions build now passes end-to-end.
+## NOW
+Add a “Commit Message Lint” step to the CI build job by editing `.github/workflows/ci-publish.yml`: insert a new step before tests that runs  
+```yaml
+- name: Lint commit messages
+  run: npx commitlint --from=HEAD~1 --to=HEAD  
+```
 
-## LATER  
-- Enable branch protection on `main` to require passing CI checks before merges.  
-- Add cross-platform CI jobs (Windows/macOS) to catch environment-specific issues.  
-- Schedule a nightly CI job to run `dry-aged-deps` and alert on safe updates.  
-- Introduce performance and scale tests for large dependency graphs.
+## NEXT
+- Enforce zero ESLint warnings in CI: update the lint script in `package.json` to  
+  `"lint": "eslint src bin test --ext .js,.cjs --max-warnings=0"`  
+  and ensure the CI workflow uses `npm run lint` so any warning fails the build.
+- Add a Husky pre-commit hook to run `npx commitlint --edit "$1"` locally, keeping commit quality consistent.
+- Update `docs/developer-guidelines.md` to call out the new CI commitlint step and zero-warning ESLint policy.
+
+## LATER
+- Investigate and stabilize any flaky CI steps (e.g., caching, timeouts, network calls) to further improve pipeline reliability.
+- Add a GitHub App or Action to block merges on commitlint or lint failures at pull‐request time.
+- Periodically review and tighten branch protection rules (e.g., require green commitlint and lint statuses) to sustain >90% version_control score.
