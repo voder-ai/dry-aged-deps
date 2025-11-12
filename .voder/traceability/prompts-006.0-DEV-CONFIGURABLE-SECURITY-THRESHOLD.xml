@@ -2,23 +2,10 @@
 <traceability>
   <specification>prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-12T13:21:13.719Z</last_validated>
+  <last_validated>2025-11-12T13:56:16.829Z</last_validated>
   <last_modified>2025-11-09T23:03:30.864Z</last_modified>
-  <evidence>1) CLI parsing (bin/dry-aged-deps.js) supports --severity flags and validation:
-   • validSeverities defined as ['none','low','moderate','high','critical']
-   • Default minSeverity='none'
-   • Help text includes --severity and valid values
-
-2) No config-file support:
-   • Help text flags --config-file as "coming soon"
-   • No code reading .dry-aged-deps.json anywhere in src or bin
-
-3) Filtering logic (src/filter-by-security.js) ignores severity thresholds:
-   • Always blocks any package with vulnCount>0 regardless of threshold
-   • Does not inspect actual vulnerability severity levels
-   • Uses minSeverity only to set vulnMap.maxSeverity, not to decide blocking
-
-4) No tests found referencing severity or config precedence in test/ directory
-</evidence>
-  <notes>The CLI flag and help text for --severity exist, and severity levels are validated. However, the implementation does not read config files, does not apply any threshold filtering logic (it simply blocks all vulnerabilities regardless of level), and lacks tests or output messaging reflecting the configured threshold. Therefore, the story is not fully implemented.</notes>
+  <evidence>• bin/dry-aged-deps.js parses --severity and valid levels (none, low, moderate, high, critical) and shows it in help, but does not read minSeverity from a .dry-aged-deps.json file (no config-file support).
+• print-outdated passes prodMinSeverity/devMinSeverity but filter-by-security.js ignores those thresholds – it blocks any vulnerability count >0 rather than comparing vulnerability severity to the configured threshold.
+• No code to load a config file or to apply a severity threshold when filtering. No tests reference severity levels or config precedence.</evidence>
+  <notes>The CLI flag and valid levels are recognized, but config-file support and the filtering logic based on severity thresholds are not implemented. The filter function blocks all vulnerabilities regardless of the chosen severity threshold, and .dry-aged-deps.json support is missing.</notes>
 </traceability>

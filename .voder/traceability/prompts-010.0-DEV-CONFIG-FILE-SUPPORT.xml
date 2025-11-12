@@ -2,8 +2,10 @@
 <traceability>
   <specification>prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-12T13:21:46.974Z</last_validated>
+  <last_validated>2025-11-12T13:54:56.278Z</last_validated>
   <last_modified>2025-11-10T21:23:22.067Z</last_modified>
-  <evidence>Search for ".dry-aged-deps.json" or any config‐file logic in bin/dry-aged-deps.js, src/, and test/ yielded no results. The CLI help still lists config-file support as “coming soon” and no code reads or validates a .dry-aged-deps.json. README.md likewise states config-file support is not yet implemented. There are no tests for parsing or merging config files, nor an example or JSON schema in the repo.</evidence>
-  <notes>The specification for config file support exists, but none of the acceptance criteria (file location, schema support, precedence logic, validation, error handling, documentation, tests, or schema) have been implemented. The story is therefore not satisfied.</notes>
+  <evidence>1. bin/dry-aged-deps.js: no code to read or merge .dry-aged-deps.json; only a placeholder in help (‘--config-file=<file> Configuration-file support (coming soon)’)  
+2. README.md still states “configuration-file support (.dry-aged-deps.json) are coming soon and not yet implemented.”  
+3. No JSON schema file present, no tests for config parsing, merging, validation or error handling.</evidence>
+  <notes>None of the acceptance criteria for config-file support have been implemented: the tool does not load a config file, merge values or validate schema, tests and documentation updates are missing.</notes>
 </traceability>

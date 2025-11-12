@@ -20,6 +20,133 @@ async function main() {
   const args = process.argv.slice(2);
   const checkMode = args.includes('--check');
 
+  // Define valid option values for config and flag validation
+  const validFormats = ['table', 'json', 'xml'];
+  const validSeverities = ['none', 'low', 'moderate', 'high', 'critical'];
+
+  // Config file support (Story: prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md)
+  const configFileArg = args.find((a) => a.startsWith('--config-file='));
+  const configFileName = configFileArg
+    ? configFileArg.split('=')[1]
+    : '.dry-aged-deps.json';
+  const configFilePath = path.resolve(process.cwd(), configFileName);
+  let config = {};
+  if (fs.existsSync(configFilePath)) {
+    try {
+      const rawConfig = fs.readFileSync(configFilePath, 'utf8');
+      config = JSON.parse(rawConfig);
+    } catch (err) {
+      console.error(
+        `Invalid JSON in config file ${configFileName}: ${err.message}`
+      );
+      process.exit(2);
+    }
+    if (typeof config !== 'object' || config === null || Array.isArray(config)) {
+      console.error(
+        `Invalid config format in ${configFileName}: must be a JSON object`
+      );
+      process.exit(2);
+    }
+    const allowedTopKeys = ['minAge', 'severity', 'prod', 'dev', 'format'];
+    for (const key of Object.keys(config)) {
+      if (!allowedTopKeys.includes(key)) {
+        console.error(`Unknown config key: ${key} in ${configFileName}`);
+        process.exit(2);
+      }
+    }
+    if (config.minAge !== undefined) {
+      if (!Number.isInteger(config.minAge) || config.minAge < 1 || config.minAge > 365) {
+        console.error(
+          `Invalid config value for minAge: ${config.minAge}. Must be integer 1-365`
+        );
+        process.exit(2);
+      }
+    }
+    if (config.severity !== undefined) {
+      if (!validSeverities.includes(config.severity)) {
+        console.error(
+          `Invalid config value for severity: ${config.severity}. Valid values: ${validSeverities.join(', ')}`
+        );
+        process.exit(2);
+      }
+    }
+    if (config.format !== undefined) {
+      if (!validFormats.includes(config.format)) {
+        console.error(
+          `Invalid config value for format: ${config.format}. Valid values: ${validFormats.join(', ')}`
+        );
+        process.exit(2);
+      }
+    }
+    if (config.prod !== undefined) {
+      if (typeof config.prod !== 'object' || config.prod === null || Array.isArray(config.prod)) {
+        console.error(`Invalid config value for prod: must be an object`);
+        process.exit(2);
+      }
+      for (const key of Object.keys(config.prod)) {
+        if (!['minAge', 'minSeverity'].includes(key)) {
+          console.error(`Unknown config key in prod: ${key}`);
+          process.exit(2);
+        }
+      }
+      if (config.prod.minAge !== undefined) {
+        if (!Number.isInteger(config.prod.minAge) || config.prod.minAge < 1 || config.prod.minAge > 365) {
+          console.error(
+            `Invalid config value for prod.minAge: ${config.prod.minAge}. Must be integer 1-365`
+          );
+          process.exit(2);
+        }
+      }
+      if (config.prod.minSeverity !== undefined) {
+        if (!validSeverities.includes(config.prod.minSeverity)) {
+          console.error(
+            `Invalid config value for prod.minSeverity: ${config.prod.minSeverity}. Valid values: ${validSeverities.join(', ')}`
+          );
+          process.exit(2);
+        }
+      }
+    }
+    if (config.dev !== undefined) {
+      if (typeof config.dev !== 'object' || config.dev === null || Array.isArray(config.dev)) {
+        console.error(`Invalid config value for dev: must be an object`);
+        process.exit(2);
+      }
+      for (const key of Object.keys(config.dev)) {
+        if (!['minAge', 'minSeverity'].includes(key)) {
+          console.error(`Unknown config key in dev: ${key}`);
+          process.exit(2);
+        }
+      }
+      if (config.dev.minAge !== undefined) {
+        if (!Number.isInteger(config.dev.minAge) || config.dev.minAge < 1 || config.dev.minAge > 365) {
+          console.error(
+            `Invalid config value for dev.minAge: ${config.dev.minAge}. Must be integer 1-365`
+          );
+          process.exit(2);
+        }
+      }
+      if (config.dev.minSeverity !== undefined) {
+        if (!validSeverities.includes(config.dev.minSeverity)) {
+          console.error(
+            `Invalid config value for dev.minSeverity: ${config.dev.minSeverity}. Valid values: ${validSeverities.join(', ')}`
+          );
+          process.exit(2);
+        }
+      }
+    }
+  } else if (configFileArg) {
+    console.error(`Configuration file not found: ${configFileName}`);
+    process.exit(2);
+  }
+
+  let format = config.format !== undefined ? config.format : 'table';
+  let minAge = config.minAge !== undefined ? config.minAge : 7;
+  let minSeverity = config.severity !== undefined ? config.severity : 'none';
+  let prodMinAge = config.prod && config.prod.minAge !== undefined ? config.prod.minAge : minAge;
+  let devMinAge = config.dev && config.dev.minAge !== undefined ? config.dev.minAge : minAge;
+  let prodMinSeverity = config.prod && config.prod.minSeverity !== undefined ? config.prod.minSeverity : minSeverity;
+  let devMinSeverity = config.dev && config.dev.minSeverity !== undefined ? config.dev.minSeverity : minSeverity;
+
   // Help flag
   if (args.includes('-h') || args.includes('--help')) {
     console.log('Usage: dry-aged-deps [options]');
@@ -65,9 +192,6 @@ async function main() {
     process.exit(0);
   }
 
-  // Format flag parsing
-  const validFormats = ['table', 'json', 'xml'];
-  let format = 'table';
   const fmtEq = args.find((a) => a.startsWith('--format='));
   if (fmtEq) {
     format = fmtEq.split('=')[1];
@@ -85,7 +209,6 @@ async function main() {
   }
 
   // Parse --min-age flag
-  let minAge = 7;
   const minAgeEq = args.find((a) => a.startsWith('--min-age='));
   if (minAgeEq) {
     const v = minAgeEq.split('=')[1];
@@ -128,8 +251,6 @@ async function main() {
   }
 
   // Parse --severity flag
-  const validSeverities = ['none', 'low', 'moderate', 'high', 'critical'];
-  let minSeverity = 'none';
   const sevEq = args.find((a) => a.startsWith('--severity='));
   if (sevEq) {
     const v = sevEq.split('=')[1];
@@ -160,7 +281,6 @@ async function main() {
   }
 
   // Parse --prod-min-age flag (falls back to minAge)
-  let prodMinAge = minAge;
   const prodMinAgeEq = args.find((a) => a.startsWith('--prod-min-age='));
   if (prodMinAgeEq) {
     const v = prodMinAgeEq.split('=')[1];
@@ -203,7 +323,6 @@ async function main() {
   }
 
   // Parse --dev-min-age flag (falls back to minAge)
-  let devMinAge = minAge;
   const devMinAgeEq = args.find((a) => a.startsWith('--dev-min-age='));
   if (devMinAgeEq) {
     const v = devMinAgeEq.split('=')[1];
@@ -246,7 +365,6 @@ async function main() {
   }
 
   // Parse --prod-severity flag (falls back to minSeverity)
-  let prodMinSeverity = minSeverity;
   const prodSevEq = args.find((a) => a.startsWith('--prod-severity='));
   if (prodSevEq) {
     const v = prodSevEq.split('=')[1];
@@ -277,7 +395,6 @@ async function main() {
   }
 
   // Parse --dev-severity flag (falls back to minSeverity)
-  let devMinSeverity = minSeverity;
   const devSevEq = args.find((a) => a.startsWith('--dev-severity='));
   if (devSevEq) {
     const v = devSevEq.split('=')[1];

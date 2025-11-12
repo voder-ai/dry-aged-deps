@@ -2,10 +2,8 @@
 <traceability>
   <specification>prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-12T13:22:18.844Z</last_validated>
+  <last_validated>2025-11-12T13:55:56.725Z</last_validated>
   <last_modified>2025-11-09T23:03:02.030Z</last_modified>
-  <evidence>1. No code to read a .dry-aged-deps.json config file: search for “.dry-aged-deps.json” yields nothing; bin/dry-aged-deps.js only mentions “--config-file” in help text as “coming soon” and nowhere parses or loads a config file.
-2. No tests cover config-file support or reading a “minAge” from a config file: test directory contains no reference to config file or config loading.
-3. Although --min-age flag, validation, default of 7, override behavior, help text, and JSON output thresholds (minAge) are implemented (and covered by existing cli.flags.test.js), the core requirement of config file support (REQ-CONFIG-FILE, REQ-CONFIG-SCHEMA, REQ-PRECEDENCE for config) is missing.</evidence>
-  <notes>The implementation fully supports the CLI flag (--min-age), its validation, default value, help documentation, and JSON output changes, but does not implement reading or merging of configuration from a .dry-aged-deps.json file. As a result, the story’s acceptance criteria for config file support and CLI override precedence are not met.</notes>
+  <evidence>The CLI parsing in bin/dry-aged-deps.js implements --min-age (with validation, default 7, and help text) but there is no code to read ‘minAge’ from a .dry-aged-deps.json config file. The help entry for --config-file still shows “(coming soon)”, and there are no tests or src modules that load or apply config-file values, nor any precedence logic for config-file > default.</evidence>
+  <notes>While CLI flag handling, defaults, validation, help text, and output messaging for thresholds are in place, the config-file support and CLI-overrides-config-file behavior required by this story are not implemented.</notes>
 </traceability>

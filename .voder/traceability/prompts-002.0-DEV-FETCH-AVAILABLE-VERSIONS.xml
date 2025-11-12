@@ -2,8 +2,8 @@
 <traceability>
   <specification>prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-12T13:22:52.635Z</last_validated>
+  <last_validated>2025-11-12T13:56:16.829Z</last_validated>
   <last_modified>2025-11-09T23:01:54.797Z</last_modified>
-  <evidence>The fetchVersionTimes implementation (src/fetch-version-times.js) always returns time data for every published version and is never passed a current‐version filter (no REQ-OPTIMIZATION). In printOutdated (src/print-outdated.js) we only ever look up and display the age of the single `info.latest` version—there is no loop over all versions newer than current, nor any code pruning versionTimes to those > current. No tests cover filtering to only newer versions or rendering ages for each available version.</evidence>
-  <notes>The core fetch (npm view … time) and age calculation are implemented and tested, and the CLI prints a single age column. However, the story’s smart‐fetching optimization (only versions newer than the current) and displaying ages next to every newer version have not been implemented.</notes>
+  <evidence>The implementation in src/fetch-version-times.js correctly retrieves a mapping of all version publish times via “npm view <pkg> time --json”, and calculateAgeInDays computes days correctly. However, printOutdated (src/print-outdated.js) only looks up the publish time for info.latest and calculates a single age value per package. There is no code to iterate over all versions newer than the current version nor to filter fetches to only those versions. No tests exercise fetching or displaying ages for each newer version, nor cover a “smart fetching” optimization.</evidence>
+  <notes>The story requires fetching publish dates and calculating ages for all versions newer than the current version, and optimizing to only fetch those versions. The current implementation only fetches all version times (without filtering) but then only uses the latest version’s date, and lacks any smart-fetching optimization. Acceptance criteria for core functionality beyond latest version and optimization are not met.</notes>
 </traceability>

@@ -2,11 +2,14 @@
 <traceability>
   <specification>prompts/013.0-DEV-CHECK-MODE.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-12T13:21:44.716Z</last_validated>
+  <last_validated>2025-11-12T13:57:04.792Z</last_validated>
   <last_modified>2025-11-11T08:04:07.352Z</last_modified>
-  <evidence>1. In bin/dry-aged-deps.js help output: “--check                 Check mode: exit code 1 if safe updates available, 0 if none, 2 on error (coming soon)”
-2. No parsing of a `--check` flag in CLI argument handling (no code checks args for "--check").
-3. No reference to check mode in exit code logic—always exits 0 on success, 2 on error, never 1 for available updates.
-4. README.md still marks --check as “coming soon” and there are no tests for --check in the test suite.</evidence>
-  <notes>The specification for --check mode exists, but none of the acceptance criteria are implemented. The CLI neither recognizes nor acts on a --check flag, the exit code logic has not been updated, output formats are unchanged, and there are no tests or documentation examples showing usage. Implementation is not present, so the story is failed.</notes>
+  <evidence>1) README.md still marks --check as “coming soon” and does not include the CI/CD usage examples from the spec. For example:
+
+  | --check                 | Check mode: exit code 1 if safe updates available, 0 if none, 2 on error (coming soon) |
+  …
+  # dry-aged-deps --check (coming soon)
+
+2) No CI/CD YAML snippet in README as required by “Documentation: README shows --check usage with CI/CD examples.”</evidence>
+  <notes>All functional acceptance criteria (CLI flag, exit codes, clear output, JSON/XML support, unit tests) are implemented and tests pass, but the documentation has not been updated to include CI/CD examples. Per the spec’s acceptance criteria, the README must be updated with --check usage in a CI/CD context, so the story is not fully done.</notes>
 </traceability>

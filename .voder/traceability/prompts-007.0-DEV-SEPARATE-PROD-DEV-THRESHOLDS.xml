@@ -2,10 +2,11 @@
 <traceability>
   <specification>prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-12T13:22:38.673Z</last_validated>
+  <last_validated>2025-11-12T13:56:29.817Z</last_validated>
   <last_modified>2025-11-09T23:04:08.953Z</last_modified>
-  <evidence>- The CLI help in bin/dry-aged-deps.js lists “--config-file=<file>    Configuration-file support (coming soon)”, but no code parses a --config-file flag or reads prod/dev settings from a config file.
-- No code in main() or printOutdated() reads a config file or merges config-file thresholds; config schema REQ-CONFIG-SCHEMA is not implemented.
-- No tests in test/ cover config-file support, and searching the codebase shows no handling of config-file input.</evidence>
-  <notes>All other acceptance criteria around CLI flags, fallback behavior, defaults, validation, dependency type detection, and output indication are implemented and tested. However, the required config-file support for prod/dev thresholds is not implemented, so the story is not complete.</notes>
+  <evidence>• bin/dry-aged-deps.js help text lists --config-file as “coming soon”, but no parsing logic for --config-file is present.
+• No code reads a config file or processes prod/dev objects from config.
+• No tests referencing or exercising --prod-min-age, --dev-min-age, --prod-severity, or --dev-severity flags.
+• Precedence logic mentions config file in requirements but is not implemented.</evidence>
+  <notes>Config-file support and related precedence rules are not implemented, and there are no tests covering the new prod/dev flags or config parsing. Thus not all acceptance criteria are satisfied.</notes>
 </traceability>

@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <traceability>
   <specification>prompts/009.0-DEV-XML-OUTPUT.md</specification>
-  <status>FAILED</status>
-  <last_validated>2025-11-12T13:25:43.690Z</last_validated>
+  <status>PASSED</status>
+  <last_validated>2025-11-12T14:02:06.941Z</last_validated>
   <last_modified>2025-11-09T23:05:40.405Z</last_modified>
-  <evidence>In bin/dry-aged-deps.js the main routine always calls `process.exit(0)` after a successful run, even when updates are available. The story’s acceptance criteria specify exit code 1 for “updates available”, but there is no code path setting exit code 1 in that case.</evidence>
-  <notes>All other XML formatter behaviors (CLI flag, valid XML, full data, summary, error handling, schema, help text) are implemented and well-tested. However, the required exit-code semantics for signaling available updates (exit code 1) has not been implemented.</notes>
+  <evidence>• src/xml-formatter.js implements xmlFormatter with XML declaration, error and data paths.
+• bin/dry-aged-deps.js supports --format=xml, validates formats, suppresses console logs, handles errors via xmlFormatter and exit codes 0,1,2.
+• 20+ Vitest tests for xml output (test/xml-formatter*.test.js, test/cli.format-xml*.test.js, test/printOutdated.xml*.test.js, test/cli.check-mode.test.js) all passing (80 tests total, including XML tests).
+• npx vitest run --coverage: 38 test files, 80 tests, 100% tests passing, xmlFormatter branches covered.
+• README.md and --help output include xml as valid format option.</evidence>
+  <notes>All acceptance criteria for story 009.0-DEV-XML-OUTPUT are implemented and tested: the CLI flag, valid XML output including declaration, complete data, summary, thresholds and error blocks, correct exit codes, suppression of console noise, schema consistency, and documentation. Unit and integration tests verify functionality and edge cases.</notes>
 </traceability>

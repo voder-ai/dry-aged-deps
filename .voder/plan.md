@@ -1,22 +1,16 @@
 ## NOW  
-Modify the CLI entrypoint (`bin/dry-aged-deps.js`) to detect and store the `--check` flag—e.g. immediately after parsing `args`, add  
-```js
-const checkMode = args.includes('--check');
-```  
+Implement `.dry-aged-deps.json` support in the CLI: in `bin/dry-aged-deps.js`, immediately after parsing CLI flags, check for a `.dry-aged-deps.json` file in the CWD; if present, read and `JSON.parse` it, validate that it only contains the allowed keys (`minAge`, `severity`, `prod`, `dev`, `format`), and merge its values into the variables for `minAge`, `minSeverity`, `prodMinAge`, `prodMinSeverity`, `devMinAge`, `devMinSeverity`, and `format`—using precedence CLI flags > config file > defaults.
 
 ## NEXT  
-- Pass `checkMode` through to the invocation of `printOutdated`, capture its returned summary object (for table mode you’ll need to update `printOutdated` to always return a summary).  
-- After `await printOutdated(...)`, implement the check‐mode exit logic in the CLI:  
-  - If `checkMode` and `summary.safeUpdates > 0`, call `process.exit(1)`.  
-  - If `checkMode` and `summary.safeUpdates === 0`, call `process.exit(0)`.  
-  - Leave existing exit codes (0/2) for non-check and error conditions.  
-- Add a new test suite (e.g. `test/cli.check-mode.test.js`) covering:  
-  - No updates → exit 0  
-  - Safe updates available → exit 1  
-  - Errors (invalid JSON, invalid flags, config errors) → exit 2  
-  - Verify behavior in table, JSON, and XML modes.  
+- Add a new test suite `test/cli.config-file.test.js` to verify:  
+  • Default thresholds when only config file is present (no flags)  
+  • CLI flags override config values  
+  • Invalid config values (e.g. negative ages, unknown severity) exit code 2 with clear error messages  
+- Update the CLI help text in `bin/dry-aged-deps.js` to describe the `--config-file` option and config-file precedence  
+- Update `README.md` and `docs/api.md` with a `.dry-aged-deps.json` example, its JSON schema (keys & types), and merge-precedence rules  
+- Commit an example `.dry-aged-deps.json` file at the project root demonstrating all supported settings
 
 ## LATER  
-- Update README.md, docs/api.md, and ADRs to remove “coming soon” and add `--check` usage examples and exit-code semantics.  
-- Enhance CI examples in docs to show `--check` enforcement in GitHub Actions (and other pipelines).  
-- Refactor `printOutdated` to always return its summary in all formats so future features (auto‐update, config file support) can reuse it.
+- Publish a JSON Schema file (`.dry-aged-deps.schema.json`) for editor validation/autocomplete  
+- Extend config lookup to support global (`~/.dry-aged-deps.json`) and project-level files with proper precedence  
+- Allow environment-variable overrides (e.g. `DRY_AGED_DEPS_CONFIG`) and document them in CLI help and docs

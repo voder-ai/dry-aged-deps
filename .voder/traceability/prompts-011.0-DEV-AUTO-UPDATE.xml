@@ -2,8 +2,8 @@
 <traceability>
   <specification>prompts/011.0-DEV-AUTO-UPDATE.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-12T13:21:08.529Z</last_validated>
+  <last_validated>2025-11-12T13:55:12.137Z</last_validated>
   <last_modified>2025-11-11T08:04:07.327Z</last_modified>
-  <evidence>Search of CLI entry point (bin/dry-aged-deps.js) shows no handling of a --update or --yes flag. README.md has no mention of --update. Vitest test suite contains no tests referencing update functionality. No src modules for reading/writing package.json or confirmation flows exist.</evidence>
-  <notes>The story for auto-updating package.json via --update and --yes flags, with backup, confirmation, summary report, and post-update prompts, is not implemented in code or tests.</notes>
+  <evidence>Search of bin/dry-aged-deps.js: no handling of `--update` or `--yes` flags found. CLI help text does not list `--update` or `--yes`. No tests in the test suite reference update functionality. README.md does not document `--update` usage (only mentions `--check`).</evidence>
+  <notes>The story `011.0-DEV-AUTO-UPDATE` is clearly a specification for adding an auto-update feature, but there is no implementation of the required flags, preview/confirm flow, backup creation, summary reporting, or post-update prompts. No supporting tests exist. All acceptance criteria remain unmet.</notes>
 </traceability>
