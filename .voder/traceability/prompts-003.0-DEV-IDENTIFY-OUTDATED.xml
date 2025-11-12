@@ -2,16 +2,16 @@
 <traceability>
   <specification>prompts/003.0-DEV-IDENTIFY-OUTDATED.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-11T08:54:31.833Z</last_validated>
+  <last_validated>2025-11-12T10:59:36.781Z</last_validated>
   <last_modified>2025-11-09T23:02:10.889Z</last_modified>
-  <evidence>In src/print-outdated.js at the age-filtering step, the code filters only on the age of info.latest:
+  <evidence>In src/print-outdated.js the age filtering only checks the age of info.latest and filters out packages younger than the threshold; it never iterates over earlier versions (REQ-SMART-SEARCH) to find the newest mature version. Additionally, there is no logic to skip packages where the mature version is <= current version (REQ-COMPARISON), e.g.:
 
-  // Filter by age threshold
+  // Filter by age threshold (using appropriate threshold per dependency type)
   const matureRows = rows.filter(([_name, , , , age, depType]) => {
     const minAge = depType === 'prod' ? prodMinAge : devMinAge;
     return typeof age === 'number' && age >= minAge;
   });
 
-This only checks the latest version’s age and does not implement the “smart filtering” requirement to iterate backwards through published versions until finding the first one ≥7 days old. Consequently, if the very latest version is too new but an earlier version is mature, it won’t be selected. No code handles selecting a non-latest mature version.</evidence>
-  <notes>The core story requires iterating from latest backwards to find the newest version at least 7 days old (REQ-SMART-SEARCH). The implementation only tests the latest version, so it fails the smart-filtering acceptance criterion.</notes>
+No subsequent check excludes rows with latest <= current. These missing behaviors violate the “Smart Filtering” and “Skip Current” acceptance criteria.</evidence>
+  <notes>While basic age filtering and output formatting are in place, the key requirements of iterating backwards through version history to locate the first mature version and of excluding updates that aren’t newer than the current version are not implemented.</notes>
 </traceability>

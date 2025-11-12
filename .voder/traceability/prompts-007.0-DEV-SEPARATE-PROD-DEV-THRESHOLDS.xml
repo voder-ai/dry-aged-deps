@@ -2,11 +2,11 @@
 <traceability>
   <specification>prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-11T08:56:17.281Z</last_validated>
+  <last_validated>2025-11-12T11:00:53.895Z</last_validated>
   <last_modified>2025-11-09T23:04:08.953Z</last_modified>
-  <evidence>• bin/dry-aged-deps.js and src/print-outdated.js implement CLI flags (--prod-min-age, --dev-min-age, --prod-severity, --dev-severity), validation, dependency-type detection, fallback to general flags, default behavior, and output ‘Type’ column in table and XML.
-• No code reads a config file or supports a config schema ({ prod: {...}, dev: {...} }).
-• No tests exist for prod/dev threshold logic, fallback behavior, or precedence rules (search in test/ finds no prod- or dev-related tests).
-• README and help text document the new flags, but config file support is neither implemented nor documented.</evidence>
-  <notes>Key acceptance criteria are unimplemented: config file support (REQ-CONFIG-SCHEMA), corresponding precedence, and automated tests. Production/dev flags work, but without config file reading and tests the story is incomplete.</notes>
+  <evidence>• CLI code (bin/dry-aged-deps.js) prints “--config-file=<file> (coming soon)” but never parses or reads a config file; no implementation of REQ-CONFIG-SCHEMA or config-file support.
+• No tests in test/cli.flags.test.js or elsewhere exercise the --prod-min-age, --dev-min-age, --prod-severity, or --dev-severity flags or fallback logic from config file.
+• README notes config-file support is “coming soon.”
+• Acceptance criteria “Config File Support” and related precedence/validation from config file are unaddressed.</evidence>
+  <notes>All CLI flags for prod/dev thresholds are parsed and fallback/default logic for general flags is implemented, and dependency-type detection and table output include a "Type" column. However, config-file support (reading prod/dev thresholds from a config file) and corresponding tests and schema validation are missing, so not all acceptance criteria are satisfied.</notes>
 </traceability>

@@ -2,14 +2,14 @@
 <traceability>
   <specification>prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-11T08:56:05.011Z</last_validated>
+  <last_validated>2025-11-12T11:01:29.923Z</last_validated>
   <last_modified>2025-11-11T08:04:07.339Z</last_modified>
-  <evidence>1. In bin/dry-aged-deps.js, errors from `npm outdated` without stdout and JSON parse errors use `process.exit(1)` (lines ~285 and ~305), but the spec requires exit code 2 for all errors (REQ-EXIT-2).
-
-2. README.md contains no documentation of exit codes (search term “exit” yields no matches).
-
-3. The help text printed by `--help` in the CLI does not mention any exit codes.
-
-4. No existing tests verify the new exit‐code semantics (e.g., exit 1 for safe updates available, exit 2 for errors) across formats—tests still assert the old behavior.</evidence>
-  <notes>The current implementation has not been updated to meet the acceptance criteria for standardized exit codes. Error conditions still exit with code 1 in many cases where spec mandates 2; exit codes for “updates available” are not distinguished; and neither README.md nor --help documentation has been updated. Comprehensive tests around the new exit codes are also absent.</notes>
+  <evidence>1. Code (bin/dry-aged-deps.js) always calls process.exit(0) after printOutdated, with no branch setting exit code 1 when safe updates are available or exit code 2 for errors.  
+2. The --check flag is mentioned in help text as “coming soon” but has no implementation.  
+3. Error handling for JSON parse in default/table/JSON formats calls process.exit(1) (not exit 2 as specified).  
+   - In bin/dry-aged-deps.js, JSON.parse failures do console.error and process.exit(1).  
+   - Test (test/cli.error-cmd.test.js) expects exitCode 1 on invalid JSON, but spec requires exitCode 2 for errors.  
+4. There is no test verifying exit code 1 when safe updates are available; existing tests for outdated scenarios expect exitCode 0 (e.g. test/cli.outdated.test.js, test/cli.outdated.mock.test.js).  
+5. Documentation (README.md, --help output) still marks exit-code behavior as “coming soon” and does not document finalized exit codes for all modes.</evidence>
+  <notes>The specification calls for three standardized exit codes (0=no updates, 1=updates available, 2=error) and consistent behavior across formats and documentation. The current implementation lacks any logic to emit exit code 1 for safe updates, uses exit code 1 for error conditions (should be 2), and the --check flag isn’t implemented. Tests and documentation still reflect the pre-refinement behavior. All acceptance criteria for this story remain unmet.</notes>
 </traceability>

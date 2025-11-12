@@ -2,8 +2,8 @@
 <traceability>
   <specification>prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-11T23:10:15.403Z</last_validated>
+  <last_validated>2025-11-12T10:59:55.901Z</last_validated>
   <last_modified>2025-11-09T23:01:54.797Z</last_modified>
-  <evidence>The implementation in src/fetch-version-times.js fetches all version times, and src/print-outdated.js only ever looks up the single 'latest' version’s publish date (info.latest). There is no logic to compare against info.current or to fetch/display ages for each version newer than current. No code filters or iterates over intermediate versions, and no tests cover 'Smart Fetching: Only fetch versions newer than current'.</evidence>
-  <notes>Acceptance criteria for Core Functionality, Age Calculation, and Display Ages are met (fetchVersionTimes works, calculateAgeInDays is used, age shown for the latest version), but the Smart Fetching optimization—fetching or filtering only versions newer than the current version and displaying ages for each of those versions—is not implemented.</notes>
+  <evidence>In src/fetch-version-times.js the npm view call always retrieves the full “time” mapping for all versions and src/print-outdated.js only ever looks up the publish date for info.latest, never iterating over or filtering versions newer than info.current. There is no code that limits the npm view call to versions > current nor any logic to calculate or display ages for each version beyond the latest. No test exercises “smart fetching” (only newer versions) or per-version age display.</evidence>
+  <notes>While publish-time retrieval and single-version age calculation/display are implemented and well-tested, the key optimization and multi-version criteria from the story (“only fetch versions newer than current” and “display ages alongside each version”) are not present. The story’s acceptance criteria are therefore not fully met.</notes>
 </traceability>

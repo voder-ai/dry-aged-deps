@@ -1,17 +1,14 @@
-## NOW
-Run `git push origin main` to publish the three pending local commits to the remote repository and synchronize history.
+## NOW  
+Remove the `--production` flag from the “Vulnerability scan” step in `.github/workflows/ci-publish.yml` so that `npm audit` scans both production and devDependencies.
 
-## NEXT
-- Re-run the GitHub Actions CI workflow on the updated `main` branch and review any failing steps in the “Build & Test” and “Release” jobs.
-- Locally reproduce any CI failures by running:
-  1. `npm ci --prefer-frozen-lockfile`
-  2. `npm run lint`
-  3. `prettier --check .`
-  4. `npm test`
-  Fix any formatting, linting, or test errors uncovered, commit the changes, and push again.
-- Update `.github/workflows/ci-publish.yml` (and related scripts) to correct broken steps (e.g., lockfile‐drift check, peer‐dependency installs, commitlint invocation) so that the CI pipeline passes reliably.
+## NEXT  
+- Update SECURITY.md to note that CI now audits all dependencies (prod + dev).  
+- Update docs/architecture.md (and any related docs) to reflect that the pipeline runs full `npm audit`.  
+- Rename or clarify the GitHub Actions “Vulnerability scan” step description to indicate it covers all dependencies.  
+- Update README.md under “Development” or “Troubleshooting” to recommend running `npm audit` without `--production` for local audits.
 
-## LATER
-- Write targeted Vitest unit tests to cover under-tested branches in `src/print-outdated.js` and `src/xml-formatter.js` to raise branch coverage above 90%.
-- Implement support for `.dry-aged-deps.json` configuration files, merge with CLI flags (precedence CLI > config > defaults), and add corresponding tests and documentation.
-- Complete `--check` mode enforcement logic with exit-code behavior, add end-to-end tests, and update README, API docs, and CHANGELOG.
+## LATER  
+- Implement full `--check` mode and standardized exit-code logic per ADRs 0003/0004.  
+- Add `.dry-aged-deps.json` config-file support to match documented options.  
+- Reconcile or remove CHANGELOG.md in favor of GitHub Releases as per ADR 0005.  
+- Once those features ship, update docs to remove “coming soon” notices and ensure examples are accurate.

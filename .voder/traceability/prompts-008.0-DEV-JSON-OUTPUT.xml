@@ -2,8 +2,8 @@
 <traceability>
   <specification>prompts/008.0-DEV-JSON-OUTPUT.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-11T08:55:42.894Z</last_validated>
+  <last_validated>2025-11-12T11:00:00.853Z</last_validated>
   <last_modified>2025-11-09T23:04:54.331Z</last_modified>
-  <evidence>The `jsonFormatter` (src/json-formatter.js) only outputs name, current, wanted, latest, age, and summary stats; it omits vulnerabilities (count, maxSeverity, details), dependency type, recommended version, filtered flags, and filterReason as defined in the spec’s example schema. Additionally, in JSON mode the CLI always exits with code 0 (`process.exit(0)` after printing) and does not return exit code 1 when updates are available, nor does it emit errors as JSON objects with an `error` field. These acceptance criteria (Complete Data, Exit Codes, Error Handling) are not met.</evidence>
-  <notes>While basic JSON output and flag parsing are implemented and tests pass for minimal JSON output, the implementation does not satisfy the full spec: the JSON schema is incomplete and exit/error handling in JSON mode is missing. You should enhance `jsonFormatter`, adjust exit codes based on summary.safeUpdates, and implement JSON-formatted error output.</notes>
+  <evidence>Specification 008.0-DEV-JSON-OUTPUT.md requires JSON output to include for each package: name, current, latest, age, vulnerabilities (count, maxSeverity, details), filtered flags, filterReason, recommended version, and summary thresholds. However, src/json-formatter.js and the printOutdated JSON branch produce only {name,current,wanted,latest,age}. No vulnerabilities info, no filtered flags, no recommended, no filterReason. Moreover, exit codes in JSON mode are always 0 (no support for exit code 1 when updates exist), and JSON error output (with an error field) is not implemented. Although tests for minimal JSON pass, they do not cover the full schema or exit-code behavior defined in the spec.</evidence>
+  <notes>The JSON formatter and CLI JSON branch implement only a minimal subset of the spec (timestamp, packages array, summary counts, thresholds) and do not satisfy the story’s acceptance criteria for complete data, exit codes, and error handling. Full JSON schema and exit-code logic remain unimplemented.</notes>
 </traceability>

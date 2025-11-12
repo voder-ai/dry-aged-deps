@@ -123,11 +123,6 @@ test/fixtures-up-to-date/node_modules/
 # Generated documentation
 docs/generated/
 
-# Package lock files (choose one based on package manager preference)
-# package-lock.json  # Uncomment if using yarn exclusively
-# yarn.lock         # Uncomment if using npm exclusively
-
-
 # Ignore temporary and patch files
 *.patch
 *.tmp

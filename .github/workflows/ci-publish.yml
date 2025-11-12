@@ -90,8 +90,8 @@ jobs:
             exit 1
           fi
 
-      - name: Vulnerability scan
-        run: npm audit --audit-level=moderate --production
+      - name: Vulnerability scan (all dependencies)
+        run: npm audit --audit-level=moderate
 
   publish:
     if: ${{ github.event_name == 'push' }}
