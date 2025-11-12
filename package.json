@@ -14,7 +14,7 @@
     "test": "vitest run --coverage",
     "test:watch": "vitest --coverage",
     "test:cli": "vitest run",
-    "lint": "eslint . --max-warnings=0",
+    "lint": "node_modules/.bin/eslint . --max-warnings=0",
     "release": "npm version patch && git push --follow-tags"
   },
   "devDependencies": {
