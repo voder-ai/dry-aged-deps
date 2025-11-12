@@ -2,12 +2,10 @@
 <traceability>
   <specification>prompts/009.0-DEV-XML-OUTPUT.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-12T14:02:06.941Z</last_validated>
+  <last_validated>2025-11-12T15:54:52.354Z</last_validated>
   <last_modified>2025-11-09T23:05:40.405Z</last_modified>
-  <evidence>• src/xml-formatter.js implements xmlFormatter with XML declaration, error and data paths.
-• bin/dry-aged-deps.js supports --format=xml, validates formats, suppresses console logs, handles errors via xmlFormatter and exit codes 0,1,2.
-• 20+ Vitest tests for xml output (test/xml-formatter*.test.js, test/cli.format-xml*.test.js, test/printOutdated.xml*.test.js, test/cli.check-mode.test.js) all passing (80 tests total, including XML tests).
-• npx vitest run --coverage: 38 test files, 80 tests, 100% tests passing, xmlFormatter branches covered.
-• README.md and --help output include xml as valid format option.</evidence>
-  <notes>All acceptance criteria for story 009.0-DEV-XML-OUTPUT are implemented and tested: the CLI flag, valid XML output including declaration, complete data, summary, thresholds and error blocks, correct exit codes, suppression of console noise, schema consistency, and documentation. Unit and integration tests verify functionality and edge cases.</notes>
+  <evidence>- src/xml-formatter.js implements xmlFormatter with declaration, packages, summary, thresholds, error blocks and escaping
+- bin/dry-aged-deps.js parses --format=xml, suppresses console noise, outputs XML via xmlFormatter, handles errors and exit codes (0/1/2) correctly, and lists xml as valid in --help
+- All 39 XML-related unit and integration tests passed (vitest run produced 87/87 tests passing, including xml-formatter.*, printOutdated.xml*, cli.format-xml.test.js, cli.format-xml.error.test.js)</evidence>
+  <notes>All acceptance criteria for the XML output story are met: CLI flag support, well-formed XML, complete data, summary, exit codes, silent mode, error formatting, schema consistency, and help documentation. Comprehensive tests verify behavior.</notes>
 </traceability>

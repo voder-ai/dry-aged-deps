@@ -2,11 +2,8 @@
 <traceability>
   <specification>prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-12T13:57:17.411Z</last_validated>
+  <last_validated>2025-11-12T15:53:18.351Z</last_validated>
   <last_modified>2025-11-09T23:02:37.596Z</last_modified>
-  <evidence>• In src/filter-by-security.js the code only ever checks the single “latest” version per package and if it has any vulnerabilities (vulnCount !== 0) it filters the package out. There is no loop or fallback to older mature versions if the latest is vulnerable (REQ-SMART-SEARCH is not implemented).
-• The user story explicitly calls for “Smart Checking: start from the newest mature version and work backwards until finding a safe one”, but the implementation never inspects any version other than info.latest.
-• No tests cover or demonstrate the fallback behavior; filter-by-security.test.js only stubs a single version per name and verifies exclusion/inclusion and vulnMap, but does not set up multiple candidate versions or assert that the code will pick a prior safe version.
-• Severity thresholds (prodMinSeverity/devMinSeverity) are accepted as parameters but never used to decide inclusion—any non‐zero vulnCount filters the version regardless of threshold—another gap versus the story’s negotiable severity threshold note.</evidence>
-  <notes>While the mechanics of invoking npm audit on a temp project and filtering out any version with vulnerabilities are in place, the key story requirement of iterating backwards over mature versions until a safe one is found (REQ-SMART-SEARCH) is missing, so the story is not fully implemented.</notes>
+  <evidence>Review of src/filter-by-security.js and src/print-outdated.js shows that only the latest version is checked for vulnerabilities and, if unsafe, the package is simply filtered out. There is no implementation of “smart checking” that would iterate backwards through older mature versions until a safe one is found. Additionally, the configurable severity thresholds (prodMinSeverity, devMinSeverity) are never applied to the audit result—the code filters any nonzero vulnerability count regardless of severity. No tests cover back-tracking to older versions or threshold logic.</evidence>
+  <notes>Core vulnerability checking and output formatting are implemented, but the key requirement to search older mature versions until a safe one is found (REQ-SMART-SEARCH) and to respect severity thresholds is missing.</notes>
 </traceability>

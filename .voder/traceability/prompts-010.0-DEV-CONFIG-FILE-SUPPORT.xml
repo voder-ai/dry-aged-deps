@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <traceability>
   <specification>prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md</specification>
-  <status>FAILED</status>
-  <last_validated>2025-11-12T13:54:56.278Z</last_validated>
+  <status>PASSED</status>
+  <last_validated>2025-11-12T15:57:04.945Z</last_validated>
   <last_modified>2025-11-10T21:23:22.067Z</last_modified>
-  <evidence>1. bin/dry-aged-deps.js: no code to read or merge .dry-aged-deps.json; only a placeholder in help (‘--config-file=<file> Configuration-file support (coming soon)’)  
-2. README.md still states “configuration-file support (.dry-aged-deps.json) are coming soon and not yet implemented.”  
-3. No JSON schema file present, no tests for config parsing, merging, validation or error handling.</evidence>
-  <notes>None of the acceptance criteria for config-file support have been implemented: the tool does not load a config file, merge values or validate schema, tests and documentation updates are missing.</notes>
+  <evidence>All 7 tests in test/cli.config-file.test.js passed (see `npm test` output), implementation in bin/dry-aged-deps.js includes logic for loading `.dry-aged-deps.json` (and custom via `--config-file`), JSON parsing, schema/key validation, range/type checks, clear error messages, proper CLI>config>default precedence, and README.md documents the config file format and usage.</evidence>
+  <notes>The implementation fully satisfies the acceptance criteria: it reads the config file from the working directory, supports all specified options in JSON, applies correct precedence and defaults, validates structure/values with clear errors, works without a config file, offers documentation, and tests cover parsing, merging, and error handling.</notes>
 </traceability>

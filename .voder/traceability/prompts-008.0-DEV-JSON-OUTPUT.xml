@@ -2,11 +2,8 @@
 <traceability>
   <specification>prompts/008.0-DEV-JSON-OUTPUT.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-12T13:56:33.459Z</last_validated>
+  <last_validated>2025-11-12T15:56:22.723Z</last_validated>
   <last_modified>2025-11-09T23:04:54.331Z</last_modified>
-  <evidence>- The JSON formatter in src/json-formatter.js only emits name, current, wanted, latest, age, and summary counts. It does not include vulnerabilities (count, maxSeverity, details), filtered flags, filterReason, or dependency type as specified.
-- Errors in JSON mode are printed to stderr via console.error rather than formatted as JSON objects with an "error" field, violating the Error Handling requirement.
-- The implementation treats updates-only exit codes under `--check` but always exits 0 in default JSON mode, whereas the spec’s Exit Codes criterion expects exit code 1 when updates are available even without `--check`.
-- No tests cover JSON error output format; searching code paths shows no JSON error formatter for `--format=json`.</evidence>
-  <notes>The CLI supports --format=json, produces valid JSON, and suppresses extraneous logs, but its JSON schema is incomplete and error handling does not emit JSON. Exit-code behavior in default JSON mode also diverges from spec. To satisfy the story, the JSON formatter must be extended to include all fields (vulnerabilities, dependency type, filter metadata), error cases must output JSON error objects, and exit-code logic should match the acceptance criteria.</notes>
+  <evidence>The implementation in src/json-formatter.js and print-outdated.js only emits a minimal JSON with fields [name, current, wanted, latest, age] and summary counts. It does not include vulnerabilities details (count, maxSeverity, details), recommended versions, dependency type, filtered flags or filterReason as required by the spec. Moreover, error cases in JSON mode still write plain console.error messages and exit codes rather than a JSON object with an `error` field.</evidence>
+  <notes>While the CLI flag, JSON validity, summary stats, help text, and exit-code semantics are present, the JSON output schema is incomplete and error handling in JSON mode is not formatted as JSON. Several acceptance criteria (complete data fields and JSON-formatted errors) are not met.</notes>
 </traceability>

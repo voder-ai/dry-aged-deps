@@ -113,6 +113,30 @@ Use the `--format` option to specify the output format:
 - JSON: `dry-aged-deps --format=json`
 - XML: `dry-aged-deps --format=xml`
 
+## CI/CD Integration
+
+To enforce dependency freshness in your CI/CD pipeline, use the `--check` flag. Below is an example GitHub Actions workflow that checks for safe updates, fails on detection, and shows available updates on failure:
+
+```yaml
+# GitHub Actions - Enforce dependency freshness
+name: Check Dependencies
+on: [pull_request]
+
+jobs:
+  check-deps:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Check for outdated dependencies
+        run: npx dry-aged-deps --check
+        # Fails if safe updates are available
+
+      - name: Show available updates on failure
+        if: failure()
+        run: npx dry-aged-deps --format=json
+```
+
 ## Advanced Usage
 
 For programmatic API access and detailed architectural overview, see:

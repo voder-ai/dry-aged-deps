@@ -2,14 +2,11 @@
 <traceability>
   <specification>prompts/013.0-DEV-CHECK-MODE.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-12T13:57:04.792Z</last_validated>
+  <last_validated>2025-11-12T15:53:31.263Z</last_validated>
   <last_modified>2025-11-11T08:04:07.352Z</last_modified>
-  <evidence>1) README.md still marks --check as “coming soon” and does not include the CI/CD usage examples from the spec. For example:
-
-  | --check                 | Check mode: exit code 1 if safe updates available, 0 if none, 2 on error (coming soon) |
-  …
-  # dry-aged-deps --check (coming soon)
-
-2) No CI/CD YAML snippet in README as required by “Documentation: README shows --check usage with CI/CD examples.”</evidence>
-  <notes>All functional acceptance criteria (CLI flag, exit codes, clear output, JSON/XML support, unit tests) are implemented and tests pass, but the documentation has not been updated to include CI/CD examples. Per the spec’s acceptance criteria, the README must be updated with --check usage in a CI/CD context, so the story is not fully done.</notes>
+  <evidence>1) All five Vitest tests in test/cli.check-mode.test.js passed, demonstrating correct flag parsing, exit codes (0, 1, 2), and JSON/XML output handling for --check mode.
+2) The CLI help text (bin/dry-aged-deps.js) includes “--check” and describes its exit‐code behavior.
+3) README.md includes --check in the options table but contains no CI/CD pipeline integration example (no GitHub Actions YAML or failure() snippet as specified).
+4) There are no integration tests that simulate a CI/CD run (e.g. a YAML step or failure hook) verifying the documented pipeline usage.</evidence>
+  <notes>The core functionality for --check mode is implemented and covered by unit tests, but the acceptance criterion around documentation (README showing CI/CD examples) and the corresponding integration tests are missing.</notes>
 </traceability>

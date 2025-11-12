@@ -295,3 +295,31 @@ Supported schema:
 ```
 
 Merge precedence: CLI flags override config file values, which override built-in defaults.
+
+## CI/CD Integration
+
+To enforce dependency freshness policies in your CI/CD pipelines, use the `--check` flag. In check mode, the exit codes are:
+- `0`: No safe updates available (success).
+- `1`: Safe updates available (failure).
+- `2`: Execution error (invalid input, unexpected exceptions).
+
+Example GitHub Actions workflow:
+
+```yaml
+# GitHub Actions - Enforce dependency freshness
+name: Check Dependencies
+on: [pull_request]
+
+jobs:
+  check-deps:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Check for outdated dependencies
+        run: npx dry-aged-deps --check
+        # Fails if safe updates are available
+
+      - name: Show available updates on failure
+        if: failure()
+        run: npx dry-aged-deps --format=json

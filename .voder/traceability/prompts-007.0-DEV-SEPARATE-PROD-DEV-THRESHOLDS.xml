@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <traceability>
   <specification>prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md</specification>
-  <status>FAILED</status>
-  <last_validated>2025-11-12T13:56:29.817Z</last_validated>
+  <status>PASSED</status>
+  <last_validated>2025-11-12T16:00:07.918Z</last_validated>
   <last_modified>2025-11-09T23:04:08.953Z</last_modified>
-  <evidence>• bin/dry-aged-deps.js help text lists --config-file as “coming soon”, but no parsing logic for --config-file is present.
-• No code reads a config file or processes prod/dev objects from config.
-• No tests referencing or exercising --prod-min-age, --dev-min-age, --prod-severity, or --dev-severity flags.
-• Precedence logic mentions config file in requirements but is not implemented.</evidence>
-  <notes>Config-file support and related precedence rules are not implemented, and there are no tests covering the new prod/dev flags or config parsing. Thus not all acceptance criteria are satisfied.</notes>
+  <evidence>1) bin/dry-aged-deps.js parses and validates --prod-min-age, --dev-min-age, --prod-severity and --dev-severity flags (see lines ~430–510).  
+2) print-outdated.js adds a “Type” column in table output and XML <dependency-type> for each row.  
+3) test/printOutdated.prodDependency.test.js verifies ‘prod’ vs ‘dev’ detection in table output.  
+4) test/cli.flags.test.js covers fallback of --min-age/--severity to both prod/dev.  
+5) test/cli.config-file.test.js verifies config.prod/dev objects override general settings.  
+6) Manual run: `node bin/dry-aged-deps.js --format=json --prod-min-age=15` yields `"thresholds": { "prod": { "minAge": 15, ... }, "dev": { "minAge": 7, ... } }`.</evidence>
+  <notes>All acceptance criteria are satisfied: new CLI flags are supported and validated, config file nested prod/dev settings are read, dependency types are detected and labeled in output, general flags fall back correctly, default behavior remains backward-compatible, and tests (unit, integration, E2E) cover the key behaviors.</notes>
 </traceability>

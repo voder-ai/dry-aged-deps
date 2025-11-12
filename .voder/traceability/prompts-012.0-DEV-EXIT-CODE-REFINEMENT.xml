@@ -2,14 +2,19 @@
 <traceability>
   <specification>prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-12T13:59:45.115Z</last_validated>
+  <last_validated>2025-11-12T15:57:09.981Z</last_validated>
   <last_modified>2025-11-11T08:04:07.339Z</last_modified>
-  <evidence>1. Documentation: README.md still marks `--check` exit codes as “coming soon” (line 58) instead of fully documenting them.
-2. Inconsistent error exit codes across formats: 
-   - Table/default mode: invalid JSON parse → process.exit(1) (tested in test/cli.error-cmd.test.js)
-   - XML mode: same invalid JSON parse → process.exit(2) (tested in test/cli.format-xml.error.test.js)
-   This violates REQ-CONSISTENCY (“same exit codes regardless of --format”).
-3. Missing tests (and implementation) for a true npm-outdated failure (execFileSync error without stdout) exiting with code 2 in non-XML modes, as required by REQ-EXIT-2.
+  <evidence>1) In bin/dry-aged-deps.js (JSON path) npm‐outdated JSON‐parse errors call process.exit(1) instead of exit(2):
+```
+try { data = JSON.parse(outputStr) } catch (parseErr) {
+  console.error('Failed to parse npm outdated output:', parseErr.message)
+  process.exit(1)
+}
+```
+Spec’s REQ-EXIT-2 mandates exit code 2 on errors.  
+2) In the XML branch a parse error does exit(2), but JSON and table formats exit(1) → inconsistent across formats (violates REQ-CONSISTENCY).  
+3) No tests simulate a real npm‐outdated failure (execFileSync throws with no stdout) to verify exit 2 for that scenario.  
+4) The user story examples imply exit 1 for updates even in default mode, but implementation only uses exit 1 under --check.  
 </evidence>
-  <notes>While most check-mode exit codes and flag-validation errors are covered by tests and behave correctly, error scenarios are handled inconsistently across output formats and the README hasn’t been updated to fully document exit codes. Tests for npm-outdated failures are also absent, so not all acceptance criteria are satisfied.</notes>
+  <notes>The code and tests partially cover exit codes, but JSON‐parse errors and default‐mode update detection diverge from the spec’s requirements. The story’s acceptance criteria for uniform exit 2 on errors and exit 1 for updates outside --check mode are not fully implemented.</notes>
 </traceability>

@@ -1,16 +1,11 @@
 ## NOW  
-Implement `.dry-aged-deps.json` support in the CLI: in `bin/dry-aged-deps.js`, immediately after parsing CLI flags, check for a `.dry-aged-deps.json` file in the CWD; if present, read and `JSON.parse` it, validate that it only contains the allowed keys (`minAge`, `severity`, `prod`, `dev`, `format`), and merge its values into the variables for `minAge`, `minSeverity`, `prodMinAge`, `prodMinSeverity`, `devMinAge`, `devMinSeverity`, and `format`—using precedence CLI flags > config file > defaults.
+Update README.md to include a dedicated “CI/CD Integration” section showing a GitHub Actions snippet that runs `dry-aged-deps --check`, fails the build on safe updates, and demonstrates the `if: failure()` step.
 
 ## NEXT  
-- Add a new test suite `test/cli.config-file.test.js` to verify:  
-  • Default thresholds when only config file is present (no flags)  
-  • CLI flags override config values  
-  • Invalid config values (e.g. negative ages, unknown severity) exit code 2 with clear error messages  
-- Update the CLI help text in `bin/dry-aged-deps.js` to describe the `--config-file` option and config-file precedence  
-- Update `README.md` and `docs/api.md` with a `.dry-aged-deps.json` example, its JSON schema (keys & types), and merge-precedence rules  
-- Commit an example `.dry-aged-deps.json` file at the project root demonstrating all supported settings
+- Add a corresponding section to docs/api.md under the `--check` flag describing its exit-code semantics and CI/CD usage, including the same example snippet.  
+- Create a new documentation test (e.g. `test/docs/ci-integration.test.js`) that reads README.md and asserts it contains the `--check` GitHub Actions example block.
 
 ## LATER  
-- Publish a JSON Schema file (`.dry-aged-deps.schema.json`) for editor validation/autocomplete  
-- Extend config lookup to support global (`~/.dry-aged-deps.json`) and project-level files with proper precedence  
-- Allow environment-variable overrides (e.g. `DRY_AGED_DEPS_CONFIG`) and document them in CLI help and docs
+- Extend the documentation test suite to validate API docs (docs/api.md) for other options (e.g. `--format=json`, config-file).  
+- Add automated validation of the CI snippet (e.g. YAML linting) in the CI pipeline.  
+- Consider adding example workflows for other CI platforms (e.g. GitLab CI, Jenkins) in docs.

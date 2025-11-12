@@ -2,11 +2,10 @@
 <traceability>
   <specification>prompts/001.0-DEV-RUN-NPM-OUTDATED.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-12T13:56:21.277Z</last_validated>
+  <last_validated>2025-11-12T15:54:47.027Z</last_validated>
   <last_modified>2025-11-09T23:01:40.301Z</last_modified>
-  <evidence>• The bin/dry-aged-deps.js entrypoint invokes execFileSync('npm', ['outdated','--json']) and JSON.parse, with try/catch handling for both command failures and parse errors.
-• printOutdated in src/print-outdated.js covers display of outdated packages, the “All dependencies are up to date.” message when data is empty, and error/output formatting for table, JSON, and XML modes.
-• Vitest suite ran 80 tests across 38 files (including cli.outdated.test.js, cli.upToDate.test.js, cli.outdated.mock.test.js, cli.error-cmd.test.js), all passing. The CLI E2E and unit tests cover core functionality, parsing, display, error handling, and no-updates scenarios.
-• “npm test” output shows 100% passing and >98% coverage, confirming full implementation of acceptance criteria.</evidence>
-  <notes>All acceptance criteria (running npm outdated, parsing JSON output, displaying results, handling errors, and the no-updates case) are implemented and exhaustively tested. CLI help/version flags, unit and integration tests, and documentation in README satisfy the Definition of Done for this foundational story.</notes>
+  <evidence>• In bin/dry-aged-deps.js: execFileSync('npm',['outdated','--json']) is used to run npm outdated in JSON mode, with JSON.parse and error handlers for both command failures and parse failures.
+• In src/print-outdated.js: parsed data is transformed into table, JSON, and XML outputs, with separate handling for no-outdated scenario (‘All dependencies are up to date.’).
+• Comprehensive Vitest suite (39 files, 87 tests) passes (see npm test output). Tests cover: real‐fixture outdated, up‐to‐date, mock outdated, JSON and XML formats, parse errors, CLI flags and help, config file, check mode, and edge cases.</evidence>
+  <notes>All acceptance criteria are satisfied. The CLI runs npm outdated --json, parses the output, displays results (table, JSON, XML), handles failures (command and parse errors), and handles the no-updates case. Unit and integration tests are in place and passing, and documentation/CLI help is implemented.</notes>
 </traceability>

@@ -2,15 +2,18 @@
 <traceability>
   <specification>prompts/003.0-DEV-IDENTIFY-OUTDATED.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-12T13:56:57.296Z</last_validated>
+  <last_validated>2025-11-12T15:58:46.817Z</last_validated>
   <last_modified>2025-11-09T23:02:10.889Z</last_modified>
-  <evidence>The story requires “smart filtering” – i.e. for each package, walk backward through all published versions (from newest to oldest) until you find the first version ≥7 days old. In the current implementation:
+  <evidence>1) In src/print-outdated.js, when computing ages the code only ever looks at info.latest:
 
-• src/print-outdated.js only ever inspects `info.latest` (the single latest version from `npm outdated`).
-• fetchVersionTimes() returns a map of all version timestamps, but printOutdated immediately picks only `versionTimes[info.latest]` and never iterates over earlier versions.
-• src/filter-by-age.js simply filters rows on a pre-computed age value; there is no logic to scan multiple versions.
-• There are zero tests in test/… that verify walking back through versions to find a mature release.
+  const latestTime = versionTimes[info.latest];
+  …
+  const rows = await Promise.all(ageTasks);
 
-Because the core “smart filtering” requirement (REQ-SMART-SEARCH) is not implemented or tested, this story is not complete.</evidence>
-  <notes>All other criteria (age threshold filtering of a single version, no-mature messaging, output formatting) are covered by code and tests, but the critical “walk versions until you find the first mature one” behavior is missing.</notes>
+ There is no iteration over older versions when the latest is too young.  
+
+2) filterByAge (src/filter-by-age.js) simply filters out rows whose age < threshold—it does not implement “smart filtering” (walking backwards through older versions) as described in REQ-SMART-SEARCH.  
+
+3) There are no tests covering the requirement to fall back to an older, mature version if the latest is younger than 7 days.  The existing filter-by-age.test.js only verifies filtering on a fixed set of rows, not smart version selection.</evidence>
+  <notes>The story calls for “smart filtering” to start from the latest and then work backwards through version history until a mature (>=7 days) version is found. The current implementation only ever computes age on the latest version and filters it out if too new—there is no logic or tests for selecting a previous version. Therefore not all acceptance criteria are met.</notes>
 </traceability>
