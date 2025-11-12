@@ -1,14 +1,13 @@
 ## NOW  
-Remove the `--production` flag from the “Vulnerability scan” step in `.github/workflows/ci-publish.yml` so that `npm audit` scans both production and devDependencies.
+Remove the Dependabot configuration to eliminate the policy conflict by deleting the file `.github/dependabot.yml` from the repository.
 
 ## NEXT  
-- Update SECURITY.md to note that CI now audits all dependencies (prod + dev).  
-- Update docs/architecture.md (and any related docs) to reflect that the pipeline runs full `npm audit`.  
-- Rename or clarify the GitHub Actions “Vulnerability scan” step description to indicate it covers all dependencies.  
-- Update README.md under “Development” or “Troubleshooting” to recommend running `npm audit` without `--production` for local audits.
+- Create a new file `.env.example` at the project root listing all environment variables used by development tooling (e.g. DRY_AGED_DEPS_MOCK, NPM_TOKEN, GITHUB_TOKEN) as placeholders.  
+- Update `README.md` and `SECURITY.md` to reference `.env.example`, explain how to copy it to `.env`, and reinforce that `.env` remains git-ignored.  
+- Verify that `.gitignore` continues to exclude `.env` but allows `.env.example` to be tracked.
 
 ## LATER  
-- Implement full `--check` mode and standardized exit-code logic per ADRs 0003/0004.  
-- Add `.dry-aged-deps.json` config-file support to match documented options.  
-- Reconcile or remove CHANGELOG.md in favor of GitHub Releases as per ADR 0005.  
-- Once those features ship, update docs to remove “coming soon” notices and ensure examples are accurate.
+- Add an additional security-scan step (e.g. Snyk or GitHub Advanced Security) to the CI pipeline for deeper vulnerability coverage.  
+- Integrate secret-scanning (e.g. git-secrets) into pre-commit hooks to prevent accidental credential leaks.  
+- Enhance the incident-response process in `docs/security-incidents/` by automating notifications (e.g. Slack or email) when new critical vulnerabilities are detected.  
+- Schedule and document periodic security policy reviews to ensure the project maintains ≥80% security score over time.
