@@ -21,8 +21,6 @@ async function main() {
   const checkMode = args.includes('--check');
 
   // Define valid option values for config and flag validation
-  const validFormats = ['table', 'json', 'xml'];
-  const validSeverities = ['none', 'low', 'moderate', 'high', 'critical'];
 
   // Config file support (Story: prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md)
   const configFileArg = args.find((a) => a.startsWith('--config-file='));
@@ -41,7 +39,11 @@ async function main() {
       );
       process.exit(2);
     }
-    if (typeof config !== 'object' || config === null || Array.isArray(config)) {
+    if (
+      typeof config !== 'object' ||
+      config === null ||
+      Array.isArray(config)
+    ) {
       console.error(
         `Invalid config format in ${configFileName}: must be a JSON object`
       );
@@ -55,7 +57,11 @@ async function main() {
       }
     }
     if (config.minAge !== undefined) {
-      if (!Number.isInteger(config.minAge) || config.minAge < 1 || config.minAge > 365) {
+      if (
+        !Number.isInteger(config.minAge) ||
+        config.minAge < 1 ||
+        config.minAge > 365
+      ) {
         console.error(
           `Invalid config value for minAge: ${config.minAge}. Must be integer 1-365`
         );
@@ -79,7 +85,11 @@ async function main() {
       }
     }
     if (config.prod !== undefined) {
-      if (typeof config.prod !== 'object' || config.prod === null || Array.isArray(config.prod)) {
+      if (
+        typeof config.prod !== 'object' ||
+        config.prod === null ||
+        Array.isArray(config.prod)
+      ) {
         console.error(`Invalid config value for prod: must be an object`);
         process.exit(2);
       }
@@ -90,7 +100,11 @@ async function main() {
         }
       }
       if (config.prod.minAge !== undefined) {
-        if (!Number.isInteger(config.prod.minAge) || config.prod.minAge < 1 || config.prod.minAge > 365) {
+        if (
+          !Number.isInteger(config.prod.minAge) ||
+          config.prod.minAge < 1 ||
+          config.prod.minAge > 365
+        ) {
           console.error(
             `Invalid config value for prod.minAge: ${config.prod.minAge}. Must be integer 1-365`
           );
@@ -107,7 +121,11 @@ async function main() {
       }
     }
     if (config.dev !== undefined) {
-      if (typeof config.dev !== 'object' || config.dev === null || Array.isArray(config.dev)) {
+      if (
+        typeof config.dev !== 'object' ||
+        config.dev === null ||
+        Array.isArray(config.dev)
+      ) {
         console.error(`Invalid config value for dev: must be an object`);
         process.exit(2);
       }
@@ -118,7 +136,11 @@ async function main() {
         }
       }
       if (config.dev.minAge !== undefined) {
-        if (!Number.isInteger(config.dev.minAge) || config.dev.minAge < 1 || config.dev.minAge > 365) {
+        if (
+          !Number.isInteger(config.dev.minAge) ||
+          config.dev.minAge < 1 ||
+          config.dev.minAge > 365
+        ) {
           console.error(
             `Invalid config value for dev.minAge: ${config.dev.minAge}. Must be integer 1-365`
           );
@@ -142,10 +164,20 @@ async function main() {
   let format = config.format !== undefined ? config.format : 'table';
   let minAge = config.minAge !== undefined ? config.minAge : 7;
   let minSeverity = config.severity !== undefined ? config.severity : 'none';
-  let prodMinAge = config.prod && config.prod.minAge !== undefined ? config.prod.minAge : minAge;
-  let devMinAge = config.dev && config.dev.minAge !== undefined ? config.dev.minAge : minAge;
-  let prodMinSeverity = config.prod && config.prod.minSeverity !== undefined ? config.prod.minSeverity : minSeverity;
-  let devMinSeverity = config.dev && config.dev.minSeverity !== undefined ? config.dev.minSeverity : minSeverity;
+  let prodMinAge =
+    config.prod && config.prod.minAge !== undefined
+      ? config.prod.minAge
+      : minAge;
+  let devMinAge =
+    config.dev && config.dev.minAge !== undefined ? config.dev.minAge : minAge;
+  let prodMinSeverity =
+    config.prod && config.prod.minSeverity !== undefined
+      ? config.prod.minSeverity
+      : minSeverity;
+  let devMinSeverity =
+    config.dev && config.dev.minSeverity !== undefined
+      ? config.dev.minSeverity
+      : minSeverity;
 
   // Help flag
   if (args.includes('-h') || args.includes('--help')) {
@@ -179,7 +211,7 @@ async function main() {
       '  --check                 Check mode: exit code 1 if safe updates available, 0 if none, 2 on error'
     );
     console.log(
-      '  --config-file=<file>    Configuration-file support (coming soon)'
+      '  --config-file=<file>    Path to JSON config file (default: .dry-aged-deps.json). CLI flags override config file values'
     );
     process.exit(0);
   }
@@ -250,6 +282,19 @@ async function main() {
     }
   }
 
+  // propagate global minAge to prod and dev if not overridden by CLI or config
+  const hasProdMinAgeFlag = args.some((a) => a.startsWith('--prod-min-age'));
+  const hasDevMinAgeFlag = args.some((a) => a.startsWith('--dev-min-age'));
+  if (
+    !hasProdMinAgeFlag &&
+    !(config.prod && config.prod.minAge !== undefined)
+  ) {
+    prodMinAge = minAge;
+  }
+  if (!hasDevMinAgeFlag && !(config.dev && config.dev.minAge !== undefined)) {
+    devMinAge = minAge;
+  }
+
   // Parse --severity flag
   const sevEq = args.find((a) => a.startsWith('--severity='));
   if (sevEq) {
@@ -278,6 +323,22 @@ async function main() {
         process.exit(2);
       }
     }
+  }
+
+  // propagate global severity to prod and dev if not overridden by CLI or config
+  const hasProdSeverityFlag = args.some((a) => a.startsWith('--prod-severity'));
+  const hasDevSeverityFlag = args.some((a) => a.startsWith('--dev-severity'));
+  if (
+    !hasProdSeverityFlag &&
+    !(config.prod && config.prod.minSeverity !== undefined)
+  ) {
+    prodMinSeverity = minSeverity;
+  }
+  if (
+    !hasDevSeverityFlag &&
+    !(config.dev && config.dev.minSeverity !== undefined)
+  ) {
+    devMinSeverity = minSeverity;
   }
 
   // Parse --prod-min-age flag (falls back to minAge)

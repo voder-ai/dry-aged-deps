@@ -55,9 +55,8 @@ dry-aged-deps
 | --severity=<level>      | Vulnerability severity threshold: none, low, moderate, high, critical (default: none)  |
 | --prod-severity=<level> | Severity threshold for production dependencies (falls back to --severity)              |
 | --dev-severity=<level>  | Severity threshold for development dependencies (falls back to --severity)             |
-| --check                 | Check mode: exit code 1 if safe updates available, 0 if none, 2 on error (coming soon) |
-
-> **Note:** The `--check` CLI flag and configuration-file support (`.dry-aged-deps.json`) are coming soon and not yet implemented.
+| --config-file=<file>    | Path to JSON config file (default: .dry-aged-deps.json). CLI flags override config file values |
+| --check                 | Check mode: exit code 1 if safe updates available, 0 if none, 2 on error               |
 
 ### Examples
 
@@ -82,8 +81,29 @@ dry-aged-deps --prod-severity=none --dev-severity=moderate
 
 # Combine age and severity thresholds
 dry-aged-deps --prod-min-age=30 --prod-severity=none --dev-min-age=7 --dev-severity=high
+```
 
-# dry-aged-deps --check (coming soon)
+```sh
+# Example: using a configuration file
+# Create a .dry-aged-deps.json file:
+cat << 'EOF' > .dry-aged-deps.json
+{
+  "minAge": 14,
+  "severity": "low",
+  "prod": {
+    "minAge": 30,
+    "minSeverity": "moderate"
+  },
+  "dev": {
+    "minAge": 7,
+    "minSeverity": "high"
+  },
+  "format": "table"
+}
+EOF
+
+# Run without flags to use config file values
+dry-aged-deps
 ```
 
 ### Output Formats

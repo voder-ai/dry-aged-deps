@@ -1,7 +1,5 @@
 # API Reference
 
-> **Note:** The `--check` CLI flag and `.dry-aged-deps.json` configuration-file support are coming soon and not yet implemented.
-
 This document describes the public API exposed by `dry-aged-deps` for programmatic use.
 
 ## fetchVersionTimes(packageName)
@@ -273,3 +271,27 @@ const xml = xmlFormatter({
 });
 console.log(xml);
 ```
+
+## CLI Configuration File Support
+
+`dry-aged-deps` will automatically load a JSON configuration file from the current working directory. By default, it looks for `.dry-aged-deps.json`, but you can specify a custom path using the `--config-file=<file>` CLI flag.
+
+Supported schema:
+
+```json
+{
+  "minAge": number,
+  "severity": "none" | "low" | "moderate" | "high" | "critical",
+  "prod": {
+    "minAge": number,
+    "minSeverity": "none" | "low" | "moderate" | "high" | "critical"
+  },
+  "dev": {
+    "minAge": number,
+    "minSeverity": "none" | "low" | "moderate" | "high" | "critical"
+  },
+  "format": "table" | "json" | "xml"
+}
+```
+
+Merge precedence: CLI flags override config file values, which override built-in defaults.
