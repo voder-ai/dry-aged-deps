@@ -149,7 +149,7 @@ For programmatic API access and detailed architectural overview, see:
 ### Local Development Setup
 
 1. Clone the repository
-2. Install dependencies: `npm install`
+2. Install dependencies: `npm ci --prefer-frozen-lockfile`
 3. Run tests: `npm test`
 4. Run linter: `npm run lint`
 5. Format code: `npm run format`
