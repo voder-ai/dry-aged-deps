@@ -5,7 +5,12 @@ import { describe, it, expect } from 'vitest';
 import { xmlFormatter } from '../src/xml-formatter.js';
 
 describe('xmlFormatter thresholds partial values', () => {
-  const summary = { totalOutdated: 0, safeUpdates: 0, filteredByAge: 0, filteredBySecurity: 0 };
+  const summary = {
+    totalOutdated: 0,
+    safeUpdates: 0,
+    filteredByAge: 0,
+    filteredBySecurity: 0,
+  };
   const timestamp = '2025-01-01T00:00:00.000Z';
 
   it('renders only min-age when prod.minSeverity is undefined', () => {

@@ -1,11 +1,17 @@
-## NOW  
-Refactor `test/cli.error-cmd.test.js` to create its fake-npm executable inside an OS temporary directory (using `fs.mkdtemp`) instead of under `test/`, ensuring tests do not write into the repository.
+## NOW
+Run `git push origin main` to publish the three pending local commits to the remote repository and synchronize history.
 
-## NEXT  
-- Add a CI post-test step (`git diff --exit-code`) to fail the build if any repository files were modified during tests.  
-- Identify under-tested branches in `src/print-outdated.js` and `src/xml-formatter.js`, then write targeted Vitest unit tests to push branch coverage above 90%.
+## NEXT
+- Re-run the GitHub Actions CI workflow on the updated `main` branch and review any failing steps in the “Build & Test” and “Release” jobs.
+- Locally reproduce any CI failures by running:
+  1. `npm ci --prefer-frozen-lockfile`
+  2. `npm run lint`
+  3. `prettier --check .`
+  4. `npm test`
+  Fix any formatting, linting, or test errors uncovered, commit the changes, and push again.
+- Update `.github/workflows/ci-publish.yml` (and related scripts) to correct broken steps (e.g., lockfile‐drift check, peer‐dependency installs, commitlint invocation) so that the CI pipeline passes reliably.
 
-## LATER  
-- Implement support for `.dry-aged-deps.json` configuration files and add corresponding tests and documentation.  
-- Complete and test real-npm-outdated behavior for `--check` mode, then update docs and add E2E coverage.  
-- Introduce caching or performance benchmarks for `fetchVersionTimes` to optimize CLI responsiveness.
+## LATER
+- Write targeted Vitest unit tests to cover under-tested branches in `src/print-outdated.js` and `src/xml-formatter.js` to raise branch coverage above 90%.
+- Implement support for `.dry-aged-deps.json` configuration files, merge with CLI flags (precedence CLI > config > defaults), and add corresponding tests and documentation.
+- Complete `--check` mode enforcement logic with exit-code behavior, add end-to-end tests, and update README, API docs, and CHANGELOG.

@@ -6,7 +6,12 @@ import { xmlFormatter } from '../src/xml-formatter.js';
 
 describe('xmlFormatter thresholds dev minAge only', () => {
   it('renders dev <min-age> only when only dev.minAge is provided', () => {
-    const summary = { totalOutdated: 0, safeUpdates: 0, filteredByAge: 0, filteredBySecurity: 0 };
+    const summary = {
+      totalOutdated: 0,
+      safeUpdates: 0,
+      filteredByAge: 0,
+      filteredBySecurity: 0,
+    };
     const thresholds = { dev: { minAge: 4 } };
     const timestamp = '2025-02-02T02:02:02Z';
     const xml = xmlFormatter({ rows: [], summary, thresholds, timestamp });

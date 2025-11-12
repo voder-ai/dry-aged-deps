@@ -34,7 +34,11 @@ describe('printOutdated XML fetch error handling', () => {
     // Age should be N/A in output
     expect(xml).toContain('<age>N/A</age>');
     // Summary filteredByAge should indicate removal by age
-    expect(summary).toMatchObject({ totalOutdated: 1, safeUpdates: 0, filteredByAge: 1 });
+    expect(summary).toMatchObject({
+      totalOutdated: 1,
+      safeUpdates: 0,
+      filteredByAge: 1,
+    });
 
     logSpy.mockRestore();
     errorSpy.mockRestore();
