@@ -7,6 +7,8 @@ import { calculateAgeInDays as defaultCalculateAgeInDays } from './age-calculato
 import { checkVulnerabilities as defaultCheckVulnerabilities } from './check-vulnerabilities.js';
 import { jsonFormatter } from './json-formatter.js';
 import { xmlFormatter } from './xml-formatter.js';
+import { filterByAge } from './filter-by-age.js';
+import { filterBySecurity } from './filter-by-security.js';
 
 /**
  * Print outdated dependencies information with age
@@ -120,44 +122,16 @@ export async function printOutdated(data, options = {}) {
   );
   const rows = await Promise.all(ageTasks);
 
-  // Filter by age threshold (using appropriate threshold per dependency type)
-  const matureRows = rows.filter(([_name, , , , age, depType]) => {
-    const minAge = depType === 'prod' ? prodMinAge : devMinAge;
-    return typeof age === 'number' && age >= minAge;
-  });
+  // Filter by age threshold using helper
+  const matureRows = filterByAge(rows, { prodMinAge, devMinAge });
 
-  // Vulnerability filtering
-  const safeRows = [];
-  const vulnMap = new Map();
-  const filterReasonMap = new Map();
-  for (const row of matureRows) {
-    const [name, , , latest, , depType] = row;
-    const minSeverity = depType === 'prod' ? prodMinSeverity : devMinSeverity;
-    let include = true;
-    let vulnCount = 0;
-    try {
-      vulnCount = await checkVulnerabilities(name, latest);
-      if (vulnCount !== 0) {
-        include = false;
-        filterReasonMap.set(name, 'security');
-      }
-    } catch (err) {
-      if (format !== 'xml' && format !== 'json') {
-        console.error(
-          `Warning: failed to check vulnerabilities for ${name}@${latest}: ${err.message}`
-        );
-      }
-      // treat failures as safe
-    }
-    vulnMap.set(name, {
-      count: vulnCount,
-      maxSeverity: vulnCount > 0 ? minSeverity : 'none',
-      details: [],
-    });
-    if (include) {
-      safeRows.push(row);
-    }
-  }
+  // Vulnerability filtering using helper
+  const { safeRows, vulnMap, filterReasonMap } = await filterBySecurity(
+    matureRows,
+    checkVulnerabilities,
+    { prodMinSeverity, devMinSeverity },
+    format
+  );
 
   const totalOutdated = rows.length;
   const filteredByAge = totalOutdated - matureRows.length;
@@ -208,7 +182,7 @@ export async function printOutdated(data, options = {}) {
   // Table output (default)
   console.log('Outdated packages:');
   console.log(
-    ['Name', 'Current', 'Wanted', 'Latest', 'Age (days)', 'Type'].join('\t')
+    ['Name', 'Current', 'Wanted', 'Latest', 'Age (days)', 'Type'].join('	')
   );
 
   if (matureRows.length === 0) {
@@ -225,6 +199,6 @@ export async function printOutdated(data, options = {}) {
   }
 
   for (const row of safeRows) {
-    console.log(row.join('\t'));
+    console.log(row.join('	'));
   }
 }
