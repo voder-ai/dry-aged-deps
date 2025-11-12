@@ -367,6 +367,7 @@ async function main() {
       devMinAge,
       prodMinSeverity,
       devMinSeverity,
+      returnSummary: checkMode,
     });
     if (checkMode) {
       if (summary.safeUpdates > 0) process.exit(1);
