@@ -126,6 +126,7 @@ If you're using AI development assistants (like Voder), you can configure them b
 - If you get permission errors during global installation, try using `sudo` or configure npm permissions
 - Verify your package.json is valid JSON to avoid parsing errors
 - Check network connectivity if npm registry requests fail
+- For a complete security audit including development dependencies, run `npm audit --audit-level=moderate` (omit the `--production` flag).
 
 ## Attribution
 
