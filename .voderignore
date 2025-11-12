@@ -14,6 +14,7 @@ test/fixtures/**
 
 # Env and secrets
 .env*
+!.env.example
 
 # Editor settings and swap files
 .vscode/**
