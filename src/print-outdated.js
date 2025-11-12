@@ -13,8 +13,8 @@ import { filterBySecurity } from './filter-by-security.js';
 /**
  * Print outdated dependencies information with age
  * @param {Record<string, { current: string; wanted: string; latest: string }>} data
- * @param {{ fetchVersionTimes?: function, calculateAgeInDays?: function, checkVulnerabilities?: function, format?: string, prodMinAge?: number, devMinAge?: number, prodMinSeverity?: string, devMinSeverity?: string }} [options]
- * @returns {Object|undefined} summary for xml mode
+ * @param {{ fetchVersionTimes?: function, calculateAgeInDays?: function, checkVulnerabilities?: function, format?: string, prodMinAge?: number, devMinAge?: number, prodMinSeverity?: string, devMinSeverity?: string, returnSummary?: boolean }} [options]
+ * @returns {Object|undefined} summary for xml mode or if returnSummary is true
  */
 export async function printOutdated(data, options = {}) {
   const fetchVersionTimes =
@@ -24,6 +24,7 @@ export async function printOutdated(data, options = {}) {
   const checkVulnerabilities =
     options.checkVulnerabilities || defaultCheckVulnerabilities;
   const format = options.format || 'table';
+  const returnSummary = options.returnSummary === true;
 
   // Configurable thresholds - support both old and new parameter names
   const prodMinAge =
@@ -96,7 +97,8 @@ export async function printOutdated(data, options = {}) {
       return summary;
     }
     console.log('All dependencies are up to date.');
-    return summary;
+    if (returnSummary) return summary;
+    return;
   }
 
   // Fetch version times and calculate ages
@@ -189,17 +191,20 @@ export async function printOutdated(data, options = {}) {
     console.log(
       `No outdated packages with mature versions found (prod >= ${prodMinAge} days, dev >= ${devMinAge} days).`
     );
-    return summary;
+    if (returnSummary) return summary;
+    return;
   }
   if (safeRows.length === 0) {
     console.log(
       `No outdated packages with safe, mature versions (>= ${prodMinAge}/${devMinAge} days old, no vulnerabilities) found.`
     );
-    return summary;
+    if (returnSummary) return summary;
+    return;
   }
 
   for (const row of safeRows) {
     console.log(row.join('	'));
   }
-  return summary;
+  if (returnSummary) return summary;
+  return;
 }

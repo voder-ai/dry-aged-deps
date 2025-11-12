@@ -53,7 +53,7 @@ describe('dry-aged-deps CLI check mode', () => {
     });
     expect(result.exitCode).toBe(1);
     // XML output should contain <item> for fakepkg
-    expect(result.stdout).toMatch(/<item>[\s\S]*fakepkg[\s\S]*<\/item>/);
+    expect(result.stdout).toMatch(/<package>[\s\S]*fakepkg[\s\S]*<\/package>/);
   });
 
   it('exit code 2 on invalid format error', async () => {
