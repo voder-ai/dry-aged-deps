@@ -44,6 +44,10 @@ Please include:
 
 See `docs/security-incidents/incident-response-template.md` for detailed triage and response steps.
 
+## CI Audit in CI Pipeline
+
+The CI & Publish workflow defined in `.github/workflows/ci-publish.yml` now runs `npm audit --audit-level=moderate` across all dependencies (production and development) without the `--production` flag to ensure no known vulnerabilities are missed.
+
 ---
 
 _This policy may be updated periodically. See version history in `CHANGELOG.md` for changes._
