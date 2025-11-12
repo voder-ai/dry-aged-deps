@@ -28,8 +28,5 @@ test/fixtures/**
 
 # Hide all test files
 
-# Hide GitHub metadata and workflows
-.github/**
-
 # Hide patch files
 *.patch
