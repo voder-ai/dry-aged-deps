@@ -78,6 +78,9 @@ jobs:
       - name: Run E2E CLI tests
         run: npm run test:cli -- test/cli.e2e.real-fixture.test.js
 
+      - name: Ensure no repository changes post tests
+        run: git diff --exit-code
+
       - name: Validate CLI version
         run: |
           expected=$(npm pkg get version | tr -d '"')

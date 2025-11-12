@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { execa } from 'execa';
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -8,11 +9,11 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 describe('dry-aged-deps CLI error exit code', () => {
-  const fakeNpmDir = path.join(__dirname, 'fake-npm');
+  let fakeNpmDir;
 
   beforeAll(() => {
-    // Create a fake npm executable that outputs invalid JSON
-    fs.mkdirSync(fakeNpmDir, { recursive: true });
+    // Create a temporary directory for fake npm executable
+    fakeNpmDir = fs.mkdtempSync(path.join(os.tmpdir(), 'fake-npm-'));
     const npmPath = path.join(fakeNpmDir, 'npm');
     fs.writeFileSync(
       npmPath,
