@@ -83,6 +83,12 @@ dry-aged-deps --prod-severity=none --dev-severity=moderate
 
 # Combine age and severity thresholds
 dry-aged-deps --prod-min-age=30 --prod-severity=none --dev-min-age=7 --dev-severity=high
+
+# Preview update (requires confirmation)
+dry-aged-deps --update
+
+# Apply updates without confirmation
+dry-aged-deps --update --yes
 ```
 
 ```sh
