@@ -2,8 +2,11 @@
 <traceability>
   <specification>prompts/013.0-DEV-CHECK-MODE.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-12T10:59:09.071Z</last_validated>
+  <last_validated>2025-11-12T13:21:44.716Z</last_validated>
   <last_modified>2025-11-11T08:04:07.352Z</last_modified>
-  <evidence>In bin/dry-aged-deps.js the help text lists --check as “(coming soon)”, but there is no parsing of a --check flag (no args.includes('--check') branch) and no code to change the exit code based on check mode. The CLI always runs printOutdated and then process.exit(0) on success, regardless of updates. No tests exercise a --check flag or verify exit code 1 when updates exist.</evidence>
-  <notes>The specification’s acceptance criteria around check mode (REQ-CHECK-FLAG, REQ-EXIT-1-ON-UPDATES, check-mode behavior changes, JSON/XML support, tests, and documentation) are not implemented. The feature remains a stub in the help text only.</notes>
+  <evidence>1. In bin/dry-aged-deps.js help output: “--check                 Check mode: exit code 1 if safe updates available, 0 if none, 2 on error (coming soon)”
+2. No parsing of a `--check` flag in CLI argument handling (no code checks args for "--check").
+3. No reference to check mode in exit code logic—always exits 0 on success, 2 on error, never 1 for available updates.
+4. README.md still marks --check as “coming soon” and there are no tests for --check in the test suite.</evidence>
+  <notes>The specification for --check mode exists, but none of the acceptance criteria are implemented. The CLI neither recognizes nor acts on a --check flag, the exit code logic has not been updated, output formats are unchanged, and there are no tests or documentation examples showing usage. Implementation is not present, so the story is failed.</notes>
 </traceability>

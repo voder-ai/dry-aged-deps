@@ -2,8 +2,10 @@
 <traceability>
   <specification>prompts/008.0-DEV-JSON-OUTPUT.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-12T11:00:00.853Z</last_validated>
+  <last_validated>2025-11-12T13:22:32.918Z</last_validated>
   <last_modified>2025-11-09T23:04:54.331Z</last_modified>
-  <evidence>Specification 008.0-DEV-JSON-OUTPUT.md requires JSON output to include for each package: name, current, latest, age, vulnerabilities (count, maxSeverity, details), filtered flags, filterReason, recommended version, and summary thresholds. However, src/json-formatter.js and the printOutdated JSON branch produce only {name,current,wanted,latest,age}. No vulnerabilities info, no filtered flags, no recommended, no filterReason. Moreover, exit codes in JSON mode are always 0 (no support for exit code 1 when updates exist), and JSON error output (with an error field) is not implemented. Although tests for minimal JSON pass, they do not cover the full schema or exit-code behavior defined in the spec.</evidence>
-  <notes>The JSON formatter and CLI JSON branch implement only a minimal subset of the spec (timestamp, packages array, summary counts, thresholds) and do not satisfy the story’s acceptance criteria for complete data, exit codes, and error handling. Full JSON schema and exit-code logic remain unimplemented.</notes>
+  <evidence>Review of src/json-formatter.js shows the output schema only includes timestamp, packages (with name, current, wanted, latest, age) and summary (totalOutdated, safeUpdates, filteredByAge, filteredBySecurity, thresholds). It does NOT include a vulnerabilities object, severity info, recommended versions, filtered/filterReason fields as specified.
+
+Further, bin/dry-aged-deps.js always exits with code 0 after printOutdated, regardless of whether updates are available, instead of using exit code 1 for available updates. The CLI error paths for JSON mode do not emit errors as JSON objects with an error field. Spec calls for exit codes: 0=no errors, 1=updates available, 2=error, and JSON‐formatted errors, which are not implemented.</evidence>
+  <notes>The implementation and accompanying tests cover only a minimal JSON format (packages list and basic summary) and do not satisfy several acceptance criteria: full data including vulnerabilities and severity, correct exit codes based on update availability, and JSON‐formatted error handling.</notes>
 </traceability>

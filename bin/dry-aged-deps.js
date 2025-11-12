@@ -18,6 +18,7 @@ async function main() {
 
   // CLI arguments
   const args = process.argv.slice(2);
+  const checkMode = args.includes('--check');
 
   // Help flag
   if (args.includes('-h') || args.includes('--help')) {
@@ -48,7 +49,7 @@ async function main() {
       '  --dev-severity=<lvl>   Severity threshold for development dependencies (falls back to --severity)'
     );
     console.log(
-      '  --check                 Check mode: exit code 1 if safe updates available, 0 if none, 2 on error (coming soon)'
+      '  --check                 Check mode: exit code 1 if safe updates available, 0 if none, 2 on error'
     );
     console.log(
       '  --config-file=<file>    Configuration-file support (coming soon)'
@@ -358,7 +359,7 @@ async function main() {
 
   // Print results
   try {
-    await printOutdated(data, {
+    const summary = await printOutdated(data, {
       format,
       fetchVersionTimes: fetchVersionTimesOverride,
       checkVulnerabilities: checkVulnerabilitiesOverride,
@@ -367,6 +368,10 @@ async function main() {
       prodMinSeverity,
       devMinSeverity,
     });
+    if (checkMode) {
+      if (summary.safeUpdates > 0) process.exit(1);
+      else process.exit(0);
+    }
     process.exit(0);
   } catch (err) {
     if (format === 'xml') {

@@ -2,10 +2,10 @@
 <traceability>
   <specification>prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-12T11:03:28.877Z</last_validated>
+  <last_validated>2025-11-12T13:22:18.844Z</last_validated>
   <last_modified>2025-11-09T23:03:02.030Z</last_modified>
-  <evidence>1) In bin/dry-aged-deps.js --help output: "--config-file=<file>    Configuration-file support (coming soon)" (no real implementation).
-2) No code paths import or read a ".dry-aged-deps.json" file (search for ".dry-aged-deps.json" and "minAge" in the code yields zero hits).
-3) No tests reference loading configuration from a file or exercising precedence of config vs CLI flag.</evidence>
-  <notes>The CLI flag (--min-age) with validation, defaulting, help text, and JSON/table output support are implemented and tested, but the story’s requirement to read `minAge` from a `.dry-aged-deps.json` config file (and to have CLI override it) is not implemented and has no accompanying tests.</notes>
+  <evidence>1. No code to read a .dry-aged-deps.json config file: search for “.dry-aged-deps.json” yields nothing; bin/dry-aged-deps.js only mentions “--config-file” in help text as “coming soon” and nowhere parses or loads a config file.
+2. No tests cover config-file support or reading a “minAge” from a config file: test directory contains no reference to config file or config loading.
+3. Although --min-age flag, validation, default of 7, override behavior, help text, and JSON output thresholds (minAge) are implemented (and covered by existing cli.flags.test.js), the core requirement of config file support (REQ-CONFIG-FILE, REQ-CONFIG-SCHEMA, REQ-PRECEDENCE for config) is missing.</evidence>
+  <notes>The implementation fully supports the CLI flag (--min-age), its validation, default value, help documentation, and JSON output changes, but does not implement reading or merging of configuration from a .dry-aged-deps.json file. As a result, the story’s acceptance criteria for config file support and CLI override precedence are not met.</notes>
 </traceability>

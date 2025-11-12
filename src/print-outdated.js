@@ -80,23 +80,23 @@ export async function printOutdated(data, options = {}) {
 
   // No outdated dependencies
   if (entries.length === 0) {
+    const summary = {
+      totalOutdated: 0,
+      safeUpdates: 0,
+      filteredByAge: 0,
+      filteredBySecurity: 0,
+    };
+    const thresholds = {
+      prod: { minAge: prodMinAge, minSeverity: prodMinSeverity },
+      dev: { minAge: devMinAge, minSeverity: devMinSeverity },
+    };
+    const timestamp = new Date().toISOString();
     if (format === 'xml') {
-      const timestamp = new Date().toISOString();
-      const summary = {
-        totalOutdated: 0,
-        safeUpdates: 0,
-        filteredByAge: 0,
-        filteredBySecurity: 0,
-      };
-      const thresholds = {
-        prod: { minAge: prodMinAge, minSeverity: prodMinSeverity },
-        dev: { minAge: devMinAge, minSeverity: devMinSeverity },
-      };
       console.log(xmlFormatter({ rows: [], summary, thresholds, timestamp }));
       return summary;
     }
     console.log('All dependencies are up to date.');
-    return;
+    return summary;
   }
 
   // Fetch version times and calculate ages
@@ -189,16 +189,17 @@ export async function printOutdated(data, options = {}) {
     console.log(
       `No outdated packages with mature versions found (prod >= ${prodMinAge} days, dev >= ${devMinAge} days).`
     );
-    return;
+    return summary;
   }
   if (safeRows.length === 0) {
     console.log(
       `No outdated packages with safe, mature versions (>= ${prodMinAge}/${devMinAge} days old, no vulnerabilities) found.`
     );
-    return;
+    return summary;
   }
 
   for (const row of safeRows) {
     console.log(row.join('	'));
   }
+  return summary;
 }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <traceability>
   <specification>prompts/009.0-DEV-XML-OUTPUT.md</specification>
-  <status>PASSED</status>
-  <last_validated>2025-11-12T11:02:09.395Z</last_validated>
+  <status>FAILED</status>
+  <last_validated>2025-11-12T13:25:43.690Z</last_validated>
   <last_modified>2025-11-09T23:05:40.405Z</last_modified>
-  <evidence>All 72 tests passed (including 14 XML‐formatter tests and 2 CLI XML format tests). The project has src/xml-formatter.js, bin/dry-aged-deps.js supports --format=xml, tests verify valid XML declaration, complete data fields, summary section, thresholds, error output, exit codes (0 on success, 2 on error), suppressed stderr in XML mode, and help text includes XML format.</evidence>
-  <notes>The XML output feature is fully implemented as specified. The CLI flag, XML schema, summary, thresholds, error handling, exit codes, and documentation are all covered by passing tests and correct code.</notes>
+  <evidence>In bin/dry-aged-deps.js the main routine always calls `process.exit(0)` after a successful run, even when updates are available. The story’s acceptance criteria specify exit code 1 for “updates available”, but there is no code path setting exit code 1 in that case.</evidence>
+  <notes>All other XML formatter behaviors (CLI flag, valid XML, full data, summary, error handling, schema, help text) are implemented and well-tested. However, the required exit-code semantics for signaling available updates (exit code 1) has not been implemented.</notes>
 </traceability>

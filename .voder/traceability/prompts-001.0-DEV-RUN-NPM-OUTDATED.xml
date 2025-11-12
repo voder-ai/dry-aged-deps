@@ -2,8 +2,15 @@
 <traceability>
   <specification>prompts/001.0-DEV-RUN-NPM-OUTDATED.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-12T10:59:19.368Z</last_validated>
+  <last_validated>2025-11-12T13:22:24.549Z</last_validated>
   <last_modified>2025-11-09T23:01:40.301Z</last_modified>
-  <evidence>1) bin/dry-aged-deps.js invokes execFileSync('npm', ['outdated','--json']) and catches errors (lines 327–340). It JSON.parse()s the output with error handling (lines 343–354). 2) src/print-outdated.js parses the JSON and renders table, JSON, and XML outputs, and handles the “no outdated” case (`entries.length === 0`) by printing “All dependencies are up to date.” 3) Vitest suite (72 tests, 35 files) passed: includes test/cli.outdated.test.js (valid outdated output), test/cli.upToDate.test.js (no-updates case), cli.error-cmd.test.js (npm outdated failure), cli.format-json.test.js, cli.format-xml.* tests, printOutdated.* tests, etc. 4) README and --help flag cover usage examples and options.</evidence>
-  <notes>All specified acceptance criteria—running npm outdated, parsing JSON, displaying results, handling errors, and no-update scenarios—are fully implemented and covered by automated tests.</notes>
+  <evidence>All 75 Vitest tests passed (100% statements/functions/lines coverage, ~91.8% branch coverage), including CLI tests for:
+- running `npm outdated --json` and parsing its output (cli.outdated.test.js)
+- handling no outdated packages (cli.upToDate.test.js) with exit code 0 and message “All dependencies are up to date.”
+- error handling on invalid JSON from npm outdated (cli.error-cmd.test.js)
+- JSON format output (cli.format-json.test.js) without stderr warnings
+- XML format and error xml output (cli.format-xml*.test.js)
+
+Additionally, real‐fixture E2E tests exercise integration with actual package.json, and help/version flags are tested. The code uses `execFileSync('npm', ['outdated','--json'])`, parses JSON, and displays results via `printOutdated`. CLI help text is present.</evidence>
+  <notes>The implementation fully satisfies all acceptance criteria for the 001.0-DEV-RUN-NPM-OUTDATED story. Tests cover core functionality, parsing, display, error handling, and no‐updates scenarios.</notes>
 </traceability>

@@ -2,8 +2,8 @@
 <traceability>
   <specification>prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-12T10:59:33.228Z</last_validated>
+  <last_validated>2025-11-12T13:25:09.478Z</last_validated>
   <last_modified>2025-11-09T23:02:37.596Z</last_modified>
-  <evidence>In src/print-outdated.js the vulnerability filtering logic only ever checks the single ‘latest’ version for each package (lines 139–153) and, if vulnerable, excludes the package entirely. There is no code to retrieve or iterate through earlier mature versions (“work backwards until finding a safe one”), nor any tests exercising that behavior. The smart-search requirement (REQ-SMART-SEARCH) from prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md is not implemented.</evidence>
-  <notes>Core vulnerability detection (REQ-AUDIT-CHECK and REQ-TRANSITIVE-DEPS) and basic filtering (REQ-SAFE-ONLY) are in place, and output messages for no safe versions exist (REQ-CLEAR-OUTPUT), but the key smart-search across multiple versions is missing, so the story is incomplete.</notes>
+  <evidence>The implementation in src/filter-by-security.js and src/print-outdated.js applies a single vulnerability check to the ‘latest’ version for each package and simply filters it out if vulnerable. There is no logic to “check newest mature first, work backwards until finding a safe version” (REQ-SMART-SEARCH), and no code to fetch or evaluate earlier version candidates for a package. The existing tests (e.g., test/filter-by-security.test.js) only verify that vulnerable rows are removed and safe ones retained, but none cover the smart search behavior described in prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md. Therefore the key acceptance criterion “Smart Checking” is not met.</evidence>
+  <notes>While core vulnerability checking and filtering are implemented and tested, the smart version-backtracking behavior required by the story is missing, so this story cannot be marked as passed.</notes>
 </traceability>

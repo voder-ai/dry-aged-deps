@@ -2,14 +2,11 @@
 <traceability>
   <specification>prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-12T11:01:29.923Z</last_validated>
+  <last_validated>2025-11-12T13:24:06.099Z</last_validated>
   <last_modified>2025-11-11T08:04:07.339Z</last_modified>
-  <evidence>1. Code (bin/dry-aged-deps.js) always calls process.exit(0) after printOutdated, with no branch setting exit code 1 when safe updates are available or exit code 2 for errors.  
-2. The --check flag is mentioned in help text as “coming soon” but has no implementation.  
-3. Error handling for JSON parse in default/table/JSON formats calls process.exit(1) (not exit 2 as specified).  
-   - In bin/dry-aged-deps.js, JSON.parse failures do console.error and process.exit(1).  
-   - Test (test/cli.error-cmd.test.js) expects exitCode 1 on invalid JSON, but spec requires exitCode 2 for errors.  
-4. There is no test verifying exit code 1 when safe updates are available; existing tests for outdated scenarios expect exitCode 0 (e.g. test/cli.outdated.test.js, test/cli.outdated.mock.test.js).  
-5. Documentation (README.md, --help output) still marks exit-code behavior as “coming soon” and does not document finalized exit codes for all modes.</evidence>
-  <notes>The specification calls for three standardized exit codes (0=no updates, 1=updates available, 2=error) and consistent behavior across formats and documentation. The current implementation lacks any logic to emit exit code 1 for safe updates, uses exit code 1 for error conditions (should be 2), and the --check flag isn’t implemented. Tests and documentation still reflect the pre-refinement behavior. All acceptance criteria for this story remain unmet.</notes>
+  <evidence>1) In bin/dry-aged-deps.js all non-error runs (including safe-updates) end with `process.exit(0)`, so exit code 1 is never emitted for the “updates available” case.  
+2) Error handling is inconsistent: for default/table format JSON-parse failures the code does `process.exit(1)` (see lines 338–345), but for XML it does `process.exit(2)` (lines 331–334). The spec mandates exit code 2 on any error and consistent codes across formats.  
+3) There are no tests checking for exit code 1 when safe updates are found, and no “check” mode implemented to drive that behavior.  
+4) The README/help still labels `--check` as “coming soon” and does not list the standardized codes for normal runs as required.</evidence>
+  <notes>The codebase and tests reflect the old behavior (always exit 0 on success, mixed exit 1/2 on errors) and never emit exit 1 for safe-update detection. This does not satisfy the spec’s acceptance criteria around exit code 1 or consistent exit 2 on errors.</notes>
 </traceability>

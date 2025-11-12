@@ -2,16 +2,8 @@
 <traceability>
   <specification>prompts/003.0-DEV-IDENTIFY-OUTDATED.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-12T10:59:36.781Z</last_validated>
+  <last_validated>2025-11-12T13:23:53.911Z</last_validated>
   <last_modified>2025-11-09T23:02:10.889Z</last_modified>
-  <evidence>In src/print-outdated.js the age filtering only checks the age of info.latest and filters out packages younger than the threshold; it never iterates over earlier versions (REQ-SMART-SEARCH) to find the newest mature version. Additionally, there is no logic to skip packages where the mature version is <= current version (REQ-COMPARISON), e.g.:
-
-  // Filter by age threshold (using appropriate threshold per dependency type)
-  const matureRows = rows.filter(([_name, , , , age, depType]) => {
-    const minAge = depType === 'prod' ? prodMinAge : devMinAge;
-    return typeof age === 'number' && age >= minAge;
-  });
-
-No subsequent check excludes rows with latest <= current. These missing behaviors violate the “Smart Filtering” and “Skip Current” acceptance criteria.</evidence>
-  <notes>While basic age filtering and output formatting are in place, the key requirements of iterating backwards through version history to locate the first mature version and of excluding updates that aren’t newer than the current version are not implemented.</notes>
+  <evidence>In src/print-outdated.js and src/filter-by-age.js, the code simply filters out rows whose latest version’s age < 7 days. There is no logic to ‘work backwards’ through older versions when the latest is too new (i.e. smart filtering), nor any comparison to skip to a mature version <= current. No tests reference or cover this behavior.</evidence>
+  <notes>The story requires “smart filtering” (iterating from latest backwards to find the first mature version) and skipping if the mature version ≤ current. The implementation only drops entire packages when the latest version is too young, so key acceptance criteria are not met.</notes>
 </traceability>
