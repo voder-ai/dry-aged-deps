@@ -49,7 +49,7 @@ jobs:
 
       - name: Check lockfile drift
         run: |
-          npm install --package-lock-only
+          npm install --package-lock-only --legacy-peer-deps
           git diff --exit-code
 
       - name: Lint commit messages
@@ -119,7 +119,7 @@ jobs:
 
       - name: Check lockfile drift
         run: |
-          npm install --package-lock-only
+          npm install --package-lock-only --legacy-peer-deps
           git diff --exit-code
 
       - name: Check tag matches version
