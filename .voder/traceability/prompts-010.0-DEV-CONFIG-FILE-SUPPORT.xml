@@ -2,11 +2,8 @@
 <traceability>
   <specification>prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-12T17:29:40.163Z</last_validated>
+  <last_validated>2025-11-12T20:56:19.333Z</last_validated>
   <last_modified>2025-11-10T21:23:22.067Z</last_modified>
-  <evidence>• bin/dry-aged-deps.js includes config-file support (lines 30–50) with default path '.dry-aged-deps.json', JSON parsing, schema validation (allowed keys, type checks, range checks), merge and precedence logic (CLI > config > defaults).
-• test/cli.config-file.test.js covers all acceptance scenarios: reading defaults from config, CLI override precedence, invalid JSON exit code/message, unknown keys, value validations, custom config-file name, missing file errors—all tests pass.
-• README.md documents the .dry-aged-deps.json format (example block under “Example: using a configuration file”) and lists the --config-file option along with all relevant flags.
-• Existing tests (89 Vitest tests) including E2E, unit, and CLI tests all pass with coverage >80%, confirming optional behavior when config is absent.</evidence>
-  <notes>The implementation fulfills all mandatory acceptance criteria: config location, full schema support for thresholds and format, correct precedence, validation with clear errors, optional use, sensible defaults, and documentation. The JSON schema file is not present but was only a non‐mandatory recommendation.</notes>
+  <evidence>All 7 tests in test/cli.config-file.test.js passed under Vitest, verifying config file reading (default .dry-aged-deps.json and custom file via --config-file), JSON parsing and structure validation (invalid JSON and unknown keys exit code 2 with clear messages), merging logic (defaults ← config ← CLI flags), and format support. The implementation in bin/dry-aged-deps.js reads and validates `.dry-aged-deps.json`, applies thresholds and format from config, and correctly honors CLI overrides. README.md includes a detailed example and documents the --config-file option.</evidence>
+  <notes>The config-file support meets every acceptance criterion: correct location, schema validation, override precedence, error handling, optional usage, documentation, and sensible defaults. The JSON schema file is not present, but schema support was marked optional.</notes>
 </traceability>

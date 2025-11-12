@@ -2,14 +2,8 @@
 <traceability>
   <specification>prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-12T17:30:48.881Z</last_validated>
+  <last_validated>2025-11-12T20:56:57.081Z</last_validated>
   <last_modified>2025-11-09T23:03:02.030Z</last_modified>
-  <evidence>1. CLI parsing in bin/dry-aged-deps.js implements --min-age=<days> flag with validation (regex and range 1–365) and default of 7 days.
-2. Config file support reads .dry-aged-deps.json and applies config.minAge (validated as integer 1–365).
-3. Precedence logic: CLI flag overrides config file; config file overrides default; verified in code at lines parsing config and flag.
-4. Tests in test/cli.flags.test.js verify rejecting invalid values, default to 7, and override behavior. Tests in test/cli.config-file.test.js verify config file support, override by CLI flags, invalid config JSON/key, custom config-file name, missing file behavior.
-5. Help output in bin/dry-aged-deps.js includes the line “--min-age=<days>       Minimum age in days (1-365) for including versions (default: 7)”.
-6. Table, JSON, and XML outputs include thresholds (min-age) in messages or data structures; tested in JSON formatter (test/cli.flags.test.js), XML formatter tests (test/xml-formatter.thresholds*.test.js).
-7. All existing Vitest tests for this feature pass (per cycle data: 89 tests, ~90.8% coverage, no failures).</evidence>
-  <notes>Implementation fully satisfies the 005.0 DEV-CONFIGURABLE-AGE-THRESHOLD story: CLI flag, config file minAge, default behavior, validation, override precedence, help documentation, and output messages are all present and covered by tests.</notes>
+  <evidence>Review of bin/dry-aged-deps.js shows full support for --min-age flag with parsing, validation (integer 1–365), default to 7, and precedence over config file. Config file (.dry-aged-deps.json) is read, schema enforced (minAge number 1–365), unknown keys rejected, CLI flags override config values. Help text includes `--min-age=<days>` description. filterByAge helper supports configurable prodMinAge/devMinAge. JSON and XML formatters output thresholds. Vitest suite includes tests in filter-by-age.test.js, cli.flags.test.js, cli.config-file.test.js, xml-formatter.thresholds.test.js, and others covering all acceptance criteria, all passing in CI.</evidence>
+  <notes>All Acceptance Criteria for 005.0-DEV-CONFIGURABLE-AGE-THRESHOLD are implemented and covered by existing tests. Defaults, overrides, validation, help docs, and output messages satisfy the specification.</notes>
 </traceability>

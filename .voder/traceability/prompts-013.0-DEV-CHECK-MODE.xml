@@ -2,15 +2,8 @@
 <traceability>
   <specification>prompts/013.0-DEV-CHECK-MODE.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-12T17:32:14.299Z</last_validated>
+  <last_validated>2025-11-12T20:54:45.876Z</last_validated>
   <last_modified>2025-11-11T08:04:07.352Z</last_modified>
-  <evidence>- bin/dry-aged-deps.js implements `--check` flag (line 22) and uses it to set `returnSummary: checkMode`, exiting with code 1 if `summary.safeUpdates > 0`, 0 otherwise, and 2 on errors (lines 557–567).
-- CLI help (`--help`) documents `--check` flag.
-- test/cli.check-mode.test.js covers:
-  • exit code 0 when no updates in JSON mode
-  • exit code 1 when safe updates in table, JSON, XML modes
-  • exit code 2 on invalid format
-- test/docs/ci-integration.test.js verifies README.md has a CI/CD Integration section with `npx dry-aged-deps --check` and `if: failure()`, and docs/api.md describes exit codes (0,1,2) under a CI/CD Integration heading.
-- `npm test` (Vitest) ran 89 tests including cli.check-mode and docs integration, all passing.</evidence>
-  <notes>All acceptance criteria for 013.0-DEV-CHECK-MODE are satisfied: the `--check` flag exists, correct exit codes (0,1,2) are returned in all formats, clear output is shown, JSON/XML modes supported, and documentation updated with examples.</notes>
+  <evidence>1) Test suite 'test/cli.check-mode.test.js' (5 tests) passed: verifies --check flag, exit code 0 when no updates, exit code 1 on safe updates in table/JSON/XML, and exit code 2 on invalid format. 2) End-to-end `npm test` run: 43 files, 93 tests, all passing; coverage remains ≥89% branches. 3) Help text in bin/dry-aged-deps.js includes `--check`. 4) README.md and docs/api.md contain CI/CD integration section with `--check` usage and correct exit-code semantics (verified by test/docs/ci-integration.test.js).</evidence>
+  <notes>All acceptance criteria for story 013.0-DEV-CHECK-MODE are implemented: the CLI supports `--check`, fails with exit 1 when safe updates exist, exits 0 when up-to-date, uses exit 2 on errors, shows outdated packages in table output, supports JSON/XML formats, and documentation has been updated with CI/CD examples.</notes>
 </traceability>

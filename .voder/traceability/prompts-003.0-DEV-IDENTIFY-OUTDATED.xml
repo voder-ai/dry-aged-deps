@@ -2,8 +2,8 @@
 <traceability>
   <specification>prompts/003.0-DEV-IDENTIFY-OUTDATED.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-12T17:30:01.931Z</last_validated>
+  <last_validated>2025-11-12T20:54:40.378Z</last_validated>
   <last_modified>2025-11-09T23:02:10.889Z</last_modified>
-  <evidence>The current implementation in src/filter-by-age.js simply filters the rows for age ≥ threshold on the latest version; it does not implement the “smart filtering” requirement of walking backwards through earlier versions until a mature one is found. In src/print-outdated.js the code calls fetchVersionTimes(name) and only looks up versionTimes[info.latest] (never iterating over prior versions). There are no tests exercising smart‐search behavior or the “skip current” criterion when a mature version ≤ current exists.</evidence>
-  <notes>The story’s core acceptance criterion of “Smart Filtering: start from the latest and work backwards until finding mature version” is not implemented. The code only filters the latest version by age. To pass, logic must be added to inspect earlier versions when the latest is too fresh and tests must be added to cover that scenario.</notes>
+  <evidence>In src/print-outdated.js (around line 66) the code always fetches and computes age only for info.latest and then applies filterByAge on those rows — there is no logic to iterate through earlier versions if the latest is younger than the threshold. filterByAge (src/filter-by-age.js) simply drops rows whose age < threshold; it does not implement “start from latest and work backwards until finding [the] mature version.”</evidence>
+  <notes>The ‘smart filtering’ acceptance criterion (REQ-SMART-SEARCH) is not implemented. The code only considers the single latest version for each package rather than searching previous versions until finding one ≥7 days old.</notes>
 </traceability>

@@ -2,16 +2,12 @@
 <traceability>
   <specification>prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-12T17:29:57.160Z</last_validated>
+  <last_validated>2025-11-12T20:55:56.260Z</last_validated>
   <last_modified>2025-11-09T23:01:54.797Z</last_modified>
-  <evidence>Implementation inspects version times via npm view and calculates age only for the “latest” version for each package, not for all versions newer than the current:
+  <evidence>• fetch-version-times.js always invokes `npm view <pkg> time --json` and returns all version–time entries, but there is no code that limits the fetch or subsequent processing to only versions newer than the current version (REQ-OPTIMIZATION).
+• print-outdated.js only ever looks up and calculates an age for `info.latest`, never iterating over or displaying all versions newer than the current version as described in acceptance (“fetch publish dates for all versions newer than my current version” and “show age alongside each version”).
+• No tests cover partial fetching or version‐range filtering; all existing tests assume only the latest version’s age is needed.
 
-• fetch-version-times.js returns a map of all version→date but print-outdated.js only does:
-    const latestTime = versionTimes[info.latest];
-    age = calculateAgeInDays(latestTime);
-
-• No code enumerates every version > current or prints their individual ages.
-• No optimization to only fetch newer versions is implemented (npm view always returns all).
-• Tests cover fetchVersionTimes parsing/retries and that the CLI prints an Age column for the latest version, but there are no tests for multiple-version ages or smart fetching.</evidence>
-  <notes>The core plumbing (npm view, age calculation, CLI age column) is in place, but the story’s acceptance criteria to fetch, age–calculate, and display every version newer than current — and to optimize fetching only those versions — are not implemented or tested. Thus the story is incomplete.</notes>
+Tests run: `npm test` (Vitest 93/93 passing, 97.6% coverage)</evidence>
+  <notes>While the code correctly fetches publish times, calculates age for the latest version, and displays that age, it does not implement the smart‐fetch optimization nor handle all newer versions as specified in the story. Therefore not all acceptance criteria are satisfied.</notes>
 </traceability>

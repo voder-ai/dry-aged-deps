@@ -1,12 +1,20 @@
 ## NOW  
-Implement the auto-update write-back in the `updateMode` block of `src/print-outdated.js`: after creating the backup, read and parse `package.json`, update each package in `safeRows` under `dependencies` or `devDependencies` to its `wanted` version, then write the file back with 2-space indentation, replacing the existing preview/“TODO” placeholder.
+Refactor the `if (format === 'json')` branch in **src/print-outdated.js** to drive the full pipeline (fetchVersionTimes → calculateAgeInDays → filterByAge → filterBySecurity) and emit enriched JSON via `jsonFormatter`, including all fields required by prompts/008.0-DEV-JSON-OUTPUT.md (recommended version, vulnerabilities, filtered flags, filter reasons, dependency type).
 
 ## NEXT  
-- Add unit tests for the `--update` and `--yes` flows: verify backup creation, package.json modifications, confirmation prompt behavior, and error handling.  
-- Extend `bin/dry-aged-deps.js` help text and `README.md` to document `--update` and `--yes` flags, including examples.  
-- In `src/print-outdated.js`, print a summary report after applying updates and remind users to run `npm install`.
+- Enhance **src/json-formatter.js** to accept and serialize object-style rows with properties:  
+  - `name`, `current`, `wanted`, `latest`, `recommended`, `age`,  
+  - `vulnerabilities` (with `count`, `maxSeverity`, `details`),  
+  - `filtered`, `filterReason`, `dependencyType`  
+  and include summary thresholds exactly as in the spec.  
+- Update **bin/dry-aged-deps.js** to catch errors when `--format=json` and print a JSON error object (`{ error: { message, code, details }, timestamp }`) before exiting with code 2.  
+- Add Vitest unit tests for:  
+  - JSON error output format  
+  - Full JSON output content (vulnerability details, filter reasons, dependency types)  
+  extending or creating test files under `test/cli.format-json.*` and `test/json-formatter.*`.  
+- Revise the **README.md** JSON examples under “Output Formats” to reflect the complete schema.
 
 ## LATER  
-- Create end-to-end tests that run `dry-aged-deps --update --yes` against a real fixture, verify package.json was updated and backup exists, and then restore state.  
-- Add an ADR in `docs/decisions/` to capture the architectural decision for auto-update behavior.  
-- Optionally support updating `package-lock.json` and/or running `npm install` automatically behind a new flag.
+- Publish a formal JSON schema file (e.g. `schemas/outdated-packages.json`) and integrate schema validation in CI.  
+- Add end-to-end tests that run `dry-aged-deps --format=json` against real fixtures and validate output against the schema.  
+- Version the JSON schema in documentation (`docs/api.md`) and plan a migration path for future schema changes.

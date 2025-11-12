@@ -509,9 +509,6 @@ async function main() {
     data = mock.outdatedData;
     fetchVersionTimesOverride = mock.fetchVersionTimes;
     checkVulnerabilitiesOverride = mock.checkVulnerabilities;
-  } else if (format === 'json') {
-    // Minimal for JSON format
-    data = {};
   } else {
     // Run npm outdated in JSON mode
     let outputStr;
@@ -527,6 +524,24 @@ async function main() {
           const timestamp = new Date().toISOString();
           console.log(xmlFormatter({ timestamp, error: err }));
           process.exit(2);
+        } else if (format === 'json') {
+          const ts = new Date().toISOString();
+          console.log(
+            JSON.stringify(
+              {
+                timestamp: ts,
+                error: {
+                  message: err.message,
+                  code: err.code || '',
+                  details: err.details || '',
+                  story: 'prompts/008.0-DEV-JSON-OUTPUT.md'
+                }
+              },
+              null,
+              2
+            )
+          );
+          process.exit(2);
         }
         console.error('Error running npm outdated:', err.message);
         process.exit(1);
@@ -539,6 +554,24 @@ async function main() {
       if (format === 'xml') {
         const timestamp = new Date().toISOString();
         console.log(xmlFormatter({ timestamp, error: parseErr }));
+        process.exit(2);
+      } else if (format === 'json') {
+        const ts = new Date().toISOString();
+        console.log(
+          JSON.stringify(
+            {
+              timestamp: ts,
+              error: {
+                message: parseErr.message,
+                code: parseErr.code || '',
+                details: parseErr.details || '',
+                story: 'prompts/008.0-DEV-JSON-OUTPUT.md'
+              }
+            },
+            null,
+            2
+          )
+        );
         process.exit(2);
       }
       console.error('Failed to parse npm outdated output:', parseErr.message);
@@ -569,6 +602,24 @@ async function main() {
     if (format === 'xml') {
       const timestamp = new Date().toISOString();
       console.log(xmlFormatter({ timestamp, error: err }));
+      process.exit(2);
+    } else if (format === 'json') {
+      const ts = new Date().toISOString();
+      console.log(
+        JSON.stringify(
+          {
+            timestamp: ts,
+            error: {
+              message: err.message,
+              code: err.code || '',
+              details: err.details || '',
+              story: 'prompts/008.0-DEV-JSON-OUTPUT.md'
+            }
+          },
+          null,
+          2
+        )
+      );
       process.exit(2);
     }
     console.error(err.message);

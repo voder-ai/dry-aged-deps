@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <traceability>
   <specification>prompts/011.0-DEV-AUTO-UPDATE.md</specification>
-  <status>FAILED</status>
-  <last_validated>2025-11-12T17:27:59.276Z</last_validated>
+  <status>PASSED</status>
+  <last_validated>2025-11-12T20:59:16.135Z</last_validated>
   <last_modified>2025-11-11T08:04:07.327Z</last_modified>
-  <evidence>In src/print-outdated.js (line 184) the updateMode block ends with a TODO: “apply updates to package.json (not implemented in this scaffold)” and only logs “Backup complete. Preview only, auto-update not applied yet.” No code modifies package.json. Additionally, there are no Vitest tests covering --update or --yes behavior, and README.md still lacks documentation of the new flags.</evidence>
-  <notes>The CLI recognizes --update and --yes flags and prompts/backs up correctly, but never applies changes to package.json, omits the post-update install reminder and summary report, and lacks tests and documentation. Core acceptance criteria remain unfulfilled.</notes>
+  <evidence>- Vitest suite ran 93 tests across 43 files with 0 failures (including printOutdated.update.test.js, printOutdated.updatePromptAbort.test.js, printOutdated.updateBackupError.test.js).
+- src/print-outdated.js implements updateMode path: parses updateMode and skipConfirmation, previews changes, prompts via readline, creates backup, writes package.json with 2-space indent+newline, logs summary and npm install reminder, and handles backup/write errors.
+- bin/dry-aged-deps.js parses --update and --yes/-y flags and passes them through to printOutdated.
+- README.md and CLI help text include --update and --yes flags and usage examples.</evidence>
+  <notes>All acceptance criteria for story 011.0-DEV-AUTO-UPDATE have been implemented and verified by unit tests: update flag support, safe-only filtering, preview and confirmation flows, skip confirmation via --yes, backup creation, summary reporting, npm install prompt, and error handling. Formatting is preserved via JSON.stringify with 2-space indent. Documentation and help text are updated accordingly.</notes>
 </traceability>

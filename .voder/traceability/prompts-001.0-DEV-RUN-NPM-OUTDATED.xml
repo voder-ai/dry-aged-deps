@@ -2,13 +2,8 @@
 <traceability>
   <specification>prompts/001.0-DEV-RUN-NPM-OUTDATED.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-12T17:29:16.259Z</last_validated>
+  <last_validated>2025-11-12T20:54:57.271Z</last_validated>
   <last_modified>2025-11-09T23:01:40.301Z</last_modified>
-  <evidence>• bin/dry-aged-deps.js invokes execFileSync('npm', ['outdated','--json']) and handles stdout errors (lines 512–560)
-• JSON.parse of npm outdated output and catch for parse errors with appropriate exit codes
-• printOutdated displays ‘Outdated packages:’ table, handles empty data (‘All dependencies are up to date.’) and error paths
-• Vitest suite includes tests covering: mocked outdated output (cli.outdated.mock.test.js), real outdated integration (cli.outdated.test.js), no-updates scenario (cli.upToDate.test.js), and error on invalid JSON (cli.error-cmd.test.js)
-• npm test → 89/89 tests passed, coverage ≥80%
-• README.md and CLI help include usage examples of running the command</evidence>
-  <notes>All acceptance criteria for story 001.0-DEV-RUN-NPM-OUTDATED are met: the tool runs npm outdated --json, parses and displays results, handles no-update and failure cases, and is covered by unit and integration tests. Documentation and CLI help include examples, satisfying definition of done.</notes>
+  <evidence>All 93 Vitest tests across 43 files passed (including cli.outdated.test.js, cli.outdated.mock.test.js, cli.upToDate.test.js, cli.error-cmd.test.js) with 97.61% statements and 89.01% branches coverage. The CLI entrypoint (bin/dry-aged-deps.js) invokes `npm outdated --json`, parses its output, and delegates to src/print-outdated.js, which correctly handles displaying outdated packages, the no‐updates case (‘All dependencies are up to date.’), and error scenarios (invalid JSON or execution failure).</evidence>
+  <notes>The implementation fulfills all acceptance criteria: core functionality executes `npm outdated --json`, output is parsed and displayed in human and JSON/XML formats, errors in running or parsing npm outdated are handled with appropriate exit codes, and the no‐updates path is correctly rendered. Comprehensive unit, E2E, and integration tests cover edge cases and confirm behavior.</notes>
 </traceability>
