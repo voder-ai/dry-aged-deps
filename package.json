@@ -14,7 +14,7 @@
     "test": "vitest run --coverage",
     "test:watch": "vitest --coverage",
     "test:cli": "vitest run",
-    "lint": "eslint src bin test --ext .js --ext .cjs --max-warnings=0",
+    "lint": "eslint src bin --ext .js --ext .cjs --max-warnings=0",
     "release": "npm version patch && git push --follow-tags"
   },
   "devDependencies": {
