@@ -1,11 +1,12 @@
 ## NOW  
-Update README.md to include a dedicated “CI/CD Integration” section showing a GitHub Actions snippet that runs `dry-aged-deps --check`, fails the build on safe updates, and demonstrates the `if: failure()` step.
+Generate and commit a `package-lock.json` by running `npm install` so that the lockfile is tracked in Git.
 
 ## NEXT  
-- Add a corresponding section to docs/api.md under the `--check` flag describing its exit-code semantics and CI/CD usage, including the same example snippet.  
-- Create a new documentation test (e.g. `test/docs/ci-integration.test.js`) that reads README.md and asserts it contains the `--check` GitHub Actions example block.
+- Review `package.json` and replace all version ranges (`^` and `~`) with exact pinned versions to ensure reproducible installs.  
+- Add or verify a CI step that runs `npm ci --package-lock-only` and fails if `package-lock.json` changes (lockfile‐drift check).  
+- Document in `README.md` that users should run `npm ci` (not `npm install`) for deterministic builds.
 
 ## LATER  
-- Extend the documentation test suite to validate API docs (docs/api.md) for other options (e.g. `--format=json`, config-file).  
-- Add automated validation of the CI snippet (e.g. YAML linting) in the CI pipeline.  
-- Consider adding example workflows for other CI platforms (e.g. GitLab CI, Jenkins) in docs.
+- Introduce a scheduled GitHub Action to regularly update dependencies, regenerate the lockfile, run tests, and open pull requests with the updated lockfile.  
+- Consider publishing a `npm-shrinkwrap.json` or adding alternative lock formats (e.g. `yarn.lock`/`pnpm-lock.yaml`) for multi–package‐manager support.  
+- Expand documentation with a “Dependency Management” section that explains lockfile best practices, pinning policies, and how to audit for drift over time.
