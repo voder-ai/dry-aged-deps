@@ -13,7 +13,7 @@ This document outlines the security policy for the `dry-aged-deps` project, incl
 
 If you discover a security vulnerability in `dry-aged-deps`, please report it through one of the following channels:
 
-1. **GitHub Security Advisories**: Open a private security advisory at https://github.com/voder-ai/dry-aged-deps/security/advisories.
+1. **GitHub Security Advisories**: Open a private security advisory at https://github.com/voder-ai/dry-aged-deps/security/advisories.  
 2. **Email**: Send details to `security@voder.ai` with subject line `[dry-aged-deps Security]`.
 
 Please include:
@@ -33,12 +33,12 @@ Please include:
 
 ## Vulnerability Response Process
 
-1. **Acknowledgment**: We will acknowledge receipt within 48 hours.
-2. **Investigation**: We aim to complete initial triage within 7 days.
-3. **Fix Development**: A patch or mitigation will be developed and tested.
-4. **Disclosure**:
-   - We will follow coordinated disclosure best practices.
-   - Release notes will include CVE identifiers when assigned.
+1. **Acknowledgment**: We will acknowledge receipt within 48 hours.  
+2. **Investigation**: We aim to complete initial triage within 7 days.  
+3. **Fix Development**: A patch or mitigation will be developed and tested.  
+4. **Disclosure**:  
+   - We will follow coordinated disclosure best practices.  
+   - Release notes will include CVE identifiers when assigned.  
 
 ## Incident Response
 
@@ -47,6 +47,10 @@ See `docs/security-incidents/incident-response-template.md` for detailed triage 
 ## CI Audit in CI Pipeline
 
 The CI & Publish workflow defined in `.github/workflows/ci-publish.yml` now runs `npm audit --audit-level=moderate` across all dependencies (production and development) without the `--production` flag to ensure no known vulnerabilities are missed.
+
+## Environment Variables
+
+For local development and CI workflows, `dry-aged-deps` relies on environment variables defined in the `.env` file. To set this up, copy the `.env.example` file to `.env` in the project root and fill in the required values. The `.env` file is included in `.gitignore` to protect sensitive information such as API keys, tokens, and passwords. Refer to `.env.example` for the list of necessary variables and format.
 
 ---
 
