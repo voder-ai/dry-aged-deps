@@ -112,13 +112,15 @@ For programmatic API access and detailed architectural overview, see:
 
 ### Development Tooling (Optional)
 
-If you're using AI development assistants (like Voder), you can configure them by:
+If you're using AI development assistants (like Voder), you can configure environment variables by:
 
 1. Copy `.env.example` to `.env`
-2. Fill in your API keys and preferences
+2. Open `.env` and replace the placeholder values with your actual API keys, tokens, and preferences
 3. The `.env` file is gitignored and will never be committed
 
-**Note:** The `.env` file is only used by development tooling, not by the `dry-aged-deps` application itself.
+See `.env.example` for the full list of required environment variables.
+
+**Note:** The environment variables in `.env` are only used by development tooling and do not affect the `dry-aged-deps` application at runtime.
 
 ## Troubleshooting
 
