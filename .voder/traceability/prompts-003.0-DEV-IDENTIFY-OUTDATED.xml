@@ -2,18 +2,14 @@
 <traceability>
   <specification>prompts/003.0-DEV-IDENTIFY-OUTDATED.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-12T15:58:46.817Z</last_validated>
+  <last_validated>2025-11-12T16:57:05.487Z</last_validated>
   <last_modified>2025-11-09T23:02:10.889Z</last_modified>
-  <evidence>1) In src/print-outdated.js, when computing ages the code only ever looks at info.latest:
+  <evidence>In src/print-outdated.js, the implementation always checks only the single 'latest' version timestamp:
 
   const latestTime = versionTimes[info.latest];
-  …
-  const rows = await Promise.all(ageTasks);
+  // ...
+  const matureRows = filterByAge(rows, { prodMinAge, devMinAge });
 
- There is no iteration over older versions when the latest is too young.  
-
-2) filterByAge (src/filter-by-age.js) simply filters out rows whose age < threshold—it does not implement “smart filtering” (walking backwards through older versions) as described in REQ-SMART-SEARCH.  
-
-3) There are no tests covering the requirement to fall back to an older, mature version if the latest is younger than 7 days.  The existing filter-by-age.test.js only verifies filtering on a fixed set of rows, not smart version selection.</evidence>
-  <notes>The story calls for “smart filtering” to start from the latest and then work backwards through version history until a mature (>=7 days) version is found. The current implementation only ever computes age on the latest version and filters it out if too new—there is no logic or tests for selecting a previous version. Therefore not all acceptance criteria are met.</notes>
+There is no logic to iterate backwards through earlier versions to find the first mature one (REQ-SMART-SEARCH), nor any version comparison to ensure the selected mature version is strictly greater than the current version (REQ-COMPARISON). Furthermore, no tests cover selecting an intermediate mature version when the very latest is too young, or skipping when the mature version is <= current. These omissions mean smart filtering and comparison criteria are not met.</evidence>
+  <notes>Core age filtering works (filterByAge covers REQ-AGE-THRESHOLD) and UI messages for no mature versions exist, but the smart search and version comparison requirements are not implemented, so the story is not satisfied.</notes>
 </traceability>

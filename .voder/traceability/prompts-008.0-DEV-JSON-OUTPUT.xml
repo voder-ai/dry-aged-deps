@@ -2,8 +2,8 @@
 <traceability>
   <specification>prompts/008.0-DEV-JSON-OUTPUT.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-12T15:56:22.723Z</last_validated>
+  <last_validated>2025-11-12T16:58:41.844Z</last_validated>
   <last_modified>2025-11-09T23:04:54.331Z</last_modified>
-  <evidence>The implementation in src/json-formatter.js and print-outdated.js only emits a minimal JSON with fields [name, current, wanted, latest, age] and summary counts. It does not include vulnerabilities details (count, maxSeverity, details), recommended versions, dependency type, filtered flags or filterReason as required by the spec. Moreover, error cases in JSON mode still write plain console.error messages and exit codes rather than a JSON object with an `error` field.</evidence>
-  <notes>While the CLI flag, JSON validity, summary stats, help text, and exit-code semantics are present, the JSON output schema is incomplete and error handling in JSON mode is not formatted as JSON. Several acceptance criteria (complete data fields and JSON-formatted errors) are not met.</notes>
+  <evidence>The JSON formatter and CLI JSON branch only emit minimal fields (name, current, wanted, latest, age) and summary, but do not include vulnerabilities, dependency type, recommended version, filtered flags or filterReason as specified in prompts/008.0-DEV-JSON-OUTPUT.md. Furthermore, error handling in JSON mode prints plain-text errors to stderr instead of emitting an error object with an “error” field and timestamp in JSON. See src/json-formatter.js and the JSON branch in src/print-outdated.js for the incomplete output, and bin/dry-aged-deps.js error handlers for plain-text stderr output.</evidence>
+  <notes>While existing tests expect minimal JSON, the implemented JSON output does not satisfy the story’s acceptance criteria for “Complete Data” or “Error Handling” as defined in prompts/008.0-DEV-JSON-OUTPUT.md.</notes>
 </traceability>

@@ -20,6 +20,8 @@ async function main() {
   // CLI arguments
   const args = process.argv.slice(2);
   const checkMode = args.includes('--check');
+  const updateMode = args.includes('--update');
+  const skipConfirmation = args.includes('--yes') || args.includes('-y');
 
   // Valid option values for config and flag validation
   const validSeverities = ['none', 'low', 'moderate', 'high', 'critical'];
@@ -213,6 +215,8 @@ async function main() {
     console.log(
       '  --check                 Check mode: exit code 1 if safe updates available, 0 if none, 2 on error'
     );
+    console.log('  --update               Update dependencies to latest safe versions');
+    console.log('  -y, --yes               Skip confirmation prompts (assume yes)');
     console.log(
       '  --config-file=<file>    Path to JSON config file (default: .dry-aged-deps.json). CLI flags override config file values'
     );
@@ -548,6 +552,8 @@ async function main() {
       devMinAge,
       prodMinSeverity,
       devMinSeverity,
+      updateMode,
+      skipConfirmation,
       returnSummary: checkMode,
     });
     if (checkMode) {

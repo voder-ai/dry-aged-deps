@@ -1,12 +1,14 @@
 ## NOW  
-Generate and commit a `package-lock.json` by running `npm install` so that the lockfile is tracked in Git.
+Add parsing for the `--update` and `--yes` flags in `bin/dry-aged-deps.js`, setting `updateMode` and `skipConfirmation` variables for the CLI.
 
 ## NEXT  
-- Review `package.json` and replace all version ranges (`^` and `~`) with exact pinned versions to ensure reproducible installs.  
-- Add or verify a CI step that runs `npm ci --package-lock-only` and fails if `package-lock.json` changes (lockfile‐drift check).  
-- Document in `README.md` that users should run `npm ci` (not `npm install`) for deterministic builds.
+- Extend the CLI to pass `updateMode` and `skipConfirmation` into `printOutdated` (or a new update handler).  
+- Scaffold a “preview” step that computes the safe updates and shows the diff against `package.json` without writing.  
+- Implement a non-interactive confirmation prompt (skipped when `--yes` is present).  
+- Create a backup of `package.json` (e.g. `package.json.backup`) before applying any changes.
 
 ## LATER  
-- Introduce a scheduled GitHub Action to regularly update dependencies, regenerate the lockfile, run tests, and open pull requests with the updated lockfile.  
-- Consider publishing a `npm-shrinkwrap.json` or adding alternative lock formats (e.g. `yarn.lock`/`pnpm-lock.yaml`) for multi–package‐manager support.  
-- Expand documentation with a “Dependency Management” section that explains lockfile best practices, pinning policies, and how to audit for drift over time.
+- Write the updated versions into `package.json`, preserving formatting and key order.  
+- Display a post-update summary and remind the user to run `npm install`.  
+- Add unit and integration tests for the `--update`/`--yes` flows, including backup and error handling.  
+- Update README, API docs, and CLI help text to document the `--update` and `--yes` flags.

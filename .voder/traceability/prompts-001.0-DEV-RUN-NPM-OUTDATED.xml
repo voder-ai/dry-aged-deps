@@ -2,10 +2,11 @@
 <traceability>
   <specification>prompts/001.0-DEV-RUN-NPM-OUTDATED.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-12T15:54:47.027Z</last_validated>
+  <last_validated>2025-11-12T16:56:13.897Z</last_validated>
   <last_modified>2025-11-09T23:01:40.301Z</last_modified>
-  <evidence>• In bin/dry-aged-deps.js: execFileSync('npm',['outdated','--json']) is used to run npm outdated in JSON mode, with JSON.parse and error handlers for both command failures and parse failures.
-• In src/print-outdated.js: parsed data is transformed into table, JSON, and XML outputs, with separate handling for no-outdated scenario (‘All dependencies are up to date.’).
-• Comprehensive Vitest suite (39 files, 87 tests) passes (see npm test output). Tests cover: real‐fixture outdated, up‐to‐date, mock outdated, JSON and XML formats, parse errors, CLI flags and help, config file, check mode, and edge cases.</evidence>
-  <notes>All acceptance criteria are satisfied. The CLI runs npm outdated --json, parses the output, displays results (table, JSON, XML), handles failures (command and parse errors), and handles the no-updates case. Unit and integration tests are in place and passing, and documentation/CLI help is implemented.</notes>
+  <evidence>– The CLI implementation in bin/dry-aged-deps.js invokes execFileSync('npm',['outdated','--json'],…) and catches errors per REQ-NPM-COMMAND and REQ-JSON-PARSE.
+– src/print-outdated.js parses the JSON, handles entries.length===0 (no updates) by printing “All dependencies are up to date.”, and renders outdated packages in table/json/xml formats (REQ-OUTPUT-DISPLAY).
+– Error handling paths are covered: execFileSync errors, JSON parse errors, and upstream printOutdated exceptions all produce proper exit codes and output.
+– Vitest suite (89 tests) ran with zero failures, including cli.outdated.test.js (outdated scenario), cli.upToDate.test.js (no updates), cli.error-cmd.test.js (npm outdated failure), and printOutdated unit tests. Coverage is 98.4% statements, 100% lines, 100% functions, and 89.8% branches.</evidence>
+  <notes>All acceptance criteria (core functionality, JSON parsing, display format, error handling, and no‐updates case) from the 001.0-DEV-RUN-NPM-OUTDATED story are fully implemented and comprehensively tested.</notes>
 </traceability>

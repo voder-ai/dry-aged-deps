@@ -2,8 +2,8 @@
 <traceability>
   <specification>prompts/011.0-DEV-AUTO-UPDATE.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-12T15:52:59.542Z</last_validated>
+  <last_validated>2025-11-12T16:56:04.010Z</last_validated>
   <last_modified>2025-11-11T08:04:07.327Z</last_modified>
-  <evidence>Search for '--update' in bin/dry-aged-deps.js yielded no matches; CLI only handles '--check', '--help', '--version', '--format', and other existing flags. No code paths read or act on an '--update' or '-y/--yes' flag. No functions to modify or write package.json; no tests referencing update functionality (grep ‘update’ across src/ and test/ found nothing).</evidence>
-  <notes>The auto-update feature described in prompts/011.0-DEV-AUTO-UPDATE.md is not implemented: there is no '--update' flag support, no package.json write/backup logic, no confirmation or auto-yes flow, and no related tests. All acceptance criteria are unmet.</notes>
+  <evidence>Search of bin/dry-aged-deps.js and src/**/*.js shows no handling of `--update` or `--yes` flags. CLI help text does not list `--update` or `--yes`. No tests reference update behavior or backup creation. No code for preview/confirmation, package.json modification, or summary post-update.</evidence>
+  <notes>The story 011.0-DEV-AUTO-UPDATE is not implemented: none of the acceptance criteria for auto-updating package.json (flags, preview, confirmation, backup, install prompt, summary, error handling) are present.</notes>
 </traceability>

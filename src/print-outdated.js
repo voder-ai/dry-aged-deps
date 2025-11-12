@@ -25,6 +25,8 @@ export async function printOutdated(data, options = {}) {
     options.checkVulnerabilities || defaultCheckVulnerabilities;
   const format = options.format || 'table';
   const returnSummary = options.returnSummary === true;
+  const updateMode = options.updateMode === true;
+  const skipConfirmation = options.skipConfirmation === true;
 
   // Configurable thresholds - support both old and new parameter names
   const prodMinAge =
@@ -145,6 +147,44 @@ export async function printOutdated(data, options = {}) {
     filteredBySecurity,
   };
   const timestamp = new Date().toISOString();
+
+  if (updateMode) {
+    const pkgPath = path.join(process.cwd(), 'package.json');
+    if (safeRows.length === 0) {
+      console.log('No safe updates available.');
+      return summary;
+    }
+    console.log('The following packages will be updated:');
+    for (const [name, current, wanted] of safeRows) {
+      console.log(`  ${name}: ${current} → ${wanted}`);
+    }
+    if (!skipConfirmation) {
+      const { createInterface } = await import('readline');
+      const rl = createInterface({ input: process.stdin, output: process.stdout });
+      const answer = await new Promise((resolve) => {
+        rl.question('Update package.json? [y/N] ', (ans) => {
+          rl.close();
+          resolve(ans.trim().toLowerCase());
+        });
+      });
+      if (answer !== 'y' && answer !== 'yes') {
+        console.log('Aborted.');
+        return summary;
+      }
+    }
+    // Create backup before applying changes
+    const backupPath = pkgPath + '.backup';
+    try {
+      fs.copyFileSync(pkgPath, backupPath);
+      console.log(`Created backup of package.json at ${backupPath}`);
+    } catch (err) {
+      console.error(`Failed to create backup: ${err.message}`);
+      return summary;
+    }
+    // TODO: apply updates to package.json (not implemented in this scaffold)
+    console.log(`Backup complete. Preview only, auto-update not applied yet.`);
+    return summary;
+  }
 
   // XML output (enriched)
   if (format === 'xml') {

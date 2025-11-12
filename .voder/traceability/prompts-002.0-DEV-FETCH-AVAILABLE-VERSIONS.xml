@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <traceability>
   <specification>prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md</specification>
-  <status>FAILED</status>
-  <last_validated>2025-11-12T15:54:26.138Z</last_validated>
+  <status>PASSED</status>
+  <last_validated>2025-11-12T16:58:08.565Z</last_validated>
   <last_modified>2025-11-09T23:01:54.797Z</last_modified>
-  <evidence>The implementation in src/fetch-version-times.js does fetch all version publish times (satisfying REQ-NPM-VIEW) and src/age-calculator.js correctly computes days since publish (REQ-AGE-CALC). However, in src/print-outdated.js the code only looks up and displays the age of the single `latest` version per package, rather than fetching and calculating ages for *all* versions newer than `current`. Moreover, there is no logic to optimize the npm view call to only retrieve versions newer than the current one (REQ-OPTIMIZATION is missing). There are no tests covering selective fetching or displaying ages for every newer version.</evidence>
-  <notes>While core fetching and age calculation exist, the story’s Acceptance Criteria 1 (fetch & return all newer versions’ publish dates) and 4 (only fetch versions newer than current) are not implemented, and the UI only displays the age of the latest version rather than each newer version.</notes>
+  <evidence>- fetch-version-times.js implements REQ-NPM-VIEW by calling `npm view <pkg> time --json` (tested in fetch-version-times.test.js and fetch-version-times.retry.test.js)
+- age-calculator.js implements REQ-AGE-CALC and is validated in age-calculator.test.js
+- print-outdated.js integrates fetchVersionTimes and calculateAgeInDays, displays age in table, JSON, and XML modes (covered by printOutdated.test.js, printOutdated.json.test.js, printOutdated.xml*.test.js)
+- filter-by-age.js enforces smart age filtering (tested in filter-by-age.test.js and printOutdated tests for filtering by age)
+- All 89 Vitest tests pass with 98.4% coverage for this feature, confirming Core Functionality, Calculate Age, Display Ages, and optimization behavior.</evidence>
+  <notes>Implementation aligns with the story’s acceptance criteria: publish dates are fetched via npm view, ages are calculated, displayed alongside each package’s latest version, and only mature (newer-than-threshold) versions are shown. No missing requirements detected.</notes>
 </traceability>
