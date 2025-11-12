@@ -1,13 +1,15 @@
 ## NOW  
-Update CHANGELOG.md to remove the `--check` and `.dry-aged-deps.json` bullets from the **[0.1.2]** section (or move them into an “Unreleased” section) so the changelog reflects only implemented features.
+Review the latest GitHub Actions `build` job logs to pinpoint the first failing step in the CI pipeline (e.g. lockfile drift, lint error, or test failure).
 
 ## NEXT  
-- Bump the version in package.json to `0.1.2` to align with the updated CHANGELOG.  
-- In `bin/dry-aged-deps.js`, remove or append “(coming soon)” to the `--check` and config-file flags in the help text.  
-- Add an “Unreleased” heading at the top of CHANGELOG.md for planned features.
+- Locally reproduce and fix the identified failure:  
+  • If it’s lockfile drift, run `npm install --package-lock-only`, commit the updated `package-lock.json`, and push.  
+  • If it’s a lint or formatting error, run `npm run lint`/`npm run format`, apply fixes, and commit.  
+  • If it’s a test failure, debug and correct the test or underlying code.  
+- Push the changes and verify that the GitHub Actions build now passes end-to-end.
 
 ## LATER  
-- Implement `.dry-aged-deps.json` config-file support with schema validation, merging logic, and tests.  
-- Add true `--check` mode in the CLI and `printOutdated` per ADR 0004, with enforcement exit codes, tests, and documentation.  
-- Configure Husky pre-commit hooks to run `npm run lint` and `npm test`.  
-- Publish a JSON Schema file (`.dry-aged-deps.schema.json`) for editor validation of the config file.
+- Enable branch protection on `main` to require passing CI checks before merges.  
+- Add cross-platform CI jobs (Windows/macOS) to catch environment-specific issues.  
+- Schedule a nightly CI job to run `dry-aged-deps` and alert on safe updates.  
+- Introduce performance and scale tests for large dependency graphs.
