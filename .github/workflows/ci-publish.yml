@@ -45,9 +45,7 @@ jobs:
           node-version: '20'
 
       - name: Check lockfile drift
-        run: |
-          npm install --package-lock-only --legacy-peer-deps
-          git diff --exit-code
+        run: npm ci --prefer-frozen-lockfile --legacy-peer-deps
 
       - name: Install dependencies
         run: npm ci --prefer-frozen-lockfile
@@ -112,9 +110,7 @@ jobs:
           node-version: '20'
 
       - name: Check lockfile drift
-        run: |
-          npm install --package-lock-only --legacy-peer-deps
-          git diff --exit-code
+        run: npm ci --prefer-frozen-lockfile --legacy-peer-deps
 
       - name: Install dependencies
         run: npm ci --prefer-frozen-lockfile
