@@ -34,6 +34,7 @@ export default [
       'coverage/',
       'node_modules/',
       'test/fixtures/',
+      'test/fixtures-up-to-date/',
       'commitlint.config.cjs',
       '.voder/',
       '*.patch',
