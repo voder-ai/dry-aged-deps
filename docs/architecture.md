@@ -80,6 +80,10 @@ test/
 - **Modular**: Small, focused modules for easy testing and maintenance.
 - **Check Mode**: Adds CI enforcement mode without changing default behavior.
 
+## CI/CD Pipeline
+
+The CI & Publish workflow defined in `.github/workflows/ci-publish.yml` includes a vulnerability scan step that runs `npm audit --audit-level=moderate` across all dependencies (production and development) without the `--production` flag. This ensures that no known vulnerabilities in any dependencies are missed.
+
 ## Future Considerations
 
 - **Async Refactor**: Migrate to async child processes for performance.
