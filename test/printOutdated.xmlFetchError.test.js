@@ -2,7 +2,7 @@
 // Tests for: xml fetch error suppression and N/A age in xml output
 
 import { printOutdated } from '../src/print-outdated.js';
-import { vi, describe, test, expect } from 'vitest';
+import { vi, describe, expect } from 'vitest';
 
 // Suppress xmlFormatter import to check raw XML output
 
