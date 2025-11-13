@@ -1,1 +1,4 @@
 .voder/
+
+# Ignore CI workflow files
+.github/workflows/
