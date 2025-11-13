@@ -2,8 +2,16 @@
 <traceability>
   <specification>prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-13T02:14:33.156Z</last_validated>
+  <last_validated>2025-11-13T06:49:33.538Z</last_validated>
   <last_modified>2025-11-09T23:03:30.864Z</last_modified>
-  <evidence>In src/filter-by-security.js, the thresholds (prodMinSeverity, devMinSeverity) are passed in but never used—the code simply blocks any nonzero vulnerability count, ignoring severity levels. No logic compares vulnerability severities against the configured threshold. Additionally, the config parser in bin/dry-aged-deps.js reads a top-level config.severity key (not minSeverity as specified) and there are no tests covering severity thresholds or config precedence for severity.</evidence>
-  <notes>The configurable security threshold story is not implemented. The filtering logic does not respect severity thresholds, and config file support for minSeverity at the root level is inconsistent with the spec. No tests verify the new functionality.</notes>
+  <evidence>In src/filter-by-security.js (lines 18–24), the code unconditionally blocks any package with vulnCount !== 0, ignoring the configured threshold:
+
+  vulnCount = await checkVulnerabilities(name, latest);
+  if (vulnCount !== 0) {
+    include = false;
+    filterReasonMap.set(name, 'security');
+  }
+
+There is no comparison of actual vulnerability severities against the prodMinSeverity/devMinSeverity values, nor does checkVulnerabilities return severity data. The acceptance criterion “Filtering Logic: Blocks packages with vulnerabilities at or above the threshold” is not implemented. No tests cover configurable severity behavior, and check-vulnerabilities only returns a count, not severity information.</evidence>
+  <notes>The code parses and displays a --severity flag and config file values, but never applies them to filter logic. To satisfy the story, checkVulnerabilities must extract and return per-severity data and filterBySecurity must compare max severity against the configured threshold. Until these are implemented and tested, the story is not complete.</notes>
 </traceability>

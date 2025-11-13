@@ -2,8 +2,12 @@
 <traceability>
   <specification>prompts/009.0-DEV-XML-OUTPUT.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-13T02:17:58.389Z</last_validated>
+  <last_validated>2025-11-13T06:52:46.901Z</last_validated>
   <last_modified>2025-11-09T23:05:40.405Z</last_modified>
-  <evidence>Ran `npm test` (vitest run) with all 94 tests passing, including 14 XML‐specific tests (e.g., test/cli.format-xml.test.js, test/cli.format-xml.error.test.js, test/xml-formatter*.test.js). Coverage shows 100% functions on xml-formatter.js and CLI exit‐code tests for XML mode all green. The code in bin/dry-aged-deps.js supports `--format=xml`, validates the flag, suppresses console noise, emits proper XML declaration, error blocks, package and summary sections, thresholds, and uses correct exit codes.</evidence>
-  <notes>All acceptance criteria from prompts/009.0-DEV-XML-OUTPUT.md are satisfied: XML flag, valid&well-formed output, complete data matching JSON output, summary section, exit codes (0/1/2), silent mode in XML, XML error handling, schema consistency per tests, and help text includes XML as a valid format option.</notes>
+  <evidence>• src/xml-formatter.js implements escapeXml and xmlFormatter with declaration, root element, packages, summary, thresholds, and error sections
+• src/cli-options.js and cli-options-helpers.js include 'xml' in validFormats and parse --format=xml correctly
+• bin/dry-aged-deps.js help text lists xml as valid format, and the main CLI branches on format==='xml'
+• All XML-related tests (test/cli.format-xml.test.js, test/cli.format-xml.error.test.js, and the  sixteen xml-formatter.* tests) pass
+• End-to-end suite output: 128 tests across 45 files all passing (including exit codes 0,1,2 behavior and no console noise in XML mode)</evidence>
+  <notes>The XML output feature fully implements all acceptance criteria: CLI flag, well-formed declaration, complete data (packages, summary, thresholds), proper exit codes, silent mode, error formatting, schema consistency, and updated help/documentation. Tests cover array and object rows, escaping, error conditions, thresholds, and CLI integration.</notes>
 </traceability>

@@ -30,7 +30,7 @@ describe('dry-aged-deps CLI error exit code', () => {
     fs.rmSync(fakeNpmDir, { recursive: true, force: true });
   });
 
-  it('exits with code 1 when npm outdated output is invalid JSON', async () => {
+  it('exits with code 2 when npm outdated output is invalid JSON', async () => {
     const cliPath = path.join(__dirname, '..', 'bin', 'dry-aged-deps.js');
     // Prepend fake npm directory to PATH
     const env = Object.assign({}, process.env, {
@@ -38,7 +38,7 @@ describe('dry-aged-deps CLI error exit code', () => {
     });
 
     await expect(execa('node', [cliPath], { env })).rejects.toMatchObject({
-      exitCode: 1,
+      exitCode: 2,
     });
 
     try {

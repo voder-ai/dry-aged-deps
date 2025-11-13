@@ -2,13 +2,24 @@
 <traceability>
   <specification>prompts/008.0-DEV-JSON-OUTPUT.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-13T02:15:15.916Z</last_validated>
+  <last_validated>2025-11-13T06:49:21.835Z</last_validated>
   <last_modified>2025-11-09T23:04:54.331Z</last_modified>
-  <evidence>In src/print-outdated.js the JSON branch emits only name, current, wanted, latest, age (null) for each package and summary fields, e.g.:
+  <evidence>In src/print-outdated.js, the JSON output branch (format === 'json') creates rows as arrays [name, current, wanted, latest, null] and jsonFormatter maps these to objects with only name, current, wanted, latest, and age. There is no inclusion of per-package vulnerabilities, severity, recommended version, filtered flag, or filterReason, despite the story’s acceptance criteria and example schema requiring these fields. For example:
 
-  const rows = entries.map(([name, info]) => [name, info.current, info.wanted, info.latest, null]);
-  console.log(jsonFormatter({ rows, summary, thresholds, timestamp }));
+  // JSON branch in printOutdated.js
+  if (format === 'json') {
+    const rows = entries.map(([name, info]) => [
+      name,
+      info.current,
+      info.wanted,
+      info.latest,
+      null,
+    ]);
+    // ...
+    console.log(jsonFormatter({ rows, summary, thresholds, timestamp }));
+    return summary;
+  }
 
-The jsonFormatter then maps array rows to objects with properties {name, current, wanted, latest, age} only.  It does not include vulnerabilities, severity thresholds, recommended versions, package type, filtered flag or filterReason as required by the spec (see prompts/008.0-DEV-JSON-OUTPUT.md).</evidence>
-  <notes>The JSON output is syntactically valid and the CLI flag, summary, help text, error handling, and exit-code behavior in check mode are implemented and tested. However, the output omits critical fields (vulnerabilities, severity, recommended, type, filtered/filterReason) mandated by the story’s acceptance criteria, so the feature is incomplete.</notes>
+This minimal output omits vulnerabilities and severity details per package, as well as recommended versions and filtering metadata.</evidence>
+  <notes>The CLI flag, JSON parsing, summary section, exit codes, error handling, default behavior, and help documentation are all implemented and tested. However, the ‘Complete Data’ acceptance criterion—specifically requiring per-package vulnerabilities, severity, recommended version, and filtering metadata—is not met by the minimal JSON formatter. To fully satisfy the story, the JSON output must be enriched with these additional fields.</notes>
 </traceability>

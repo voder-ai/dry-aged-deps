@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <traceability>
   <specification>prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md</specification>
-  <status>PASSED</status>
-  <last_validated>2025-11-13T02:18:08.043Z</last_validated>
+  <status>FAILED</status>
+  <last_validated>2025-11-13T06:51:36.027Z</last_validated>
   <last_modified>2025-11-11T08:04:07.339Z</last_modified>
-  <evidence>• All 94 Vitest tests passed, including exit‐code tests in test/cli.check-mode.test.js, test/cli.error-cmd.test.js, test/cli.format-json.error.test.js, test/cli.format-xml.error.test.js, test/cli.flags.test.js, test/cli-entrypoint.test.js, and test/cli.upToDate.test.js.  
-• CLI help (`--help`) includes exit code documentation for `--check`.  
-• README.md documents exit codes for `--check` (0, 1, 2).  
-• Consistent exit codes in table, JSON, and XML modes.  
-• Tests cover: no updates → exit 0; safe updates → exit 1; command failures, invalid flags, invalid config → exit 2.</evidence>
-  <notes>The exit-code refinement story (prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md) is fully implemented: standardized exit codes via `--check`, comprehensive tests, and appropriate documentation are present.</notes>
+  <evidence>The implementation exits with code 1 for errors in the default (table) format, but uses exit code 2 for errors in JSON and XML formats. For example, in cli.error-cmd.test.js (table format) a parse error yields exitCode=1, while cli.format-xml.error.test.js and cli.format-json.error.test.js assert exitCode=2. This violates the acceptance criterion “Exit codes consistent across all output formats” and the requirement that errors always yield exit code 2. Moreover, table-mode npm failures currently produce exit code 1, not 2 as specified.</evidence>
+  <notes>Error exit codes are inconsistent across formats: table mode uses exit code 1 for errors, whereas JSON/XML use exit code 2. The story’s acceptance criteria for standardized exit codes (errors → exit 2) and consistency across formats are not satisfied.</notes>
 </traceability>

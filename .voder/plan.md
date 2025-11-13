@@ -1,12 +1,12 @@
 ## NOW
-Remove all `// @ts-nocheck` pragmas in `src/` and `bin/` and update JSDoc/type annotations so that `npm run type-check` (tsc --noEmit) passes without errors.
+Modify the default error‐handling branches in `bin/dry-aged-deps.js` so that any error path in table mode (outside the JSON/XML handlers) calls `process.exit(2)` instead of `process.exit(1)` to comply with the exit‐code standardization.
 
 ## NEXT
-- Add a `npm run type-check` step to the Build & Test job in `.github/workflows/ci-publish.yml`.  
-- Update `docs/api.md` to document that `fetchVersionTimes` returns a `Promise` and detail its possible errors.  
-- Revise `README.md` examples to cover `--config-file` and `--check` usage along with exit-code semantics.
+- Update `test/cli.error-cmd.test.js` to expect `exitCode: 2` for table‐mode failures (e.g. invalid JSON from `npm outdated`).  
+- Revise the README and `docs/api.md` “Exit Codes” sections to clearly state that **exit 2 = error** in all formats, and **exit 1 = updates available**.  
+- Run locally: `npm run lint && npm run type-check && npm test` to verify that all tests (including exit‐code tests) pass.
 
 ## LATER
-- Implement in-memory caching in `src/fetch-version-times.js` to batch `npm view` calls.  
-- Configure lint-staged via Husky to auto-run Prettier and `eslint --fix` on staged files.  
-- Publish a JSON Schema (`.dry-aged-deps.schema.json`) for the CLI config file and reference it in the docs.
+- Complete any remaining user stories (“auto-update” refinements, concurrency/caching for `fetchVersionTimes`, lint‐staged pre‐commit auto‐fix).  
+- Publish a JSON Schema for `.dry-aged-deps.json` and integrate it into docs and CI validation.  
+- Gradually tighten JSDoc/type coverage (remove any remaining `@ts-nocheck`) and refactor for stricter lint complexity rules.

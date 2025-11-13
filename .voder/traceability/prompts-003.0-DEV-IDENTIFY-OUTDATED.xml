@@ -2,8 +2,8 @@
 <traceability>
   <specification>prompts/003.0-DEV-IDENTIFY-OUTDATED.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-13T02:15:52.423Z</last_validated>
+  <last_validated>2025-11-13T06:49:56.243Z</last_validated>
   <last_modified>2025-11-09T23:02:10.889Z</last_modified>
-  <evidence>The `filterByAge` helper (src/filter-by-age.js) and `printOutdated` implementation only consider the single npm ‘latest’ version for each package when applying the 7-day threshold. There is no logic to iterate over earlier versions (“smart filtering” of walking backwards) to pick the newest mature version if the latest is too new. No code references searching older versions, and no tests cover selecting a prior version when the latest is under 7 days old. The “skip current” criterion (do not show a package if the mature version ≤ current version) is also not implemented or tested.</evidence>
-  <notes>Core threshold filtering and ‘no mature available’ messaging are implemented, but the smart backwards search and skip-current logic required by this story are missing.</notes>
+  <evidence>The implementation only filters the single “latest” version per package (in filterByAge and buildRows) and does not scan earlier versions to “work backwards until finding a mature version” as specified. There is no logic in fetch-version-times, buildRows, or applyFilters to examine older versions or adjust the recommended update to the newest mature release. Tests only verify filtering of the latest version’s age, not the smart backwards scan requirement.</evidence>
+  <notes>Smart filtering (REQ-SMART-SEARCH) is missing: the code does not iterate over prior versions to find the first one ≥7 days old, so the story is not fully implemented.</notes>
 </traceability>

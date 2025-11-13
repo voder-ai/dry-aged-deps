@@ -137,7 +137,7 @@ async function main() {
           process.exit(2);
         }
         console.error('Error running npm outdated:', err.message);
-        process.exit(1);
+        process.exit(2);
       }
     }
     // Parse JSON output
@@ -168,7 +168,7 @@ async function main() {
         process.exit(2);
       }
       console.error('Failed to parse npm outdated output:', parseErr.message);
-      process.exit(1);
+      process.exit(2);
     }
   }
 
@@ -222,5 +222,5 @@ async function main() {
 
 main().catch((err) => {
   console.error(err);
-  process.exit(1);
+  process.exit(2);
 });

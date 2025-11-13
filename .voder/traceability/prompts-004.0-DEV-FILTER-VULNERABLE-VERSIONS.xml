@@ -2,8 +2,8 @@
 <traceability>
   <specification>prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-13T02:15:09.004Z</last_validated>
+  <last_validated>2025-11-13T06:51:37.592Z</last_validated>
   <last_modified>2025-11-09T23:02:37.596Z</last_modified>
-  <evidence>In src/filter-by-security.js and src/print-outdated.js the code only checks the single latest version for vulnerabilities and outright filters it if vulnerable. There is no logic to fetch or iterate over earlier mature versions ‘working backwards’ until finding a safe one. Tests in test/filter-by-security.test.js validate simple filtering of a single version but do not cover selecting an earlier version when the newest is vulnerable.</evidence>
-  <notes>The core vulnerability check and output formatting are implemented, but the smart-search requirement (start from newest mature version and work backwards to find a safe one) is not satisfied. Instead, vulnerable latest versions are simply discarded, so no alternative safe version is ever recommended.</notes>
+  <evidence>The implementation in src/filter-by-security.js and print-outdated.js only checks the single recommended (‘wanted’) version per package and filters it if vulnerable. There is no logic to retrieve multiple mature versions nor to “start from the newest mature version and work backwards until finding a safe one,” as required by the “Smart Checking” acceptance criterion. Tests (e.g., test/filter-by-security.test.js) likewise only cover single-version filtering and do not exercise or verify any fallback/search behavior.</evidence>
+  <notes>Core vulnerability filtering and transitive-audit via npm audit are implemented and tested, and the CLI correctly omits vulnerable rows and prints a ‘no safe versions’ message when safeRows is empty. However, the story’s key requirement to iterate over mature versions—checking newer to older until a safe one is found—is not implemented.</notes>
 </traceability>

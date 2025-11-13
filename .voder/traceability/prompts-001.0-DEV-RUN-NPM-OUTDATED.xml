@@ -2,8 +2,13 @@
 <traceability>
   <specification>prompts/001.0-DEV-RUN-NPM-OUTDATED.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-13T02:16:03.790Z</last_validated>
+  <last_validated>2025-11-13T06:49:13.714Z</last_validated>
   <last_modified>2025-11-09T23:01:40.301Z</last_modified>
-  <evidence>All 94 Vitest tests passed including CLI integration tests (test/cli.outdated.test.js, test/cli.upToDate.test.js, test/cli.error-cmd.test.js). The bin/dry-aged-deps.js entrypoint invokes `npm outdated --json` via child_process, JSON.parse’s the output, handles error cases (invalid JSON, command failure), and prints either a table of outdated packages or “All dependencies are up to date.” printOutdated.js covers display logic and edge cases. README and --help text document usage. CI pipeline reports 96.96% statement coverage, 100% functions covered.</evidence>
-  <notes>The core functionality of running `npm outdated --json`, parsing its JSON output, displaying outdated packages, handling command failures, and the no-updates case are fully implemented and verified by unit and integration tests. Documentation and CLI help text are in place.</notes>
+  <evidence>1) The CLI entrypoint (bin/dry-aged-deps.js) invokes `npm outdated --json` via child_process (execFileSync) and correctly captures stdout and error cases.
+2) The JSON parsing branch handles valid and invalid JSON, with tests exercising both paths (test/cli.error-cmd.test.js, test/cli.format-json.error.test.js, test/cli.format-xml.error.test.js).
+3) The “no updates” case prints “All dependencies are up to date.” and returns a 0 exit code, covered by test/cli.upToDate.test.js.
+4) The standard outdated-display path prints a header and rows of outdated packages, asserted in test/cli.outdated.test.js and the E2E test test/cli.e2e.real-fixture.test.js.
+5) All 128 Vitest tests pass (npm test → 128 passed, 92% coverage), including unit, integration, and E2E fixtures.
+6) README.md and the CLI help text include usage examples for running the command and handling outdated packages.</evidence>
+  <notes>All acceptance criteria for story 001.0 (running npm outdated, parsing JSON, displaying results, error handling, and handling no-update cases) have been fully implemented, tested, and documented.</notes>
 </traceability>

@@ -2,13 +2,11 @@
 <traceability>
   <specification>prompts/013.0-DEV-CHECK-MODE.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-13T02:17:56.625Z</last_validated>
+  <last_validated>2025-11-13T06:49:12.503Z</last_validated>
   <last_modified>2025-11-11T08:04:07.352Z</last_modified>
-  <evidence>• bin/dry-aged-deps.js implements --check flag (args.includes('--check')) and on checkMode uses summary.safeUpdates to exit 1 or 0 accordingly.
-• Help text includes “--check                 Check mode: exit code 1 if safe updates available, 0 if none, 2 on error”.
-• printOutdated returns a summary when returnSummary=true; code in main handles checkMode and exit codes 0,1,2 correctly.
-• Tests in test/cli.check-mode.test.js cover: exit code 0 (no updates), exit code 1 (safe updates) in table/JSON/XML, exit code 2 on invalid format—all passing.
-• test/docs/ci-integration.test.js verifies README.md and docs/api.md CI/CD sections with --check example, exit code semantics and “if: failure()”.
-• npm test (94 tests) and vitest coverage show all tests passing, including JSON/XML support and documentation checks.</evidence>
-  <notes>The implementation fully satisfies all acceptance criteria for check mode: flag support, correct exit codes (0,1,2), clear output listing updates, JSON/XML support, and updated documentation with CI/CD examples. All related tests are present and passing.</notes>
+  <evidence>- Tests in test/cli.check-mode.test.js reference prompts/013.0-DEV-CHECK-MODE.md and cover all acceptance criteria (5 tests) and all passed in `npm test` (128/128 passing).
+- CLI code in bin/dry-aged-deps.js and src/cli-options.js implements `--check` (returnSummary), exits 1 on safe updates, 0 when none, 2 on errors, and supports --format=json/xml.
+- Default table mode prints clear output including 'Outdated packages:' and package names (e.g., fakepkg) before failing.
+- README.md includes the `--check` flag in the options table and shows a CI/CD integration example using `npx dry-aged-deps --check`.</evidence>
+  <notes>All requirements from prompts/013.0-DEV-CHECK-MODE.md (flag support, exit codes, clear output, format support, documentation) are fully implemented and verified by tests and documentation.</notes>
 </traceability>

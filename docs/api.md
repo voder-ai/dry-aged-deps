@@ -302,7 +302,9 @@ To enforce dependency freshness policies in your CI/CD pipelines, use the `--che
 
 - `0`: No safe updates available (success).
 - `1`: Safe updates available (failure).
-- `2`: Execution error (invalid input, unexpected exceptions).
+- `2`: Execution error (invalid input, unexpected exceptions; applies across table, JSON, and XML formats).
+
+These exit codes are consistent across all output formats (table, JSON, XML).
 
 Example GitHub Actions workflow:
 
@@ -324,4 +326,3 @@ jobs:
       - name: Show available updates on failure
         if: failure()
         run: npx dry-aged-deps --format=json
-```

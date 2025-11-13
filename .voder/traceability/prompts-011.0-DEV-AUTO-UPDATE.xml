@@ -2,21 +2,13 @@
 <traceability>
   <specification>prompts/011.0-DEV-AUTO-UPDATE.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-13T02:18:33.581Z</last_validated>
+  <last_validated>2025-11-13T06:52:31.157Z</last_validated>
   <last_modified>2025-11-11T08:04:07.327Z</last_modified>
-  <evidence>1. All existing tests pass (94/94 tests) under `vitest run --coverage`, including dedicated update tests (`printOutdated.update.test.js`, `printOutdated.updatePromptAbort.test.js`, `printOutdated.updateBackupError.test.js`).
-2. In the CLI (`bin/dry-aged-deps.js`):
-   - Parses `--update` and `--yes`/`-y` flags.
-   - Passes `updateMode` and `skipConfirmation` to `printOutdated`.
-   - Help text includes `--update` and `--yes` flags.
-3. In the core updater (`src/print-outdated.js`):
-   - Filters by age and vulnerabilities, only updates safe packages.
-   - Logs a preview of updates and prompts for confirmation unless `skipConfirmation` is true.
-   - Creates `package.json.backup` before applying changes.
-   - Applies updates by updating the parsed JSON and writing back with 2-space indentation.
-   - Logs summary of updates and a reminder to run `npm install`.
-   - Catches and logs file I/O errors (backup and write failures).
-4. README and CLI help document the `--update` and `--yes` flags.
-</evidence>
-  <notes>The implementation fully satisfies the story’s acceptance criteria: the `--update` flag enables safe updates only, previews changes, supports `--yes` to skip confirmation, creates backups, preserves JSON indentation, reports a summary, prompts for `npm install`, and handles errors gracefully. All tests, including unit tests for update flows and error cases, pass successfully.</notes>
+  <evidence>• CLI parsing (src/cli-options.js) recognizes --update and --yes flags
+• Help text (bin/dry-aged-deps.js) documents --update and -y/--yes
+• printOutdated implementation (src/print-outdated.js) handles updateMode: previews safeRows, prompts (unless skipConfirmation), creates backup, writes package.json with 2-space indent, logs post-install reminder and summary
+• Backup‐error path catches and logs failures without corrupting package.json
+• Vitest update‐mode tests all pass (test/printOutdated.update.test.js, printOutdated.updateBackupError.test.js, printOutdated.updatePromptAbort.test.js)
+• Full test suite passes (128/128 tests, coverage 92.1%)</evidence>
+  <notes>All acceptance criteria for story 011.0-DEV-AUTO-UPDATE are satisfied: the CLI supports the flags, only safe updates are applied, formatting is preserved, preview and confirmation flows work (with --yes override), backups are made (and errors handled), a post-update npm install prompt is emitted, and a summary is returned. Documentation and README have been updated accordingly.</notes>
 </traceability>
