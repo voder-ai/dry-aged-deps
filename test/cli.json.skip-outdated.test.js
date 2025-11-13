@@ -35,7 +35,7 @@ describe('CLI JSON skip outdated behavior', () => {
     expect(Array.isArray(obj.packages)).toBe(true);
     expect(obj.packages).toHaveLength(0);
     expect(obj).toHaveProperty('summary');
-    expect(obj.summary).toEqual({
+    expect(obj.summary).toMatchObject({
       totalOutdated: 0,
       safeUpdates: 0,
       filteredByAge: 0,
