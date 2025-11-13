@@ -10,6 +10,8 @@ import { xmlFormatter } from './xml-formatter.js';
 import { filterByAge } from './filter-by-age.js';
 import { filterBySecurity } from './filter-by-security.js';
 import { loadPackageJson } from './load-package-json.js';
+import { buildRows } from './build-rows.js';
+import { applyFilters } from './apply-filters.js';
 
 /**
  * Print outdated dependencies information with age
@@ -91,49 +93,15 @@ export async function printOutdated(data, options = {}) {
     return;
   }
 
-  // Fetch version times and calculate ages
-  const ageTasks = entries.map(([name, info]) =>
-    (async () => {
-      let age = 'N/A';
-      const depType = getDependencyType(name);
-      try {
-        const versionTimes = await fetchVersionTimes(name);
-        const latestTime = versionTimes[info.latest];
-        if (latestTime) {
-          age = calculateAgeInDays(latestTime);
-        }
-      } catch (err) {
-        if (format !== 'xml' && format !== 'json') {
-          console.error(
-            `Warning: failed to fetch version times for ${name}: ${err.message}`
-          );
-        }
-      }
-      return [name, info.current, info.wanted, info.latest, age, depType];
-    })()
-  );
-  const rows = await Promise.all(ageTasks);
+  // Build rows
+  const rows = await buildRows(data, { fetchVersionTimes, calculateAgeInDays, getDependencyType, format });
 
-  // Filter by age threshold using helper
-  const matureRows = filterByAge(rows, { prodMinAge, devMinAge });
-
-  // Vulnerability filtering using helper
-  const { safeRows, vulnMap, filterReasonMap } = await filterBySecurity(
-    matureRows,
-    checkVulnerabilities,
-    { prodMinSeverity, devMinSeverity },
-    format
+  // Apply filters
+  const { safeRows, matureRows, vulnMap, filterReasonMap, summary } = await applyFilters(
+    rows,
+    { prodMinAge, devMinAge, prodMinSeverity, devMinSeverity, checkVulnerabilities, format }
   );
 
-  const totalOutdated = rows.length;
-  const filteredByAge = totalOutdated - matureRows.length;
-  const filteredBySecurity = matureRows.length - safeRows.length;
-  const summary = {
-    totalOutdated,
-    safeUpdates: safeRows.length,
-    filteredByAge,
-    filteredBySecurity,
-  };
   const timestamp = new Date().toISOString();
 
   if (updateMode) {
