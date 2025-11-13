@@ -538,8 +538,8 @@ async function main() {
                   message: err.message,
                   code: err.code || '',
                   details: err.details || '',
-                  story: 'prompts/008.0-DEV-JSON-OUTPUT.md'
-                }
+                  story: 'prompts/008.0-DEV-JSON-OUTPUT.md',
+                },
               },
               null,
               2
@@ -569,8 +569,8 @@ async function main() {
                 message: parseErr.message,
                 code: parseErr.code || '',
                 details: parseErr.details || '',
-                story: 'prompts/008.0-DEV-JSON-OUTPUT.md'
-              }
+                story: 'prompts/008.0-DEV-JSON-OUTPUT.md',
+              },
             },
             null,
             2
@@ -617,8 +617,8 @@ async function main() {
               message: err.message,
               code: err.code || '',
               details: err.details || '',
-              story: 'prompts/008.0-DEV-JSON-OUTPUT.md'
-            }
+              story: 'prompts/008.0-DEV-JSON-OUTPUT.md',
+            },
           },
           null,
           2

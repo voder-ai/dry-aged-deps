@@ -10,7 +10,7 @@
  * @returns {string} JSON string
  */
 export function jsonFormatter({ rows, summary, thresholds, timestamp }) {
-  const packages = rows.map(row => {
+  const packages = rows.map((row) => {
     if (Array.isArray(row)) {
       const [name, current, wanted, latest, age] = row;
       return { name, current, wanted, latest, age };
