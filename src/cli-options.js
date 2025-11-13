@@ -1,6 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 
+/* eslint-disable security/detect-non-literal-fs-filename */
+
 /**
  * Options derived from CLI arguments and config file.
  *
