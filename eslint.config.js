@@ -113,6 +113,7 @@ export default [
       // Allow unused vars in tests during incremental cleanup
       'no-unused-vars': 'off',
       'complexity': 'off',
+      'max-lines-per-function': 'off',
     },
   },
 ];
