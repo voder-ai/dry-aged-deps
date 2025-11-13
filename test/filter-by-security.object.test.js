@@ -3,9 +3,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { filterBySecurity } from '../src/filter-by-security.js';
 
-const rows = [
-  ['pkgA', '1.0.0', '1.2.0', '1.2.0', 15, 'prod'],
-];
+const rows = [['pkgA', '1.0.0', '1.2.0', '1.2.0', 15, 'prod']];
 const thresholds = { prodMinSeverity: 'moderate', devMinSeverity: 'low' };
 
 // Story: prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
@@ -38,15 +36,12 @@ describe('filterBySecurity object-based vulnerability results', () => {
   });
 
   it('treats errors as safe without logging in json format', async () => {
-    const stubCheckVuln = async () => { throw new Error('audit failure'); };
+    const stubCheckVuln = async () => {
+      throw new Error('audit failure');
+    };
     const spyError = vi.spyOn(console, 'error').mockImplementation(() => {});
 
-    const { safeRows, vulnMap, filterReasonMap } = await filterBySecurity(
-      rows,
-      stubCheckVuln,
-      thresholds,
-      'json'
-    );
+    const { safeRows, vulnMap, filterReasonMap } = await filterBySecurity(rows, stubCheckVuln, thresholds, 'json');
     // Should include package despite error
     expect(safeRows).toEqual(rows);
     // vulnMap entry should exist with no vulnerabilities

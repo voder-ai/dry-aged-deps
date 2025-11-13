@@ -10,17 +10,14 @@ describe('filterBySecurity error handling in table format', () => {
   it('logs warning to console.error when checkVulnerabilities throws in table format', async () => {
     const rows = [['pkgError', '1.0.0', '1.1.0', '1.1.0', 5, 'prod']];
     // stub that throws an error
-    const stubCheckVuln = async () => { throw new Error('audit failure'); };
+    const stubCheckVuln = async () => {
+      throw new Error('audit failure');
+    };
     // spy on console.error
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     const thresholds = { prodMinSeverity: 'none', devMinSeverity: 'none' };
 
-    const { safeRows, vulnMap, filterReasonMap } = await filterBySecurity(
-      rows,
-      stubCheckVuln,
-      thresholds,
-      'table'
-    );
+    const { safeRows, vulnMap, filterReasonMap } = await filterBySecurity(rows, stubCheckVuln, thresholds, 'table');
 
     // Should include the package as safe
     expect(safeRows).toEqual(rows);
