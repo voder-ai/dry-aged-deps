@@ -2,14 +2,8 @@
 <traceability>
   <specification>prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-13T06:51:34.313Z</last_validated>
+  <last_validated>2025-11-13T09:14:43.468Z</last_validated>
   <last_modified>2025-11-09T23:01:54.797Z</last_modified>
-  <evidence>The code does implement npm view time via fetchVersionTimes and age calculation via calculateAgeInDays, and the CLI prints a single “Age (days)” column for each package. However:
-
-1. Smart‐fetching optimization is missing: fetchVersionTimes always calls `npm view <pkg> time --json` and returns *all* version timestamps—there is no logic to fetch or even drop versions older than the current version.
-
-2. The UI only ever shows the age of the latest version (one number per package). The spec calls for fetching and displaying ages for *all* newer versions.
-
-No tests or code paths implement the filtering or per‐version display required by the story’s acceptance criteria for smart fetching and full version‐age listing.</evidence>
-  <notes>Core fetch and age‐calc functions exist and are wired into the CLI, but the optimization and multi‐version age display requirements have not been implemented.</notes>
+  <evidence>The implementation in src/fetch-version-times.js always runs “npm view <pkg> time --json” to retrieve all versions, and buildRows (src/build-rows.js) only uses the date for the single “latest” version to calculate and display age. There is no code that limits fetching or processing to only versions newer than the current installed version (REQ-OPTIMIZATION), nor is there logic to display the age for each available version—only the latest version’s age is shown. No tests cover selective fetching or per-version age display.</evidence>
+  <notes>Core fetching of publish dates, age calculation, and display of the latest version’s age are implemented, but the required optimization to fetch only newer versions and the display of ages for all available versions are missing, so the story’s acceptance criteria are not fully met.</notes>
 </traceability>

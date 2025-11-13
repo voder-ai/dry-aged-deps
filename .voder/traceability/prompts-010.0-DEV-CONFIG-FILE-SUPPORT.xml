@@ -2,12 +2,11 @@
 <traceability>
   <specification>prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-13T06:51:08.991Z</last_validated>
+  <last_validated>2025-11-13T09:14:09.527Z</last_validated>
   <last_modified>2025-11-10T21:23:22.067Z</last_modified>
-  <evidence>• src/config-loader.js implements loading .dry-aged-deps.json from project root (or custom via --config-file) with schema validation and clear error messages (exit code 2).
-• src/cli-options.js merges config values with CLI flags (precedence CLI > config > defaults) and applies sensible defaults when no config present.
-• test/cli.config-file.test.js covers reading defaults from config, CLI override, invalid JSON, unknown keys, invalid values, custom config-file flag, and missing custom file behaviors.
-• README.md documents --config-file flag, shows example .dry-aged-deps.json schema and usage without flags.
-• No breaking changes when config absent; existing CLI-only workflows remain unchanged.</evidence>
-  <notes>All mandatory acceptance criteria for configuration file support are implemented, tested, and documented. Optional JSON schema support was considered but is non-blocking per story notes.</notes>
+  <evidence>- src/config-loader.js implements loading, validation, and merging of .dry-aged-deps.json
+- src/cli-options.js wires loadConfigFile into option parsing with precedence CLI > config > defaults
+- test/cli.config-file.test.js covers all acceptance criteria: default values from config, CLI overrides, invalid JSON, unknown keys, invalid values, custom config-file flag, missing file error
+- README.md includes --config-file option and example .dry-aged-deps.json format</evidence>
+  <notes>All acceptance criteria for config-file support are implemented, tested, and documented. The config file is optional, schema and value validation are in place, CLI flags override config values, and sensible defaults apply when neither flags nor config are provided.</notes>
 </traceability>

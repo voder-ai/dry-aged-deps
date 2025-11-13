@@ -2,14 +2,10 @@
 <traceability>
   <specification>prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-13T06:51:15.137Z</last_validated>
+  <last_validated>2025-11-13T09:17:42.328Z</last_validated>
   <last_modified>2025-11-09T23:03:02.030Z</last_modified>
-  <evidence>– parseMinAgeFlag implemented in src/cli-options-helpers.js with validation (1–365) and tests in test/cli-options-helpers.test.js referencing prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
-– parseOptions in src/cli-options.js uses config.minAge (from loadConfigFile) and default 7, and applies CLI override via parseMinAgeFlag
-– loadConfigFile in src/config-loader.js supports minAge key, validates integer 1–365, errors on invalid JSON or unknown keys; tested in test/cli.config-file.test.js
-– CLI end-to-end tests (test/cli.flags.test.js, test/cli.config-file.test.js, test/filter-by-age.test.js) cover default behavior, override, invalid inputs, config precedence
-– Help output in bin/dry-aged-deps.js includes “--min-age=<days> Minimum age in days (1-365) for including versions (default: 7)”
-– JSON and XML formatters include thresholds in output (tested in test/json-formatter.test.js and test/xml-formatter.thresholds-*.test.js)
-– Vitest run --coverage: 128 tests passed, coverage ≥80%</evidence>
-  <notes>All acceptance criteria for configurable age threshold have concrete implementation and test coverage. CLI flag, config file support, precedence, defaults, validation, help documentation, and output reporting are fully satisfied.</notes>
+  <evidence>1) All Vitest tests pass (128/128), including cli.flags.test.js (validates --min-age flag parsing, default=7, rejects invalid values), cli.config-file.test.js (validates reading minAge from .dry-aged-deps.json, CLI override, custom config-file name, JSON errors), filter-by-age.test.js (ensures filterByAge respects prodMinAge/devMinAge), and printOutdated JSON/table output tests (checks thresholds appear in JSON under summary.thresholds and in table messages).  
+2) Help output in bin/dry-aged-deps.js includes the line: “--min-age=<days>       Minimum age in days (1-365) for including versions (default: 7)”.  
+3) package JSON and src/cli-options.js wiring: loadConfigFile reads config.minAge, parseMinAgeFlag applies validation & precedence, and printOutdated uses prodMinAge/devMinAge correctly.</evidence>
+  <notes>The story 005.0-DEV-CONFIGURABLE-AGE-THRESHOLD is fully implemented. The CLI supports --min-age with correct validation and defaulting, reads minAge from .dry-aged-deps.json, applies flag-overrides, falls back to 7 days when unset, documents the flag in help/README, and surfaces the active threshold in both JSON output and human-readable messages. All acceptance criteria are satisfied and covered by unit and integration tests.</notes>
 </traceability>

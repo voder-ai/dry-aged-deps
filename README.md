@@ -148,6 +148,14 @@ jobs:
         run: npx dry-aged-deps --format=json
 ```
 
+## Exit Codes
+
+- `0`: No safe updates available (success).
+- `1`: Safe updates available (failure).
+- `2`: Execution error (invalid input or unexpected exceptions).
+
+These exit codes are consistent across table, JSON, and XML output.
+
 ## Advanced Usage
 
 For programmatic API access and detailed architectural overview, see:

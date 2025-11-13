@@ -2,14 +2,13 @@
 <traceability>
   <specification>prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-13T06:51:38.100Z</last_validated>
+  <last_validated>2025-11-13T09:20:54.465Z</last_validated>
   <last_modified>2025-11-09T23:04:08.953Z</last_modified>
-  <evidence>• src/cli-options-helpers.js implements parseProdMinAgeFlag, parseDevMinAgeFlag, parseProdSeverityFlag, parseDevSeverityFlag with full validation (unit‐tested in test/cli-options-helpers.test.js)
-• src/cli-options.js wires those helpers into parseOptions, merging CLI flags, config file (config-loader.js) and defaults
-• config-loader.js supports nested prod/dev blocks and validates config.prod.minAge/minSeverity and config.dev.minAge/minSeverity (verified in test/cli.config-file.test.js)
-• print-outdated.js uses getDependencyType against package.json and injects a “Type” column in table output (verified in test/printOutdated.prodDependency.test.js)
-• Fallback and default behavior: --prod-min-age/--dev-min-age fall back to --min-age, and both fall back to default 7 if no flags or config (verified in test/cli.flags.test.js)
-• Output formatting (table/json/xml) carries thresholds and dependencyType for prod/dev (covered by tests in test/printOutdated.* and xml/json‐formatter tests)
-• All 128 Vitest tests pass (per project’s current cycle test report)</evidence>
-  <notes>All acceptance criteria for story 007.0 (new CLI flags, config support, dependency‐type awareness, fallback/defaults, validation, output) are satisfied with concrete tests and implementation. Performance of precedence (nested config vs general flags) aligns with the defined fallback semantics.</notes>
+  <evidence>• CLI flag parsing: src/cli-options-helpers.js supports --prod-min-age, --dev-min-age, --prod-severity, --dev-severity with validation; covered by test/cli-options-helpers.test.js (parseProdMinAgeFlag, parseDevMinAgeFlag, parseProdSeverityFlag, parseDevSeverityFlag).
+• Fallback & default: parseOptions in src/cli-options.js uses general --min-age/--severity when prod/dev flags absent; test/cli.flags.test.js verifies that --min-age sets both prod and dev thresholds and that default values are applied.
+• Config file support: src/config-loader.js reads config.prod and config.dev with keys minAge and minSeverity; test/cli.config-file.test.js verifies reading nested prod/dev values and that CLI flags override config.
+• Dependency-type detection: loadPackageJson + buildRows set depType to 'prod' or 'dev' based on package.json; test/printOutdated.prodDependency.test.js asserts 'prod' for prodDeps, and test/printOutdated.test.js asserts 'dev' fallback.
+• Output indication: printOutdated (src/print-outdated.js) prints a "Type" column in table output, and xmlFormatter (src/xml-formatter.js) emits <dependency-type> for each package; tests in test/printOutdated*.test.js and test/xml-formatter.thresholds.test.js cover this.
+• Precedence & validation: Specific CLI flags > general flags > config > defaults; invalid values exit with code 2 (tested in cli-options-helpers and cli.flags), validating the full acceptance criteria.</evidence>
+  <notes>All ten acceptance criteria are satisfied by the existing implementation and covered by unit and integration tests, demonstrating full support for separate production and development thresholds.</notes>
 </traceability>

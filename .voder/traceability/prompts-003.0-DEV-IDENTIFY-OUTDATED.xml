@@ -2,8 +2,8 @@
 <traceability>
   <specification>prompts/003.0-DEV-IDENTIFY-OUTDATED.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-13T06:49:56.243Z</last_validated>
+  <last_validated>2025-11-13T09:20:24.450Z</last_validated>
   <last_modified>2025-11-09T23:02:10.889Z</last_modified>
-  <evidence>The implementation only filters the single “latest” version per package (in filterByAge and buildRows) and does not scan earlier versions to “work backwards until finding a mature version” as specified. There is no logic in fetch-version-times, buildRows, or applyFilters to examine older versions or adjust the recommended update to the newest mature release. Tests only verify filtering of the latest version’s age, not the smart backwards scan requirement.</evidence>
-  <notes>Smart filtering (REQ-SMART-SEARCH) is missing: the code does not iterate over prior versions to find the first one ≥7 days old, so the story is not fully implemented.</notes>
+  <evidence>The implementation (src/build-rows.js → buildRows and src/filter-by-age.js → filterByAge) only computes and filters the age of the single “latest” version for each package. It never inspects earlier versions in the versionTimes map to “work backwards until finding a mature version.” No code path iterates over versionTimes entries or picks an older, mature version if latest is too young. The filter-by-age tests (test/filter-by-age.test.js) only exercise simple threshold logic on the supplied age values—there are no tests or code for smart backward search. </evidence>
+  <notes>Acceptance criterion “Smart Filtering: Checks latest first, works backwards until finding mature version” is not implemented. The code merely drops any package whose latest version is younger than the threshold, rather than selecting the newest mature version. Other criteria (basic age filtering, no-mature message, table output) may be partially satisfied, but the core smart-search requirement is missing.</notes>
 </traceability>

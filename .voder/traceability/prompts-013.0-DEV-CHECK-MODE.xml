@@ -2,11 +2,14 @@
 <traceability>
   <specification>prompts/013.0-DEV-CHECK-MODE.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-13T06:49:12.503Z</last_validated>
+  <last_validated>2025-11-13T09:15:58.306Z</last_validated>
   <last_modified>2025-11-11T08:04:07.352Z</last_modified>
-  <evidence>- Tests in test/cli.check-mode.test.js reference prompts/013.0-DEV-CHECK-MODE.md and cover all acceptance criteria (5 tests) and all passed in `npm test` (128/128 passing).
-- CLI code in bin/dry-aged-deps.js and src/cli-options.js implements `--check` (returnSummary), exits 1 on safe updates, 0 when none, 2 on errors, and supports --format=json/xml.
-- Default table mode prints clear output including 'Outdated packages:' and package names (e.g., fakepkg) before failing.
-- README.md includes the `--check` flag in the options table and shows a CI/CD integration example using `npx dry-aged-deps --check`.</evidence>
-  <notes>All requirements from prompts/013.0-DEV-CHECK-MODE.md (flag support, exit codes, clear output, format support, documentation) are fully implemented and verified by tests and documentation.</notes>
+  <evidence>- parseOptions in src/cli-options.js recognizes --check and sets returnSummary flag
+- bin/dry-aged-deps.js exits with code 1 when summary.safeUpdates > 0 in check mode, 0 when none, and 2 on error
+- printOutdated in src/print-outdated.js returns summary and outputs clear table, JSON, and XML formats when returnSummary is true
+- test/cli.check-mode.test.js (5 tests) passes covering exit codes 0/1/1/1/2 and output content in table, JSON, and XML modes
+- test/docs/ci-integration.test.js verifies README.md and docs/api.md contain CI/CD examples with --check and correct exit code semantics
+- README.md includes --check flag in help table and CI/CD Integration section
+- CLI --help output lists --check flag</evidence>
+  <notes>All acceptance criteria for the `--check` mode story (prompts/013.0-DEV-CHECK-MODE.md) have concrete implementation and automated tests passing, and documentation examples are present and correct.</notes>
 </traceability>

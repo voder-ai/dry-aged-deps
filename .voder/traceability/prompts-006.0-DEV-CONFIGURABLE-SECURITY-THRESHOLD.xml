@@ -2,16 +2,15 @@
 <traceability>
   <specification>prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-13T06:49:33.538Z</last_validated>
+  <last_validated>2025-11-13T09:14:37.309Z</last_validated>
   <last_modified>2025-11-09T23:03:30.864Z</last_modified>
-  <evidence>In src/filter-by-security.js (lines 18–24), the code unconditionally blocks any package with vulnCount !== 0, ignoring the configured threshold:
+  <evidence>In src/filter-by-security.js, the function completely ignores the configured prodMinSeverity/devMinSeverity when deciding to filter a row. It simply does:
 
-  vulnCount = await checkVulnerabilities(name, latest);
   if (vulnCount !== 0) {
     include = false;
     filterReasonMap.set(name, 'security');
   }
 
-There is no comparison of actual vulnerability severities against the prodMinSeverity/devMinSeverity values, nor does checkVulnerabilities return severity data. The acceptance criterion “Filtering Logic: Blocks packages with vulnerabilities at or above the threshold” is not implemented. No tests cover configurable severity behavior, and check-vulnerabilities only returns a count, not severity information.</evidence>
-  <notes>The code parses and displays a --severity flag and config file values, but never applies them to filter logic. To satisfy the story, checkVulnerabilities must extract and return per-severity data and filterBySecurity must compare max severity against the configured threshold. Until these are implemented and tested, the story is not complete.</notes>
+and never inspects actual vulnerability severities from `checkVulnerabilities`. There are no code paths or tests that gate filtering based on the configured threshold (e.g. allow low/moderate when threshold is 'high').</evidence>
+  <notes>All other acceptance points (CLI flag, config support, help text, validation, output of thresholds in JSON/XML) are implemented, but the core filtering‐logic requirement—block only vulnerabilities at or above the user‐configurable severity—has not been implemented.</notes>
 </traceability>

@@ -2,8 +2,8 @@
 <traceability>
   <specification>prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-13T06:51:36.027Z</last_validated>
+  <last_validated>2025-11-13T09:15:57.633Z</last_validated>
   <last_modified>2025-11-11T08:04:07.339Z</last_modified>
-  <evidence>The implementation exits with code 1 for errors in the default (table) format, but uses exit code 2 for errors in JSON and XML formats. For example, in cli.error-cmd.test.js (table format) a parse error yields exitCode=1, while cli.format-xml.error.test.js and cli.format-json.error.test.js assert exitCode=2. This violates the acceptance criterion “Exit codes consistent across all output formats” and the requirement that errors always yield exit code 2. Moreover, table-mode npm failures currently produce exit code 1, not 2 as specified.</evidence>
-  <notes>Error exit codes are inconsistent across formats: table mode uses exit code 1 for errors, whereas JSON/XML use exit code 2. The story’s acceptance criteria for standardized exit codes (errors → exit 2) and consistency across formats are not satisfied.</notes>
+  <evidence>While exit codes 0, 1, 2 are implemented and covered for check-mode in JSON, XML and table formats (tests in test/cli.check-mode.test.js), and error/flag/config-error cases are covered (tests in cli-entrypoint.test.js, cli.error-cmd.test.js, cli.format-json.error.test.js, cli.config-file.test.js), there is no test verifying the scenario “outdated packages but none mature/safe → exit 0” under --check mode as required by the Definition of Done. That acceptance criterion remains untested.</evidence>
+  <notes>All other acceptance criteria—standardized exit codes, consistency across formats, documentation in README and --help, error handling, backward compatibility—are satisfied. A missing test for the ‘outdated but none safe’ check-mode case prevents full compliance.</notes>
 </traceability>

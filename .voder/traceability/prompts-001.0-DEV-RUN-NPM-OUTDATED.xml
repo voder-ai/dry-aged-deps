@@ -2,13 +2,14 @@
 <traceability>
   <specification>prompts/001.0-DEV-RUN-NPM-OUTDATED.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-13T06:49:13.714Z</last_validated>
+  <last_validated>2025-11-13T09:13:17.136Z</last_validated>
   <last_modified>2025-11-09T23:01:40.301Z</last_modified>
-  <evidence>1) The CLI entrypoint (bin/dry-aged-deps.js) invokes `npm outdated --json` via child_process (execFileSync) and correctly captures stdout and error cases.
-2) The JSON parsing branch handles valid and invalid JSON, with tests exercising both paths (test/cli.error-cmd.test.js, test/cli.format-json.error.test.js, test/cli.format-xml.error.test.js).
-3) The “no updates” case prints “All dependencies are up to date.” and returns a 0 exit code, covered by test/cli.upToDate.test.js.
-4) The standard outdated-display path prints a header and rows of outdated packages, asserted in test/cli.outdated.test.js and the E2E test test/cli.e2e.real-fixture.test.js.
-5) All 128 Vitest tests pass (npm test → 128 passed, 92% coverage), including unit, integration, and E2E fixtures.
-6) README.md and the CLI help text include usage examples for running the command and handling outdated packages.</evidence>
-  <notes>All acceptance criteria for story 001.0 (running npm outdated, parsing JSON, displaying results, error handling, and handling no-update cases) have been fully implemented, tested, and documented.</notes>
+  <evidence>• prompts/001.0-DEV-RUN-NPM-OUTDATED.md exists as a valid user‐story/spec with clear acceptance criteria.
+• bin/dry-aged-deps.js invokes execFileSync('npm', ['outdated','--json']), catches errors, handles stdout, parses JSON and exits with proper codes.
+• src/print-outdated.js implements parsing of the JSON data, table/json/xml output, handles no‐updates (entries.length===0 → “All dependencies are up to date.”), and error branches.
+• Two Vitest suites cover this story:
+  – test/cli.outdated.mock.test.js (mocked outdated data) → passes, asserts header and fakepkg row.
+  – test/cli.outdated.test.js (real fixture project) → passes, asserts exit code 0, header “Outdated packages:” and at least one real package.
+• CI evidence (from current cycle): all lint, type, format checks pass; 128 tests (incl. cli.outdated) pass; coverage > 90%.</evidence>
+  <notes>All acceptance criteria for story 001.0 (running `npm outdated --json`, parsing output, displaying results, handling failures and no‐update scenarios) are fully implemented and covered by unit and E2E tests. The CLI prints the expected headers, handles errors, and reports when no packages are outdated.</notes>
 </traceability>

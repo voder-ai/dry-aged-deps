@@ -2,13 +2,14 @@
 <traceability>
   <specification>prompts/011.0-DEV-AUTO-UPDATE.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-13T06:52:31.157Z</last_validated>
+  <last_validated>2025-11-13T09:15:02.536Z</last_validated>
   <last_modified>2025-11-11T08:04:07.327Z</last_modified>
-  <evidence>• CLI parsing (src/cli-options.js) recognizes --update and --yes flags
-• Help text (bin/dry-aged-deps.js) documents --update and -y/--yes
-• printOutdated implementation (src/print-outdated.js) handles updateMode: previews safeRows, prompts (unless skipConfirmation), creates backup, writes package.json with 2-space indent, logs post-install reminder and summary
-• Backup‐error path catches and logs failures without corrupting package.json
-• Vitest update‐mode tests all pass (test/printOutdated.update.test.js, printOutdated.updateBackupError.test.js, printOutdated.updatePromptAbort.test.js)
-• Full test suite passes (128/128 tests, coverage 92.1%)</evidence>
-  <notes>All acceptance criteria for story 011.0-DEV-AUTO-UPDATE are satisfied: the CLI supports the flags, only safe updates are applied, formatting is preserved, preview and confirmation flows work (with --yes override), backups are made (and errors handled), a post-update npm install prompt is emitted, and a summary is returned. Documentation and README have been updated accordingly.</notes>
+  <evidence>- CLI parsing in src/cli-options.js recognizes --update and --yes flags and bin/dry-aged-deps.js help text lists them.
+- printOutdated in src/print-outdated.js implements update mode: shows preview, prompts (unless skipConfirmation), creates backup, writes package.json with 2-space indentation, logs summary and install reminder, and handles errors.
+- Unit tests under test/printOutdated.update.test.js cover successful update, backup creation, summary, and install prompt.
+- test/printOutdated.updateBackupError.test.js covers backup error handling.
+- test/printOutdated.updatePromptAbort.test.js covers preview and abort flow.
+- applyFilters ensures only safeRows are updated based on age and vulnerability filters.
+- Integration with existing mature and security filters (dependencies on earlier stories) is exercised via stubbed helpers in tests.</evidence>
+  <notes>All acceptance criteria for story 011.0-DEV-AUTO-UPDATE have been implemented and verified: update flag, safe-only updates, preview/confirm flow, --yes override, backup creation, post-update prompt, summary report, and error handling. Formatting preservation via JSON.stringify(…,2) maintains 2-space indent; property order follows original object order. No missing requirements detected.</notes>
 </traceability>

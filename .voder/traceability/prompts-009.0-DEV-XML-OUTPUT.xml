@@ -2,12 +2,12 @@
 <traceability>
   <specification>prompts/009.0-DEV-XML-OUTPUT.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-13T06:52:46.901Z</last_validated>
+  <last_validated>2025-11-13T09:15:08.407Z</last_validated>
   <last_modified>2025-11-09T23:05:40.405Z</last_modified>
-  <evidence>• src/xml-formatter.js implements escapeXml and xmlFormatter with declaration, root element, packages, summary, thresholds, and error sections
-• src/cli-options.js and cli-options-helpers.js include 'xml' in validFormats and parse --format=xml correctly
-• bin/dry-aged-deps.js help text lists xml as valid format, and the main CLI branches on format==='xml'
-• All XML-related tests (test/cli.format-xml.test.js, test/cli.format-xml.error.test.js, and the  sixteen xml-formatter.* tests) pass
-• End-to-end suite output: 128 tests across 45 files all passing (including exit codes 0,1,2 behavior and no console noise in XML mode)</evidence>
-  <notes>The XML output feature fully implements all acceptance criteria: CLI flag, well-formed declaration, complete data (packages, summary, thresholds), proper exit codes, silent mode, error formatting, schema consistency, and updated help/documentation. Tests cover array and object rows, escaping, error conditions, thresholds, and CLI integration.</notes>
+  <evidence>– Found src/xml-formatter.js implementing xmlFormatter with proper declaration, packages, summary, thresholds and error handling.
+– cli-options.js and cli-options-helpers.js accept and validate `--format=xml` alongside table/json.
+– bin/dry-aged-deps.js prints XML via xmlFormatter on `--format=xml`, suppresses other logs, and exits with codes 0/1/2 as specified.
+– README.md, docs/api.md and CLI help text list xml as a valid format.
+– 45 test files, including test/xml-formatter.*.test.js and test/cli.format-xml*.test.js, cover XML output, escaping, schema, error handling, exit codes, and run with zero failures under `npm test` (128 passed).</evidence>
+  <notes>All acceptance criteria for prompts/009.0-DEV-XML-OUTPUT.md have concrete implementation and automated test coverage. XML output is well-formed, includes complete data, summary, thresholds, error blocks, proper exit codes, no extra console noise, and documentation/help is updated.</notes>
 </traceability>

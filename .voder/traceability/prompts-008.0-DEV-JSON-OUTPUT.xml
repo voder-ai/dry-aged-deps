@@ -2,24 +2,8 @@
 <traceability>
   <specification>prompts/008.0-DEV-JSON-OUTPUT.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-13T06:49:21.835Z</last_validated>
+  <last_validated>2025-11-13T09:15:25.681Z</last_validated>
   <last_modified>2025-11-09T23:04:54.331Z</last_modified>
-  <evidence>In src/print-outdated.js, the JSON output branch (format === 'json') creates rows as arrays [name, current, wanted, latest, null] and jsonFormatter maps these to objects with only name, current, wanted, latest, and age. There is no inclusion of per-package vulnerabilities, severity, recommended version, filtered flag, or filterReason, despite the story’s acceptance criteria and example schema requiring these fields. For example:
-
-  // JSON branch in printOutdated.js
-  if (format === 'json') {
-    const rows = entries.map(([name, info]) => [
-      name,
-      info.current,
-      info.wanted,
-      info.latest,
-      null,
-    ]);
-    // ...
-    console.log(jsonFormatter({ rows, summary, thresholds, timestamp }));
-    return summary;
-  }
-
-This minimal output omits vulnerabilities and severity details per package, as well as recommended versions and filtering metadata.</evidence>
-  <notes>The CLI flag, JSON parsing, summary section, exit codes, error handling, default behavior, and help documentation are all implemented and tested. However, the ‘Complete Data’ acceptance criterion—specifically requiring per-package vulnerabilities, severity, recommended version, and filtering metadata—is not met by the minimal JSON formatter. To fully satisfy the story, the JSON output must be enriched with these additional fields.</notes>
+  <evidence>In src/print-outdated.js the JSON branch unconditionally serializes rows as simple arrays (name, current, wanted, latest, age) and jsonFormatter maps these arrays to objects with only {name, current, wanted, latest, age}. There is no vulnerabilities field, no type, no recommended, no filterReason in the CLI JSON output. For example, running `dry-aged-deps --format=json` (with DRY_AGED_DEPS_MOCK=1) yields package entries without any vulnerabilities information, despite the spec’s requirement (“Complete Data”) that each package object include vulnerabilities details and severity.</evidence>
+  <notes>The implementation covers the basic JSON flag, exit codes, summary, thresholds, help text, and error formatting, but it omits critical fields specified in the story (per‐package vulnerabilities, severity, filtering metadata). To fully satisfy prompts/008.0-DEV-JSON-OUTPUT.md, the JSON output must be extended to include the additional package properties as defined in the spec.</notes>
 </traceability>
