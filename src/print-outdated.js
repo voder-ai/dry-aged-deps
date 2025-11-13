@@ -11,6 +11,7 @@ import { xmlFormatter } from './xml-formatter.js';
 import { loadPackageJson } from './load-package-json.js';
 import { buildRows } from './build-rows.js';
 import { applyFilters } from './apply-filters.js';
+import { handleJsonOutput } from './print-outdated-handlers.js';
 
 // complexity is tolerated in this file due to CLI orchestration; review during refactors
 /**
@@ -49,26 +50,7 @@ export async function printOutdated(data, options = {}) {
 
   // Story: prompts/008.0-DEV-JSON-OUTPUT.md - minimal JSON output
   if (format === 'json') {
-    const rows = entries.map(([name, info]) => [
-      name,
-      info.current,
-      info.wanted,
-      info.latest,
-      null,
-    ]);
-    const totalOutdated = rows.length;
-    const summary = {
-      totalOutdated,
-      safeUpdates: totalOutdated,
-      filteredByAge: 0,
-      filteredBySecurity: 0,
-    };
-    const thresholds = {
-      prod: { minAge: prodMinAge, minSeverity: prodMinSeverity },
-      dev: { minAge: devMinAge, minSeverity: devMinSeverity },
-    };
-    const timestamp = new Date().toISOString();
-    console.log(jsonFormatter({ rows, summary, thresholds, timestamp }));
+    const summary = handleJsonOutput(data, { prodMinAge, devMinAge, prodMinSeverity, devMinSeverity });
     return summary;
   }
 
