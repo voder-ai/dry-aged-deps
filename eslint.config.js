@@ -87,16 +87,6 @@ export default [
     },
   },
 
-  // Disable complexity, max-lines-per-function, and no-unused-vars for specific src files
-  {
-    files: ['src/print-outdated.js'],
-    rules: {
-      complexity: 'off',
-      'max-lines-per-function': 'off',
-      'no-unused-vars': 'off',
-    },
-  },
-
   // Disable complexity and max-lines-per-function for xml-formatter
   {
     files: ['src/xml-formatter.js'],

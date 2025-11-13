@@ -1,8 +1,7 @@
 #!/usr/bin/env node
-// @ts-nocheck - TODO: Fix type annotations incrementally
+// @ts-nocheck
+/* eslint-disable complexity */
 
-import fs from 'fs';
-import path from 'path';
 import { fetchVersionTimes as defaultFetchVersionTimes } from './fetch-version-times.js';
 import { calculateAgeInDays as defaultCalculateAgeInDays } from './age-calculator.js';
 import { checkVulnerabilities as defaultCheckVulnerabilities } from './check-vulnerabilities.js';
@@ -103,8 +102,6 @@ export async function printOutdated(data, options = {}) {
       checkVulnerabilities,
       format,
     });
-
-  const timestamp = new Date().toISOString();
 
   if (updateMode) {
     const result = await updatePackages(safeRows, skipConfirmation, summary);

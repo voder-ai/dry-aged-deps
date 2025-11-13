@@ -1,12 +1,12 @@
-## NOW  
-Implement the configurable-security-threshold story (006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD) by updating `src/filter-by-security.js` to honor the `prodMinSeverity`/`devMinSeverity` settings rather than blocking every nonzero vulnerability count.
+## NOW
+Remove the `// @ts-nocheck` directive from the top of `src/print-outdated.js`.
 
-## NEXT  
-- Enhance `src/check-vulnerabilities.js` (and its tests) to return a breakdown of vulnerabilities by severity, not just a total count.  
-- Add unit tests in `test/filter-by-security.test.js` covering cases where vulnerabilities below the threshold are allowed and only those at or above the threshold are blocked.  
-- Update documentation (README.md, docs/api.md, and prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md) to describe the new severity-threshold behavior and examples.
+## NEXT
+- In `eslint.config.js`, remove the file-specific override that disables the `complexity` and `max-lines-per-function` rules for `src/print-outdated.js`.  
+- Delete any remaining `// @ts-nocheck` directives from `src/xml-formatter.js` and `src/filter-by-security.js`.  
+- Run the full validation suite (`npm run validate`) locally and fix all new lint or type errors that arise in those files.
 
-## LATER  
-- Add end-to-end CLI tests for `--severity`/`--prod-severity`/`--dev-severity` flags to verify enforcement in real fixtures.  
-- Cache audit results to speed up repeated vulnerability checks.  
-- After security threshold support is stable, refactor any remaining large functions (e.g., in `print-outdated.js` and `xml-formatter.js`) to reduce complexity and re-enable their ESLint complexity rules.
+## LATER
+- Refactor the logic in `src/print-outdated.js`, `src/xml-formatter.js`, and `src/filter-by-security.js` to break large functions into smaller, single-responsibility units and reduce cyclomatic complexity below the configured ESLint thresholds.  
+- Gradually tighten the `max-lines-per-function` rule (e.g. lower from 200 to 100, then to 50) and address any violations.  
+- Enhance and complete JSDoc annotations so that `tsc --noEmit` passes without errors, enabling full type-checking coverage across the codebase.
