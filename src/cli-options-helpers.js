@@ -39,16 +39,12 @@ export function parseMinAgeFlag(args, defaultMinAge) {
   if (eq) {
     const v = eq.split('=')[1];
     if (!/^[0-9]+$/.test(v)) {
-      console.error(
-        `Invalid min-age: ${v}. Must be an integer >= 1.`
-      );
+      console.error(`Invalid min-age: ${v}. Must be an integer >= 1.`);
       process.exit(2);
     }
     minAge = parseInt(v, 10);
     if (minAge < 1) {
-      console.error(
-        `Invalid min-age: ${v}. Must be an integer >= 1.`
-      );
+      console.error(`Invalid min-age: ${v}. Must be an integer >= 1.`);
       process.exit(2);
     }
   } else {
@@ -57,16 +53,12 @@ export function parseMinAgeFlag(args, defaultMinAge) {
       if (args.length > idx + 1) {
         const v = args[idx + 1];
         if (!/^[0-9]+$/.test(v)) {
-          console.error(
-            `Invalid min-age: ${v}. Must be an integer >= 1.`
-          );
+          console.error(`Invalid min-age: ${v}. Must be an integer >= 1.`);
           process.exit(2);
         }
         minAge = parseInt(v, 10);
         if (minAge < 1) {
-          console.error(
-            `Invalid min-age: ${v}. Must be an integer >= 1.`
-          );
+          console.error(`Invalid min-age: ${v}. Must be an integer >= 1.`);
           process.exit(2);
         }
       } else {
@@ -132,16 +124,12 @@ export function parseProdMinAgeFlag(args, defaultProdMinAge) {
   if (eq) {
     const v = eq.split('=')[1];
     if (!/^[0-9]+$/.test(v)) {
-      console.error(
-        `Invalid prod-min-age: ${v}. Must be an integer >= 1.`
-      );
+      console.error(`Invalid prod-min-age: ${v}. Must be an integer >= 1.`);
       process.exit(2);
     }
     prodMinAge = parseInt(v, 10);
     if (prodMinAge < 1) {
-      console.error(
-        `Invalid prod-min-age: ${v}. Must be an integer >= 1.`
-      );
+      console.error(`Invalid prod-min-age: ${v}. Must be an integer >= 1.`);
       process.exit(2);
     }
   } else {
@@ -150,16 +138,12 @@ export function parseProdMinAgeFlag(args, defaultProdMinAge) {
       if (args.length > idx + 1) {
         const v = args[idx + 1];
         if (!/^[0-9]+$/.test(v)) {
-          console.error(
-            `Invalid prod-min-age: ${v}. Must be an integer >= 1.`
-          );
+          console.error(`Invalid prod-min-age: ${v}. Must be an integer >= 1.`);
           process.exit(2);
         }
         prodMinAge = parseInt(v, 10);
         if (prodMinAge < 1) {
-          console.error(
-            `Invalid prod-min-age: ${v}. Must be an integer >= 1.`
-          );
+          console.error(`Invalid prod-min-age: ${v}. Must be an integer >= 1.`);
           process.exit(2);
         }
       } else {
@@ -184,16 +168,12 @@ export function parseDevMinAgeFlag(args, defaultDevMinAge) {
   if (eq) {
     const v = eq.split('=')[1];
     if (!/^[0-9]+$/.test(v)) {
-      console.error(
-        `Invalid dev-min-age: ${v}. Must be an integer >= 1.`
-      );
+      console.error(`Invalid dev-min-age: ${v}. Must be an integer >= 1.`);
       process.exit(2);
     }
     devMinAge = parseInt(v, 10);
     if (devMinAge < 1) {
-      console.error(
-        `Invalid dev-min-age: ${v}. Must be an integer >= 1.`
-      );
+      console.error(`Invalid dev-min-age: ${v}. Must be an integer >= 1.`);
       process.exit(2);
     }
   } else {
@@ -202,16 +182,12 @@ export function parseDevMinAgeFlag(args, defaultDevMinAge) {
       if (args.length > idx + 1) {
         const v = args[idx + 1];
         if (!/^[0-9]+$/.test(v)) {
-          console.error(
-            `Invalid dev-min-age: ${v}. Must be an integer >= 1.`
-          );
+          console.error(`Invalid dev-min-age: ${v}. Must be an integer >= 1.`);
           process.exit(2);
         }
         devMinAge = parseInt(v, 10);
         if (devMinAge < 1) {
-          console.error(
-            `Invalid dev-min-age: ${v}. Must be an integer >= 1.`
-          );
+          console.error(`Invalid dev-min-age: ${v}. Must be an integer >= 1.`);
           process.exit(2);
         }
       } else {

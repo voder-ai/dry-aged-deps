@@ -21,7 +21,11 @@ describe('CLI --min-age flag', () => {
   });
 
   it('accepts values >365 without error', async () => {
-    const result = await execa('node', [cliPath, '--format=json', '--min-age=366']);
+    const result = await execa('node', [
+      cliPath,
+      '--format=json',
+      '--min-age=366',
+    ]);
     expect(result.exitCode).toBe(0);
     const obj = JSON.parse(result.stdout);
     expect(obj.summary.thresholds.prod.minAge).toBe(366);

@@ -68,11 +68,17 @@ describe('dry-aged-deps CLI check mode', () => {
 
   it('exit code 0 when outdated packages exist but none meet min-age threshold in check mode', async () => {
     // Story: prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md
-    const result = await execa('node', [cliPath, '--check', '--min-age=10000'], {
-      env: { ...process.env, DRY_AGED_DEPS_MOCK: '1' },
-      reject: false,
-    });
+    const result = await execa(
+      'node',
+      [cliPath, '--check', '--min-age=10000'],
+      {
+        env: { ...process.env, DRY_AGED_DEPS_MOCK: '1' },
+        reject: false,
+      }
+    );
     expect(result.exitCode).toBe(0);
-    expect(result.stdout).toContain('No outdated packages with mature versions found');
+    expect(result.stdout).toContain(
+      'No outdated packages with mature versions found'
+    );
   });
 });
