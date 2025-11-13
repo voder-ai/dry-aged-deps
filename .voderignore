@@ -23,7 +23,6 @@ test/fixtures/**
 *.swo
 
 # Husky hooks and GitHub assistant prompts
-.husky/**
 .github/instructions/**
 .github/prompts/**
 
