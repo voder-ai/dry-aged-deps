@@ -89,6 +89,9 @@ dry-aged-deps --update
 
 # Apply updates without confirmation
 dry-aged-deps --update --yes
+
+# Check for safe updates (exit code 1 if updates available, 0 if none, 2 on error)
+dry-aged-deps --check
 ```
 
 ```sh
