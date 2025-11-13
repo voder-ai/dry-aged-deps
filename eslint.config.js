@@ -97,9 +97,9 @@ export default [
     },
   },
 
-  // Disable complexity and max-lines-per-function for config-loader and xml-formatter
+  // Disable complexity and max-lines-per-function for xml-formatter
   {
-    files: ['src/config-loader.js', 'src/xml-formatter.js'],
+    files: ['src/xml-formatter.js'],
     rules: {
       complexity: 'off',
       'max-lines-per-function': 'off',
