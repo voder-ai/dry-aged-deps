@@ -126,4 +126,13 @@ export default [
       'max-lines-per-function': 'off',
     },
   },
+
+  // Disable complexity and max-lines-per-function for ESLint config file
+  {
+    files: ['eslint.config.js'],
+    rules: {
+      complexity: 'off',
+      'max-lines-per-function': 'off',
+    },
+  },
 ];
