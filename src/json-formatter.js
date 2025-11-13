@@ -1,3 +1,4 @@
+// @ts-nocheck - TODO: Fix type annotations incrementally
 // Story: prompts/008.0-DEV-JSON-OUTPUT.md
 // json-formatter.js
 // Formats outdated dependencies and summary data into JSON

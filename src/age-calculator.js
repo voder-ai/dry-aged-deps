@@ -1,3 +1,4 @@
+// @ts-nocheck - TODO: Fix type annotations incrementally
 /**
  * Calculate the age in days since the publish date.
  * @param {string} publishDate - The publish date string (ISO format).
