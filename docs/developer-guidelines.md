@@ -68,6 +68,66 @@ Tests use vitest and must maintain 80% coverage thresholds.
 
 ## Git Workflow
 
+### Commit Messages
+
+We use [Conventional Commits](https://www.conventionalcommits.org/) format, enforced by commitlint.
+
+#### Commit Types
+
+- `feat:` - New feature that adds user-visible functionality (triggers minor version bump)
+- `fix:` - Bug fix (triggers patch version bump)
+- `chore:` - Changes that don't modify src or test files (e.g., dependency updates, build config)
+- `refactor:` - Code changes that neither fix bugs nor add features
+- `docs:` - Documentation only changes
+- `style:` - Code style changes (formatting, missing semicolons, etc.)
+- `test:` - Adding or updating tests
+- `perf:` - Performance improvements
+- `ci:` - CI/CD configuration changes
+- `build:` - Changes to build system or external dependencies
+- `revert:` - Reverts a previous commit
+
+#### When to Use `feat:`
+
+Use `feat:` **ONLY** when adding new user-facing functionality or CLI options. Examples:
+
+- ✅ `feat: add --json output format`
+- ✅ `feat: support config file for default options`
+- ❌ `feat: enable TypeScript type checking` (use `chore:` - internal tooling)
+- ❌ `feat: add ESLint rule` (use `chore:` - developer tooling)
+
+#### When to Use `BREAKING CHANGE:`
+
+Add `BREAKING CHANGE:` in the commit body or footer **ONLY** when:
+
+- Removing or renaming a CLI flag/option
+- Changing the default behavior of existing functionality
+- Removing support for a documented feature
+- Changing exit codes in a way that breaks existing scripts
+- Changing output format in a backwards-incompatible way
+
+**NEVER use `BREAKING CHANGE:` for:**
+
+- ❌ Linting rule changes (internal developer tooling)
+- ❌ Adding stricter type checking (internal developer tooling)
+- ❌ Refactoring code without changing external behavior
+- ❌ Updating dependencies (unless they change user-facing behavior)
+- ❌ Test changes
+- ❌ Documentation updates
+
+Examples:
+
+```
+# CORRECT - Breaking change
+feat: change --min-age to require integer value
+
+BREAKING CHANGE: --min-age now only accepts integers, not floats
+
+# WRONG - Not a breaking change
+refactor: enable strict TypeScript checking
+
+BREAKING CHANGE: Added strict null checks
+```
+
 ### What NOT to Ignore
 
 - `.voder/` - AI development state (as mentioned above)

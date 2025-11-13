@@ -86,7 +86,7 @@ import { checkVulnerabilities } from 'dry-aged-deps';
  * Check if a specific package version has known vulnerabilities.
  * @param {string} packageName - The name of the npm package.
  * @param {string} version - The version to check.
- * @returns {Promise<{ total: number; breakdown: { info: number; low: number; moderate: number; high: number; critical: number } }>} Promise resolving to an object containing the total number of vulnerabilities and a breakdown by severity.
+ * @returns {Promise<{ count: number; vulnerabilities: { info: number; low: number; moderate: number; high: number; critical: number }; details: Array<object> }>} Promise resolving to an object containing the total number of vulnerabilities, a breakdown by severity, and detailed vulnerability entries.
  * @throws {Error} If the packageName is invalid or audit fails unexpectedly.
  */
 async function checkVulnerabilities(packageName, version)
@@ -101,8 +101,9 @@ async function checkVulnerabilities(packageName, version)
 
 A promise that resolves to an object with:
 
-- `total` (number): Total number of vulnerabilities found.
-- `breakdown` (object): Mapping of severity levels (`info`, `low`, `moderate`, `high`, `critical`) to the count of vulnerabilities at each level.
+- `count` (number): Total number of vulnerabilities found.
+- `vulnerabilities` (object): Mapping of severity levels (`info`, `low`, `moderate`, `high`, `critical`) to the count of vulnerabilities at each level.
+- `details` (array): Detailed information for each vulnerability issue.
 
 ### Example
 
@@ -110,8 +111,8 @@ A promise that resolves to an object with:
 import { checkVulnerabilities } from 'dry-aged-deps';
 
 const report = await checkVulnerabilities('lodash', '4.17.21');
-console.log(report.total); // => 0
-console.log(report.breakdown); // => { info: 0, low: 0, moderate: 0, high: 0, critical: 0 }
+console.log(report.count); // => 0
+console.log(report.vulnerabilities); // => { info: 0, low: 0, moderate: 0, high: 0, critical: 0 }
 ```
 
 ## printOutdated(data, options)

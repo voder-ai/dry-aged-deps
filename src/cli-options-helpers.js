@@ -1,5 +1,29 @@
 // @ts-nocheck
 /**
+ * Helper to extract raw flag value from CLI args.
+ *
+ * @param {string[]} args - CLI arguments.
+ * @param {string} flag - Flag name without leading hyphens.
+ * @returns {string|undefined} The raw flag value if provided; undefined if flag not present. Exits with code 2 if flag provided without a value.
+ */
+function getFlagRawValue(args, flag) {
+  const prefix = `--${flag}=`;
+  const eqArg = args.find((a) => a.startsWith(prefix));
+  if (eqArg) {
+    return eqArg.slice(prefix.length);
+  }
+  const idx = args.indexOf(`--${flag}`);
+  if (idx !== -1) {
+    if (args.length > idx + 1) {
+      return args[idx + 1];
+    }
+    console.error(`Missing value for --${flag}`);
+    process.exit(2);
+  }
+  return undefined;
+}
+
+/**
  * Generic helper to parse string flags with optional validation.
  *
  * @param {string[]} args - CLI arguments.
@@ -9,22 +33,8 @@
  * @returns {string} Parsed flag value.
  */
 function parseStringFlag(args, flag, defaultValue, validValues) {
-  let value = defaultValue;
-  const prefix = `--${flag}=`;
-  const eqArg = args.find((a) => a.startsWith(prefix));
-  if (eqArg) {
-    value = eqArg.slice(prefix.length);
-  } else {
-    const idx = args.indexOf(`--${flag}`);
-    if (idx !== -1) {
-      if (args.length > idx + 1) {
-        value = args[idx + 1];
-      } else {
-        console.error(`Missing value for --${flag}`);
-        process.exit(2);
-      }
-    }
-  }
+  const raw = getFlagRawValue(args, flag);
+  const value = raw !== undefined ? raw : defaultValue;
   if (validValues && !validValues.includes(value)) {
     console.error(
       `Invalid ${flag}: ${value}. Valid values are: ${validValues.join(', ')}`
@@ -45,44 +55,19 @@ function parseStringFlag(args, flag, defaultValue, validValues) {
  * @returns {number} Parsed integer flag value.
  */
 function parseIntegerFlag(args, flag, defaultValue, min = 1, max = Infinity) {
+  const raw = getFlagRawValue(args, flag);
   let num = defaultValue;
-  const prefix = `--${flag}=`;
-  const eqArg = args.find((a) => a.startsWith(prefix));
-  if (eqArg) {
-    const str = eqArg.slice(prefix.length);
-    if (!/^[0-9]+$/.test(str)) {
-      console.error(`Invalid ${flag}: ${str}. Must be an integer >= ${min}.`);
+  if (raw !== undefined) {
+    if (!/^[0-9]+$/.test(raw)) {
+      console.error(`Invalid ${flag}: ${raw}. Must be an integer >= ${min}.`);
       process.exit(2);
     }
-    num = parseInt(str, 10);
+    num = parseInt(raw, 10);
     if (num < min || num > max) {
       console.error(
-        `Invalid ${flag}: ${str}. Must be an integer between ${min} and ${max}.`
+        `Invalid ${flag}: ${raw}. Must be an integer between ${min} and ${max}.`
       );
       process.exit(2);
-    }
-  } else {
-    const idx = args.indexOf(`--${flag}`);
-    if (idx !== -1) {
-      if (args.length > idx + 1) {
-        const str = args[idx + 1];
-        if (!/^[0-9]+$/.test(str)) {
-          console.error(
-            `Invalid ${flag}: ${str}. Must be an integer >= ${min}.`
-          );
-          process.exit(2);
-        }
-        num = parseInt(str, 10);
-        if (num < min || num > max) {
-          console.error(
-            `Invalid ${flag}: ${str}. Must be an integer between ${min} and ${max}.`
-          );
-          process.exit(2);
-        }
-      } else {
-        console.error(`Missing value for --${flag}`);
-        process.exit(2);
-      }
     }
   }
   return num;
