@@ -1,3 +1,7 @@
+/**
+ * @file Main entry point for dry-aged-deps programmatic API.
+ * @module dry-aged-deps
+ */
 // src/index.js
 // Main entry point for programmatic usage of dry-aged-deps
 

@@ -1,29 +1,12 @@
 ## NOW  
-Run Prettier to auto-fix all formatting issues:  
-```bash
-npx prettier --write .
-```
+Edit CHANGELOG.md to remove the “Unreleased” section and add concrete entries for config-file support and the --check mode under the current version, documenting those features as shipped.
 
 ## NEXT  
-- Run ESLint with auto-fix to correct lint errors:  
-  ```bash
-  npx eslint . --ext .js --max-warnings=0 --fix
-  ```  
-- Run the type checker and resolve any JSDoc/type errors:  
-  ```bash
-  npm run type-check
-  ```  
-- Stage and commit all code-quality changes:  
-  ```bash
-  git add .
-  git commit -m "chore: apply formatting, lint and type fixes"
-  ```  
-- Push the commit to the remote repository:  
-  ```bash
-  git push
-  ```
+- Update tsconfig.json per ADR 0006: enable strict type‐checking flags and include the bin directory in the “include” paths.  
+- Add or complete JSDoc annotations in `src/index.js` and any helpers missing `@throws`, parameter and return types.  
+- Revise docs/api.md and README.md examples to cover `--config-file` and `--check` usage, including exit-code semantics.
 
 ## LATER  
-- Configure a Husky pre-commit hook (via lint-staged) to run Prettier and ESLint --fix on staged files automatically.  
-- Add strict Prettier and ESLint checks to the CI pipeline and fail builds on violations.  
-- Review and tune ESLint complexity and max-lines-per-function rules for maintainability.
+- Publish a JSON Schema file (e.g. `.dry-aged-deps.schema.json`) for the config file and reference it in `.dry-aged-deps.json`.  
+- Configure lint-staged in Husky to auto-run Prettier and ESLint --fix on staged files.  
+- Add snapshot tests for JSON and XML formatter output to guard against future regressions.

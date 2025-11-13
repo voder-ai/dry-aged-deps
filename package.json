@@ -15,10 +15,11 @@
     "test": "vitest run --coverage",
     "test:watch": "vitest --coverage",
     "test:cli": "vitest run",
-    "lint": "npx eslint . --ext .js --max-warnings=0",
+    "lint": "npx eslint . --ext .js,.ts --max-warnings=0",
     "prepare": "husky install",
-    "type-check": "node node_modules/typescript/bin/tsc --noEmit -p tsconfig.json",
-    "validate": "npm run lint && npm run type-check && npm test",
+    "typecheck": "tsc --noEmit",
+    "type-check": "tsc --noEmit",
+    "validate": "npm run lint && npm run typecheck && npm test",
     "release": "npm version patch && git push --follow-tags"
   },
   "devDependencies": {
