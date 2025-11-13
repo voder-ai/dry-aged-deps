@@ -77,22 +77,18 @@ describe('CLI --severity flag', () => {
     expect(obj.summary.thresholds.prod.minSeverity).toBe('none');
   });
 
-  it(
-    'accepts valid severity values',
-    { timeout: 30000 },
-    async () => {
-      const valid = ['none', 'low', 'moderate', 'high', 'critical'];
-      for (const level of valid) {
-        const result = await execa('node', [
-          cliPath,
-          '--format=json',
-          `--severity=${level}`,
-        ]);
-        expect(result.exitCode).toBe(0);
-        const obj = JSON.parse(result.stdout);
-        expect(obj.summary.thresholds.prod.minSeverity).toBe(level);
-        expect(obj.summary.thresholds.dev.minSeverity).toBe(level);
-      }
+  it('accepts valid severity values', { timeout: 30000 }, async () => {
+    const valid = ['none', 'low', 'moderate', 'high', 'critical'];
+    for (const level of valid) {
+      const result = await execa('node', [
+        cliPath,
+        '--format=json',
+        `--severity=${level}`,
+      ]);
+      expect(result.exitCode).toBe(0);
+      const obj = JSON.parse(result.stdout);
+      expect(obj.summary.thresholds.prod.minSeverity).toBe(level);
+      expect(obj.summary.thresholds.dev.minSeverity).toBe(level);
     }
-  );
+  });
 });
