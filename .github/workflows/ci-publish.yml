@@ -58,6 +58,9 @@ jobs:
       - name: Lint code
         run: npm run lint
 
+      - name: Check types
+        run: npm run type-check
+
       - name: Check formatting
         run: npx prettier --check .
 
