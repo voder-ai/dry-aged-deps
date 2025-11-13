@@ -1,290 +1,153 @@
 /**
- * Parse the --format flag.
+ * Generic helper to parse string flags with optional validation.
  *
  * @param {string[]} args - CLI arguments.
- * @param {string} defaultFormat - Default format value.
- * @param {string[]} validFormats - Allowed format values.
- * @returns {string} The selected format.
+ * @param {string} flag - Flag name, e.g., 'format', 'severity'.
+ * @param {string} defaultValue - Default value if flag not provided.
+ * @param {string[]} [validValues] - Optional array of valid values.
+ * @returns {string} Parsed flag value.
  */
-export function parseFormatFlag(args, defaultFormat, validFormats) {
-  let format = defaultFormat;
-  const fmtEq = args.find((a) => a.startsWith('--format='));
-  if (fmtEq) {
-    format = fmtEq.split('=')[1];
+function parseStringFlag(args, flag, defaultValue, validValues) {
+  let value = defaultValue;
+  const prefix = `--${flag}=`;
+  const eqArg = args.find((a) => a.startsWith(prefix));
+  if (eqArg) {
+    value = eqArg.slice(prefix.length);
   } else {
-    const idx = args.indexOf('--format');
-    if (idx !== -1 && args.length > idx + 1) {
-      format = args[idx + 1];
+    const idx = args.indexOf(`--${flag}`);
+    if (idx !== -1) {
+      if (args.length > idx + 1) {
+        value = args[idx + 1];
+      } else {
+        console.error(`Missing value for --${flag}`);
+        process.exit(2);
+      }
     }
   }
-  if (!validFormats.includes(format)) {
+  if (validValues && !validValues.includes(value)) {
     console.error(
-      `Invalid format: ${format}. Valid values are: ${validFormats.join(', ')}`
+      `Invalid ${flag}: ${value}. Valid values are: ${validValues.join(', ')}`
     );
     process.exit(2);
   }
-  return format;
+  return value;
+}
+
+/**
+ * Generic helper to parse integer flags with min/max bounds.
+ *
+ * @param {string[]} args - CLI arguments.
+ * @param {string} flag - Flag name, e.g., 'min-age', 'prod-min-age'.
+ * @param {number} defaultValue - Default numeric value.
+ * @param {number} [min=1] - Minimum allowed value (inclusive).
+ * @param {number} [max=Infinity] - Maximum allowed value (inclusive).
+ * @returns {number} Parsed integer flag value.
+ */
+function parseIntegerFlag(args, flag, defaultValue, min = 1, max = Infinity) {
+  let num = defaultValue;
+  const prefix = `--${flag}=`;
+  const eqArg = args.find((a) => a.startsWith(prefix));
+  if (eqArg) {
+    const str = eqArg.slice(prefix.length);
+    if (!/^[0-9]+$/.test(str)) {
+      console.error(`Invalid ${flag}: ${str}. Must be an integer >= ${min}.`);
+      process.exit(2);
+    }
+    num = parseInt(str, 10);
+    if (num < min || num > max) {
+      console.error(
+        `Invalid ${flag}: ${str}. Must be an integer between ${min} and ${max}.`
+      );
+      process.exit(2);
+    }
+  } else {
+    const idx = args.indexOf(`--${flag}`);
+    if (idx !== -1) {
+      if (args.length > idx + 1) {
+        const str = args[idx + 1];
+        if (!/^[0-9]+$/.test(str)) {
+          console.error(`Invalid ${flag}: ${str}. Must be an integer >= ${min}.`);
+          process.exit(2);
+        }
+        num = parseInt(str, 10);
+        if (num < min || num > max) {
+          console.error(
+            `Invalid ${flag}: ${str}. Must be an integer between ${min} and ${max}.`
+          );
+          process.exit(2);
+        }
+      } else {
+        console.error(`Missing value for --${flag}`);
+        process.exit(2);
+      }
+    }
+  }
+  return num;
+}
+
+/**
+ * Parse the --format flag.
+ */
+export function parseFormatFlag(args, defaultFormat, validFormats) {
+  return parseStringFlag(args, 'format', defaultFormat, validFormats);
 }
 
 /**
  * Parse the --min-age flag.
- *
- * @param {string[]} args - CLI arguments.
- * @param {number} defaultMinAge - Default minAge value.
- * @returns {number} The parsed minAge.
  */
 export function parseMinAgeFlag(args, defaultMinAge) {
-  let minAge = defaultMinAge;
-  const eq = args.find((a) => a.startsWith('--min-age='));
-  if (eq) {
-    const v = eq.split('=')[1];
-    if (!/^[0-9]+$/.test(v)) {
-      console.error(`Invalid min-age: ${v}. Must be an integer >= 1.`);
-      process.exit(2);
-    }
-    minAge = parseInt(v, 10);
-    if (minAge < 1) {
-      console.error(`Invalid min-age: ${v}. Must be an integer >= 1.`);
-      process.exit(2);
-    }
-  } else {
-    const idx = args.indexOf('--min-age');
-    if (idx !== -1) {
-      if (args.length > idx + 1) {
-        const v = args[idx + 1];
-        if (!/^[0-9]+$/.test(v)) {
-          console.error(`Invalid min-age: ${v}. Must be an integer >= 1.`);
-          process.exit(2);
-        }
-        minAge = parseInt(v, 10);
-        if (minAge < 1) {
-          console.error(`Invalid min-age: ${v}. Must be an integer >= 1.`);
-          process.exit(2);
-        }
-      } else {
-        console.error('Missing value for --min-age');
-        process.exit(2);
-      }
-    }
-  }
-  return minAge;
+  return parseIntegerFlag(args, 'min-age', defaultMinAge, 1, 365);
 }
 
 /**
  * Parse the --severity flag.
- *
- * @param {string[]} args - CLI arguments.
- * @param {string} defaultSeverity - Default severity value.
- * @param {string[]} validSeverities - Allowed severity values.
- * @returns {string} The parsed severity.
  */
 export function parseSeverityFlag(args, defaultSeverity, validSeverities) {
-  let severity = defaultSeverity;
-  const eq = args.find((a) => a.startsWith('--severity='));
-  if (eq) {
-    const v = eq.split('=')[1];
-    if (!validSeverities.includes(v)) {
-      console.error(
-        `Invalid severity: ${v}. Valid values are: ${validSeverities.join(', ')}`
-      );
-      process.exit(2);
-    }
-    severity = v;
-  } else {
-    const idx = args.indexOf('--severity');
-    if (idx !== -1) {
-      if (args.length > idx + 1) {
-        const v = args[idx + 1];
-        if (!validSeverities.includes(v)) {
-          console.error(
-            `Invalid severity: ${v}. Valid values are: ${validSeverities.join(', ')}`
-          );
-          process.exit(2);
-        }
-        severity = v;
-      } else {
-        console.error('Missing value for --severity');
-        process.exit(2);
-      }
-    }
-  }
-  return severity;
+  return parseStringFlag(args, 'severity', defaultSeverity, validSeverities);
 }
 
 /**
  * Parse the --prod-min-age flag.
- *
- * @param {string[]} args - CLI arguments.
- * @param {number} defaultProdMinAge - Default prodMinAge value.
- * @returns {number} The parsed prodMinAge.
  */
 export function parseProdMinAgeFlag(args, defaultProdMinAge) {
-  let prodMinAge = defaultProdMinAge;
-  const eq = args.find((a) => a.startsWith('--prod-min-age='));
-  if (eq) {
-    const v = eq.split('=')[1];
-    if (!/^[0-9]+$/.test(v)) {
-      console.error(`Invalid prod-min-age: ${v}. Must be an integer >= 1.`);
-      process.exit(2);
-    }
-    prodMinAge = parseInt(v, 10);
-    if (prodMinAge < 1) {
-      console.error(`Invalid prod-min-age: ${v}. Must be an integer >= 1.`);
-      process.exit(2);
-    }
-  } else {
-    const idx = args.indexOf('--prod-min-age');
-    if (idx !== -1) {
-      if (args.length > idx + 1) {
-        const v = args[idx + 1];
-        if (!/^[0-9]+$/.test(v)) {
-          console.error(`Invalid prod-min-age: ${v}. Must be an integer >= 1.`);
-          process.exit(2);
-        }
-        prodMinAge = parseInt(v, 10);
-        if (prodMinAge < 1) {
-          console.error(`Invalid prod-min-age: ${v}. Must be an integer >= 1.`);
-          process.exit(2);
-        }
-      } else {
-        console.error('Missing value for --prod-min-age');
-        process.exit(2);
-      }
-    }
-  }
-  return prodMinAge;
+  return parseIntegerFlag(args, 'prod-min-age', defaultProdMinAge, 1, 365);
 }
 
 /**
  * Parse the --dev-min-age flag.
- *
- * @param {string[]} args - CLI arguments.
- * @param {number} defaultDevMinAge - Default devMinAge value.
- * @returns {number} The parsed devMinAge.
  */
 export function parseDevMinAgeFlag(args, defaultDevMinAge) {
-  let devMinAge = defaultDevMinAge;
-  const eq = args.find((a) => a.startsWith('--dev-min-age='));
-  if (eq) {
-    const v = eq.split('=')[1];
-    if (!/^[0-9]+$/.test(v)) {
-      console.error(`Invalid dev-min-age: ${v}. Must be an integer >= 1.`);
-      process.exit(2);
-    }
-    devMinAge = parseInt(v, 10);
-    if (devMinAge < 1) {
-      console.error(`Invalid dev-min-age: ${v}. Must be an integer >= 1.`);
-      process.exit(2);
-    }
-  } else {
-    const idx = args.indexOf('--dev-min-age');
-    if (idx !== -1) {
-      if (args.length > idx + 1) {
-        const v = args[idx + 1];
-        if (!/^[0-9]+$/.test(v)) {
-          console.error(`Invalid dev-min-age: ${v}. Must be an integer >= 1.`);
-          process.exit(2);
-        }
-        devMinAge = parseInt(v, 10);
-        if (devMinAge < 1) {
-          console.error(`Invalid dev-min-age: ${v}. Must be an integer >= 1.`);
-          process.exit(2);
-        }
-      } else {
-        console.error('Missing value for --dev-min-age');
-        process.exit(2);
-      }
-    }
-  }
-  return devMinAge;
+  return parseIntegerFlag(args, 'dev-min-age', defaultDevMinAge, 1, 365);
 }
 
 /**
  * Parse the --prod-severity flag.
- *
- * @param {string[]} args - CLI arguments.
- * @param {string} defaultProdMinSeverity - Default prodMinSeverity value.
- * @param {string[]} validSeverities - Allowed severity values.
- * @returns {string} The parsed prodMinSeverity.
  */
 export function parseProdSeverityFlag(
   args,
   defaultProdMinSeverity,
   validSeverities
 ) {
-  let prodMinSeverity = defaultProdMinSeverity;
-  const eq = args.find((a) => a.startsWith('--prod-severity='));
-  if (eq) {
-    const v = eq.split('=')[1];
-    if (!validSeverities.includes(v)) {
-      console.error(
-        `Invalid prod-severity: ${v}. Valid values are: ${validSeverities.join(', ')}`
-      );
-      process.exit(2);
-    }
-    prodMinSeverity = v;
-  } else {
-    const idx = args.indexOf('--prod-severity');
-    if (idx !== -1) {
-      if (args.length > idx + 1) {
-        const v = args[idx + 1];
-        if (!validSeverities.includes(v)) {
-          console.error(
-            `Invalid prod-severity: ${v}. Valid values are: ${validSeverities.join(', ')}`
-          );
-          process.exit(2);
-        }
-        prodMinSeverity = v;
-      } else {
-        console.error('Missing value for --prod-severity');
-        process.exit(2);
-      }
-    }
-  }
-  return prodMinSeverity;
+  return parseStringFlag(
+    args,
+    'prod-severity',
+    defaultProdMinSeverity,
+    validSeverities
+  );
 }
 
 /**
  * Parse the --dev-severity flag.
- *
- * @param {string[]} args - CLI arguments.
- * @param {string} defaultDevMinSeverity - Default devMinSeverity value.
- * @param {string[]} validSeverities - Allowed severity values.
- * @returns {string} The parsed devMinSeverity.
  */
 export function parseDevSeverityFlag(
   args,
   defaultDevMinSeverity,
   validSeverities
 ) {
-  let devMinSeverity = defaultDevMinSeverity;
-  const eq = args.find((a) => a.startsWith('--dev-severity='));
-  if (eq) {
-    const v = eq.split('=')[1];
-    if (!validSeverities.includes(v)) {
-      console.error(
-        `Invalid dev-severity: ${v}. Valid values are: ${validSeverities.join(', ')}`
-      );
-      process.exit(2);
-    }
-    devMinSeverity = v;
-  } else {
-    const idx = args.indexOf('--dev-severity');
-    if (idx !== -1) {
-      if (args.length > idx + 1) {
-        const v = args[idx + 1];
-        if (!validSeverities.includes(v)) {
-          console.error(
-            `Invalid dev-severity: ${v}. Valid values are: ${validSeverities.join(', ')}`
-          );
-          process.exit(2);
-        }
-        devMinSeverity = v;
-      } else {
-        console.error('Missing value for --dev-severity');
-        process.exit(2);
-      }
-    }
-  }
-  return devMinSeverity;
+  return parseStringFlag(
+    args,
+    'dev-severity',
+    defaultDevMinSeverity,
+    validSeverities
+  );
 }
