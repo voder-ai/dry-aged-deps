@@ -1,12 +1,21 @@
-## NOW  
-Refactor src/print-outdated-handlers.js’s `handleJsonOutput` to build and pass object‐style package entries—including `name`, `type`, `current`, `wanted`, `latest`, `recommended`, `age`, `vulnerabilities` (count, maxSeverity, details), `filtered`, and `filterReason`—to `jsonFormatter`, replacing the existing array‐only rows.
+## NOW
+Add a new unit test `test/build-rows.fetchError.test.js` that stubs `fetchVersionTimes` to throw an error and verifies that `buildRows` returns a row with the package’s age set to `"N/A"` when a publish‐date lookup fails.
 
-## NEXT  
-- Update src/json-formatter.js so it serializes these new object fields into the final JSON output schema.  
-- Revise all JSON‐output tests (e.g. test/cli.format-json.test.js, test/printOutdated.json.test.js) to assert presence and correctness of the added fields.  
-- Run local quality checks (npm run lint, npm run type-check, npm test) to confirm everything still passes.
+## NEXT
+- Write unit tests for unexercised branches to raise branch coverage above 90%:
+  1. **filterBySecurity**: cover the branch where `checkVulnerabilities` throws in JSON mode (no console errors) and in table mode (logs a warning and treats the package as safe).
+  2. **xmlFormatter**: cover all threshold‐only combinations (prod only, dev only, missing fields) and missing‐details branches.
+  3. **config-loader**: cover invalid‐JSON, unknown key, invalid ranges, and missing custom config file error paths.
+  4. **printOutdated**: cover the early‐JSON branch when a local `package.json` exists and bypasses `npm outdated`.
+- Run local quality checks:
+    ```
+    npm run lint
+    npm run type-check
+    npm test
+    ```
+  and verify branch coverage is ≥ 90% and all checks pass.
 
-## LATER  
-- Define a formal JSON Schema (e.g. schema/outdated-packages.schema.json), reference it in README.md/docs/api.md, and add runtime or test-time validation against it.  
-- Add CI E2E tests that parse JSON output and validate against the schema to catch regressions.  
-- Extract shared XML/JSON formatting helpers into a common utility module to remove duplication and simplify future maintenance.
+## LATER
+- Refactor oversized modules (e.g. `print-outdated.js`, `xml-formatter.js`) into smaller functions so complexity and max‐lines rules can be re-enabled.
+- Implement caching and parallel fetching in `fetch-version-times.js` to improve performance.
+- Define a formal JSON Schema for the machine‐readable output, publish it under `schema/`, and add test-time validation against it.
