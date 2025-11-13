@@ -509,11 +509,11 @@ async function main() {
     data = mock.outdatedData;
     fetchVersionTimesOverride = mock.fetchVersionTimes;
     checkVulnerabilitiesOverride = mock.checkVulnerabilities;
-  } else if (format === 'json') {
-    // Skip running npm outdated in JSON mode
+  } else if (format === 'json' && checkMode) {
+    // Skip running npm outdated in JSON check mode
     data = {};
   } else {
-    // Run npm outdated in non-JSON modes
+    // Run npm outdated via npm outdated --json
     let outputStr;
     try {
       outputStr = execFileSync('npm', ['outdated', '--json'], {
