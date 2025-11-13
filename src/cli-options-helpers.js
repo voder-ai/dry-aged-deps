@@ -96,7 +96,7 @@ export function parseFormatFlag(args, defaultFormat, validFormats) {
  * Parse the --min-age flag.
  */
 export function parseMinAgeFlag(args, defaultMinAge) {
-  return parseIntegerFlag(args, 'min-age', defaultMinAge, 1, 365);
+  return parseIntegerFlag(args, 'min-age', defaultMinAge, 1);
 }
 
 /**
@@ -110,14 +110,14 @@ export function parseSeverityFlag(args, defaultSeverity, validSeverities) {
  * Parse the --prod-min-age flag.
  */
 export function parseProdMinAgeFlag(args, defaultProdMinAge) {
-  return parseIntegerFlag(args, 'prod-min-age', defaultProdMinAge, 1, 365);
+  return parseIntegerFlag(args, 'prod-min-age', defaultProdMinAge, 1);
 }
 
 /**
  * Parse the --dev-min-age flag.
  */
 export function parseDevMinAgeFlag(args, defaultDevMinAge) {
-  return parseIntegerFlag(args, 'dev-min-age', defaultDevMinAge, 1, 365);
+  return parseIntegerFlag(args, 'dev-min-age', defaultDevMinAge, 1);
 }
 
 /**
