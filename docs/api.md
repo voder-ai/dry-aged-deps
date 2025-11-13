@@ -300,6 +300,8 @@ Merge precedence: CLI flags override config file values, which override built-in
 
 To enforce dependency freshness policies in your CI/CD pipelines, use the `--check` flag. In check mode, the exit codes are:
 
+### Exit Codes
+
 - `0`: No safe updates available (success).
 - `1`: Safe updates available (failure).
 - `2`: Execution error (invalid input, unexpected exceptions; applies across table, JSON, and XML formats).
