@@ -4,3 +4,5 @@
 
 # Ignore Husky hooks
 .husky/**
+
+test/cli.json.skip-outdated.test.js
