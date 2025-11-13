@@ -172,7 +172,9 @@ For programmatic API access and detailed architectural overview, see:
 3. Install Git hooks: `npm run prepare`
 4. Run tests: `npm test`
 5. Run linter: `npm run lint`
-6. Format code: `npm run format`
+6. Run type-check: `npm run typecheck`
+7. Validate code and tests: `npm run validate`
+8. Format code: `npm run format`
 
 ### Development Tooling (Optional)
 

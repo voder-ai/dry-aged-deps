@@ -60,6 +60,8 @@ All code changes should include appropriate tests:
 ```bash
 npm test           # Run tests with coverage
 npm run test:cli   # Run CLI-specific tests
+npm run typecheck  # Run type-checking with TypeScript
+npm run validate   # Run linting and tests together
 ```
 
 Tests use vitest and must maintain 80% coverage thresholds.
