@@ -10,7 +10,7 @@ import { xmlFormatter } from './xml-formatter.js';
 import { loadPackageJson } from './load-package-json.js';
 import { buildRows } from './build-rows.js';
 import { applyFilters } from './apply-filters.js';
-import { handleJsonOutput } from './print-outdated-handlers.js';
+import { handleJsonOutput, handleXmlOutput, handleTableOutput } from './print-outdated-handlers.js';
 import { updatePackages } from './update-packages.js';
 
 // complexity is tolerated in this file due to CLI orchestration; review during refactors
@@ -107,65 +107,25 @@ export async function printOutdated(data, options = {}) {
     return result;
   }
 
-  // XML output (enriched)
   if (format === 'xml') {
-    const thresholds = {
-      prod: { minAge: prodMinAge, minSeverity: prodMinSeverity },
-      dev: { minAge: devMinAge, minSeverity: devMinSeverity },
-    };
-    const items = rows.map(([name, current, wanted, latest, age, depType]) => {
-      const minAge = depType === 'prod' ? prodMinAge : devMinAge;
-      const filteredByAge = typeof age !== 'number' || age < minAge;
-      const vulnInfo = vulnMap.get(name) || {
-        count: 0,
-        maxSeverity: 'none',
-        details: [],
-      };
-      const filteredBySecurity = vulnInfo.count > 0;
-      const filtered = filteredByAge || filteredBySecurity;
-      const filterReason =
-        filterReasonMap.get(name) || (filteredByAge ? 'age' : '');
-      return {
-        name,
-        current,
-        wanted,
-        latest,
-        age,
-        recommended: wanted,
-        vulnerabilities: vulnInfo,
-        filtered,
-        filterReason,
-        dependencyType: depType,
-      };
-    });
-    console.log(xmlFormatter({ rows: items, summary, thresholds, timestamp }));
-    return summary;
+    return handleXmlOutput(
+      rows,
+      summary,
+      {
+        prod: { minAge: prodMinAge, minSeverity: prodMinSeverity },
+        dev: { minAge: devMinAge, minSeverity: devMinSeverity },
+      },
+      vulnMap,
+      filterReasonMap
+    );
   }
 
-  // Table output (default)
-  console.log('Outdated packages:');
-  console.log(
-    ['Name', 'Current', 'Wanted', 'Latest', 'Age (days)', 'Type'].join('	')
+  return handleTableOutput(
+    safeRows,
+    matureRows,
+    summary,
+    prodMinAge,
+    devMinAge,
+    returnSummary
   );
-
-  if (matureRows.length === 0) {
-    console.log(
-      `No outdated packages with mature versions found (prod >= ${prodMinAge} days, dev >= ${devMinAge} days).`
-    );
-    if (returnSummary) return summary;
-    return;
-  }
-  if (safeRows.length === 0) {
-    console.log(
-      `No outdated packages with safe, mature versions (>= ${prodMinAge}/${devMinAge} days old, no vulnerabilities) found.`
-    );
-    if (returnSummary) return summary;
-    return;
-  }
-
-  for (const row of safeRows) {
-    console.log(row.join('	'));
-  }
-  if (returnSummary) return summary;
-  return;
 }
