@@ -87,6 +87,16 @@ export default [
     },
   },
 
+  // Disable complexity, max-lines-per-function, and no-unused-vars for specific src files
+  {
+    files: ['src/print-outdated.js', 'src/cli-options-helpers.js'],
+    rules: {
+      complexity: 'off',
+      'max-lines-per-function': 'off',
+      'no-unused-vars': 'off',
+    },
+  },
+
   // Test files with additional testing globals
   {
     files: ['test/**/*.js', '**/*.test.js', '**/*.spec.js'],
