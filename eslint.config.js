@@ -74,6 +74,8 @@ export default [
     rules: {
       'no-console': 'off',
       'security/detect-child-process': 'off',
+      'complexity': 'off',
+      'max-lines-per-function': 'off',
     },
   },
 
