@@ -16,6 +16,7 @@
     "test:watch": "vitest --coverage",
     "test:cli": "vitest run",
     "lint": "eslint src bin --ext .js --ext .cjs --max-warnings=0",
+    "prepare": "husky install",
     "type-check": "echo 'No type checking required'",
     "release": "npm version patch && git push --follow-tags"
   },
