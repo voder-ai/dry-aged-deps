@@ -15,6 +15,7 @@
     "test:watch": "vitest --coverage",
     "test:cli": "vitest run",
     "lint": "eslint src bin --ext .js --ext .cjs --max-warnings=0",
+    "type-check": "echo 'No type checking required'",
     "release": "npm version patch && git push --follow-tags"
   },
   "devDependencies": {
@@ -26,6 +27,7 @@
     "@semantic-release/github": "12.0.1",
     "@semantic-release/npm": "12.0.2",
     "@semantic-release/release-notes-generator": "14.1.0",
+    "@types/node": "^24.10.1",
     "@vitest/coverage-v8": "4.0.8",
     "eslint": "9.39.1",
     "eslint-plugin-security": "3.0.1",
@@ -34,8 +36,8 @@
     "husky": "9.1.7",
     "prettier": "3.6.2",
     "semantic-release": "24.2.9",
-    "vitest": "4.0.8",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "vitest": "4.0.8"
   },
   "publishConfig": {
     "provenance": true
