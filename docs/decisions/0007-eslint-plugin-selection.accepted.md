@@ -43,11 +43,13 @@ We need to decide whether to add additional ESLint plugins to improve code quali
 - Highly configurable but very comprehensive
 - Many auto-fixable rules
 
-**eslint-plugin-sonarjs (TBD):**
-- 30 cognitive complexity and bug detection rules
-- Focused on code smell detection
-- Less opinionated than unicorn
-- (Analysis pending)
+**eslint-plugin-sonarjs (v3.0.5):**
+- ~30 cognitive complexity and bug detection rules
+- 2M+ weekly downloads
+- Focused on code smells, complexity tracking, and logic bugs
+- Less opinionated than unicorn (bugs over style)
+- From SonarSource (static analysis experts)
+- Fewer auto-fixes (requires manual refactoring)
 
 ## Decision
 
@@ -130,6 +132,9 @@ Review this decision if:
 4. **Major Refactoring**: Natural time to adopt stricter standards
 5. **Quality Problems**: eslint-disable comments proliferate
 6. **Dependency Issues**: Security plugin no longer maintained
+7. **Complexity Creep**: Functions becoming difficult to understand/maintain
+
+**Recommendation if adding a plugin**: Choose **eslint-plugin-sonarjs** over unicorn for its focus on bugs and maintainability over style.
 
 ### Alternative: Selective Rule Adoption
 
@@ -200,20 +205,66 @@ If specific improvements are identified, consider adding individual rules from p
 
 ### Add eslint-plugin-sonarjs
 
-**Approach**: Add cognitive complexity and bug detection rules
+**Approach**: Add ~30 cognitive complexity and bug detection rules from SonarSource
 
 **Pros:**
-- Focused on bugs/code smells vs style
-- ~30 rules (more focused than unicorn)
-- Detects complex functions needing refactoring
+- **Bug Prevention Focus**: Catches logic errors, duplicated code, and confusing patterns
+- **Cognitive Complexity Tracking**: Quantifies function complexity (measurable metric)
+- **Smaller Footprint**: ~30 rules vs 100+ (more targeted than unicorn)
+- **Less Opinionated**: Focuses on correctness over style preferences
+- **Professional Pedigree**: From SonarSource (static analysis experts)
+- **Lower False Positives**: Rules target genuine maintainability issues
+- **Better Than Unicorn**: If adding anything, this is the best choice
 
 **Cons:**
-- Another dependency to maintain
-- May flag false positives
-- Project complexity is already manageable
-- (Full analysis to follow)
+- **Another Dependency**: More maintenance overhead
+- **May Flag Working Code**: Complex but correct functions will be flagged for refactoring
+- **Subjective Thresholds**: Complexity limits (default: 15) are somewhat arbitrary
+- **Not Auto-Fixable**: Most issues require manual refactoring
+- **Configuration Needed**: Thresholds may need tuning for project
+- **Still Not Necessary**: Current quality is good without it
 
-**Rejection Reason**: (To be documented after sonarjs analysis)
+**Expected Impact on dry-aged-deps:**
+- **5-10 warnings** likely (based on codebase analysis)
+- `printOutdated()` (277 lines) may exceed cognitive complexity
+- `cli-options.js` (470 lines) validation logic might be flagged
+- **2-4 hours** refactoring effort to address issues
+- **Potential improvements**: Extract validation functions, simplify conditionals
+
+**Rejection Reason**: While sonarjs is superior to unicorn (bug prevention > style), the project's current quality measures are sufficient. The codebase shows no evidence of complexity problems:
+- Only 236 control structures across 1,815 LOC (healthy ratio)
+- No deeply nested conditionals found
+- 96.96% test coverage catches logic bugs
+- TypeScript type checking prevents type errors
+- Single contributor understands complexity trade-offs
+
+**If circumstances change** (team growth, complexity issues), sonarjs would be the first plugin to add.
+
+**Example Configuration if Adopted:**
+```javascript
+import sonarjs from 'eslint-plugin-sonarjs';
+
+export default [
+  // ... existing config
+  {
+    plugins: { sonarjs },
+    rules: {
+      // Core bug detection (zero tolerance)
+      'sonarjs/no-all-duplicated-branches': 'error',
+      'sonarjs/no-identical-functions': 'error',
+      'sonarjs/no-duplicate-string': ['warn', 5],
+      
+      // Complexity (warnings, tune thresholds)
+      'sonarjs/cognitive-complexity': ['warn', 20], // Higher than default 15
+      'sonarjs/max-switch-cases': ['warn', 15],
+      
+      // Code smells (start as warnings)
+      'sonarjs/no-collapsible-if': 'warn',
+      'sonarjs/prefer-immediate-return': 'warn',
+    }
+  }
+];
+```
 
 ### Use @stylistic/eslint-plugin
 

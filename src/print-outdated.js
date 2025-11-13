@@ -9,6 +9,7 @@ import { jsonFormatter } from './json-formatter.js';
 import { xmlFormatter } from './xml-formatter.js';
 import { filterByAge } from './filter-by-age.js';
 import { filterBySecurity } from './filter-by-security.js';
+import { loadPackageJson } from './load-package-json.js';
 
 /**
  * Print outdated dependencies information with age
@@ -36,23 +37,10 @@ export async function printOutdated(data, options = {}) {
   const prodMinSeverity = options.prodMinSeverity || 'none';
   const devMinSeverity = options.devMinSeverity || 'none';
 
-  // Read package.json to determine dependency types
-  let packageJson = { dependencies: {}, devDependencies: {} };
-  try {
-    const pkgPath = path.join(process.cwd(), 'package.json');
-    const pkgContent = fs.readFileSync(pkgPath, 'utf8');
-    packageJson = JSON.parse(pkgContent);
-  } catch {
-    // If we can't read package.json, treat all as dev dependencies
-  }
-
-  // Helper to determine if a package is prod or dev
-  const getDependencyType = (packageName) => {
-    if (packageJson.dependencies && packageName in packageJson.dependencies) {
-      return 'prod';
-    }
-    return 'dev';
-  };
+  // Load package.json to determine dependency types
+  const { dependencies: prodDeps, devDependencies: _devDeps } = loadPackageJson();
+  const getDependencyType = (packageName) =>
+    packageName in prodDeps ? 'prod' : 'dev';
 
   const entries = Object.entries(data);
 

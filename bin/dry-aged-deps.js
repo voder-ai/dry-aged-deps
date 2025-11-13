@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-/* eslint-disable security/detect-non-literal-fs-filename */
 
 import fs from 'fs';
 import path from 'path';
