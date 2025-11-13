@@ -72,7 +72,7 @@ export default [
     rules: {
       'no-console': 'off',
       'security/detect-child-process': 'off',
-      'complexity': 'off',
+      complexity: 'off',
       'max-lines-per-function': 'off',
     },
   },
@@ -122,7 +122,7 @@ export default [
       'security/detect-non-literal-fs-filename': 'off',
       // Allow unused vars in tests during incremental cleanup
       'no-unused-vars': 'off',
-      'complexity': 'off',
+      complexity: 'off',
       'max-lines-per-function': 'off',
     },
   },
