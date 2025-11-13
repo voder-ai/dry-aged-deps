@@ -326,3 +326,4 @@ jobs:
       - name: Show available updates on failure
         if: failure()
         run: npx dry-aged-deps --format=json
+```
