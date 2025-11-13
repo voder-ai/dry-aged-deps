@@ -49,7 +49,12 @@ export async function printOutdated(data, options = {}) {
 
   // Story: prompts/008.0-DEV-JSON-OUTPUT.md - minimal JSON output
   if (format === 'json') {
-    const summary = handleJsonOutput(data, { prodMinAge, devMinAge, prodMinSeverity, devMinSeverity });
+    const summary = handleJsonOutput(data, {
+      prodMinAge,
+      devMinAge,
+      prodMinSeverity,
+      devMinSeverity,
+    });
     return summary;
   }
 

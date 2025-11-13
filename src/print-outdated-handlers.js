@@ -14,7 +14,8 @@ import { jsonFormatter } from './json-formatter.js';
  * @returns {{ totalOutdated: number, safeUpdates: number, filteredByAge: number, filteredBySecurity: number }} summary
  */
 export function handleJsonOutput(data, thresholdsOpts) {
-  const { prodMinAge, devMinAge, prodMinSeverity, devMinSeverity } = thresholdsOpts;
+  const { prodMinAge, devMinAge, prodMinSeverity, devMinSeverity } =
+    thresholdsOpts;
   const entries = Object.entries(data);
   // Build rows for JSON output, age set to null
   const rows = entries.map(([name, info]) => [
