@@ -13,50 +13,6 @@ import { applyFilters } from './apply-filters.js';
 import { handleJsonOutput } from './print-outdated-handlers.js';
 import { updatePackages } from './update-packages.js';
 
-/**
- * Handle JSON format output for outdated dependencies.
- * Extracted from printOutdated to reduce complexity.
- * @param {Record<string, { current: string; wanted: string; latest: string }>} data
- * @param {number} prodMinAge
- * @param {number} devMinAge
- * @param {string} prodMinSeverity
- * @param {string} devMinSeverity
- * @returns {Object} Summary object
- */
-function handleJsonFormat(data, prodMinAge, devMinAge, prodMinSeverity, devMinSeverity) {
-  return handleJsonOutput(data, {
-    prodMinAge,
-    devMinAge,
-    prodMinSeverity,
-    devMinSeverity,
-  });
-}
-
-/**
- * Handle case where there are no outdated dependencies.
- * Extracted from printOutdated to reduce complexity.
- * @param {string} format
- * @param {{prod:{minAge:number,minSeverity:string}, dev:{minAge:number,minSeverity:string}}} thresholds
- * @param {boolean} returnSummary
- * @returns {Object|undefined} Summary object if needed
- */
-function handleNoOutdated(format, thresholds, returnSummary) {
-  const summary = {
-    totalOutdated: 0,
-    safeUpdates: 0,
-    filteredByAge: 0,
-    filteredBySecurity: 0,
-  };
-  const timestamp = new Date().toISOString();
-  if (format === 'xml') {
-    console.log(xmlFormatter({ rows: [], summary, thresholds, timestamp }));
-    return summary;
-  }
-  console.log('All dependencies are up to date.');
-  if (returnSummary) return summary;
-  return;
-}
-
 // complexity is tolerated in this file due to CLI orchestration; review during refactors
 /**
  * Print outdated dependencies information with age
@@ -94,16 +50,35 @@ export async function printOutdated(data, options = {}) {
 
   // Story: prompts/008.0-DEV-JSON-OUTPUT.md - minimal JSON output
   if (format === 'json') {
-    return handleJsonFormat(data, prodMinAge, devMinAge, prodMinSeverity, devMinSeverity);
+    const summary = handleJsonOutput(data, {
+      prodMinAge,
+      devMinAge,
+      prodMinSeverity,
+      devMinSeverity,
+    });
+    return summary;
   }
 
   // No outdated dependencies
   if (entries.length === 0) {
+    const summary = {
+      totalOutdated: 0,
+      safeUpdates: 0,
+      filteredByAge: 0,
+      filteredBySecurity: 0,
+    };
     const thresholds = {
       prod: { minAge: prodMinAge, minSeverity: prodMinSeverity },
       dev: { minAge: devMinAge, minSeverity: devMinSeverity },
     };
-    return handleNoOutdated(format, thresholds, returnSummary);
+    const timestamp = new Date().toISOString();
+    if (format === 'xml') {
+      console.log(xmlFormatter({ rows: [], summary, thresholds, timestamp }));
+      return summary;
+    }
+    console.log('All dependencies are up to date.');
+    if (returnSummary) return summary;
+    return;
   }
 
   // Build rows
