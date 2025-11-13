@@ -9,6 +9,7 @@
     "node": ">=18.0.0"
   },
   "scripts": {
+    "build": "echo 'No build step required'",
     "format": "prettier --write .",
     "start": "node ./bin/dry-aged-deps.js",
     "test": "vitest run --coverage",
