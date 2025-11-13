@@ -2,11 +2,22 @@
 <traceability>
   <specification>prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-13T17:38:42.524Z</last_validated>
+  <last_validated>2025-11-13T22:06:34.146Z</last_validated>
   <last_modified>2025-11-11T08:04:07.339Z</last_modified>
-  <evidence>• All Vitest tests passed (142/142) including exit‐code tests: test/cli.check-mode.test.js (exit codes 0,1,2 across table, JSON, XML), test/cli.error-cmd.test.js (exit 2 on invalid JSON), test/cli.format-json.error.test.js and test/cli.format-xml.error.test.js (exit 2 and correct output formats), test/cli.upToDate.test.js (exit 0 when up-to-date), test/cli.outdated.mock.test.js (default mode exit 0)
-• README.md documents exit codes under “## Exit Codes”
-• CLI --help output (bin/dry-aged-deps.js) includes “--check                 Check mode: exit code 1 if safe updates available, 0 if none, 2 on error”
-• Coverage reports show no missing exit‐code logic</evidence>
-  <notes>All acceptance criteria are satisfied: standardized exit codes (0,1,2), consistency across formats, documentation in README and help, comprehensive tests covering all scenarios, and backward-compatible behavior preserved.</notes>
+  <evidence>1. README.md documents exit codes under “## Exit Codes”: 0,1,2 consistent across table, JSON, XML.
+2. bin/dry-aged-deps.js implements:
+   - process.exit(0) when no safe updates (check mode)
+   - process.exit(1) when safe updates available (check mode)
+   - process.exit(2) on any error (invalid flags, npm outdated failure, JSON/XML errors).
+3. --help output (bin/dry-aged-deps.js) includes “--check                 Check mode: exit code 1 if safe updates available, 0 if none, 2 on error”.
+4. Comprehensive tests in test/cli.check-mode.test.js cover:
+   - exit code 0 when no updates (JSON/table/XML)
+   - exit code 1 when safe updates available (table/JSON/XML)
+   - exit code 2 on invalid format
+   - exit code 0 when outdated but none meet threshold
+5. Additional tests cover error exit code 2 for:
+   - invalid npm outdated JSON (cli.error-cmd.test.js, cli.format-xml.error.test.js, cli.format-json.error.test.js)
+   - invalid config file and invalid flags (cli.config-file.test.js, cli-options-helpers behavior).
+6. CI suite: 145/145 tests pass; Vitest run shows exit-code behavior correct.</evidence>
+  <notes>The specification in prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md has been fully implemented: exit codes 0/1/2 behave as defined, are documented in README and help text, and are verified by thorough tests across all output formats and error scenarios. Backward compatibility is preserved and no acceptance criteria remain unmet.</notes>
 </traceability>

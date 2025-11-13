@@ -2,11 +2,13 @@
 <traceability>
   <specification>prompts/009.0-DEV-XML-OUTPUT.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-13T17:39:53.904Z</last_validated>
+  <last_validated>2025-11-13T22:07:29.818Z</last_validated>
   <last_modified>2025-11-09T23:05:40.405Z</last_modified>
-  <evidence>- All 142 Vitest tests passed (including 15+ tests covering xmlFormatter and CLI XML behavior).
-- xml-formatter.js implements XML declaration, root, packages, vulnerabilities, summary, thresholds, error blocks, and escaping correctly (100% statement coverage for xml-formatter.js).
-- CLI bin/dry-aged-deps.js and src/print-outdated.js handle --format=xml, suppress console noise, emit proper exit codes (0/1/2), and include xml in --help.
-- README.md and docs reference XML format. Tests for help text, invalid format, and xml error output all pass.</evidence>
-  <notes>The XML output feature is fully implemented according to prompts/009.0-DEV-XML-OUTPUT.md. All acceptance criteria—CLI flag, valid well-formed XML, complete data, summary section, correct exit codes, silent mode, error handling, schema consistency, help documentation—are satisfied with comprehensive unit and integration tests.</notes>
+  <evidence>– Found and reviewed src/xml-formatter.js: includes XML declaration, <outdated-packages> root with timestamp, <packages>, <summary>, <thresholds>, error block, proper escaping, complete data fields (name, current, wanted, latest, recommended, vulnerabilities, filtered, filter-reason, dependency-type).
+– CLI (bin/dry-aged-deps.js) supports --format=xml, routes output and errors through xmlFormatter, suppresses console.error/log noise, exits with codes 0/1/2 per spec.
+– parseOptions (src/cli-options.js + helpers) validates format ∈ {table,json,xml} and errors with exit code 2 on invalid.
+– Help text includes xml as valid format.
+– README.md updated with XML examples and notes that XML is supported.
+– Test suite (145 tests) passed with 100% of xml-formatter tests and CLI XML tests (test/cli.format-xml.test.js, cli.format-xml.error.test.js, printOutdated.xmlEmpty.test.js, printOutdated.xmlFetchError.test.js, xml-formatter.* tests). All vitest runs green.</evidence>
+  <notes>All acceptance criteria from prompts/009.0-DEV-XML-OUTPUT.md have concrete evidence of implementation: CLI flag works, XML is valid and well-formed, includes complete data and summary, exit codes correct, error output in XML, no extraneous console noise, schema consistent, help text updated, and extensive unit and integration tests cover all scenarios.</notes>
 </traceability>

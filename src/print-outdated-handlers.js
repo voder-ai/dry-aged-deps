@@ -6,39 +6,47 @@ import { xmlFormatter } from './xml-formatter.js';
 
 /**
  * Handle JSON output for printOutdated function.
- * @param {Record<string, { current: string; wanted: string; latest: string }>} data - Outdated dependency info
- * @param {object} thresholdsOpts
- * @param {number} thresholdsOpts.prodMinAge
- * @param {number} thresholdsOpts.devMinAge
- * @param {string} thresholdsOpts.prodMinSeverity
- * @param {string} thresholdsOpts.devMinSeverity
- * @returns {{ totalOutdated: number, safeUpdates: number, filteredByAge: number, filteredBySecurity: number }} summary
+ * @param {Array<[string, string, string, string, number|string, string]>} rows - Array of [name, current, wanted, latest, age, depType].
+ * @param {Object} summary - Summary object returned from applyFilters
+ * @param {{ prod: { minAge: number, minSeverity: string }, dev: { minAge: number, minSeverity: string } }} thresholds
+ * @param {Map<string, {count: number, maxSeverity: string, details: Array<any>}>} vulnMap
+ * @param {Map<string, string>} filterReasonMap
+ * @returns {Object} summary
  */
-export function handleJsonOutput(data, thresholdsOpts) {
-  const { prodMinAge, devMinAge, prodMinSeverity, devMinSeverity } =
-    thresholdsOpts;
-  const entries = Object.entries(data);
-  // Build rows for JSON output, age set to null
-  const rows = entries.map(([name, info]) => [
-    name,
-    info.current,
-    info.wanted,
-    info.latest,
-    null,
-  ]);
-  const totalOutdated = rows.length;
-  const summary = {
-    totalOutdated,
-    safeUpdates: totalOutdated,
-    filteredByAge: 0,
-    filteredBySecurity: 0,
-  };
-  const thresholds = {
-    prod: { minAge: prodMinAge, minSeverity: prodMinSeverity },
-    dev: { minAge: devMinAge, minSeverity: devMinSeverity },
-  };
+export function handleJsonOutput(
+  rows,
+  summary,
+  thresholds,
+  vulnMap,
+  filterReasonMap
+) {
   const timestamp = new Date().toISOString();
-  console.log(jsonFormatter({ rows, summary, thresholds, timestamp }));
+  const items = rows.map(([name, current, wanted, latest, age, depType]) => {
+    // Determine if filtered by age
+    const minAge = depType === 'prod' ? thresholds.prod.minAge : thresholds.dev.minAge;
+    const filteredByAge = typeof age !== 'number' || age < minAge;
+    // Get vulnerability info
+    const vulnInfo = vulnMap.get(name) || { count: 0, maxSeverity: 'none', details: [] };
+    const filteredBySecurity = vulnInfo.count > 0;
+    const filtered = filteredByAge || filteredBySecurity;
+    const filterReason =
+      filterReasonMap.get(name) || (filteredByAge ? 'age' : '');
+
+    return {
+      name,
+      current,
+      wanted,
+      latest,
+      recommended: wanted,
+      age: typeof age === 'number' ? age : null,
+      vulnerabilities: vulnInfo,
+      filtered,
+      filterReason,
+      dependencyType: depType,
+    };
+  });
+
+  console.log(jsonFormatter({ rows: items, summary, thresholds, timestamp }));
   return summary;
 }
 

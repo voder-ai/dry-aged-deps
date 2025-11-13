@@ -2,8 +2,8 @@
 <traceability>
   <specification>prompts/003.0-DEV-IDENTIFY-OUTDATED.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-13T17:37:18.852Z</last_validated>
+  <last_validated>2025-11-13T22:07:11.061Z</last_validated>
   <last_modified>2025-11-09T23:02:10.889Z</last_modified>
-  <evidence>The core age‐filter (src/filter-by-age.js) and table output (src/print-outdated-handlers.js) only operate on the single “latest” version passed in from npm outdated. There is no implementation in buildRows or filter-by-age (or anywhere else) that walks back through the full versionTimes map to find the newest mature version older than 7 days. Tests (e.g. test/filter-by-age.test.js) only verify threshold filtering on the provided latest version and do not cover any fallback logic to earlier versions.</evidence>
-  <notes>The story’s Smart Filtering requirement ("start from the latest and work backwards until finding mature version") is not implemented. Currently the tool simply filters out the latest version if it is too young, without selecting an earlier version. All other acceptance criteria (basic threshold filtering, no-mature messaging, output format, skip-current) appear covered.</notes>
+  <evidence>The code always uses the `latest` version for age filtering (see buildRows → fetchVersionTimes → age = calculateAgeInDays(versionTimes[info.latest])). The filterByAge function simply removes rows whose age < threshold for their dependency type. There is no logic iterating over `versionTimes` entries to "start from the latest and work backwards until finding a mature version" and then selecting that version. No tests cover selecting a fallback mature version when the latest is too new.</evidence>
+  <notes>The ‘smart filtering’ acceptance criterion (selecting the newest mature version by walking backwards through all published versions) is not implemented. Only simple age-based filtering of the latest version is present, so the story is not fully satisfied.</notes>
 </traceability>

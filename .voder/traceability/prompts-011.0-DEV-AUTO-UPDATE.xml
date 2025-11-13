@@ -2,14 +2,17 @@
 <traceability>
   <specification>prompts/011.0-DEV-AUTO-UPDATE.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-13T17:39:01.468Z</last_validated>
+  <last_validated>2025-11-13T22:07:30.396Z</last_validated>
   <last_modified>2025-11-11T08:04:07.327Z</last_modified>
-  <evidence>• CLI supports `--update` and `--yes` flags (parseOptions and bin/dry-aged-deps.js).  
-• printOutdated branches into update mode and invokes updatePackages when updateMode=true.  
-• updatePackages logs the list of packages, prompts (using readline) when skipConfirmation=false, backs up package.json, writes updates with 2-space indent, and logs "Run 'npm install'…".  
-• Tests in test/printOutdated.update.test.js cover safe updates + backup creation + summary + install prompt and skip-confirm flow.  
-• Tests in printOutdated.updatePromptAbort.test.js cover preview and abort.  
-• Tests in printOutdated.updateBackupError.test.js cover graceful backup‐error handling.  
-• No failing tests; code and tests implementing all REQ-* requirements from prompts/011.0-DEV-AUTO-UPDATE.md</evidence>
-  <notes>All acceptance criteria for auto-update mode have concrete implementation and are exercised by tests; functionality for preview, confirmation, backup, write, summary, post-update prompt, and error handling is in place.</notes>
+  <evidence>• CLI parsing and help text include `--update` and `--yes` flags (bin/dry-aged-deps.js, src/cli-options.js)  
+• `printOutdated` recognizes `updateMode` and `skipConfirmation` and delegates to `updatePackages` (src/print-outdated.js)  
+• `updatePackages` implements preview listing, interactive confirmation, `--yes` bypass, backup creation, error handling, package.json rewrite (src/update-packages.js)  
+• README.md and help output document `--update`/`--yes` usage  
+• Vitest suite includes dedicated tests for:  
+  – Safe‐update flow and summary report (test/printOutdated.update.test.js)  
+  – No‐safe‐updates case (same)  
+  – Interactive abort path (test/printOutdated.updatePromptAbort.test.js)  
+  – Backup‐error handling (test/printOutdated.updateBackupError.test.js)  
+• All CLI and unit tests pass without failures</evidence>
+  <notes>All acceptance criteria for the auto-update story (flags, safe-only updates, preview & confirm, backup, summary, install prompt, error handling) are fully satisfied by the implementation and covered by tests.</notes>
 </traceability>

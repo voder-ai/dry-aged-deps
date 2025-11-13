@@ -1,18 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <traceability>
   <specification>prompts/008.0-DEV-JSON-OUTPUT.md</specification>
-  <status>PASSED</status>
-  <last_validated>2025-11-13T17:37:03.722Z</last_validated>
+  <status>FAILED</status>
+  <last_validated>2025-11-13T22:07:55.900Z</last_validated>
   <last_modified>2025-11-09T23:04:54.331Z</last_modified>
-  <evidence>All 142 Vitest tests pass (including CLI JSON format tests and json-formatter unit tests).
-• CLI accepts --format=json (test/cli.format-json.test.js)
-• JSON output is valid and parseable (JSON.parse assertions)
-• Output includes timestamp, packages array, and summary object (asserted in CLI tests)
-• stderr is empty in JSON mode (suppresses console noise)
-• Invalid format values exit code 2 with error message (test/cli-entrypoint.test.js)
-• JSON error output includes error object with message, code, details (test/cli.format-json.error.test.js)
-• Help text lists --format option (bin/dry-aged-deps.js help section)
-• Default behavior remains table format when no --format supplied (existing table output tests remain unchanged)
-</evidence>
-  <notes>The implementation fully satisfies the story’s acceptance criteria for JSON output: the CLI flag, valid JSON schema, summary statistics, exit codes for success and errors, silent stderr, format validation, and help documentation are all covered by automated tests. Therefore, this user story is complete.</notes>
+  <evidence>In src/print-outdated-handlers.js, handleJsonOutput builds rows as simple arrays [name, current, wanted, latest, null] and calls jsonFormatter, which for array rows only outputs {name, current, wanted, latest, age}. There is no inclusion of vulnerabilities, maxSeverity, details, filtered, or filterReason as required by the spec. The tests for JSON output (e.g., test/cli.format-json.test.js and test/printOutdated.json.test.js) only assert on timestamp, packages array, summary and thresholds, never on vulnerability fields. No code path populates those fields in JSON mode.</evidence>
+  <notes>Although CLI flag, exit codes, summary and thresholds, help text, and JSON validity are implemented and tested, the acceptance criterion “Complete Data: Includes all relevant information (name, current, latest, age, vulnerabilities, severity)” is not satisfied. JSON output omits vulnerability and filter information required by the story.</notes>
 </traceability>

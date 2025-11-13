@@ -6,6 +6,7 @@ import { fetchVersionTimes as defaultFetchVersionTimes } from './fetch-version-t
 import { calculateAgeInDays as defaultCalculateAgeInDays } from './age-calculator.js';
 import { checkVulnerabilities as defaultCheckVulnerabilities } from './check-vulnerabilities.js';
 import { xmlFormatter } from './xml-formatter.js';
+import { jsonFormatter } from './json-formatter.js';
 import { loadPackageJson } from './load-package-json.js';
 import { buildRows } from './build-rows.js';
 import { applyFilters } from './apply-filters.js';
@@ -51,30 +52,15 @@ export async function printOutdated(data, options = {}) {
 
   const entries = Object.entries(data);
 
-  // Story: prompts/008.0-DEV-JSON-OUTPUT.md - minimal JSON output
-  if (format === 'json') {
-    const summary = handleJsonOutput(data, {
-      prodMinAge,
-      devMinAge,
-      prodMinSeverity,
-      devMinSeverity,
-    });
-    return summary;
-  }
-
   // No outdated dependencies
   if (entries.length === 0) {
-    const summary = {
-      totalOutdated: 0,
-      safeUpdates: 0,
-      filteredByAge: 0,
-      filteredBySecurity: 0,
-    };
-    const thresholds = {
-      prod: { minAge: prodMinAge, minSeverity: prodMinSeverity },
-      dev: { minAge: devMinAge, minSeverity: devMinSeverity },
-    };
+    const summary = { totalOutdated: 0, safeUpdates: 0, filteredByAge: 0, filteredBySecurity: 0 };
+    const thresholds = { prod: { minAge: prodMinAge, minSeverity: prodMinSeverity }, dev: { minAge: devMinAge, minSeverity: devMinSeverity } };
     const timestamp = new Date().toISOString();
+    if (format === 'json') {
+      console.log(jsonFormatter({ rows: [], summary, thresholds, timestamp }));
+      return summary;
+    }
     if (format === 'xml') {
       console.log(xmlFormatter({ rows: [], summary, thresholds, timestamp }));
       return summary;
@@ -102,6 +88,16 @@ export async function printOutdated(data, options = {}) {
       checkVulnerabilities,
       format,
     });
+
+  if (format === 'json') {
+    return handleJsonOutput(
+      rows,
+      summary,
+      { prod: { minAge: prodMinAge, minSeverity: prodMinSeverity }, dev: { minAge: devMinAge, minSeverity: devMinSeverity } },
+      vulnMap,
+      filterReasonMap
+    );
+  }
 
   if (updateMode) {
     const result = await updatePackages(safeRows, skipConfirmation, summary);

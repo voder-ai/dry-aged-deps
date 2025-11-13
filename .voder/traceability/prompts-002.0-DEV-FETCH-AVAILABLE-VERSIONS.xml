@@ -2,8 +2,16 @@
 <traceability>
   <specification>prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-13T17:37:38.121Z</last_validated>
+  <last_validated>2025-11-13T22:06:55.623Z</last_validated>
   <last_modified>2025-11-09T23:01:54.797Z</last_modified>
-  <evidence>The implementation of fetchVersionTimes in src/fetch-version-times.js always calls `npm view <pkg> time --json` to retrieve timestamps for all published versions, and buildRows then only uses the `latest` version’s timestamp. There is no logic that limits the npm view invocation or subsequent processing to versions newer than the package’s current version. Furthermore, there are no tests covering “smart fetching” (filtering to only fetch/check versions newer than current).</evidence>
-  <notes>All other acceptance criteria (core fetching, age calculation, displaying age) are satisfied, but the optimization requirement to fetch only versions newer than the current version is not implemented.</notes>
+  <evidence>In src/build-rows.js the implementation only computes the age for the single ‘latest’ version:
+
+  const versionTimes = await fetchVersionTimes(name);
+  const latestTime = versionTimes[info.latest];
+  if (latestTime) {
+    age = calculateAgeInDays(latestTime);
+  }
+
+There is no iteration over all versions newer than the current, nor any filtering to fetch only those versions. No tests cover fetching or displaying ages for multiple versions or the “smart fetching” optimization. The acceptance criteria (“fetch all versions and their publish dates”, “calculate age for each version”, “display ages alongside each version”, “only fetch newer versions”) are not met by this code.</evidence>
+  <notes>The core fetchVersionTimes and calculateAgeInDays functions exist and work, but the downstream logic in buildRows and printOutdated only handles the latest version. There is no handling of multiple version ages nor a mechanism to optimize fetching to only newer versions. Consequently, the story is not fully implemented.</notes>
 </traceability>

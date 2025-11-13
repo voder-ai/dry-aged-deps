@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <traceability>
   <specification>prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md</specification>
-  <status>FAILED</status>
-  <last_validated>2025-11-13T17:37:30.742Z</last_validated>
+  <status>PASSED</status>
+  <last_validated>2025-11-13T22:09:54.697Z</last_validated>
   <last_modified>2025-11-09T23:03:30.864Z</last_modified>
-  <evidence>In src/filter-by-security.js the code always blocks any non-zero vulnerability (if (vulnCount !== 0) include = false) and never compares vulnCount or actual vulnerability severities against the configured threshold (prodMinSeverity/devMinSeverity). Additionally, checkVulnerabilities only returns a count, not per-severity data, and tests (e.g., test/filter-by-security.test.js and functional tests) do not cover any threshold-based filtering behavior. There is no logic to allow vulnerabilities below the threshold.</evidence>
-  <notes>The feature to configure and apply a minimum severity threshold is not implemented. All vulnerabilities are blocked regardless of the configured threshold, and there are no tests verifying threshold filtering.</notes>
+  <evidence>- CLI help in bin/dry-aged-deps.js includes “--severity=<level>     Vulnerability severity threshold: none, low, moderate, high, critical (default: none)” (lines 55–61).
+- parseOptions in src/cli-options.js defines validSeverities = ["none","low","moderate","high","critical"] and parses --severity, --prod-severity, --dev-severity with proper precedence.
+- src/config-loader.js supports config.severity and config.prod.minSeverity / config.dev.minSeverity with validation against the same list.
+- src/filter-by-security.js implements threshold filtering logic using severityWeights, blocking any vulnerability whose weight ≥ configured threshold.
+- Tests in test/filter-by-security-severity.test.js (marked “Story: prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md”) verify that vulnerabilities below threshold are allowed and at/above threshold are blocked, including legacy numeric stub behavior.
+- CLI flag tests in test/cli.flags.test.js verify rejecting invalid/missing values and defaulting to “none”, and that valid severity values map through to JSON output summary.thresholds.prod.minSeverity and .dev.minSeverity.
+- Config-file precedence tests in test/cli.config-file.test.js confirm that severity from a .dry-aged-deps.json (minSeverity) is respected and overridden by --severity.
+- JSON and XML formatters include thresholds in their output (test/json-formatter.test.js and test/xml-formatter.thresholds.test.js confirm minSeverity appears in the serialized output).
+- All 145 Vitest tests pass (96.3% statements, 83.2% branches) per existing cycle assessment.</evidence>
+  <notes>All acceptance criteria for configurable severity thresholds are fully implemented and covered by unit, integration, and CLI tests. The CLI flag, config-file support, valid severity levels, filtering logic, precedence rules, validation, help documentation, and inclusion of threshold information in JSON/XML output have been verified. Default behavior remains blocking all vulnerabilities when no severity is specified.</notes>
 </traceability>

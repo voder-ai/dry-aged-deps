@@ -2,16 +2,14 @@
 <traceability>
   <specification>prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-13T17:36:03.422Z</last_validated>
+  <last_validated>2025-11-13T22:07:49.565Z</last_validated>
   <last_modified>2025-11-09T23:04:08.953Z</last_modified>
-  <evidence>The Vitest suite (npm test) shows:
-  ✓ prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS: Supports separate prod/dev threshold flags and config
-All 142 tests pass, including the functional end-to-end test for story 007.0. Code inspection confirms:
-  • CLI flags --prod-min-age, --dev-min-age, --prod-severity, --dev-severity are parsed in src/cli-options.js and src/cli-options-helpers.js.
-  • Config file support for { prod: { minAge, minSeverity }, dev: { minAge, minSeverity } } in src/config-loader.js.
-  • Dependency type (prod vs dev) detection via loadPackageJson() and getDependencyType in src/print-outdated.js.
-  • Fallback to general --min-age/--severity when prod/dev flags are absent, and backward-compatible defaults.
-  • Output includes a “Type” column showing ‘prod’ or ‘dev’ in src/print-outdated-handlers.js.
-</evidence>
-  <notes>All acceptance criteria for story 007.0 (separate prod/dev thresholds) have been implemented and verified by both unit and functional tests.</notes>
+  <evidence>1) CLI flag parsing: src/cli-options-helpers.js defines parseProdMinAgeFlag, parseDevMinAgeFlag, parseProdSeverityFlag, parseDevSeverityFlag and src/cli-options.js wires them into prodMinAge/devMinAge and prodMinSeverity/devMinSeverity.  
+2) Config‐file support: src/config-loader.js validates and reads config.prod.minAge/minSeverity and config.dev.minAge/minSeverity; parseOptions uses those values as defaults.  
+3) Fallback & defaults: parseOptions falls back to --min-age/--severity when prod/dev flags aren’t supplied, and defaults both thresholds to the same value if no distinction is specified.  
+4) Dependency type detection: src/load-package-json.js loads dependencies/devDependencies; printOutdated uses `getDependencyType` to tag each row 'prod' or 'dev'.  
+5) Output indication: src/print-outdated-handlers.js’s table output prints a header including 'Type' and rows ending with the dependency type.  
+6) Validation: cli-options-helpers enforces integer ranges and valid severity values; config-loader enforces JSON schema and range/list constraints.  
+7) Tests: 145 Vitest tests pass, including cli.flags.test.js (flags & fallback), cli.config-file.test.js (config prod/dev support & precedence), printOutdated.prodDependency.test.js & printOutdated.extra.test.js (table output with correct type column), and cli-options-helpers.test.js (flag validation).</evidence>
+  <notes>All acceptance criteria for prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md are fully satisfied: the CLI accepts separate prod/dev age and severity flags, reads those from config file, falls back correctly, maintains backward compatibility, validates inputs, detects dependency types, and indicates the type in the output.</notes>
 </traceability>
