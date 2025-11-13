@@ -1,135 +1,142 @@
 # Implementation Progress Assessment
 
-**Generated:** 2025-11-13T02:32:36.536Z
+**Generated:** 2025-11-13T04:10:10.361Z
 
 ![Progress Chart](./progress-chart.png)
 
 Projection: flat (no recent upward trend)
 
-## IMPLEMENTATION STATUS: INCOMPLETE (88% ± 12% COMPLETE)
+## IMPLEMENTATION STATUS: INCOMPLETE (73% ± 5% COMPLETE)
 
 ## OVERALL ASSESSMENT
-Overall the project is robust with high testing, execution, dependencies, security, and version control scores. However, code quality and documentation fall below the 90% threshold, preventing a full functionality assessment. Focus is needed on reducing CLI complexity, breaking the monolithic entrypoint into smaller modules, improving JSDoc coverage and type-check enforcement, and filling minor gaps in documentation clarity and consistency.
+INCOMPLETE: Code quality (45%) and version control (75%) scores fall below thresholds; fix lint/format/type errors and commit local changes before proceeding.
 
 ## NEXT PRIORITY
-Refactor the monolithic CLI and improve modularization while enhancing documentation with complete JSDoc/type annotations.
+Fix code quality errors and commit outstanding changes to clean working directory.
 
 
 
-## CODE_QUALITY ASSESSMENT (80% ± 15% COMPLETE)
-- The project exhibits strong code quality in terms of linting, formatting, testing, security rules, and CI enforcement, with near-100% test coverage and no critical AI slop. However, maintainability is hindered by a monolithic CLI implementation, lack of complexity/duplication enforcement, and absence of type checking enforcement.
-- ESLint passes with no warnings and Prettier formatting is enforced in CI
-- Vitest tests pass (94 tests, 100% of functions covered) and high coverage overall
-- No temporary artefacts (.patch/.diff/.bak) or test mocks in production code
-- ESLint security plugin enabled, error handling is consistent and informative
-- No ESLint complexity or max-lines-per-function rules configured, cyclomatic complexity is unchecked
-- src/print-outdated.js is 276 lines with a single function >200 lines (violates maintainability thresholds)
-- No automated type checking (checkJs is disabled and "type-check" is a no-op script)
-
-**Next Steps:**
-- Break printOutdated logic into smaller, single-responsibility functions or modules
-- Enable and configure ESLint rules for complexity (complexity, max-lines, max-params) and enforce in CI
-- Introduce duplication detection (e.g. jscpd) to enforce DRY
-- Enable JSDoc type checking (checkJs) or adopt TypeScript for static type verification
-- Extract hard-coded defaults (e.g. age thresholds, retry counts) into named constants for clarity
-
-## TESTING ASSESSMENT (93% ± 18% COMPLETE)
-- The project has an excellent automated test suite: all 94 tests pass under a non-interactive Vitest run with coverage, meeting global thresholds (96.96% statements, 88.58% branches, 100% functions, 98.96% lines). Tests are well-isolated (use os.tmpdir()/mkdtemp, clean up after themselves), cover happy and error paths (config file errors, CLI flags, XML/JSON formats, backup failures, prompt flows), and demonstrate good testable design (dependency injection, mocking, reusable fixtures and helpers).
-- All 94 Vitest tests passed in non-interactive mode (`vitest run --coverage`).
-- Global coverage exceeds thresholds: 96.96% stmts, 88.58% branches, 100% funcs, 98.96% lines.
-- Tests use `fs.mkdtemp(os.tmpdir())` and clean up with `fs.rm`, ensuring no repository files are modified.
-- Error paths are thoroughly tested: invalid JSON, unknown config keys, backup creation failures, interactive prompts are mocked.
-- Dependency injection in `printOutdated` allows mocking of fetchVersionTimes, calculateAgeInDays, and security checks, enhancing testability.
-- Test helpers and real fixture E2E tests (via execa) cover CLI workflows and output formats.
-- Test suites run in isolation (beforeEach/afterEach), no shared state, can run in any order.
+## CODE_QUALITY ASSESSMENT (45% ± 10% COMPLETE)
+- The project has solid code organization and clear naming, but critical quality gates are failing: linting, formatting, and type-checking do not pass locally, indicating misconfiguration or missing fixes. CI integration is present but not fully effective due to these failures.
+- Linting: ESLint commands (`npm run lint`, `npx eslint .`) fail and cannot complete cleanly with zero warnings/errors.
+- Formatting: Prettier check (`npx prettier --check .`) reports 14 files with style issues that need `--write` to fix.
+- Type Checking: The `npm run type-check` script using `node node_modules/typescript/bin/tsc` fails to execute; no clean type-check results.
+- Complexity rules are configured in ESLint (max complexity 15, max-lines-per-function 200) but cannot be verified due to lint failures.
+- No production code purity issues: no test mocks in `src/`, no temporary `.patch`/`.diff` files, and no empty files detected.
+- Naming conventions are consistent, and code clarity is good with self-documenting functions and modules.
+- Error-handling patterns appear consistent (e.g., XML formatter handles error paths), but full coverage is unverified due to tooling issues.
+- AI slop detection: no generic AI-style comments or leftover temporary files; documentation and tests are meaningful.
 
 **Next Steps:**
-- Increase branch coverage for xml-formatter.js (currently 50% branch coverage) by adding tests for missing conditional branches.
-- Add edge-case tests for additional CLI behaviors (e.g., invalid flag combinations, XML format edge cases).
-- Introduce reusable test-data builders or factories for commonly constructed objects to DRY up fixtures.
-- Ensure coverage of any untested paths in `filter-by-security.js` and related modules.
-- Consider adding integration smoke tests for `check-vulnerabilities` calling real HTTP endpoints under a mock server.
+- Fix formatting issues by running `npx prettier --write .` and integrate Prettier in pre-commit hooks.
+- Resolve ESLint failures: adjust ignore patterns and ensure `npx eslint . --ext .js --max-warnings=0` passes cleanly.
+- Correct the type-check script to reference the proper `tsc` binary (e.g., use `npx tsc --noEmit -p tsconfig.json`) and ensure strict `checkJs` coverage.
+- Re-run lint and type-check in local development and CI to validate configuration fixes.
+- Optionally add lint-staged for auto-format and lint on commit to enforce quality before push.
 
-## EXECUTION ASSESSMENT (92% ± 15% COMPLETE)
-- The CLI application runs reliably in its target Node environment, with comprehensive unit and E2E tests validating build, runtime behavior, input validation, error handling, and end-to-end workflows. Resource cleanup (child processes, readline interfaces) is handled correctly, and there are no silent failures or critical runtime issues. Minor performance optimization (caching or batching npm view calls) could be considered for very large dependency sets.
-- Build script runs successfully (no build steps required)
-- Vitest suite (94 tests) passes with coverage 96.96%/88.58%/100%/98.96%, meeting thresholds
-- CLI E2E test exercises real fixture with dry-run install and validates output end-to-end
-- Flags and config file values validated at runtime with appropriate exit codes
-- Child processes (execFile) and readline interfaces are properly closed—no resource leaks
-- No silent failures: warnings are surfaced when fetchVersionTimes fails (except suppressed in JSON/XML modes)
-
-**Next Steps:**
-- Implement caching or batching of npm view calls in fetch-version-times to improve performance on large projects
-- Add performance benchmarks or stress tests for large dependency sets to monitor execution time
-- Optionally document expected runtime characteristics (e.g., average per-dependency fetch time) for users
-
-## DOCUMENTATION ASSESSMENT (85% ± 16% COMPLETE)
-- Comprehensive, well-organized documentation with clear README, API reference, ADRs, and developer guidelines. Minor inconsistencies exist around JSDoc/type-checking configuration and a few missing code comments.
-- tsconfig.json has "checkJs": false, conflicting with ADR 0006 which requires enabling JSDoc-based type checking (checkJs: true, noEmit).
-- No npm script or CI step for `tsc --noEmit` type checking as prescribed by ADR 0006.
-- The public xmlFormatter function in src/xml-formatter.js lacks a JSDoc comment for its parameters and return value.
-- Some code JSDoc comments (e.g. fetchVersionTimes, checkVulnerabilities) omit @throws tags, so exception behavior isn’t fully documented in-code.
-- tsconfig.json does not include skipLibCheck or the recommended strict include/exclude settings from ADR 0006.
+## TESTING ASSESSMENT (92% ± 18% COMPLETE)
+- The project has a comprehensive, non-interactive Vitest suite with 128 passing tests, healthy coverage (all metrics ≥80%), solid error-scenario and E2E coverage, and proper test isolation using temp dirs. Minor coverage gaps and lack of centralized test data builders present opportunities for improvement.
+- All 45 test files (128 tests) pass under a non-interactive `vitest run --coverage` command.
+- Coverage: 92.1% statements, 93.18% lines, 100% functions, 86.97% branches (all above the 80% thresholds in vitest.config.js).
+- Temp directories are used (fs.mkdtemp in unit and E2E tests) and cleaned up in afterEach/afterAll hooks; repository files remain untouched.
+- Error conditions are well covered: CLI format failures, fetch retry limits, xml/json formatting errors, vulnerability checks, backup failures, etc.
+- Code is designed for testability: key functions accept injected stubs (e.g. fetchVersionTimes, calculateAgeInDays, checkVulnerabilities).
+- E2E tests spin up real fixture directories and mock DRY_AGED_DEPS_MOCK, verifying CLI output without interactive prompts.
 
 **Next Steps:**
-- Enable `checkJs: true` and other compilerOptions in tsconfig.json per ADR 0006, add a `npm run typecheck` script, and integrate it into CI.
-- Add comprehensive JSDoc for xmlFormatter (parameters, return, error cases) and update other functions with missing @throws tags.
-- Update tsconfig.json to include skipLibCheck and proper include/exclude per the decision record.
-- Verify and document the new type-checking setup in developer-guidelines.md and update CHANGELOG if needed.
+- Add dedicated test data builders or factories/fixtures to avoid inline object definitions and improve maintainability.
+- Write targeted tests for the uncovered branches/lines in build-rows, cli-options-helpers, and xml-formatter to push branch coverage closer to 100%.
+- Consider isolating or speeding up slow E2E tests (6–8s each) by further mocking external calls or splitting into units.
+- Introduce schema or contract tests for config-loader and other core modules to ensure edge-case handling beyond current scenarios.
+
+## EXECUTION ASSESSMENT (90% ± 17% COMPLETE)
+- The CLI builds trivially, all 128 Vitest tests including end-to-end real-fixture scenarios pass, runtime error handling and input validation are solid, and core workflows are covered. Minor gaps remain in branch coverage of XML formatting and row-building logic.
+- Build script completes instantly (“No build step required”).
+- Vitest run (npm test) yields 128 passing tests with 92%+ coverage.
+- CLI help, version, invalid-flag exit codes and messages behave correctly.
+- E2E real-fixture test uses execa, runs CLI in a temp project, and validates positive age values.
+- JSON and XML format error paths exit with code 2 and emit structured output.
+- Minor coverage gaps in build-rows.js, cli-options-helpers branches, and xml-formatter enrichment logic.
+
+**Next Steps:**
+- Add targeted tests for XML filter-reason and row-building branches to lift branch coverage above 90%.
+- Introduce integration tests calling npm outdated and npm view against the live registry (no mocking) to validate actual network behavior.
+- Consider performance or resource-usage benchmarks for fetch-version-times under large dependency sets.
+- Review and document any potential long-running resource cleanup, though CLI process exit cleans up handles automatically.
+
+## DOCUMENTATION ASSESSMENT (90% ± 17% COMPLETE)
+- Overall, the project’s documentation is comprehensive, well-organized, and mostly up-to-date. The README, API reference, ADRs, developer guidelines, JSDoc comments, and usage examples cover all critical areas. Only minor currency issues—chiefly the changelog not recording recently shipped features—prevent a near-perfect score.
+- README.md provides clear installation, usage, flag descriptions, examples, CI/CD integration, and development instructions.
+- docs/api.md thoroughly documents public APIs (signatures, parameters, returns, error conditions) and includes runnable examples.
+- All exported functions in src/ carry JSDoc/TSDoc comments with parameter and return descriptions, supporting IDE tooling and ts-check.
+- TypeScript is configured for JSDoc-based type checking (checkJs enabled; CI runs ‘npm run type-check’).
+- ADR folder (docs/decisions) contains up-to-date architectural decisions on ESM, output formats, exit codes, JS-doc type checking, etc., reflecting current implementation.
+- Developer guidelines cover module conventions, code quality, testing, branching, CI, and documentation maintenance.
+- User stories and prompts in the prompts/ directory clearly state acceptance criteria and trace the evolution of features.
+- CHANGELOG.md is missing entries for the implemented --check flag and config-file support (they appear in code and README but not in the recorded changelog).
+
+**Next Steps:**
+- Update CHANGELOG.md to document implemented features (config-file support, --check flag) under the appropriate version or move them from Unreleased to the released section.
+- Consider authoring an ADR for configuration-file support to track the decision rationale, mirroring other feature decisions.
+- Review JSDoc coverage in edge modules (e.g., filter-by-security) to ensure full parameter, exception, and return detail, including ‘details’ array type documentation.
+- Optionally align tsconfig.json include/exclude paths with ADR guidance for bin/ files to ensure consistent type checking across CLI and library code.
 
 ## DEPENDENCIES ASSESSMENT (95% ± 15% COMPLETE)
-- Dependencies are well managed: no runtime dependencies, devDependencies are up-to-date per dry-aged-deps, and a committed lockfile ensures reproducible installs.
-- package.json has no runtime dependencies and only devDependencies defined
-- package-lock.json is present and tracked in git
-- npx dry-aged-deps reported no safe, mature (>=7 days) outdated packages
-- Dependency tree installs cleanly with no version conflicts detected
+- Dependency management is solid: a lockfile is present and committed, no outdated or vulnerable packages were found by `dry-aged-deps` or `npm audit`, and there are no version conflicts. A minor issue is the presence of an apparently unused devDependency (`execa`).
+- package-lock.json exists and is tracked in git
+- `npx dry-aged-deps` reports no mature updates (>=7 days old) with no new vulnerabilities
+- npm audit shows zero vulnerabilities
+- npm ls --depth=0 shows no dependency conflicts or unmet peer requirements
+- All transitive dependencies install correctly (no errors during ‘npm ls’)
+- No circular or duplicate dependencies detected
+- DevDependencies are all pinned to specific versions; production dependencies are minimal and intentional
+- Detected an unused devDependency: execa is listed but not imported anywhere in the codebase
 
 **Next Steps:**
-- Integrate dry-aged-deps into CI to automatically detect mature updates
-- Periodically review fresh (<7 days) versions for critical security fixes
-- Monitor new releases of devDependencies and run dry-aged-deps weekly
-- Ensure any future runtime dependencies follow the same smart-selection process
+- Remove the unused `execa` entry from devDependencies to streamline the project
+- Review devDependencies periodically for any other unused packages
+- Continue running `npx dry-aged-deps` on a weekly or CI basis to catch newly matured updates
+- Add a routine check (e.g., in CI) for unused dependencies with a tool like depcheck or eslint-plugin-unused-imports
 
-## SECURITY ASSESSMENT (95% ± 17% COMPLETE)
-- The project demonstrates a strong security posture with no outstanding vulnerabilities, proper secrets management, CodeQL scanning, and security linting in place. All key security policies are followed and no moderate-or-higher issues were found.
-- npm audit reports zero vulnerabilities across production and development dependencies
-- docs/security-incidents/ contains only the incident response template (no active incidents to re-assess)
-- .env is present locally, never tracked in Git, and listed in .gitignore; .env.example provides placeholders
-- No Dependabot or Renovate configurations detected, avoiding automation conflicts
-- GitHub Actions includes CodeQL analysis and npm audit in CI pipeline
-- eslint-plugin-security is configured and tested to catch common anti-patterns
-- Child processes in check-vulnerabilities properly validate package names, avoiding injection risks
+## SECURITY ASSESSMENT (98% ± 18% COMPLETE)
+- The project demonstrates a strong security posture: no new or existing vulnerabilities, proper secret management, comprehensive CI security checks, and no conflicting automation tools.
+- No security incidents documented in docs/security-incidents (only the response template).
+- npm audit reports zero vulnerabilities across all dependencies (prod and dev).
+- CI pipeline includes CodeQL analysis and npm audit at moderate level, ensuring no known security issues slip through.
+- `.env` is present locally but not tracked in Git, listed in `.gitignore`, and `.env.example` provides safe placeholders.
+- No Dependabot, Renovate, or other auto-update tools detected; dependency updates are managed as per policy.
 
 **Next Steps:**
-- Establish weekly automated dependency vulnerability monitoring and reporting
-- Consider integrating a secret-scanning tool (e.g., GitHub Secret Scanning) for CI
-- Add scheduled CI checks to run npm audit on a cadence outside of push events
-- Document any newly accepted residual risks as security incidents when needed
-- Periodically review and update security policy based on evolving threat landscape
+- Continue weekly or CI-triggered `npm audit` scans to catch new vulnerabilities.
+- Maintain CodeQL configuration and update rules as needed when new JavaScript security patterns emerge.
+- Document and triage any future unpatchable vulnerabilities in `docs/security-incidents` following the established template.
+- Consider adding automated monitoring for new CVEs against dependencies to supplement npm audit.
 
-## VERSION_CONTROL ASSESSMENT (95% ± 18% COMPLETE)
-- The repository demonstrates excellent version control practices: a single unified GitHub Actions workflow for CI and publishing, comprehensive quality gates (lint, format, tests, security scans), automated semantic-release, smoke tests, clean working tree, trunk-based development on main, and Husky pre-push hooks installed via prepare script. The .voder/ directory is correctly tracked and not listed in .gitignore.
-- Single CI & Publish workflow in .github/workflows/ci-publish.yml covering CodeQL analysis, build & test, publish & smoke test
-- Working directory is clean (only .voder/ modifications), and no unpushed commits to origin/main
-- Currently on the main branch with recent direct commits to main, following trunk-based development
-- .gitignore does not include .voder/, so assessment outputs are tracked
-- Husky pre-push hook exists (.husky/pre-push) and runs lint, format-check, and tests
-- package.json ‘prepare’ script installs Husky hooks automatically
+## VERSION_CONTROL ASSESSMENT (75% ± 15% COMPLETE)
+- The repository has a robust CI/CD pipeline, unified single workflow, comprehensive quality gates, automated release and smoke tests, Husky pre-push hooks, and adheres to trunk-based development. However, the working directory is not clean (uncommitted changes) and local commits have not been pushed to origin.
+- Single GitHub Actions workflow (ci-publish.yml) defines CodeQL analysis, build/test, and publish jobs without duplicating full testing across jobs.
+- Pipeline includes linting, type checking, formatting checks, unit/E2E CLI tests, vulnerability scanning, and smoke testing of the published package.
+- Semantic-release automates publishing on push, with version/tag matching and a post-release smoke test.
+- Husky pre-push hook is present and invokes lint, type-check, prettier check, and tests; hooks are installed via the package.json prepare script.
+- `.voder/` directory is not listed in .gitignore and is thus tracked in version control.
+- Trunk-based development in use: current branch is `main` and recent commits are direct to main with clear messages.
+- Working directory has uncommitted changes in package.json and src files outside of `.voder/`.
+- Local branch is 18 commits ahead of origin/main, indicating unpushed commits.
 
 **Next Steps:**
-- (Optional) Add type-checking step to pre-push hook if TypeScript validation becomes necessary
-- Monitor CI workflow duration to ensure fast feedback (<2 minutes for pre-push and CI checks)
-- Regularly review and prune GitHub Actions workflows to avoid drift and maintain a single coherent pipeline file
+- Stage and commit all pending local changes outside of `.voder/` to maintain a clean working directory.
+- Push all local commits to the remote origin to synchronize history.
+- Optionally review whether combining the publish job into the build job (as a single sequential job) could simplify the workflow further, though current setup meets requirements.
+- Verify pre-push hooks are auto-installed for all contributors (e.g., document `npm install` behavior in CONTRIBUTING).
 
 ## FUNCTIONALITY ASSESSMENT (undefined% ± 95% COMPLETE)
 - Functionality assessment skipped - fix 2 deficient support area(s) first
 - Support areas must meet thresholds before assessing feature completion
-- Deficient areas: CODE_QUALITY (80%), DOCUMENTATION (85%)
+- Deficient areas: CODE_QUALITY (45%), VERSION_CONTROL (75%)
 - Principle: "Improvement of daily work is higher priority than daily work" - fix foundation before building features
 
 **Next Steps:**
-- CODE_QUALITY: Break printOutdated logic into smaller, single-responsibility functions or modules
-- CODE_QUALITY: Enable and configure ESLint rules for complexity (complexity, max-lines, max-params) and enforce in CI
-- DOCUMENTATION: Enable `checkJs: true` and other compilerOptions in tsconfig.json per ADR 0006, add a `npm run typecheck` script, and integrate it into CI.
-- DOCUMENTATION: Add comprehensive JSDoc for xmlFormatter (parameters, return, error cases) and update other functions with missing @throws tags.
+- CODE_QUALITY: Fix formatting issues by running `npx prettier --write .` and integrate Prettier in pre-commit hooks.
+- CODE_QUALITY: Resolve ESLint failures: adjust ignore patterns and ensure `npx eslint . --ext .js --max-warnings=0` passes cleanly.
+- VERSION_CONTROL: Stage and commit all pending local changes outside of `.voder/` to maintain a clean working directory.
+- VERSION_CONTROL: Push all local commits to the remote origin to synchronize history.

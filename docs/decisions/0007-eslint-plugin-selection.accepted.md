@@ -9,10 +9,12 @@ Accepted
 ## Context
 
 The project currently uses ESLint with two configurations:
+
 - ESLint recommended rules (built-in)
 - eslint-plugin-security (security-focused rules)
 
 We need to decide whether to add additional ESLint plugins to improve code quality, particularly considering:
+
 - **eslint-plugin-unicorn**: 100+ opinionated rules for modern JavaScript
 - **eslint-plugin-sonarjs**: Bug detection and cognitive complexity rules
 - Other alternatives
@@ -20,6 +22,7 @@ We need to decide whether to add additional ESLint plugins to improve code quali
 ### Current State
 
 **Project Characteristics:**
+
 - Small, mature codebase: 1,815 lines of code
 - 10 source modules, 13 implemented features
 - Single active contributor
@@ -27,6 +30,7 @@ We need to decide whether to add additional ESLint plugins to improve code quali
 - Fast linting: 0.67 seconds
 
 **Existing Quality Measures:**
+
 - ESLint recommended rules
 - eslint-plugin-security (critical for npm packages)
 - TypeScript type checking via JSDoc (ADR 0006)
@@ -37,6 +41,7 @@ We need to decide whether to add additional ESLint plugins to improve code quali
 ### Plugins Evaluated
 
 **eslint-plugin-unicorn (v62.0.0):**
+
 - 100+ opinionated rules
 - 6M+ weekly downloads
 - Focuses on modern JavaScript patterns, consistency, best practices
@@ -44,6 +49,7 @@ We need to decide whether to add additional ESLint plugins to improve code quali
 - Many auto-fixable rules
 
 **eslint-plugin-sonarjs (v3.0.5):**
+
 - ~30 cognitive complexity and bug detection rules
 - 2M+ weekly downloads
 - Focused on code smells, complexity tracking, and logic bugs
@@ -56,6 +62,7 @@ We need to decide whether to add additional ESLint plugins to improve code quali
 **Do NOT add eslint-plugin-unicorn or additional linting plugins at this time.**
 
 Maintain current ESLint configuration:
+
 - ESLint recommended rules
 - eslint-plugin-security
 - TypeScript type checking (ADR 0006)
@@ -112,10 +119,13 @@ export default [
     plugins: { security },
     rules: {
       ...security.configs.recommended.rules,
-      'no-unused-vars': ['error', { 
-        argsIgnorePattern: '^_', 
-        varsIgnorePattern: '^_' 
-      }],
+      'no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+        },
+      ],
     },
   },
   // ... file-specific configurations
@@ -141,6 +151,7 @@ Review this decision if:
 If specific improvements are identified, consider adding individual rules from plugins without full plugin adoption:
 
 **High-value unicorn rules to consider individually:**
+
 ```javascript
 // If adopting selective rules later
 {
@@ -159,6 +170,7 @@ If specific improvements are identified, consider adding individual rules from p
 ```
 
 **Criteria for selective adoption:**
+
 - Rule prevents actual bugs (not just style)
 - Auto-fixable (minimal manual effort)
 - Addresses observed code review feedback
@@ -171,12 +183,14 @@ If specific improvements are identified, consider adding individual rules from p
 **Approach**: Enable all 100+ unicorn rules
 
 **Pros:**
+
 - Maximum consistency and modernization
 - Enforces latest JavaScript best practices
 - Many auto-fixable rules reduce manual work
 - Popular, well-maintained plugin
 
 **Cons:**
+
 - Very opinionated; may not agree with all rules
 - Significant initial refactoring (likely 50-100 issues)
 - Slower CI/linting times
@@ -191,11 +205,13 @@ If specific improvements are identified, consider adding individual rules from p
 **Approach**: Cherry-pick 10-20 specific unicorn rules
 
 **Pros:**
+
 - Targeted improvements without full plugin overhead
 - Can focus on bug-prevention rules
 - Lower refactoring cost
 
 **Cons:**
+
 - Still requires dependency and configuration maintenance
 - Need to research and select "right" rules
 - Partial adoption may be inconsistent
@@ -208,6 +224,7 @@ If specific improvements are identified, consider adding individual rules from p
 **Approach**: Add ~30 cognitive complexity and bug detection rules from SonarSource
 
 **Pros:**
+
 - **Bug Prevention Focus**: Catches logic errors, duplicated code, and confusing patterns
 - **Cognitive Complexity Tracking**: Quantifies function complexity (measurable metric)
 - **Smaller Footprint**: ~30 rules vs 100+ (more targeted than unicorn)
@@ -217,6 +234,7 @@ If specific improvements are identified, consider adding individual rules from p
 - **Better Than Unicorn**: If adding anything, this is the best choice
 
 **Cons:**
+
 - **Another Dependency**: More maintenance overhead
 - **May Flag Working Code**: Complex but correct functions will be flagged for refactoring
 - **Subjective Thresholds**: Complexity limits (default: 15) are somewhat arbitrary
@@ -225,6 +243,7 @@ If specific improvements are identified, consider adding individual rules from p
 - **Still Not Necessary**: Current quality is good without it
 
 **Expected Impact on dry-aged-deps:**
+
 - **5-10 warnings** likely (based on codebase analysis)
 - `printOutdated()` (277 lines) may exceed cognitive complexity
 - `cli-options.js` (470 lines) validation logic might be flagged
@@ -232,6 +251,7 @@ If specific improvements are identified, consider adding individual rules from p
 - **Potential improvements**: Extract validation functions, simplify conditionals
 
 **Rejection Reason**: While sonarjs is superior to unicorn (bug prevention > style), the project's current quality measures are sufficient. The codebase shows no evidence of complexity problems:
+
 - Only 236 control structures across 1,815 LOC (healthy ratio)
 - No deeply nested conditionals found
 - 96.96% test coverage catches logic bugs
@@ -241,6 +261,7 @@ If specific improvements are identified, consider adding individual rules from p
 **If circumstances change** (team growth, complexity issues), sonarjs would be the first plugin to add.
 
 **Example Configuration if Adopted:**
+
 ```javascript
 import sonarjs from 'eslint-plugin-sonarjs';
 
@@ -253,16 +274,16 @@ export default [
       'sonarjs/no-all-duplicated-branches': 'error',
       'sonarjs/no-identical-functions': 'error',
       'sonarjs/no-duplicate-string': ['warn', 5],
-      
+
       // Complexity (warnings, tune thresholds)
       'sonarjs/cognitive-complexity': ['warn', 20], // Higher than default 15
       'sonarjs/max-switch-cases': ['warn', 15],
-      
+
       // Code smells (start as warnings)
       'sonarjs/no-collapsible-if': 'warn',
       'sonarjs/prefer-immediate-return': 'warn',
-    }
-  }
+    },
+  },
 ];
 ```
 
@@ -271,10 +292,12 @@ export default [
 **Approach**: Add formatting-focused rules
 
 **Pros:**
+
 - Modern replacement for deprecated formatting rules
 - Comprehensive style enforcement
 
 **Cons:**
+
 - Prettier already handles formatting
 - Redundant with existing tooling
 - Would conflict with Prettier
@@ -286,10 +309,12 @@ export default [
 **Approach**: Node.js-specific best practices
 
 **Pros:**
+
 - Tailored for Node.js projects
 - Catches Node.js-specific issues
 
 **Cons:**
+
 - ESLint + security plugin cover critical Node.js concerns
 - Project uses modern Node.js (v18+) without deprecated APIs
 - Would add minimal value

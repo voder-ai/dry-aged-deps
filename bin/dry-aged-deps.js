@@ -29,7 +29,7 @@ async function main() {
     devMinSeverity,
     updateMode,
     skipConfirmation,
-    returnSummary: checkMode
+    returnSummary: checkMode,
   } = options;
 
   // Help flag

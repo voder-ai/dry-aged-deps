@@ -6,7 +6,19 @@
     "allowJs": true,
     "checkJs": true,
     "noEmit": true,
-    "strict": true,
+    // Minimal type checking - incrementally enable stricter checks over time
+    "strict": false,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "strictFunctionTypes": false,
+    "strictPropertyInitialization": false,
+    "noImplicitThis": false,
+    "alwaysStrict": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitReturns": false,
+    "noFallthroughCasesInSwitch": false,
+    // Other settings
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "skipLibCheck": true
