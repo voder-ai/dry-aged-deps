@@ -6,7 +6,6 @@ import path from 'path';
 import { fetchVersionTimes as defaultFetchVersionTimes } from './fetch-version-times.js';
 import { calculateAgeInDays as defaultCalculateAgeInDays } from './age-calculator.js';
 import { checkVulnerabilities as defaultCheckVulnerabilities } from './check-vulnerabilities.js';
-import { jsonFormatter } from './json-formatter.js';
 import { xmlFormatter } from './xml-formatter.js';
 import { loadPackageJson } from './load-package-json.js';
 import { buildRows } from './build-rows.js';
