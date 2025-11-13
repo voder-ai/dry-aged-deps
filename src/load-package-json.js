@@ -1,6 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 
+/* eslint-disable security/detect-non-literal-fs-filename */
+
 /**
  * Load and parse package.json from the current working directory.
  * Returns an object with dependencies and devDependencies fields.

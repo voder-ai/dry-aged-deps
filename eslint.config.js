@@ -55,6 +55,10 @@ export default [
         ...globals.node,
       },
     },
+    rules: {
+      complexity: ['error', { max: 15 }],
+      'max-lines-per-function': ['error', { max: 200, skipComments: true, skipBlankLines: true }],
+    },
   },
 
   // CLI scripts - allow console usage
