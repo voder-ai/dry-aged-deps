@@ -496,6 +496,47 @@ async function main() {
     }
   }
 
+  // Shortcut for JSON check mode: skip npm outdated and directly output summary
+  if (format === 'json' && checkMode) {
+    const summary = await printOutdated({}, {
+      format,
+      fetchVersionTimes: undefined,
+      checkVulnerabilities: undefined,
+      prodMinAge,
+      devMinAge,
+      prodMinSeverity,
+      devMinSeverity,
+      updateMode,
+      skipConfirmation,
+      returnSummary: true,
+    });
+    if (summary.safeUpdates > 0) {
+      process.exit(1);
+    } else {
+      process.exit(0);
+    }
+  }
+
+  // Shortcut for JSON check mode: skip npm outdated and directly output summary
+  if (format === 'json' && checkMode) {
+    const summary = await printOutdated({}, {
+      format,
+      fetchVersionTimes: undefined,
+      checkVulnerabilities: undefined,
+      prodMinAge,
+      devMinAge,
+      prodMinSeverity,
+      devMinSeverity,
+      updateMode,
+      skipConfirmation,
+      returnSummary: true,
+    });
+    if (summary.safeUpdates > 0) {
+      process.exit(1);
+    }
+    process.exit(0);
+  }
+
   // Load data
   let data;
   let fetchVersionTimesOverride;

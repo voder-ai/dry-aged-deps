@@ -1,20 +1,13 @@
 ## NOW  
-Refactor the `if (format === 'json')` branch in **src/print-outdated.js** to drive the full pipeline (fetchVersionTimes → calculateAgeInDays → filterByAge → filterBySecurity) and emit enriched JSON via `jsonFormatter`, including all fields required by prompts/008.0-DEV-JSON-OUTPUT.md (recommended version, vulnerabilities, filtered flags, filter reasons, dependency type).
+Patch **bin/dry-aged-deps.js** so that in check mode with `--format=json`, the CLI exits with code 0 when `summary.safeUpdates === 0` (instead of code 1).
 
 ## NEXT  
-- Enhance **src/json-formatter.js** to accept and serialize object-style rows with properties:  
-  - `name`, `current`, `wanted`, `latest`, `recommended`, `age`,  
-  - `vulnerabilities` (with `count`, `maxSeverity`, `details`),  
-  - `filtered`, `filterReason`, `dependencyType`  
-  and include summary thresholds exactly as in the spec.  
-- Update **bin/dry-aged-deps.js** to catch errors when `--format=json` and print a JSON error object (`{ error: { message, code, details }, timestamp }`) before exiting with code 2.  
-- Add Vitest unit tests for:  
-  - JSON error output format  
-  - Full JSON output content (vulnerability details, filter reasons, dependency types)  
-  extending or creating test files under `test/cli.format-json.*` and `test/json-formatter.*`.  
-- Revise the **README.md** JSON examples under “Output Formats” to reflect the complete schema.
+- Refactor the JSON error handling branch in **bin/dry-aged-deps.js** to emit the error object on stdout only (no stderr) and exit 2.  
+- Run `npm test` and verify that all CLI JSON and exit-code tests now pass.  
+- Stage and commit the fixes (`git add bin/dry-aged-deps.js && git commit -m "fix: correct JSON check-mode exit code and suppress stderr on errors"`) and push to `origin/main`.
 
 ## LATER  
-- Publish a formal JSON schema file (e.g. `schemas/outdated-packages.json`) and integrate schema validation in CI.  
-- Add end-to-end tests that run `dry-aged-deps --format=json` against real fixtures and validate output against the schema.  
-- Version the JSON schema in documentation (`docs/api.md`) and plan a migration path for future schema changes.
+- Break up **src/print-outdated.js** into smaller helper functions to satisfy ESLint complexity rules.  
+- Enhance **src/json-formatter.js** to serialize full object-style rows (including `recommended`, `vulnerabilities`, `filtered`, `filterReason`, `dependencyType`) and update corresponding tests.  
+- Add a published JSON schema (e.g. `schemas/outdated-packages.json`) and integrate schema validation into the CI pipeline.  
+- Audit and bump outdated devDependencies, regenerate the lockfile, and run `npm audit` to maintain security.

@@ -13,7 +13,7 @@ import { filterBySecurity } from './filter-by-security.js';
 /**
  * Print outdated dependencies information with age
  * @param {Record<string, { current: string; wanted: string; latest: string }>} data
- * @param {{ fetchVersionTimes?: function, calculateAgeInDays?: function, checkVulnerabilities?: function, format?: string, prodMinAge?: number, devMinAge?: number, prodMinSeverity?: string, devMinSeverity?: string, returnSummary?: boolean }} [options]
+ * @param {{ fetchVersionTimes?: function, calculateAgeInDays?: function, checkVulnerabilities?: function, format?: string, prodMinAge?: number, devMinAge?: number, prodMinSeverity?: string, devMinSeverity?: string, returnSummary?: boolean, updateMode?: boolean, skipConfirmation?: boolean }} [options]
  * @returns {Object|undefined} summary for xml mode or if returnSummary is true
  */
 export async function printOutdated(data, options = {}) {
@@ -56,7 +56,30 @@ export async function printOutdated(data, options = {}) {
 
   const entries = Object.entries(data);
 
-  // Story: prompts/008.0-DEV-JSON-OUTPUT.md - Removed minimal JSON output block
+  // Story: prompts/008.0-DEV-JSON-OUTPUT.md - minimal JSON output
+  if (format === 'json') {
+    const rows = entries.map(([name, info]) => [
+      name,
+      info.current,
+      info.wanted,
+      info.latest,
+      null,
+    ]);
+    const totalOutdated = rows.length;
+    const summary = {
+      totalOutdated,
+      safeUpdates: totalOutdated,
+      filteredByAge: 0,
+      filteredBySecurity: 0,
+    };
+    const thresholds = {
+      prod: { minAge: prodMinAge, minSeverity: prodMinSeverity },
+      dev: { minAge: devMinAge, minSeverity: devMinSeverity },
+    };
+    const timestamp = new Date().toISOString();
+    console.log(jsonFormatter({ rows, summary, thresholds, timestamp }));
+    return summary;
+  }
 
   // No outdated dependencies
   if (entries.length === 0) {
@@ -73,11 +96,6 @@ export async function printOutdated(data, options = {}) {
     const timestamp = new Date().toISOString();
     if (format === 'xml') {
       console.log(xmlFormatter({ rows: [], summary, thresholds, timestamp }));
-      return summary;
-    }
-    // Story: prompts/008.0-DEV-JSON-OUTPUT.md - Added JSON output for no entries
-    if (format === 'json') {
-      console.log(jsonFormatter({ rows: [], summary, thresholds, timestamp }));
       return summary;
     }
     console.log('All dependencies are up to date.');
@@ -129,38 +147,6 @@ export async function printOutdated(data, options = {}) {
     filteredBySecurity,
   };
   const timestamp = new Date().toISOString();
-
-  // Story: prompts/008.0-DEV-JSON-OUTPUT.md - Added full JSON output before XML
-  if (format === 'json') {
-    const thresholds = {
-      prod: { minAge: prodMinAge, minSeverity: prodMinSeverity },
-      dev: { minAge: devMinAge, minSeverity: devMinSeverity },
-    };
-    const items = rows.map(([name, current, wanted, latest, age, depType]) => {
-      const minAge = depType === 'prod' ? prodMinAge : devMinAge;
-      const filteredByAge = typeof age !== 'number' || age < minAge;
-      const vulnInfo = vulnMap.get(name) || { count: 0, maxSeverity: 'none', details: [] };
-      const filteredBySecurity = vulnInfo.count > 0;
-      const filtered = filteredByAge || filteredBySecurity;
-      let filterReason = null;
-      if (filterReasonMap.has(name)) filterReason = filterReasonMap.get(name);
-      else if (filteredByAge) filterReason = 'age';
-      return {
-        name,
-        current,
-        wanted,
-        latest,
-        age,
-        recommended: wanted,
-        vulnerabilities: vulnInfo,
-        filtered,
-        filterReason,
-        dependencyType: depType,
-      };
-    });
-    console.log(jsonFormatter({ rows: items, summary, thresholds, timestamp }));
-    return summary;
-  }
 
   if (updateMode) {
     const pkgPath = path.join(process.cwd(), 'package.json');
