@@ -15,12 +15,7 @@ describe('dry-aged-deps CLI error exit code', () => {
     // Create a temporary directory for fake npm executable
     fakeNpmDir = fs.mkdtempSync(path.join(os.tmpdir(), 'fake-npm-'));
     const npmPath = path.join(fakeNpmDir, 'npm');
-    fs.writeFileSync(
-      npmPath,
-      '#!/usr/bin/env node\n' +
-        'console.log("not valid json");' +
-        '\nprocess.exit(0);'
-    );
+    fs.writeFileSync(npmPath, '#!/usr/bin/env node\n' + 'console.log("not valid json");' + '\nprocess.exit(0);');
     // Make the fake npm executable
     fs.chmodSync(npmPath, 0o755);
   });

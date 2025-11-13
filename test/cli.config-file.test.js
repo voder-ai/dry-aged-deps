@@ -53,18 +53,12 @@ describe('CLI config-file support', () => {
     const config = { minAge: 8, severity: 'low', format: 'json' };
     await writeConfig(tempDir, '.dry-aged-deps.json', JSON.stringify(config));
 
-    const result = await execa(
-      'node',
-      [cliPath, '--min-age=15', '--severity=high', '--format=xml'],
-      { cwd: tempDir }
-    );
+    const result = await execa('node', [cliPath, '--min-age=15', '--severity=high', '--format=xml'], { cwd: tempDir });
     // XML format with error summary may print, but exit code should be 0 or 1
     // For JSON tests, adapt: force JSON output
-    const jsonRes = await execa(
-      'node',
-      [cliPath, '--format=json', '--min-age=15', '--severity=high'],
-      { cwd: tempDir }
-    );
+    const jsonRes = await execa('node', [cliPath, '--format=json', '--min-age=15', '--severity=high'], {
+      cwd: tempDir,
+    });
     const obj = JSON.parse(jsonRes.stdout);
     expect(obj.summary.thresholds.prod.minAge).toBe(15);
     expect(obj.summary.thresholds.prod.minSeverity).toBe('high');
@@ -76,18 +70,14 @@ describe('CLI config-file support', () => {
       await execa('node', [cliPath], { cwd: tempDir });
     } catch (err) {
       expect(err.exitCode).toBe(2);
-      expect(err.stderr).toContain(
-        'Invalid JSON in config file .dry-aged-deps.json'
-      );
+      expect(err.stderr).toContain('Invalid JSON in config file .dry-aged-deps.json');
     }
   });
 
   it('unknown config key exits with code 2 and error message', async () => {
     const cfg = { foo: 123 };
     await writeConfig(tempDir, '.dry-aged-deps.json', JSON.stringify(cfg));
-    await expect(
-      execa('node', [cliPath], { cwd: tempDir })
-    ).rejects.toMatchObject({ exitCode: 2 });
+    await expect(execa('node', [cliPath], { cwd: tempDir })).rejects.toMatchObject({ exitCode: 2 });
     try {
       await execa('node', [cliPath], { cwd: tempDir });
     } catch (err) {
@@ -96,25 +86,15 @@ describe('CLI config-file support', () => {
   });
 
   it('invalid config values for minAge exits with code 2', async () => {
-    await writeConfig(
-      tempDir,
-      '.dry-aged-deps.json',
-      JSON.stringify({ minAge: 0 })
-    );
-    await expect(
-      execa('node', [cliPath], { cwd: tempDir })
-    ).rejects.toMatchObject({ exitCode: 2 });
+    await writeConfig(tempDir, '.dry-aged-deps.json', JSON.stringify({ minAge: 0 }));
+    await expect(execa('node', [cliPath], { cwd: tempDir })).rejects.toMatchObject({ exitCode: 2 });
   });
 
   it('supports custom config file name via --config-file flag', async () => {
     const customName = 'custom.json';
     const cfg = { minAge: 12, severity: 'moderate', format: 'json' };
     await writeConfig(tempDir, customName, JSON.stringify(cfg));
-    const result = await execa(
-      'node',
-      [cliPath, `--config-file=${customName}`],
-      { cwd: tempDir }
-    );
+    const result = await execa('node', [cliPath, `--config-file=${customName}`], { cwd: tempDir });
     const obj = JSON.parse(result.stdout);
     expect(obj.summary.thresholds.prod.minAge).toBe(12);
     expect(obj.summary.thresholds.prod.minSeverity).toBe('moderate');
@@ -122,17 +102,15 @@ describe('CLI config-file support', () => {
 
   it('missing custom config file exits with code 2 and error message', async () => {
     const customName = 'nope.json';
-    await expect(
-      execa('node', [cliPath, `--config-file=${customName}`], { cwd: tempDir })
-    ).rejects.toMatchObject({ exitCode: 2 });
+    await expect(execa('node', [cliPath, `--config-file=${customName}`], { cwd: tempDir })).rejects.toMatchObject({
+      exitCode: 2,
+    });
     try {
       await execa('node', [cliPath, `--config-file=${customName}`], {
         cwd: tempDir,
       });
     } catch (err) {
-      expect(err.stderr).toContain(
-        `Configuration file not found: ${customName}`
-      );
+      expect(err.stderr).toContain(`Configuration file not found: ${customName}`);
     }
   });
 });

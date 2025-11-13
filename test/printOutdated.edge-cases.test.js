@@ -26,9 +26,7 @@ describe('printOutdated unit tests - table output edge cases', () => {
     const data = {
       pkgA: { current: '1.0.0', wanted: '1.1.0', latest: '1.1.0' },
     };
-    const fetchStub = vi
-      .fn()
-      .mockResolvedValue({ '1.1.0': '2020-01-01T00:00:00.000Z' });
+    const fetchStub = vi.fn().mockResolvedValue({ '1.1.0': '2020-01-01T00:00:00.000Z' });
     const ageStub = vi.fn().mockReturnValue(5);
     const summary = await printOutdated(data, {
       format: 'table',
@@ -40,18 +38,14 @@ describe('printOutdated unit tests - table output edge cases', () => {
     });
     expect(summary).toBeUndefined();
     expect(logSpy).toHaveBeenCalled();
-    expect(logSpy).toHaveBeenLastCalledWith(
-      expect.stringContaining('No outdated packages with mature versions found')
-    );
+    expect(logSpy).toHaveBeenLastCalledWith(expect.stringContaining('No outdated packages with mature versions found'));
   });
 
   test('single entry above age threshold but vulnerable prints safe-filter message', async () => {
     const data = {
       pkgB: { current: '2.0.0', wanted: '2.1.0', latest: '2.1.0' },
     };
-    const fetchStub = vi
-      .fn()
-      .mockResolvedValue({ '2.1.0': '2020-01-01T00:00:00.000Z' });
+    const fetchStub = vi.fn().mockResolvedValue({ '2.1.0': '2020-01-01T00:00:00.000Z' });
     const ageStub = vi.fn().mockReturnValue(10);
     const vulnStub = vi.fn().mockResolvedValue(3);
     const summary = await printOutdated(data, {
@@ -64,18 +58,14 @@ describe('printOutdated unit tests - table output edge cases', () => {
     });
     expect(summary).toBeUndefined();
     expect(logSpy).toHaveBeenCalled();
-    expect(logSpy).toHaveBeenLastCalledWith(
-      expect.stringContaining('No outdated packages with safe, mature versions')
-    );
+    expect(logSpy).toHaveBeenLastCalledWith(expect.stringContaining('No outdated packages with safe, mature versions'));
   });
 
   test('single entry above age threshold and vulnerability check error prints row', async () => {
     const data = {
       pkgC: { current: '3.0.0', wanted: '3.1.0', latest: '3.1.0' },
     };
-    const fetchStub = vi
-      .fn()
-      .mockResolvedValue({ '3.1.0': '2020-01-01T00:00:00.000Z' });
+    const fetchStub = vi.fn().mockResolvedValue({ '3.1.0': '2020-01-01T00:00:00.000Z' });
     const ageStub = vi.fn().mockReturnValue(15);
     const vulnError = new Error('network failure');
     const vulnStub = vi.fn().mockRejectedValue(vulnError);
@@ -88,14 +78,10 @@ describe('printOutdated unit tests - table output edge cases', () => {
       devMinAge: 7,
     });
     expect(errorSpy).toHaveBeenCalledWith(
-      expect.stringContaining(
-        'Warning: failed to check vulnerabilities for pkgC@3.1.0'
-      )
+      expect.stringContaining('Warning: failed to check vulnerabilities for pkgC@3.1.0')
     );
     expect(logSpy).toHaveBeenCalledWith('Outdated packages:');
-    expect(logSpy).toHaveBeenCalledWith(
-      ['Name', 'Current', 'Wanted', 'Latest', 'Age (days)', 'Type'].join('	')
-    );
+    expect(logSpy).toHaveBeenCalledWith(['Name', 'Current', 'Wanted', 'Latest', 'Age (days)', 'Type'].join('	'));
     expect(logSpy).toHaveBeenCalledWith('pkgC	3.0.0	3.1.0	3.1.0	15	dev');
   });
 });
@@ -171,9 +157,7 @@ describe('printOutdated unit tests - xml output', () => {
     const data = {
       pkgX: { current: '0.1.0', wanted: '0.2.0', latest: '0.2.0' },
     };
-    const fetchStub = vi
-      .fn()
-      .mockResolvedValue({ '0.2.0': '2020-01-01T00:00:00.000Z' });
+    const fetchStub = vi.fn().mockResolvedValue({ '0.2.0': '2020-01-01T00:00:00.000Z' });
     const ageStub = vi.fn().mockReturnValue(10);
     const vulnStub = vi.fn().mockResolvedValue(0);
     const summary = await printOutdated(data, {
@@ -242,13 +226,19 @@ describe('printOutdated unit tests - json output with data', () => {
       },
     });
     expect(Array.isArray(parsed.packages)).toBe(true);
+    // Verify full package entry fields
     expect(parsed.packages).toEqual([
       {
         name: 'pkgY',
         current: '1.0.0',
         wanted: '1.1.0',
         latest: '1.1.0',
+        recommended: '1.1.0',
         age: null,
+        vulnerabilities: { count: 0, maxSeverity: 'none', details: [] },
+        filtered: false,
+        filterReason: '',
+        type: 'dev',
       },
     ]);
   });

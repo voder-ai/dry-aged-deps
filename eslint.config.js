@@ -41,14 +41,7 @@ export default [
 
   // All JavaScript files - ES Modules
   {
-    files: [
-      'src/**/*.js',
-      'bin/**/*.js',
-      'test/**/*.js',
-      '**/*.test.js',
-      '**/*.spec.js',
-      '*.config.js',
-    ],
+    files: ['src/**/*.js', 'bin/**/*.js', 'test/**/*.js', '**/*.test.js', '**/*.spec.js', '*.config.js'],
     languageOptions: {
       sourceType: 'module',
       ecmaVersion: 2022,
@@ -59,10 +52,7 @@ export default [
     rules: {
       // Relax complexity to allow incremental refactors; we'll ratchet this down over time
       complexity: ['error', { max: 15 }],
-      'max-lines-per-function': [
-        'error',
-        { max: 200, skipComments: true, skipBlankLines: true },
-      ],
+      'max-lines-per-function': ['error', { max: 200, skipComments: true, skipBlankLines: true }],
     },
   },
 

@@ -36,9 +36,7 @@ function parseStringFlag(args, flag, defaultValue, validValues) {
   const raw = getFlagRawValue(args, flag);
   const value = raw !== undefined ? raw : defaultValue;
   if (validValues && !validValues.includes(value)) {
-    console.error(
-      `Invalid ${flag}: ${value}. Valid values are: ${validValues.join(', ')}`
-    );
+    console.error(`Invalid ${flag}: ${value}. Valid values are: ${validValues.join(', ')}`);
     process.exit(2);
   }
   return value;
@@ -64,9 +62,7 @@ function parseIntegerFlag(args, flag, defaultValue, min = 1, max = Infinity) {
     }
     num = parseInt(raw, 10);
     if (num < min || num > max) {
-      console.error(
-        `Invalid ${flag}: ${raw}. Must be an integer between ${min} and ${max}.`
-      );
+      console.error(`Invalid ${flag}: ${raw}. Must be an integer between ${min} and ${max}.`);
       process.exit(2);
     }
   }
@@ -111,31 +107,13 @@ export function parseDevMinAgeFlag(args, defaultDevMinAge) {
 /**
  * Parse the --prod-severity flag.
  */
-export function parseProdSeverityFlag(
-  args,
-  defaultProdMinSeverity,
-  validSeverities
-) {
-  return parseStringFlag(
-    args,
-    'prod-severity',
-    defaultProdMinSeverity,
-    validSeverities
-  );
+export function parseProdSeverityFlag(args, defaultProdMinSeverity, validSeverities) {
+  return parseStringFlag(args, 'prod-severity', defaultProdMinSeverity, validSeverities);
 }
 
 /**
  * Parse the --dev-severity flag.
  */
-export function parseDevSeverityFlag(
-  args,
-  defaultDevMinSeverity,
-  validSeverities
-) {
-  return parseStringFlag(
-    args,
-    'dev-severity',
-    defaultDevMinSeverity,
-    validSeverities
-  );
+export function parseDevSeverityFlag(args, defaultDevMinSeverity, validSeverities) {
+  return parseStringFlag(args, 'dev-severity', defaultDevMinSeverity, validSeverities);
 }

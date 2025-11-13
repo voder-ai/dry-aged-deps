@@ -10,11 +10,7 @@ import { jsonFormatter } from './json-formatter.js';
 import { loadPackageJson } from './load-package-json.js';
 import { buildRows } from './build-rows.js';
 import { applyFilters } from './apply-filters.js';
-import {
-  handleJsonOutput,
-  handleXmlOutput,
-  handleTableOutput,
-} from './print-outdated-handlers.js';
+import { handleJsonOutput, handleXmlOutput, handleTableOutput } from './print-outdated-handlers.js';
 import { updatePackages } from './update-packages.js';
 
 // complexity is tolerated in this file due to CLI orchestration; review during refactors
@@ -25,37 +21,64 @@ import { updatePackages } from './update-packages.js';
  * @returns {Object|undefined} summary for xml mode or if returnSummary is true
  */
 export async function printOutdated(data, options = {}) {
-  const fetchVersionTimes =
-    options.fetchVersionTimes || defaultFetchVersionTimes;
-  const calculateAgeInDays =
-    options.calculateAgeInDays || defaultCalculateAgeInDays;
-  const checkVulnerabilities =
-    options.checkVulnerabilities || defaultCheckVulnerabilities;
+  const fetchVersionTimes = options.fetchVersionTimes || defaultFetchVersionTimes;
+  const calculateAgeInDays = options.calculateAgeInDays || defaultCalculateAgeInDays;
+  const checkVulnerabilities = options.checkVulnerabilities || defaultCheckVulnerabilities;
   const format = options.format || 'table';
   const returnSummary = options.returnSummary === true;
   const updateMode = options.updateMode === true;
   const skipConfirmation = options.skipConfirmation === true;
 
   // Configurable thresholds - support both old and new parameter names
-  const prodMinAge =
-    typeof options.prodMinAge === 'number' ? options.prodMinAge : 7;
-  const devMinAge =
-    typeof options.devMinAge === 'number' ? options.devMinAge : 7;
+  const prodMinAge = typeof options.prodMinAge === 'number' ? options.prodMinAge : 7;
+  const devMinAge = typeof options.devMinAge === 'number' ? options.devMinAge : 7;
   const prodMinSeverity = options.prodMinSeverity || 'none';
   const devMinSeverity = options.devMinSeverity || 'none';
 
   // Load package.json to determine dependency types
-  const { dependencies: prodDeps, devDependencies: _devDeps } =
-    loadPackageJson();
-  const getDependencyType = (packageName) =>
-    packageName in prodDeps ? 'prod' : 'dev';
+  const { dependencies: prodDeps, devDependencies: _devDeps } = loadPackageJson();
+  const getDependencyType = (packageName) => (packageName in prodDeps ? 'prod' : 'dev');
 
   const entries = Object.entries(data);
 
+  // Early JSON branch: programmatic API, raw data mapping without external fetch or check
+  if (format === 'json') {
+    const rows = entries.map(([name, info]) => [
+      name,
+      info.current,
+      info.wanted,
+      info.latest,
+      null,
+      getDependencyType(name),
+    ]);
+    const totalOutdated = rows.length;
+    const summary = {
+      totalOutdated,
+      safeUpdates: totalOutdated,
+      filteredByAge: 0,
+      filteredBySecurity: 0,
+    };
+    const thresholds = {
+      prod: { minAge: prodMinAge, minSeverity: prodMinSeverity },
+      dev: { minAge: devMinAge, minSeverity: devMinSeverity },
+    };
+    const vulnMap = new Map(entries.map(([name]) => [name, { count: 0, maxSeverity: 'none', details: [] }]));
+    const filterReasonMap = new Map();
+    return handleJsonOutput(rows, summary, thresholds, vulnMap, filterReasonMap);
+  }
+
   // No outdated dependencies
   if (entries.length === 0) {
-    const summary = { totalOutdated: 0, safeUpdates: 0, filteredByAge: 0, filteredBySecurity: 0 };
-    const thresholds = { prod: { minAge: prodMinAge, minSeverity: prodMinSeverity }, dev: { minAge: devMinAge, minSeverity: devMinSeverity } };
+    const summary = {
+      totalOutdated: 0,
+      safeUpdates: 0,
+      filteredByAge: 0,
+      filteredBySecurity: 0,
+    };
+    const thresholds = {
+      prod: { minAge: prodMinAge, minSeverity: prodMinSeverity },
+      dev: { minAge: devMinAge, minSeverity: devMinSeverity },
+    };
     const timestamp = new Date().toISOString();
     if (format === 'json') {
       console.log(jsonFormatter({ rows: [], summary, thresholds, timestamp }));
@@ -79,21 +102,23 @@ export async function printOutdated(data, options = {}) {
   });
 
   // Apply filters
-  const { safeRows, matureRows, vulnMap, filterReasonMap, summary } =
-    await applyFilters(rows, {
-      prodMinAge,
-      devMinAge,
-      prodMinSeverity,
-      devMinSeverity,
-      checkVulnerabilities,
-      format,
-    });
+  const { safeRows, matureRows, vulnMap, filterReasonMap, summary } = await applyFilters(rows, {
+    prodMinAge,
+    devMinAge,
+    prodMinSeverity,
+    devMinSeverity,
+    checkVulnerabilities,
+    format,
+  });
 
   if (format === 'json') {
     return handleJsonOutput(
       rows,
       summary,
-      { prod: { minAge: prodMinAge, minSeverity: prodMinSeverity }, dev: { minAge: devMinAge, minSeverity: devMinSeverity } },
+      {
+        prod: { minAge: prodMinAge, minSeverity: prodMinSeverity },
+        dev: { minAge: devMinAge, minSeverity: devMinSeverity },
+      },
       vulnMap,
       filterReasonMap
     );
@@ -117,12 +142,5 @@ export async function printOutdated(data, options = {}) {
     );
   }
 
-  return handleTableOutput(
-    safeRows,
-    matureRows,
-    summary,
-    prodMinAge,
-    devMinAge,
-    returnSummary
-  );
+  return handleTableOutput(safeRows, matureRows, summary, prodMinAge, devMinAge, returnSummary);
 }

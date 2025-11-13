@@ -39,36 +39,18 @@ async function main() {
     console.log('Options:');
     console.log('  -h, --help             Show help');
     console.log('  -v, --version          Show version');
-    console.log(
-      '  --format=<format>      Output format: table (default), json, xml'
-    );
-    console.log(
-      '  --min-age=<days>       Minimum age in days (1-365) for including versions (default: 7)'
-    );
-    console.log(
-      '  --prod-min-age=<days>  Minimum age for production dependencies (falls back to --min-age)'
-    );
-    console.log(
-      '  --dev-min-age=<days>   Minimum age for development dependencies (falls back to --min-age)'
-    );
+    console.log('  --format=<format>      Output format: table (default), json, xml');
+    console.log('  --min-age=<days>       Minimum age in days (1-365) for including versions (default: 7)');
+    console.log('  --prod-min-age=<days>  Minimum age for production dependencies (falls back to --min-age)');
+    console.log('  --dev-min-age=<days>   Minimum age for development dependencies (falls back to --min-age)');
     console.log(
       '  --severity=<level>     Vulnerability severity threshold: none, low, moderate, high, critical (default: none)'
     );
-    console.log(
-      '  --prod-severity=<lvl>  Severity threshold for production dependencies (falls back to --severity)'
-    );
-    console.log(
-      '  --dev-severity=<lvl>   Severity threshold for development dependencies (falls back to --severity)'
-    );
-    console.log(
-      '  --check                 Check mode: exit code 1 if safe updates available, 0 if none, 2 on error'
-    );
-    console.log(
-      '  --update               Update dependencies to latest safe versions'
-    );
-    console.log(
-      '  -y, --yes               Skip confirmation prompts (assume yes)'
-    );
+    console.log('  --prod-severity=<lvl>  Severity threshold for production dependencies (falls back to --severity)');
+    console.log('  --dev-severity=<lvl>   Severity threshold for development dependencies (falls back to --severity)');
+    console.log('  --check                 Check mode: exit code 1 if safe updates available, 0 if none, 2 on error');
+    console.log('  --update               Update dependencies to latest safe versions');
+    console.log('  -y, --yes               Skip confirmation prompts (assume yes)');
     console.log(
       '  --config-file=<file>    Path to JSON config file (default: .dry-aged-deps.json). CLI flags override config file values'
     );
@@ -89,17 +71,12 @@ async function main() {
   let checkVulnerabilitiesOverride;
   if (process.env.DRY_AGED_DEPS_MOCK === '1') {
     // Load mock module for testing
-    const mockPath = pathToFileURL(
-      path.resolve(__dirname, '../test/helpers/cli.outdated.mock.js')
-    ).href;
+    const mockPath = pathToFileURL(path.resolve(__dirname, '../test/helpers/cli.outdated.mock.js')).href;
     const mock = await import(mockPath);
     data = mock.outdatedData;
     fetchVersionTimesOverride = mock.fetchVersionTimes;
     checkVulnerabilitiesOverride = mock.checkVulnerabilities;
-  } else if (
-    format === 'json' &&
-    fs.existsSync(path.join(process.cwd(), 'package.json'))
-  ) {
+  } else if (format === 'json' && fs.existsSync(path.join(process.cwd(), 'package.json'))) {
     // Skip running npm outdated in JSON mode when package.json present
     data = {};
   } else {

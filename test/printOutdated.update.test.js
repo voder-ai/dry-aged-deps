@@ -39,9 +39,7 @@ describe('printOutdated auto-update mode', () => {
       bar: { current: '2.0.0', wanted: '2.1.0', latest: '2.1.0' },
     };
     // stub helpers to mark both as safe and aged
-    const tenDays = new Date(
-      Date.now() - 10 * 24 * 60 * 60 * 1000
-    ).toISOString();
+    const tenDays = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString();
     const fetchVersionTimes = async () => ({
       '1.1.0': tenDays,
       '2.1.0': tenDays,
@@ -73,12 +71,8 @@ describe('printOutdated auto-update mode', () => {
     expect(updatedPkg.devDependencies.bar).toBe('2.1.0');
 
     // console logs summary messages containing updated count
-    expect(consoleLogSpy).toHaveBeenCalledWith(
-      expect.stringContaining('Updated package.json with 2 safe packages')
-    );
-    expect(consoleLogSpy).toHaveBeenCalledWith(
-      expect.stringContaining("Run 'npm install'")
-    );
+    expect(consoleLogSpy).toHaveBeenCalledWith(expect.stringContaining('Updated package.json with 2 safe packages'));
+    expect(consoleLogSpy).toHaveBeenCalledWith(expect.stringContaining("Run 'npm install'"));
   });
 
   it('logs no safe updates when none pass filters', async () => {
@@ -86,9 +80,7 @@ describe('printOutdated auto-update mode', () => {
     const data = {
       foo: { current: '1.0.0', wanted: '1.1.0', latest: '1.1.0' },
     };
-    const tenDays = new Date(
-      Date.now() - 10 * 24 * 60 * 60 * 1000
-    ).toISOString();
+    const tenDays = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString();
     const fetchVersionTimes = async () => ({ '1.1.0': tenDays });
     const calculateAgeInDays = () => 10;
     const checkVulnerabilities = async () => 5; // treat as vulnerable

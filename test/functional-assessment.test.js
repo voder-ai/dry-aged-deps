@@ -51,9 +51,7 @@ describe('Functional assessment - CLI end-to-end', () => {
       env: { DRY_AGED_DEPS_MOCK: '1' },
     });
     expect(result.exitCode).toBe(0);
-    expect(result.stdout).toContain(
-      'No outdated packages with mature versions found'
-    );
+    expect(result.stdout).toContain('No outdated packages with mature versions found');
   });
 
   // Story: prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
@@ -97,15 +95,8 @@ describe('Functional assessment - CLI end-to-end', () => {
 
     // Config file override for severity
     const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), 'cfg-sec-'));
-    await fs.copyFile(
-      path.join(__dirname, 'fixtures-up-to-date', 'package.json'),
-      path.join(tmpDir, 'package.json')
-    );
-    await fs.writeFile(
-      path.join(tmpDir, '.dry-aged-deps.json'),
-      JSON.stringify({ severity: 'none' }),
-      'utf8'
-    );
+    await fs.copyFile(path.join(__dirname, 'fixtures-up-to-date', 'package.json'), path.join(tmpDir, 'package.json'));
+    await fs.writeFile(path.join(tmpDir, '.dry-aged-deps.json'), JSON.stringify({ severity: 'none' }), 'utf8');
     const cfg = await runCli([], {
       cwd: tmpDir,
       env: { DRY_AGED_DEPS_MOCK: '1' },
@@ -176,18 +167,10 @@ describe('Functional assessment - CLI end-to-end', () => {
   // Story: prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
   test('010.0-DEV-CONFIG-FILE-SUPPORT: Reads configuration from .dry-aged-deps.json for format', async () => {
     const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), 'cfg-file-'));
-    const fixturePkg = path.join(
-      __dirname,
-      'fixtures-up-to-date',
-      'package.json'
-    );
+    const fixturePkg = path.join(__dirname, 'fixtures-up-to-date', 'package.json');
     await fs.copyFile(fixturePkg, path.join(tmpDir, 'package.json'));
     // Write config file to set format to json
-    await fs.writeFile(
-      path.join(tmpDir, '.dry-aged-deps.json'),
-      JSON.stringify({ format: 'json' }),
-      'utf8'
-    );
+    await fs.writeFile(path.join(tmpDir, '.dry-aged-deps.json'), JSON.stringify({ format: 'json' }), 'utf8');
     const result = await runCli([], {
       cwd: tmpDir,
       env: { DRY_AGED_DEPS_MOCK: '1' },
@@ -201,11 +184,7 @@ describe('Functional assessment - CLI end-to-end', () => {
   // Story: prompts/011.0-DEV-AUTO-UPDATE.md
   test('011.0-DEV-AUTO-UPDATE: Updates package.json with safe versions when --update flag used', async () => {
     const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), 'upd-'));
-    const fixturePkg = path.join(
-      __dirname,
-      'fixtures-up-to-date',
-      'package.json'
-    );
+    const fixturePkg = path.join(__dirname, 'fixtures-up-to-date', 'package.json');
     await fs.copyFile(fixturePkg, path.join(tmpDir, 'package.json'));
     const result = await runCli(['--update', '-y'], {
       cwd: tmpDir,
@@ -213,9 +192,7 @@ describe('Functional assessment - CLI end-to-end', () => {
     });
     expect(result.exitCode).toBe(0);
     expect(result.stdout).toContain('The following packages will be updated');
-    const updated = JSON.parse(
-      await fs.readFile(path.join(tmpDir, 'package.json'), 'utf8')
-    );
+    const updated = JSON.parse(await fs.readFile(path.join(tmpDir, 'package.json'), 'utf8'));
     expect(updated.devDependencies).toHaveProperty('fakepkg', '1.1.0');
     // backup exists
     const stat = await fs.stat(path.join(tmpDir, 'package.json.backup'));

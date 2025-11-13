@@ -17,9 +17,7 @@ describe('printOutdated unit tests - table output normal case', () => {
     const data = {
       pkgN: { current: '4.0.0', wanted: '4.1.0', latest: '4.1.0' },
     };
-    const fetchStub = vi
-      .fn()
-      .mockResolvedValue({ '4.1.0': '2020-01-01T00:00:00.000Z' });
+    const fetchStub = vi.fn().mockResolvedValue({ '4.1.0': '2020-01-01T00:00:00.000Z' });
     const ageStub = vi.fn().mockReturnValue(30);
     const vulnStub = vi.fn().mockResolvedValue(0);
     await printOutdated(data, {
@@ -32,9 +30,7 @@ describe('printOutdated unit tests - table output normal case', () => {
     });
     expect(errorSpy).not.toHaveBeenCalled();
     expect(logSpy).toHaveBeenCalledWith('Outdated packages:');
-    expect(logSpy).toHaveBeenCalledWith(
-      ['Name', 'Current', 'Wanted', 'Latest', 'Age (days)', 'Type'].join('	')
-    );
+    expect(logSpy).toHaveBeenCalledWith(['Name', 'Current', 'Wanted', 'Latest', 'Age (days)', 'Type'].join('	'));
     expect(logSpy).toHaveBeenCalledWith('pkgN	4.0.0	4.1.0	4.1.0	30	dev');
   });
 });
@@ -67,14 +63,10 @@ describe('printOutdated unit tests - table fetch error branch', () => {
       devMinAge: 7,
     });
     expect(errorSpy).toHaveBeenCalledWith(
-      expect.stringContaining(
-        'Warning: failed to fetch version times for pkgD: fetch fail'
-      )
+      expect.stringContaining('Warning: failed to fetch version times for pkgD: fetch fail')
     );
     expect(ageStub).not.toHaveBeenCalled();
-    expect(logSpy).toHaveBeenCalledWith(
-      expect.stringContaining('No outdated packages with mature versions found')
-    );
+    expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('No outdated packages with mature versions found'));
   });
 });
 
@@ -92,9 +84,7 @@ describe('printOutdated unit tests - xml output vulnerability filter', () => {
     const data = {
       pkgV: { current: '6.0.0', wanted: '6.1.0', latest: '6.1.0' },
     };
-    const fetchStub = vi
-      .fn()
-      .mockResolvedValue({ '6.1.0': '2020-01-01T00:00:00.000Z' });
+    const fetchStub = vi.fn().mockResolvedValue({ '6.1.0': '2020-01-01T00:00:00.000Z' });
     const ageStub = vi.fn().mockReturnValue(20);
     const vulnStub = vi.fn().mockResolvedValue(2);
     const summary = await printOutdated(data, {

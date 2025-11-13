@@ -11,9 +11,7 @@ const pkgName = 'prodfoo';
 const data = {
   [pkgName]: { current: '1.0.0', wanted: '1.2.0', latest: '1.2.0' },
 };
-const fetchStub = vi
-  .fn()
-  .mockResolvedValue({ '1.2.0': '2020-01-01T00:00:00.000Z' });
+const fetchStub = vi.fn().mockResolvedValue({ '1.2.0': '2020-01-01T00:00:00.000Z' });
 const ageStub = vi.fn().mockReturnValue(10);
 const vulnStub = vi.fn().mockResolvedValue(0);
 let tempDir;
@@ -26,11 +24,7 @@ describe('printOutdated unit tests - prod dependency type in table output', () =
     tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'test-prod-'));
     fs.writeFileSync(
       path.join(tempDir, 'package.json'),
-      JSON.stringify(
-        { dependencies: { [pkgName]: '^1.0.0' }, devDependencies: {} },
-        null,
-        2
-      )
+      JSON.stringify({ dependencies: { [pkgName]: '^1.0.0' }, devDependencies: {} }, null, 2)
     );
     process.chdir(tempDir);
   });
@@ -55,9 +49,7 @@ describe('printOutdated unit tests - prod dependency type in table output', () =
 
     expect(errorSpy).not.toHaveBeenCalled();
     expect(logSpy).toHaveBeenCalledWith('Outdated packages:');
-    expect(logSpy).toHaveBeenCalledWith(
-      ['Name', 'Current', 'Wanted', 'Latest', 'Age (days)', 'Type'].join('	')
-    );
+    expect(logSpy).toHaveBeenCalledWith(['Name', 'Current', 'Wanted', 'Latest', 'Age (days)', 'Type'].join('	'));
     // The last row should show 'prod' as the type
     expect(logSpy).toHaveBeenCalledWith(`${pkgName}	1.0.0	1.2.0	1.2.0	10	prod`);
 

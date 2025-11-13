@@ -26,13 +26,7 @@ function escapeXml(unsafe) {
  * @param {Error} [params.error]
  * @returns {string} XML string
  */
-export function xmlFormatter({
-  rows = [],
-  summary = {},
-  thresholds = {},
-  timestamp = '',
-  error = null,
-} = {}) {
+export function xmlFormatter({ rows = [], summary = {}, thresholds = {}, timestamp = '', error = null } = {}) {
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
   xml += `<outdated-packages timestamp="${escapeXml(timestamp)}">\n`;
 

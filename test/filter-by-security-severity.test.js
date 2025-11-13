@@ -20,12 +20,7 @@ describe('filterBySecurity severity threshold logic', () => {
     });
     // Threshold high: low/moderate < high => allowed
     const thresholds = { prodMinSeverity: 'high', devMinSeverity: 'none' };
-    const { safeRows, vulnMap, filterReasonMap } = await filterBySecurity(
-      rows,
-      checkVuln,
-      thresholds,
-      'table'
-    );
+    const { safeRows, vulnMap, filterReasonMap } = await filterBySecurity(rows, checkVuln, thresholds, 'table');
 
     expect(safeRows).toEqual(rows);
     const info = vulnMap.get('pkg1');
@@ -47,12 +42,7 @@ describe('filterBySecurity severity threshold logic', () => {
     });
     // Threshold critical: only critical matches threshold => blocked
     const thresholds = { prodMinSeverity: 'none', devMinSeverity: 'critical' };
-    const { safeRows, vulnMap, filterReasonMap } = await filterBySecurity(
-      rows,
-      checkVuln,
-      thresholds,
-      'json'
-    );
+    const { safeRows, vulnMap, filterReasonMap } = await filterBySecurity(rows, checkVuln, thresholds, 'json');
 
     expect(safeRows).toEqual([]);
     const info = vulnMap.get('pkg2');

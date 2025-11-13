@@ -9,23 +9,15 @@ const cliPath = path.join(__dirname, '..', 'bin', 'dry-aged-deps.js');
 
 describe('CLI --min-age flag', () => {
   it('rejects non-integer values', async () => {
-    await expect(
-      execa('node', [cliPath, '--min-age=abc'])
-    ).rejects.toMatchObject({ exitCode: 2 });
+    await expect(execa('node', [cliPath, '--min-age=abc'])).rejects.toMatchObject({ exitCode: 2 });
   });
 
   it('rejects out-of-range values (0)', async () => {
-    await expect(execa('node', [cliPath, '--min-age=0'])).rejects.toMatchObject(
-      { exitCode: 2 }
-    );
+    await expect(execa('node', [cliPath, '--min-age=0'])).rejects.toMatchObject({ exitCode: 2 });
   });
 
   it('accepts values >365 without error', async () => {
-    const result = await execa('node', [
-      cliPath,
-      '--format=json',
-      '--min-age=366',
-    ]);
+    const result = await execa('node', [cliPath, '--format=json', '--min-age=366']);
     expect(result.exitCode).toBe(0);
     const obj = JSON.parse(result.stdout);
     expect(obj.summary.thresholds.prod.minAge).toBe(366);
@@ -49,11 +41,7 @@ describe('CLI --min-age flag', () => {
   });
 
   it('overrides default value when provided', async () => {
-    const result = await execa(
-      'node',
-      [cliPath, '--format=json', '--min-age=10'],
-      { cwd: process.cwd() }
-    );
+    const result = await execa('node', [cliPath, '--format=json', '--min-age=10'], { cwd: process.cwd() });
     expect(result.exitCode).toBe(0);
     const obj = JSON.parse(result.stdout);
     expect(obj.summary.thresholds.prod.minAge).toBe(10);
@@ -63,9 +51,7 @@ describe('CLI --min-age flag', () => {
 
 describe('CLI --severity flag', () => {
   it('rejects invalid severity values', async () => {
-    await expect(
-      execa('node', [cliPath, '--severity=foo'])
-    ).rejects.toMatchObject({ exitCode: 2 });
+    await expect(execa('node', [cliPath, '--severity=foo'])).rejects.toMatchObject({ exitCode: 2 });
   });
 
   it('rejects missing value for --severity', async () => {
@@ -86,11 +72,7 @@ describe('CLI --severity flag', () => {
   it('accepts valid severity values', { timeout: 30000 }, async () => {
     const valid = ['none', 'low', 'moderate', 'high', 'critical'];
     for (const level of valid) {
-      const result = await execa('node', [
-        cliPath,
-        '--format=json',
-        `--severity=${level}`,
-      ]);
+      const result = await execa('node', [cliPath, '--format=json', `--severity=${level}`]);
       expect(result.exitCode).toBe(0);
       const obj = JSON.parse(result.stdout);
       expect(obj.summary.thresholds.prod.minSeverity).toBe(level);

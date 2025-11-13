@@ -14,10 +14,7 @@ describe('dry-aged-deps CLI JSON error output', () => {
     await fs.mkdir(fakeNpmDir, { recursive: true });
     const npmPath = path.join(fakeNpmDir, 'npm');
     // Write fake npm that errors
-    await fs.writeFile(
-      npmPath,
-      '#!/usr/bin/env node\nconsole.error("fatal error"); process.exit(1);'
-    );
+    await fs.writeFile(npmPath, '#!/usr/bin/env node\nconsole.error("fatal error"); process.exit(1);');
     await fs.chmod(npmPath, 0o755);
 
     const cliPath = path.join(process.cwd(), 'bin', 'dry-aged-deps.js');

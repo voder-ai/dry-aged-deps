@@ -43,15 +43,8 @@ export function parseOptions(argv) {
 
   // Config file support
   const configFileArg = args.find((a) => a.startsWith('--config-file='));
-  const configFileName = configFileArg
-    ? configFileArg.split('=')[1]
-    : '.dry-aged-deps.json';
-  const config = loadConfigFile(
-    configFileName,
-    configFileArg,
-    validSeverities,
-    validFormats
-  );
+  const configFileName = configFileArg ? configFileArg.split('=')[1] : '.dry-aged-deps.json';
+  const config = loadConfigFile(configFileName, configFileArg, validSeverities, validFormats);
 
   const defaultFormat = config.format ?? 'table';
   const format = parseFormatFlag(args, defaultFormat, validFormats);
@@ -67,16 +60,8 @@ export function parseOptions(argv) {
   const severity = parseSeverityFlag(args, defaultSeverity, validSeverities);
   const defaultProdMinSeverity = config.prod?.minSeverity ?? severity;
   const defaultDevMinSeverity = config.dev?.minSeverity ?? severity;
-  const prodMinSeverity = parseProdSeverityFlag(
-    args,
-    defaultProdMinSeverity,
-    validSeverities
-  );
-  const devMinSeverity = parseDevSeverityFlag(
-    args,
-    defaultDevMinSeverity,
-    validSeverities
-  );
+  const prodMinSeverity = parseProdSeverityFlag(args, defaultProdMinSeverity, validSeverities);
+  const devMinSeverity = parseDevSeverityFlag(args, defaultDevMinSeverity, validSeverities);
 
   return {
     format,

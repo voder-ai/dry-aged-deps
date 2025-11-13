@@ -35,10 +35,7 @@ export async function checkVulnerabilities(packageName, version) {
       },
     };
 
-    await fs.writeFile(
-      join(tempDir, 'package.json'),
-      JSON.stringify(packageJson, null, 2)
-    );
+    await fs.writeFile(join(tempDir, 'package.json'), JSON.stringify(packageJson, null, 2));
 
     // Run npm install to generate package-lock.json (needed for audit)
     await new Promise((resolve, reject) => {
@@ -61,16 +58,11 @@ export async function checkVulnerabilities(packageName, version) {
 
     // Run npm audit --json to check for vulnerabilities
     const auditOutput = await new Promise((resolve) => {
-      execFile(
-        'npm',
-        ['audit', '--json'],
-        { cwd: tempDir, encoding: 'utf8' },
-        (_error, stdout) => {
-          // npm audit exits with code 1 if vulnerabilities found
-          // We want the output either way, so don't reject
-          resolve(stdout);
-        }
-      );
+      execFile('npm', ['audit', '--json'], { cwd: tempDir, encoding: 'utf8' }, (_error, stdout) => {
+        // npm audit exits with code 1 if vulnerabilities found
+        // We want the output either way, so don't reject
+        resolve(stdout);
+      });
     });
 
     const auditResult = JSON.parse(auditOutput);
@@ -94,17 +86,9 @@ export async function checkVulnerabilities(packageName, version) {
 
     // Collect detailed vulnerability entries
     let details = [];
-    if (
-      auditResult.vulnerabilities &&
-      typeof auditResult.vulnerabilities === 'object'
-    ) {
-      details = Object.entries(auditResult.vulnerabilities).map(
-        ([moduleName, vuln]) => ({ moduleName, ...vuln })
-      );
-    } else if (
-      auditResult.advisories &&
-      typeof auditResult.advisories === 'object'
-    ) {
+    if (auditResult.vulnerabilities && typeof auditResult.vulnerabilities === 'object') {
+      details = Object.entries(auditResult.vulnerabilities).map(([moduleName, vuln]) => ({ moduleName, ...vuln }));
+    } else if (auditResult.advisories && typeof auditResult.advisories === 'object') {
       details = Object.values(auditResult.advisories);
     }
 

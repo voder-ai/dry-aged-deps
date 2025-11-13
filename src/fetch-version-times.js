@@ -17,17 +17,12 @@ export async function fetchVersionTimes(packageName) {
 
   const doExec = () =>
     new Promise((resolve, reject) => {
-      execFile(
-        'npm',
-        ['view', packageName, 'time', '--json'],
-        { encoding: 'utf8' },
-        (error, stdout) => {
-          if (error) {
-            return reject(error);
-          }
-          resolve(stdout);
+      execFile('npm', ['view', packageName, 'time', '--json'], { encoding: 'utf8' }, (error, stdout) => {
+        if (error) {
+          return reject(error);
         }
-      );
+        resolve(stdout);
+      });
     });
 
   while (true) {

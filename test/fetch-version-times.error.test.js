@@ -14,9 +14,7 @@ describe('fetchVersionTimes error paths', () => {
   });
 
   it('rejects for invalid package names', async () => {
-    await expect(fetchVersionTimes('invalid$pkg')).rejects.toThrowError(
-      /Invalid package name/
-    );
+    await expect(fetchVersionTimes('invalid$pkg')).rejects.toThrowError(/Invalid package name/);
   });
 
   it('rejects with SyntaxError when npm view output is malformed JSON', async () => {

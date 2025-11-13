@@ -90,10 +90,7 @@ describe('checkVulnerabilities', () => {
       callback(null, JSON.stringify(auditResult), '');
     });
 
-    const result = await checkVulnerabilities(
-      '@semantic-release/npm',
-      '13.1.1'
-    );
+    const result = await checkVulnerabilities('@semantic-release/npm', '13.1.1');
 
     expect(result.count).toBe(3); // 1 low + 2 moderate
     expect(result.vulnerabilities.low).toBe(1);
@@ -106,9 +103,7 @@ describe('checkVulnerabilities', () => {
       callback(new Error('Network error'), '', 'Network error');
     });
 
-    await expect(
-      checkVulnerabilities('invalid-package', '1.0.0')
-    ).rejects.toThrow();
+    await expect(checkVulnerabilities('invalid-package', '1.0.0')).rejects.toThrow();
 
     expect(fs.rm).toHaveBeenCalledWith(mockTempDir, {
       recursive: true,
@@ -117,9 +112,7 @@ describe('checkVulnerabilities', () => {
   });
 
   it('throws error for invalid package name', async () => {
-    await expect(
-      checkVulnerabilities('invalid name with spaces', '1.0.0')
-    ).rejects.toThrow('Invalid package name');
+    await expect(checkVulnerabilities('invalid name with spaces', '1.0.0')).rejects.toThrow('Invalid package name');
 
     // Should not create temp directory for invalid input
     expect(fs.mkdtemp).not.toHaveBeenCalled();

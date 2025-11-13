@@ -1,4 +1,4 @@
-// Story: docs/decisions/0002-json-xml-output-support.md
+// Story: prompts/008.0-DEV-JSON-OUTPUT.md
 // Tests for: printOutdated JSON output branch, ensuring correct rows, summary, and thresholds are logged
 
 import { printOutdated } from '../src/print-outdated.js';
@@ -47,22 +47,33 @@ describe('printOutdated unit tests - json output', () => {
     expect(obj).toHaveProperty('timestamp');
     expect(Array.isArray(obj.packages)).toBe(true);
     expect(obj.packages).toHaveLength(2);
-    expect(obj.packages).toEqual([
-      {
-        name: 'pkg1',
-        current: '1.0.0',
-        wanted: '1.1.0',
-        latest: '1.1.0',
-        age: null,
-      },
-      {
-        name: 'pkg2',
-        current: '2.0.0',
-        wanted: '2.2.0',
-        latest: '2.2.0',
-        age: null,
-      },
-    ]);
+
+    // Verify each package entry includes all required fields
+    expect(obj.packages).toHaveLength(2);
+    expect(obj.packages[0]).toEqual({
+      name: 'pkg1',
+      current: '1.0.0',
+      wanted: '1.1.0',
+      latest: '1.1.0',
+      recommended: '1.1.0',
+      age: null,
+      vulnerabilities: { count: 0, maxSeverity: 'none', details: [] },
+      filtered: false,
+      filterReason: '',
+      type: 'dev',
+    });
+    expect(obj.packages[1]).toEqual({
+      name: 'pkg2',
+      current: '2.0.0',
+      wanted: '2.2.0',
+      latest: '2.2.0',
+      recommended: '2.2.0',
+      age: null,
+      vulnerabilities: { count: 0, maxSeverity: 'none', details: [] },
+      filtered: false,
+      filterReason: '',
+      type: 'dev',
+    });
 
     // Verify summary and thresholds in JSON
     expect(obj.summary).toHaveProperty('totalOutdated', 2);

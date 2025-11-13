@@ -7,12 +7,7 @@
  * @param {string} format - Output format ('table', 'json', 'xml').
  * @returns {Promise<{ safeRows: Array, vulnMap: Map<string, { count: number, maxSeverity: string, details: Array }>, filterReasonMap: Map<string, string> }>} Returns safe rows, a map of vulnerability info, and filter reasons.
  */
-export async function filterBySecurity(
-  rows,
-  checkVulnerabilities,
-  { prodMinSeverity, devMinSeverity },
-  format
-) {
+export async function filterBySecurity(rows, checkVulnerabilities, { prodMinSeverity, devMinSeverity }, format) {
   const severityWeights = {
     none: 0,
     low: 1,
@@ -45,11 +40,7 @@ export async function filterBySecurity(
         }
       } else if (result && typeof result === 'object') {
         totalCount =
-          typeof result.count === 'number'
-            ? result.count
-            : Array.isArray(result.details)
-              ? result.details.length
-              : 0;
+          typeof result.count === 'number' ? result.count : Array.isArray(result.details) ? result.details.length : 0;
         details = Array.isArray(result.details) ? result.details : [];
         let highestWeight = 0;
         for (const vuln of details) {
@@ -59,13 +50,9 @@ export async function filterBySecurity(
             highestWeight = weight;
           }
         }
-        maxSeverity =
-          Object.keys(severityWeights).find(
-            (key) => severityWeights[key] === highestWeight
-          ) || 'none';
+        maxSeverity = Object.keys(severityWeights).find((key) => severityWeights[key] === highestWeight) || 'none';
         const countAboveThreshold = details.filter((vuln) => {
-          const weight =
-            severityWeights[(vuln.severity || '').toLowerCase()] || 0;
+          const weight = severityWeights[(vuln.severity || '').toLowerCase()] || 0;
           return weight >= minWeight;
         }).length;
         if (countAboveThreshold > 0) {
@@ -75,9 +62,7 @@ export async function filterBySecurity(
       }
     } catch (err) {
       if (format !== 'xml' && format !== 'json') {
-        console.error(
-          `Warning: failed to check vulnerabilities for ${name}@${latest}: ${err.message}`
-        );
+        console.error(`Warning: failed to check vulnerabilities for ${name}@${latest}: ${err.message}`);
       }
       // treat as safe on error
     }

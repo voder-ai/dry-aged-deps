@@ -15,34 +15,18 @@ let fixturesDir;
 describe('dry-aged-deps CLI E2E with real fixture (mocked)', () => {
   beforeAll(async () => {
     // Create a unique temporary directory for this test suite
-    tempDir = await fs.mkdtemp(
-      path.join(os.tmpdir(), 'dry-aged-deps-test-e2e-')
-    );
+    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'dry-aged-deps-test-e2e-'));
     fixturesDir = path.join(tempDir, 'fixtures');
 
     // Copy fixture package.json to temp directory
     await fs.mkdir(fixturesDir, { recursive: true });
-    await fs.copyFile(
-      path.join(fixturesSourceDir, 'package.json'),
-      path.join(fixturesDir, 'package.json')
-    );
+    await fs.copyFile(path.join(fixturesSourceDir, 'package.json'), path.join(fixturesDir, 'package.json'));
 
     // Dry-run npm install to validate package.json
-    await execa(
-      'npm',
-      [
-        'install',
-        '--ignore-scripts',
-        '--no-audit',
-        '--no-fund',
-        '--omit=dev',
-        '--dry-run',
-      ],
-      {
-        cwd: fixturesDir,
-        env: process.env,
-      }
-    );
+    await execa('npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund', '--omit=dev', '--dry-run'], {
+      cwd: fixturesDir,
+      env: process.env,
+    });
   }, 60000);
 
   afterAll(async () => {
@@ -66,15 +50,11 @@ describe('dry-aged-deps CLI E2E with real fixture (mocked)', () => {
     // Parse output lines and check age column
     const lines = result.stdout.split(/\r?\n/);
     // Find index of header line
-    const headerIndex = lines.findIndex(
-      (line) => line.includes('Name') && line.includes('Age (days)')
-    );
+    const headerIndex = lines.findIndex((line) => line.includes('Name') && line.includes('Age (days)'));
     expect(headerIndex).toBeGreaterThanOrEqual(0);
 
     // Data lines are after header
-    const dataLines = lines
-      .slice(headerIndex + 1)
-      .filter((line) => line.trim().length > 0);
+    const dataLines = lines.slice(headerIndex + 1).filter((line) => line.trim().length > 0);
     // There should be at least one data line
     expect(dataLines.length).toBeGreaterThan(0);
 

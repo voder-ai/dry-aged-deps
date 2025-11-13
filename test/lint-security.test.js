@@ -15,9 +15,7 @@ describe('ESLint security plugin', () => {
       filePath: path.resolve(__dirname, 'test.js'),
     });
     const messages = results[0].messages;
-    const hasDetectObjectInjection = messages.some(
-      (msg) => msg.ruleId === 'security/detect-object-injection'
-    );
+    const hasDetectObjectInjection = messages.some((msg) => msg.ruleId === 'security/detect-object-injection');
     expect(hasDetectObjectInjection).toBe(true);
   });
 });

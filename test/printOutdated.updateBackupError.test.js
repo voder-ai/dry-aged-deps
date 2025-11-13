@@ -39,9 +39,7 @@ describe('printOutdated auto-update backup error handling', () => {
     const data = {
       foo: { current: '1.0.0', wanted: '1.1.0', latest: '1.1.0' },
     };
-    const tenDays = new Date(
-      Date.now() - 10 * 24 * 60 * 60 * 1000
-    ).toISOString();
+    const tenDays = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString();
     const fetchVersionTimes = async () => ({ '1.1.0': tenDays });
     const calculateAgeInDays = () => 10;
     const checkVulnerabilities = async () => 0;
@@ -55,9 +53,7 @@ describe('printOutdated auto-update backup error handling', () => {
     });
 
     expect(summary.safeUpdates).toBe(1);
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      expect.stringContaining('Failed to create backup:')
-    );
+    expect(consoleErrorSpy).toHaveBeenCalledWith(expect.stringContaining('Failed to create backup:'));
 
     const files = await fsp.readdir('.');
     expect(files).toEqual(['package.json', 'package.json.backup']);

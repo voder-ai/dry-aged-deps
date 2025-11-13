@@ -19,12 +19,7 @@ describe('filterBySecurity', () => {
     const thresholds = { prodMinSeverity: 'high', devMinSeverity: 'low' };
     const format = 'table';
 
-    const { safeRows, vulnMap, filterReasonMap } = await filterBySecurity(
-      rows,
-      checkVuln,
-      thresholds,
-      format
-    );
+    const { safeRows, vulnMap, filterReasonMap } = await filterBySecurity(rows, checkVuln, thresholds, format);
 
     // safeRows should include pkg1 (0 vulns) and pkg3 (error treated as safe), but not pkg2
     expect(safeRows).toEqual([

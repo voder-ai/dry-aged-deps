@@ -61,9 +61,7 @@ function validateAgainstList(value, validList, name) {
   if (value === undefined) return;
   assert(
     validList.includes(value),
-    `Invalid config value for ${name}: ${value}. Valid values: ${validList.join(
-      ', '
-    )}`
+    `Invalid config value for ${name}: ${value}. Valid values: ${validList.join(', ')}`
   );
 }
 
@@ -75,12 +73,7 @@ function validateAgainstList(value, validList, name) {
  * @param {string[]} validFormats - List of valid formats.
  * @returns {object} Parsed config or empty object if none.
  */
-export function loadConfigFile(
-  configFileName,
-  configFileArg,
-  validSeverities,
-  validFormats
-) {
+export function loadConfigFile(configFileName, configFileArg, validSeverities, validFormats) {
   const configFilePath = path.resolve(process.cwd(), configFileName);
   let config = {};
 
@@ -90,9 +83,7 @@ export function loadConfigFile(
       raw = fs.readFileSync(configFilePath, 'utf8');
       config = JSON.parse(raw);
     } catch (err) {
-      console.error(
-        `Invalid JSON in config file ${configFileName}: ${err.message}`
-      );
+      console.error(`Invalid JSON in config file ${configFileName}: ${err.message}`);
       process.exit(2);
     }
 
@@ -107,22 +98,14 @@ export function loadConfigFile(
       ensureObject(config.prod, 'prod');
       validateKeys(config.prod, ['minAge', 'minSeverity'], ' in prod');
       validateRangeInt(config.prod.minAge, 'prod.minAge');
-      validateAgainstList(
-        config.prod.minSeverity,
-        validSeverities,
-        'prod.minSeverity'
-      );
+      validateAgainstList(config.prod.minSeverity, validSeverities, 'prod.minSeverity');
     }
 
     if (config.dev !== undefined) {
       ensureObject(config.dev, 'dev');
       validateKeys(config.dev, ['minAge', 'minSeverity'], ' in dev');
       validateRangeInt(config.dev.minAge, 'dev.minAge');
-      validateAgainstList(
-        config.dev.minSeverity,
-        validSeverities,
-        'dev.minSeverity'
-      );
+      validateAgainstList(config.dev.minSeverity, validSeverities, 'dev.minSeverity');
     }
   } else if (configFileArg) {
     console.error(`Configuration file not found: ${configFileName}`);

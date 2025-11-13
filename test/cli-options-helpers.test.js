@@ -34,15 +34,11 @@ describe('parseFormatFlag', () => {
   });
 
   it('parses --format=<value> syntax', () => {
-    expect(parseFormatFlag(['--format=json'], 'table', validFormats)).toBe(
-      'json'
-    );
+    expect(parseFormatFlag(['--format=json'], 'table', validFormats)).toBe('json');
   });
 
   it('parses --format <value> syntax', () => {
-    expect(parseFormatFlag(['--format', 'xml'], 'table', validFormats)).toBe(
-      'xml'
-    );
+    expect(parseFormatFlag(['--format', 'xml'], 'table', validFormats)).toBe('xml');
   });
 
   it('errors and exits on invalid format', () => {
@@ -51,9 +47,7 @@ describe('parseFormatFlag', () => {
       parseFormatFlag(args, 'table', validFormats);
     } catch (err) {
       expect(err.message).toContain('process.exit:2');
-      expect(console.error).toHaveBeenCalledWith(
-        expect.stringContaining('Invalid format: invalid')
-      );
+      expect(console.error).toHaveBeenCalledWith(expect.stringContaining('Invalid format: invalid'));
     }
   });
 });
@@ -77,9 +71,7 @@ describe('parseMinAgeFlag', () => {
       parseMinAgeFlag(['--min-age=abc'], 7);
     } catch (err) {
       expect(err.message).toContain('process.exit:2');
-      expect(console.error).toHaveBeenCalledWith(
-        expect.stringContaining('Invalid min-age: abc')
-      );
+      expect(console.error).toHaveBeenCalledWith(expect.stringContaining('Invalid min-age: abc'));
     }
   });
 
@@ -104,9 +96,7 @@ describe('parseMinAgeFlag', () => {
       parseMinAgeFlag(['--min-age'], 7);
     } catch (err) {
       expect(err.message).toContain('process.exit:2');
-      expect(console.error).toHaveBeenCalledWith(
-        expect.stringContaining('Missing value for --min-age')
-      );
+      expect(console.error).toHaveBeenCalledWith(expect.stringContaining('Missing value for --min-age'));
     }
   });
 });
@@ -120,15 +110,11 @@ describe('parseSeverityFlag', () => {
   });
 
   it('parses --severity=<value>', () => {
-    expect(parseSeverityFlag(['--severity=low'], 'none', validSeverities)).toBe(
-      'low'
-    );
+    expect(parseSeverityFlag(['--severity=low'], 'none', validSeverities)).toBe('low');
   });
 
   it('parses --severity <value>', () => {
-    expect(
-      parseSeverityFlag(['--severity', 'critical'], 'none', validSeverities)
-    ).toBe('critical');
+    expect(parseSeverityFlag(['--severity', 'critical'], 'none', validSeverities)).toBe('critical');
   });
 
   it('errors on invalid severity value', () => {
@@ -136,9 +122,7 @@ describe('parseSeverityFlag', () => {
       parseSeverityFlag(['--severity=foo'], 'none', validSeverities);
     } catch (err) {
       expect(err.message).toContain('process.exit:2');
-      expect(console.error).toHaveBeenCalledWith(
-        expect.stringContaining('Invalid severity: foo')
-      );
+      expect(console.error).toHaveBeenCalledWith(expect.stringContaining('Invalid severity: foo'));
     }
   });
 
@@ -147,9 +131,7 @@ describe('parseSeverityFlag', () => {
       parseSeverityFlag(['--severity'], 'none', validSeverities);
     } catch (err) {
       expect(err.message).toContain('process.exit:2');
-      expect(console.error).toHaveBeenCalledWith(
-        expect.stringContaining('Missing value for --severity')
-      );
+      expect(console.error).toHaveBeenCalledWith(expect.stringContaining('Missing value for --severity'));
     }
   });
 });
@@ -172,9 +154,7 @@ describe('parseProdMinAgeFlag', () => {
       parseProdMinAgeFlag(['--prod-min-age=xyz'], 5);
     } catch (err) {
       expect(err.message).toContain('process.exit:2');
-      expect(console.error).toHaveBeenCalledWith(
-        expect.stringContaining('Invalid prod-min-age: xyz')
-      );
+      expect(console.error).toHaveBeenCalledWith(expect.stringContaining('Invalid prod-min-age: xyz'));
     }
   });
 
@@ -183,9 +163,7 @@ describe('parseProdMinAgeFlag', () => {
       parseProdMinAgeFlag(['--prod-min-age'], 5);
     } catch (err) {
       expect(err.message).toContain('process.exit:2');
-      expect(console.error).toHaveBeenCalledWith(
-        expect.stringContaining('Missing value for --prod-min-age')
-      );
+      expect(console.error).toHaveBeenCalledWith(expect.stringContaining('Missing value for --prod-min-age'));
     }
   });
 });
@@ -208,9 +186,7 @@ describe('parseDevMinAgeFlag', () => {
       parseDevMinAgeFlag(['--dev-min-age=foo'], 8);
     } catch (err) {
       expect(err.message).toContain('process.exit:2');
-      expect(console.error).toHaveBeenCalledWith(
-        expect.stringContaining('Invalid dev-min-age: foo')
-      );
+      expect(console.error).toHaveBeenCalledWith(expect.stringContaining('Invalid dev-min-age: foo'));
     }
   });
 
@@ -219,9 +195,7 @@ describe('parseDevMinAgeFlag', () => {
       parseDevMinAgeFlag(['--dev-min-age'], 8);
     } catch (err) {
       expect(err.message).toContain('process.exit:2');
-      expect(console.error).toHaveBeenCalledWith(
-        expect.stringContaining('Missing value for --dev-min-age')
-      );
+      expect(console.error).toHaveBeenCalledWith(expect.stringContaining('Missing value for --dev-min-age'));
     }
   });
 });
@@ -230,25 +204,15 @@ describe('parseProdSeverityFlag', () => {
   const validSeverities = ['none', 'low', 'moderate', 'high', 'critical'];
 
   it('returns default prodMinSeverity when no flag provided', () => {
-    expect(parseProdSeverityFlag([], 'moderate', validSeverities)).toBe(
-      'moderate'
-    );
+    expect(parseProdSeverityFlag([], 'moderate', validSeverities)).toBe('moderate');
   });
 
   it('parses --prod-severity=<value>', () => {
-    expect(
-      parseProdSeverityFlag(['--prod-severity=high'], 'low', validSeverities)
-    ).toBe('high');
+    expect(parseProdSeverityFlag(['--prod-severity=high'], 'low', validSeverities)).toBe('high');
   });
 
   it('parses --prod-severity <value>', () => {
-    expect(
-      parseProdSeverityFlag(
-        ['--prod-severity', 'critical'],
-        'low',
-        validSeverities
-      )
-    ).toBe('critical');
+    expect(parseProdSeverityFlag(['--prod-severity', 'critical'], 'low', validSeverities)).toBe('critical');
   });
 
   it('errors on invalid prod-severity value', () => {
@@ -256,9 +220,7 @@ describe('parseProdSeverityFlag', () => {
       parseProdSeverityFlag(['--prod-severity=bar'], 'low', validSeverities);
     } catch (err) {
       expect(err.message).toContain('process.exit:2');
-      expect(console.error).toHaveBeenCalledWith(
-        expect.stringContaining('Invalid prod-severity: bar')
-      );
+      expect(console.error).toHaveBeenCalledWith(expect.stringContaining('Invalid prod-severity: bar'));
     }
   });
 });
@@ -271,19 +233,11 @@ describe('parseDevSeverityFlag', () => {
   });
 
   it('parses --dev-severity=<value>', () => {
-    expect(
-      parseDevSeverityFlag(['--dev-severity=low'], 'high', validSeverities)
-    ).toBe('low');
+    expect(parseDevSeverityFlag(['--dev-severity=low'], 'high', validSeverities)).toBe('low');
   });
 
   it('parses --dev-severity <value>', () => {
-    expect(
-      parseDevSeverityFlag(
-        ['--dev-severity', 'moderate'],
-        'high',
-        validSeverities
-      )
-    ).toBe('moderate');
+    expect(parseDevSeverityFlag(['--dev-severity', 'moderate'], 'high', validSeverities)).toBe('moderate');
   });
 
   it('errors on invalid dev-severity value', () => {
@@ -291,9 +245,7 @@ describe('parseDevSeverityFlag', () => {
       parseDevSeverityFlag(['--dev-severity=baz'], 'high', validSeverities);
     } catch (err) {
       expect(err.message).toContain('process.exit:2');
-      expect(console.error).toHaveBeenCalledWith(
-        expect.stringContaining('Invalid dev-severity: baz')
-      );
+      expect(console.error).toHaveBeenCalledWith(expect.stringContaining('Invalid dev-severity: baz'));
     }
   });
 });

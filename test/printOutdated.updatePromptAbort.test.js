@@ -43,9 +43,7 @@ describe('printOutdated auto-update prompt abort', () => {
     const data = {
       foo: { current: '1.0.0', wanted: '1.2.0', latest: '1.2.0' },
     };
-    const tenDays = new Date(
-      Date.now() - 10 * 24 * 60 * 60 * 1000
-    ).toISOString();
+    const tenDays = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString();
     const fetchVersionTimes = async () => ({ '1.2.0': tenDays });
     const calculateAgeInDays = () => 10;
     const checkVulnerabilities = async () => 0;

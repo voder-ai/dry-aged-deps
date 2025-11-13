@@ -12,10 +12,7 @@ describe('dry-aged-deps CLI XML error output', () => {
     const fakeNpmDir = path.join(tempDir, 'fake-npm');
     await fs.mkdir(fakeNpmDir, { recursive: true });
     const npmPath = path.join(fakeNpmDir, 'npm');
-    await fs.writeFile(
-      npmPath,
-      '#!/usr/bin/env node\nconsole.log("not valid json");\nprocess.exit(0);'
-    );
+    await fs.writeFile(npmPath, '#!/usr/bin/env node\nconsole.log("not valid json");\nprocess.exit(0);');
     await fs.chmod(npmPath, 0o755);
 
     const cliPath = path.join(process.cwd(), 'bin', 'dry-aged-deps.js');

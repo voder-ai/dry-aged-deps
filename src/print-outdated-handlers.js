@@ -13,24 +13,21 @@ import { xmlFormatter } from './xml-formatter.js';
  * @param {Map<string, string>} filterReasonMap
  * @returns {Object} summary
  */
-export function handleJsonOutput(
-  rows,
-  summary,
-  thresholds,
-  vulnMap,
-  filterReasonMap
-) {
+export function handleJsonOutput(rows, summary, thresholds, vulnMap, filterReasonMap) {
   const timestamp = new Date().toISOString();
   const items = rows.map(([name, current, wanted, latest, age, depType]) => {
     // Determine if filtered by age
     const minAge = depType === 'prod' ? thresholds.prod.minAge : thresholds.dev.minAge;
-    const filteredByAge = typeof age !== 'number' || age < minAge;
+    const filteredByAge = typeof age === 'number' && age < minAge;
     // Get vulnerability info
-    const vulnInfo = vulnMap.get(name) || { count: 0, maxSeverity: 'none', details: [] };
+    const vulnInfo = vulnMap.get(name) || {
+      count: 0,
+      maxSeverity: 'none',
+      details: [],
+    };
     const filteredBySecurity = vulnInfo.count > 0;
     const filtered = filteredByAge || filteredBySecurity;
-    const filterReason =
-      filterReasonMap.get(name) || (filteredByAge ? 'age' : '');
+    const filterReason = filterReasonMap.get(name) || (filteredByAge ? 'age' : '');
 
     return {
       name,
@@ -59,17 +56,10 @@ export function handleJsonOutput(
  * @param {Map<string, string>} filterReasonMap
  * @returns {Object} summary
  */
-export function handleXmlOutput(
-  rows,
-  summary,
-  thresholds,
-  vulnMap,
-  filterReasonMap
-) {
+export function handleXmlOutput(rows, summary, thresholds, vulnMap, filterReasonMap) {
   const timestamp = new Date().toISOString();
   const items = rows.map(([name, current, wanted, latest, age, depType]) => {
-    const minAge =
-      depType === 'prod' ? thresholds.prod.minAge : thresholds.dev.minAge;
+    const minAge = depType === 'prod' ? thresholds.prod.minAge : thresholds.dev.minAge;
     const filteredByAge = typeof age !== 'number' || age < minAge;
     const vulnInfo = vulnMap.get(name) || {
       count: 0,
@@ -78,8 +68,7 @@ export function handleXmlOutput(
     };
     const filteredBySecurity = vulnInfo.count > 0;
     const filtered = filteredByAge || filteredBySecurity;
-    const filterReason =
-      filterReasonMap.get(name) || (filteredByAge ? 'age' : '');
+    const filterReason = filterReasonMap.get(name) || (filteredByAge ? 'age' : '');
     return {
       name,
       current,
@@ -107,18 +96,9 @@ export function handleXmlOutput(
  * @param {boolean} returnSummary
  * @returns {Object|undefined}
  */
-export function handleTableOutput(
-  safeRows,
-  matureRows,
-  summary,
-  prodMinAge,
-  devMinAge,
-  returnSummary
-) {
+export function handleTableOutput(safeRows, matureRows, summary, prodMinAge, devMinAge, returnSummary) {
   console.log('Outdated packages:');
-  console.log(
-    ['Name', 'Current', 'Wanted', 'Latest', 'Age (days)', 'Type'].join('	')
-  );
+  console.log(['Name', 'Current', 'Wanted', 'Latest', 'Age (days)', 'Type'].join('	'));
 
   if (matureRows.length === 0) {
     console.log(
