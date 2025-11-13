@@ -49,9 +49,17 @@ describe('checkVulnerabilities', () => {
       callback(null, JSON.stringify(auditResult), '');
     });
 
-    const vulnCount = await checkVulnerabilities('express', '4.18.2');
+    const result = await checkVulnerabilities('express', '4.18.2');
 
-    expect(vulnCount).toBe(0);
+    expect(result.count).toBe(0);
+    expect(result.vulnerabilities).toEqual({
+      info: 0,
+      low: 0,
+      moderate: 0,
+      high: 0,
+      critical: 0,
+    });
+    expect(result.details).toEqual([]);
     expect(fs.mkdtemp).toHaveBeenCalled();
     expect(fs.writeFile).toHaveBeenCalled();
     expect(fs.rm).toHaveBeenCalledWith(mockTempDir, {
@@ -82,12 +90,14 @@ describe('checkVulnerabilities', () => {
       callback(null, JSON.stringify(auditResult), '');
     });
 
-    const vulnCount = await checkVulnerabilities(
+    const result = await checkVulnerabilities(
       '@semantic-release/npm',
       '13.1.1'
     );
 
-    expect(vulnCount).toBe(3); // 1 low + 2 moderate
+    expect(result.count).toBe(3); // 1 low + 2 moderate
+    expect(result.vulnerabilities.low).toBe(1);
+    expect(result.vulnerabilities.moderate).toBe(2);
   });
 
   it('cleans up temporary directory even on error', async () => {
@@ -137,8 +147,8 @@ describe('checkVulnerabilities', () => {
       callback(null, JSON.stringify(auditResult), '');
     });
 
-    const vulnCount = await checkVulnerabilities('some-package', '1.2.3');
-    expect(vulnCount).toBe(0);
+    const result = await checkVulnerabilities('some-package', '1.2.3');
+    expect(result.count).toBe(0);
     expect(fs.rm).toHaveBeenCalledWith(mockTempDir, {
       recursive: true,
       force: true,

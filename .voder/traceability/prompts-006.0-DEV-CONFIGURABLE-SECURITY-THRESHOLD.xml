@@ -2,15 +2,8 @@
 <traceability>
   <specification>prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-13T09:14:37.309Z</last_validated>
+  <last_validated>2025-11-13T17:37:30.742Z</last_validated>
   <last_modified>2025-11-09T23:03:30.864Z</last_modified>
-  <evidence>In src/filter-by-security.js, the function completely ignores the configured prodMinSeverity/devMinSeverity when deciding to filter a row. It simply does:
-
-  if (vulnCount !== 0) {
-    include = false;
-    filterReasonMap.set(name, 'security');
-  }
-
-and never inspects actual vulnerability severities from `checkVulnerabilities`. There are no code paths or tests that gate filtering based on the configured threshold (e.g. allow low/moderate when threshold is 'high').</evidence>
-  <notes>All other acceptance points (CLI flag, config support, help text, validation, output of thresholds in JSON/XML) are implemented, but the core filtering‐logic requirement—block only vulnerabilities at or above the user‐configurable severity—has not been implemented.</notes>
+  <evidence>In src/filter-by-security.js the code always blocks any non-zero vulnerability (if (vulnCount !== 0) include = false) and never compares vulnCount or actual vulnerability severities against the configured threshold (prodMinSeverity/devMinSeverity). Additionally, checkVulnerabilities only returns a count, not per-severity data, and tests (e.g., test/filter-by-security.test.js and functional tests) do not cover any threshold-based filtering behavior. There is no logic to allow vulnerabilities below the threshold.</evidence>
+  <notes>The feature to configure and apply a minimum severity threshold is not implemented. All vulnerabilities are blocked regardless of the configured threshold, and there are no tests verifying threshold filtering.</notes>
 </traceability>

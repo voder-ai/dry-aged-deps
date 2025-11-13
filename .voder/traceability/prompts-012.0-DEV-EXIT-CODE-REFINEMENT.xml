@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <traceability>
   <specification>prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md</specification>
-  <status>FAILED</status>
-  <last_validated>2025-11-13T09:15:57.633Z</last_validated>
+  <status>PASSED</status>
+  <last_validated>2025-11-13T17:38:42.524Z</last_validated>
   <last_modified>2025-11-11T08:04:07.339Z</last_modified>
-  <evidence>While exit codes 0, 1, 2 are implemented and covered for check-mode in JSON, XML and table formats (tests in test/cli.check-mode.test.js), and error/flag/config-error cases are covered (tests in cli-entrypoint.test.js, cli.error-cmd.test.js, cli.format-json.error.test.js, cli.config-file.test.js), there is no test verifying the scenario “outdated packages but none mature/safe → exit 0” under --check mode as required by the Definition of Done. That acceptance criterion remains untested.</evidence>
-  <notes>All other acceptance criteria—standardized exit codes, consistency across formats, documentation in README and --help, error handling, backward compatibility—are satisfied. A missing test for the ‘outdated but none safe’ check-mode case prevents full compliance.</notes>
+  <evidence>• All Vitest tests passed (142/142) including exit‐code tests: test/cli.check-mode.test.js (exit codes 0,1,2 across table, JSON, XML), test/cli.error-cmd.test.js (exit 2 on invalid JSON), test/cli.format-json.error.test.js and test/cli.format-xml.error.test.js (exit 2 and correct output formats), test/cli.upToDate.test.js (exit 0 when up-to-date), test/cli.outdated.mock.test.js (default mode exit 0)
+• README.md documents exit codes under “## Exit Codes”
+• CLI --help output (bin/dry-aged-deps.js) includes “--check                 Check mode: exit code 1 if safe updates available, 0 if none, 2 on error”
+• Coverage reports show no missing exit‐code logic</evidence>
+  <notes>All acceptance criteria are satisfied: standardized exit codes (0,1,2), consistency across formats, documentation in README and help, comprehensive tests covering all scenarios, and backward-compatible behavior preserved.</notes>
 </traceability>

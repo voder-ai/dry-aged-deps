@@ -2,8 +2,8 @@
 <traceability>
   <specification>prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-13T09:13:59.018Z</last_validated>
+  <last_validated>2025-11-13T17:37:54.295Z</last_validated>
   <last_modified>2025-11-09T23:02:37.596Z</last_modified>
-  <evidence>The implementation in src/filter-by-security.js and related CLI orchestration only checks the single latest version per package via checkVulnerabilities(name, latest) and filters it out if any vulnerabilities exist. There is no logic to iterate backwards through older mature versions (REQ-SMART-SEARCH), nor is the configurable severity threshold ever applied (the thresholds parameter is passed in but ignored), and vulnerability details are never populated. No code or tests address selecting the newest safe version when the latest is vulnerable. Therefore Smart Checking and severity-threshold requirements are not met.</evidence>
-  <notes>While basic vulnerability filtering is implemented and tested, the story’s key acceptance criteria around smart backward searching through mature versions and applying severity thresholds have not been implemented.</notes>
+  <evidence>The implementation in src/filter-by-security.js and related CLI flow only checks the single “latest” version for vulnerabilities and filters it out if vulnerable. There is no code that “starts from the newest mature version and works backwards until finding a safe one” as specified (no loop over prior versions). A search for “smart” or any backward‐search logic yields no matches, and there are no tests covering this scenario. All other criteria (transitive audit via npm audit, filtering out vulnerable rows, clear table output, no‐safe‐version message) are satisfied, but the key Smart Checking acceptance is missing.</evidence>
+  <notes>The story’s requirement to attempt older mature versions until a safe one is found has not been implemented; instead, only the latest version is tested and removed if vulnerable. To satisfy the story, add logic to retrieve and iterate through older versions when the newest is vulnerable.</notes>
 </traceability>

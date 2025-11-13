@@ -86,7 +86,7 @@ import { checkVulnerabilities } from 'dry-aged-deps';
  * Check if a specific package version has known vulnerabilities.
  * @param {string} packageName - The name of the npm package.
  * @param {string} version - The version to check.
- * @returns {Promise<number>} The total number of vulnerabilities found (0 = safe).
+ * @returns {Promise<{ total: number; breakdown: { info: number; low: number; moderate: number; high: number; critical: number } }>} Promise resolving to an object containing the total number of vulnerabilities and a breakdown by severity.
  * @throws {Error} If the packageName is invalid or audit fails unexpectedly.
  */
 async function checkVulnerabilities(packageName, version)
@@ -99,16 +99,19 @@ async function checkVulnerabilities(packageName, version)
 
 ### Returns
 
-A promise that resolves to the number of vulnerabilities found (info, low, moderate, high, critical).
+A promise that resolves to an object with:
+
+- `total` (number): Total number of vulnerabilities found.
+- `breakdown` (object): Mapping of severity levels (`info`, `low`, `moderate`, `high`, `critical`) to the count of vulnerabilities at each level.
 
 ### Example
 
 ```js
 import { checkVulnerabilities } from 'dry-aged-deps';
 
-const vulnCount = await checkVulnerabilities('lodash', '4.17.21');
-console.log(vulnCount);
-// => 0
+const report = await checkVulnerabilities('lodash', '4.17.21');
+console.log(report.total); // => 0
+console.log(report.breakdown); // => { info: 0, low: 0, moderate: 0, high: 0, critical: 0 }
 ```
 
 ## printOutdated(data, options)

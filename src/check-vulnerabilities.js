@@ -10,7 +10,11 @@ import { join } from 'path';
  *
  * @param {string} packageName - The name of the npm package
  * @param {string} version - The version to check
- * @returns {Promise<number>} The number of vulnerabilities found (0 = safe)
+ * @returns {Promise<{ count: number, vulnerabilities: { info: number, low: number, moderate: number, high: number, critical: number }, details: Array<Object> }>}
+ *   Detailed vulnerability report including:
+ *     - count: total number of vulnerabilities
+ *     - vulnerabilities: breakdown by severity levels
+ *     - details: array of individual vulnerability objects
  */
 export async function checkVulnerabilities(packageName, version) {
   const pkgNameRegex = /^[a-z0-9@\-*/.]+$/i;
@@ -73,7 +77,13 @@ export async function checkVulnerabilities(packageName, version) {
 
     // Count total vulnerabilities across all severity levels
     const metadata = auditResult.metadata || {};
-    const vulnerabilities = metadata.vulnerabilities || {};
+    const vulnerabilities = metadata.vulnerabilities || {
+      info: 0,
+      low: 0,
+      moderate: 0,
+      high: 0,
+      critical: 0,
+    };
 
     const total =
       (vulnerabilities.info || 0) +
@@ -82,7 +92,27 @@ export async function checkVulnerabilities(packageName, version) {
       (vulnerabilities.high || 0) +
       (vulnerabilities.critical || 0);
 
-    return total;
+    // Collect detailed vulnerability entries
+    let details = [];
+    if (
+      auditResult.vulnerabilities &&
+      typeof auditResult.vulnerabilities === 'object'
+    ) {
+      details = Object.entries(auditResult.vulnerabilities).map(
+        ([moduleName, vuln]) => ({ moduleName, ...vuln })
+      );
+    } else if (
+      auditResult.advisories &&
+      typeof auditResult.advisories === 'object'
+    ) {
+      details = Object.values(auditResult.advisories);
+    }
+
+    return {
+      count: total,
+      vulnerabilities,
+      details,
+    };
   } finally {
     // Clean up temporary directory
     await fs.rm(tempDir, { recursive: true, force: true });

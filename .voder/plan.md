@@ -1,13 +1,12 @@
 ## NOW  
-Refactor **src/cli-options-helpers.js** to extract its repetitive flag-parsing logic into one generic `parseFlag()` helper, then remove its ESLint exemptions and re-enable the `complexity` and `max-lines-per-function` rules for that file.
+Implement the configurable-security-threshold story (006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD) by updating `src/filter-by-security.js` to honor the `prodMinSeverity`/`devMinSeverity` settings rather than blocking every nonzero vulnerability count.
 
 ## NEXT  
-- Refactor **src/print-outdated.js** by breaking its large `printOutdated()` function into smaller, focused modules, remove its ESLint exemptions, and re-enable complexity/max-lines rules.  
-- Split **src/xml-formatter.js** into utility modules (e.g. `escapeXml.js` + `xmlTemplate.js`), drop its ESLint overrides, and turn on complexity/max-lines rules.  
-- Update **eslint.config.js** to remove the overrides that disable complexity and max-lines checks for those files, then run `npm run lint` and verify no warnings.
+- Enhance `src/check-vulnerabilities.js` (and its tests) to return a breakdown of vulnerabilities by severity, not just a total count.  
+- Add unit tests in `test/filter-by-security.test.js` covering cases where vulnerabilities below the threshold are allowed and only those at or above the threshold are blocked.  
+- Update documentation (README.md, docs/api.md, and prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md) to describe the new severity-threshold behavior and examples.
 
 ## LATER  
-- Integrate `jscpd` duplicate-code detection into the CI pipeline and enforce an acceptable threshold.  
-- Add JSDoc comments (and update docs/api.md) for internal modules (`config-loader.js`, `build-rows.js`, `apply-filters.js`) to improve documentation coverage.  
-- Enable `checkJs` in `tsconfig.json` and remove all `// @ts-nocheck` directives to fulfill ADR 0006 and ensure type checking across the codebase.  
-- Create a dedicated **docs/configuration.md** describing the `.dry-aged-deps.json` schema and usage examples, and add automated link/schema validation.
+- Add end-to-end CLI tests for `--severity`/`--prod-severity`/`--dev-severity` flags to verify enforcement in real fixtures.  
+- Cache audit results to speed up repeated vulnerability checks.  
+- After security threshold support is stable, refactor any remaining large functions (e.g., in `print-outdated.js` and `xml-formatter.js`) to reduce complexity and re-enable their ESLint complexity rules.

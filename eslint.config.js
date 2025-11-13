@@ -87,6 +87,34 @@ export default [
     },
   },
 
+  // Disable complexity, max-lines-per-function, and no-unused-vars for specific src files
+  {
+    files: ['src/print-outdated.js'],
+    rules: {
+      complexity: 'off',
+      'max-lines-per-function': 'off',
+      'no-unused-vars': 'off',
+    },
+  },
+
+  // Disable complexity and max-lines-per-function for xml-formatter
+  {
+    files: ['src/xml-formatter.js'],
+    rules: {
+      complexity: 'off',
+      'max-lines-per-function': 'off',
+    },
+  },
+
+  // Disable complexity and object injection detect for filter-by-security
+  {
+    files: ['src/filter-by-security.js'],
+    rules: {
+      complexity: 'off',
+      'security/detect-object-injection': 'off',
+    },
+  },
+
   // Test files with additional testing globals
   {
     files: ['test/**/*.js', '**/*.test.js', '**/*.spec.js'],

@@ -2,12 +2,11 @@
 <traceability>
   <specification>prompts/009.0-DEV-XML-OUTPUT.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-13T09:15:08.407Z</last_validated>
+  <last_validated>2025-11-13T17:39:53.904Z</last_validated>
   <last_modified>2025-11-09T23:05:40.405Z</last_modified>
-  <evidence>– Found src/xml-formatter.js implementing xmlFormatter with proper declaration, packages, summary, thresholds and error handling.
-– cli-options.js and cli-options-helpers.js accept and validate `--format=xml` alongside table/json.
-– bin/dry-aged-deps.js prints XML via xmlFormatter on `--format=xml`, suppresses other logs, and exits with codes 0/1/2 as specified.
-– README.md, docs/api.md and CLI help text list xml as a valid format.
-– 45 test files, including test/xml-formatter.*.test.js and test/cli.format-xml*.test.js, cover XML output, escaping, schema, error handling, exit codes, and run with zero failures under `npm test` (128 passed).</evidence>
-  <notes>All acceptance criteria for prompts/009.0-DEV-XML-OUTPUT.md have concrete implementation and automated test coverage. XML output is well-formed, includes complete data, summary, thresholds, error blocks, proper exit codes, no extra console noise, and documentation/help is updated.</notes>
+  <evidence>- All 142 Vitest tests passed (including 15+ tests covering xmlFormatter and CLI XML behavior).
+- xml-formatter.js implements XML declaration, root, packages, vulnerabilities, summary, thresholds, error blocks, and escaping correctly (100% statement coverage for xml-formatter.js).
+- CLI bin/dry-aged-deps.js and src/print-outdated.js handle --format=xml, suppress console noise, emit proper exit codes (0/1/2), and include xml in --help.
+- README.md and docs reference XML format. Tests for help text, invalid format, and xml error output all pass.</evidence>
+  <notes>The XML output feature is fully implemented according to prompts/009.0-DEV-XML-OUTPUT.md. All acceptance criteria—CLI flag, valid well-formed XML, complete data, summary section, correct exit codes, silent mode, error handling, schema consistency, help documentation—are satisfied with comprehensive unit and integration tests.</notes>
 </traceability>

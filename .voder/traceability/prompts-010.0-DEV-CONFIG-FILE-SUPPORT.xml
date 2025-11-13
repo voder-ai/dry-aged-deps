@@ -2,11 +2,8 @@
 <traceability>
   <specification>prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-13T09:14:09.527Z</last_validated>
+  <last_validated>2025-11-13T17:36:24.300Z</last_validated>
   <last_modified>2025-11-10T21:23:22.067Z</last_modified>
-  <evidence>- src/config-loader.js implements loading, validation, and merging of .dry-aged-deps.json
-- src/cli-options.js wires loadConfigFile into option parsing with precedence CLI > config > defaults
-- test/cli.config-file.test.js covers all acceptance criteria: default values from config, CLI overrides, invalid JSON, unknown keys, invalid values, custom config-file flag, missing file error
-- README.md includes --config-file option and example .dry-aged-deps.json format</evidence>
-  <notes>All acceptance criteria for config-file support are implemented, tested, and documented. The config file is optional, schema and value validation are in place, CLI flags override config values, and sensible defaults apply when neither flags nor config are provided.</notes>
+  <evidence>1) `src/config-loader.js` implements loading `.dry-aged-deps.json` from cwd, JSON parsing, key/schema validation, error handling, and CLI‐override logic in `src/cli-options.js`. 2) All 7 tests in `test/cli.config-file.test.js` (covering defaults-from-config, CLI‐override, invalid JSON, unknown keys, invalid values, custom file name, missing custom file) pass. 3) README.md documents `--config-file` flag, shows example `.dry-aged-deps.json`, and describes flag precedence. 4) `npx vitest run` shows 142/142 tests passing, including the config‐file suite.</evidence>
+  <notes>All mandatory acceptance criteria—config file location, schema support, CLI precedence, validation, error handling, optional use, documentation, and default values—are fully satisfied and covered by tests. The optional JSON schema file was not implemented, which aligns with its “consider” status in the story.</notes>
 </traceability>
