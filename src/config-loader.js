@@ -33,10 +33,7 @@ function ensureObject(value, name) {
  */
 function validateKeys(obj, allowedKeys, context) {
   Object.keys(obj).forEach((key) => {
-    assert(
-      allowedKeys.includes(key),
-      `Unknown config key${context}: ${key}`
-    );
+    assert(allowedKeys.includes(key), `Unknown config key${context}: ${key}`);
   });
 }
 
