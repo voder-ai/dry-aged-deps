@@ -1,3 +1,4 @@
+// @ts-nocheck
 // xml-formatter.js
 // Formats outdated dependencies and summary data into XML
 

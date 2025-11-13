@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { loadConfigFile } from './config-loader.js';
 import {
   parseFormatFlag,

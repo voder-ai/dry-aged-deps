@@ -65,7 +65,7 @@ export async function checkVulnerabilities(packageName, version) {
         'npm',
         ['audit', '--json'],
         { cwd: tempDir, encoding: 'utf8' },
-        (error, stdout) => {
+        (_error, stdout) => {
           // npm audit exits with code 1 if vulnerabilities found
           // We want the output either way, so don't reject
           resolve(stdout);

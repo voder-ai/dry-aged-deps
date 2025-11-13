@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Generic helper to parse string flags with optional validation.
  *

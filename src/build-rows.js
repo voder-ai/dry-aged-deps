@@ -10,7 +10,7 @@ import { calculateAgeInDays as defaultCalculateAgeInDays } from './age-calculato
  *   getDependencyType: function,
  *   format?: string
  * }} options
- * @returns {Promise<Array<[string, string, string, string, number|"N/A", string]>>}
+ * @returns {Promise<Array<[string, string, string, string, number|string, string]>>}
  */
 export async function buildRows(data, options) {
   const fetchVersionTimes =
@@ -33,12 +33,20 @@ export async function buildRows(data, options) {
         }
       } catch (err) {
         if (format !== 'xml' && format !== 'json') {
+          const message = err instanceof Error ? err.message : String(err);
           console.error(
-            `Warning: failed to fetch version times for ${name}: ${err.message}`
+            `Warning: failed to fetch version times for ${name}: ${message}`
           );
         }
       }
-      return [name, info.current, info.wanted, info.latest, age, depType];
+      return /** @type {[string, string, string, string, number|string, string]} */ ([
+        name,
+        info.current,
+        info.wanted,
+        info.latest,
+        age,
+        depType,
+      ]);
     })()
   );
 

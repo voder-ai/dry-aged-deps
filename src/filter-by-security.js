@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Filter rows by security vulnerabilities.
  * @param {Array} rows - Array of [name, current, wanted, latest, age, depType].

@@ -4,6 +4,7 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "allowJs": true,
+    "checkJs": true,
     "noEmit": true,
     // Minimal type checking - incrementally enable stricter checks over time
     "strict": true,

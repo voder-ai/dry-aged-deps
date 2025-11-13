@@ -34,12 +34,13 @@ export async function fetchVersionTimes(packageName) {
     try {
       const stdout = await doExec();
       const times = stdout ? JSON.parse(stdout) : {};
+      /** @type {Record<string, string>} */
       const versionTimes = {};
       // Exclude non-version entries like 'created' and 'modified'
       for (const [version, time] of Object.entries(times)) {
         if (version !== 'created' && version !== 'modified') {
           // eslint-disable-next-line security/detect-object-injection -- safe iteration
-          versionTimes[version] = time;
+          versionTimes[version] = /** @type {string} */ (time);
         }
       }
       return versionTimes;

@@ -7,8 +7,8 @@ import path from 'path';
  *
  * @param {Array<[string, string, string, string, number|string, string]>} safeRows - Array of [name, current, wanted, latest, age, depType]
  * @param {boolean} skipConfirmation - If true, skip the confirmation prompt.
- * @param {Object} summary - Summary object to return after update
- * @returns {Object} The summary object.
+ * @param {{ totalOutdated: number, safeUpdates: number, filteredByAge: number, filteredBySecurity: number }} summary - Summary object to return after update
+ * @returns {Promise<{ totalOutdated: number, safeUpdates: number, filteredByAge: number, filteredBySecurity: number }>} The summary object.
  */
 export async function updatePackages(safeRows, skipConfirmation, summary) {
   const pkgPath = path.join(process.cwd(), 'package.json');
@@ -44,7 +44,8 @@ export async function updatePackages(safeRows, skipConfirmation, summary) {
     fs.copyFileSync(pkgPath, backupPath);
     console.log(`Created backup of package.json at ${backupPath}`);
   } catch (err) {
-    console.error(`Failed to create backup: ${err.message}`);
+    const message = err instanceof Error ? err.message : String(err);
+    console.error(`Failed to create backup: ${message}`);
     return summary;
   }
 
@@ -67,7 +68,8 @@ export async function updatePackages(safeRows, skipConfirmation, summary) {
     console.log(`Updated package.json with ${safeRows.length} safe packages`);
     console.log("Run 'npm install' to install the updates");
   } catch (err) {
-    console.error(`Failed to update package.json: ${err.message}`);
+    const message = err instanceof Error ? err.message : String(err);
+    console.error(`Failed to update package.json: ${message}`);
   }
 
   return summary;
