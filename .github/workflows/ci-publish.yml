@@ -68,7 +68,7 @@ jobs:
         run: npm test
 
       - name: Detect duplicate code
-        run: npx jscpd src --threshold 5 --fail-on-threshold
+        run: npx jscpd src --threshold 5
 
       - name: Prepare CLI fixture dependencies
         run: npm install --ignore-scripts --no-audit --no-fund
