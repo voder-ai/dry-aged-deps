@@ -158,9 +158,10 @@ For programmatic API access and detailed architectural overview, see:
 
 1. Clone the repository
 2. Install dependencies: `npm ci --prefer-frozen-lockfile`
-3. Run tests: `npm test`
-4. Run linter: `npm run lint`
-5. Format code: `npm run format`
+3. Install Git hooks: `npm run prepare`
+4. Run tests: `npm test`
+5. Run linter: `npm run lint`
+6. Format code: `npm run format`
 
 ### Development Tooling (Optional)
 

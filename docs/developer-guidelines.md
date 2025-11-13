@@ -81,6 +81,16 @@ Tests use vitest and must maintain 80% coverage thresholds.
 - `coverage/` - Test coverage reports
 - Husky pre-commit hook runs commitlint locally
 
+### Pre-push Hook
+
+A Husky pre-push hook is configured to run lint, formatting checks, and tests before allowing a push. Ensure the hook is installed by running:
+
+```bash
+npm run prepare
+```
+
+This command is also executed automatically on `npm install` thanks to the `prepare` script in `package.json`.
+
 ## Documentation
 
 ### Keep Updated
