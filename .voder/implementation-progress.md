@@ -1,140 +1,149 @@
 # Implementation Progress Assessment
 
-**Generated:** 2025-11-13T12:12:15.968Z
+**Generated:** 2025-11-13T12:50:15.334Z
 
 ![Progress Chart](./progress-chart.png)
 
 Projection: flat (no recent upward trend)
 
-## IMPLEMENTATION STATUS: INCOMPLETE (49.6% ± 5% COMPLETE)
+## IMPLEMENTATION STATUS: INCOMPLETE (64% ± 10% COMPLETE)
 
 ## OVERALL ASSESSMENT
-Six foundational areas (Functionality, Code Quality, Testing, Execution, Dependencies, Version Control) are below required thresholds and must be fixed before further functionality assessment or feature work.
+Overall implementation is INCOMPLETE: Code Quality (88%), Documentation (88%), and Version Control (60%) are below the required 90% thresholds. Functionality assessment is deferred until these foundational issues are addressed.
 
 ## NEXT PRIORITY
-Remediate core deficiencies by fixing tests, CI pipeline, and code quality to restore foundational support areas.
+Focus on improving Code Quality, Documentation, and Version Control to meet the 90% threshold before reassessing functionality.
 
 
 
-## CODE_QUALITY ASSESSMENT (70% ± 15% COMPLETE)
-- The codebase demonstrates solid foundations—ESLint and Prettier configurations, TypeScript type checking, and a comprehensive test suite—but exhibits a few code‐quality gaps: formatting errors, copy-paste duplication, an elevated complexity limit, and broken lint/test commands in the current environment. Incremental refactoring and configuration fixes will elevate maintainability and enforce stricter quality gates.
-- ESLint is configured (complexity max:25, max-lines-per-function:200) but the lint command failed to execute in our environment—verify ESLint availability and ensure no lint errors.
-- Prettier check reports style issues in bin/dry-aged-deps.js and package.json; formatting is not fully applied.
-- TypeScript type checking passes cleanly with strict settings.
-- jscpd found 4 code clones (42 duplicated lines, ~3% duplication) in src/print-outdated-handlers.js, src/print-outdated.js, and src/cli-options-helpers.js.
-- Cyclomatic complexity threshold is set to 25 (above industry best practice of <15); incremental ratcheting plan is needed.
-- Tests fail due to missing '@vitest/coverage-v8' dependency, blocking coverage and the validate script.
-- No test mocks/imports detected in production code; file and function lengths are within reasonable bounds (<300 lines).
+## CODE_QUALITY ASSESSMENT (88% ± 15% COMPLETE)
+- Overall the project demonstrates high code quality—linting, type-checking, tests, CI quality gates and error handling are all well configured. However, there are a few maintainability concerns: Prettier style violations in three files and a relatively high cyclomatic complexity threshold (25) that should be ratcheted down incrementally.
+- Prettier reported formatting issues in 3 files (bin/dry-aged-deps.js, eslint.config.js, package.json). Formatting is not fully applied/enforced.
+- ESLint complexity rule is set to max 25 (above industry best practice of <15). This loose threshold masks complex functions that should be refactored.
+- CLI-options-helpers.js is 290 lines—approaching file-size warning thresholds, indicating potential for further modularization.
+- Duplication tool (jscpd) is configured in CI, but no manual report exists locally. Any detected clones over the 20% threshold are hidden by ‘|| true’.
+- Pre-commit or CI doesn’t auto-fix formatting; developers must run Prettier manually.
 
 **Next Steps:**
-- Run `npm install --save-dev @vitest/coverage-v8` and fix Vitest config so tests and coverage succeed.
-- Apply `prettier --write` to format bin/dry-aged-deps.js and package.json; integrate a Prettier check in CI/pre-commit.
-- Ensure ESLint is installable and invokable (npx eslint .); fix any lint errors and enforce `npm run lint` in the pipeline.
-- Lower the ESLint complexity rule from 25 to 20, run lint to identify failing files, refactor those functions, update config, and commit. Continue ratcheting toward max:15.
-- Refactor duplicated code in print-outdated and cli-options-helpers into shared utilities to reduce jscpd duplicates.
-- Add lint-staged/pre-commit hooks to auto-format and lint changed files, and ensure CI enforces these quality gates.
+- Run `npx prettier --write .` to fix style violations, commit the changes, and ensure `format:check` passes in CI.
+- Lower the ESLint `complexity` threshold from 25 to 20. Use `npx eslint src --rule '{"complexity":["error",{"max":20}]}' --ext .js` to locate offending functions; refactor them to reduce complexity.
+- Consider splitting or modularizing large files (e.g., cli-options-helpers.js) into smaller units or utility modules to improve readability and testability.
+- Run `npx jscpd --reporters console --threshold 20 src` locally, address any significant duplications, and remove the `|| true` bypass in CI so that duplicates break the build.
+- Add a Prettier pre-commit hook (via Husky) to automatically format staged files, preventing future style drift.
 
-## TESTING ASSESSMENT (10% ± 17% COMPLETE)
-- Critical test infrastructure issues and failing tests block progress: the test suite is misconfigured and has at least one failing test.
-- Vitest coverage provider is misconfigured: missing '@vitest/coverage-v8' dependency (coverage runner errors out).
-- CLI check-mode tests fail: in test/cli.check-mode.test.js the expected exit code 0 is actually 1, breaking the test suite.
-- npm test and npx vitest run both report failures—no clean test passthrough.
-- Tests run in non-interactive mode and proper temp-dir usage is implemented in some tests (printOutdated.auto‐update), but elevated failures prevent suite completion.
-- Coverage thresholds are specified in vitest.config.js but never enforced due to misconfiguration.
-
-**Next Steps:**
-- Add the missing '@vitest/coverage-v8' devDependency or adjust coverage provider in vitest.config.js.
-- Fix the CLI check-mode behavior so that exit codes match expectations and update tests if requirements have changed.
-- Re-run the full test suite to confirm all tests pass.
-- Once passing, verify coverage thresholds are met and consider adding CI enforcement for coverage and flake detection.
-
-## EXECUTION ASSESSMENT (20% ± 5% COMPLETE)
-- The project’s runtime pipeline is currently broken: the test suite fails due to a missing coverage plugin and a logic bug in the CLI check mode, and the lint step does not complete successfully. Until these are fixed, the build and execution cannot be validated end-to-end.
-- Test suite fails immediately: Vitest is configured with coverage.provider='v8' but @vitest/coverage-v8 is not installed (MISSING DEPENDENCY '@vitest/coverage-v8').
-- CLI ‘check’ mode miscomputes summary.safeUpdates and returns exit code 1 even when no updates are available (test/cli.check-mode.test.js failure).
-- Lint script (`npx eslint . --ext .js --max-warnings=0`) does not complete cleanly, indicating possible ESLint misconfiguration or missing plugins.
-- Because tests and lint checks are failing, the full execution pipeline (build → lint → test → CLI runtime) cannot be verified.
+## TESTING ASSESSMENT (90% ± 18% COMPLETE)
+- The project has a comprehensive, non-interactive test suite with 100% pass rate, proper isolation via temp directories, and coverage well above configured thresholds. Tests cover happy paths, error scenarios, and edge cases. Minor quality issues include loops/logic in tests, a misleading test file name, and large fixtures slowing E2E tests.
+- All 129 tests pass under ‘vitest run --coverage’ with no interactive prompts
+- Coverage: 92.24% statements, 86.39% branches, 100% functions, 93.31% lines (all > 80% thresholds)
+- Tests use mkdtemp/mkdtempSync and clean up in afterEach/afterAll to avoid repo modifications
+- Behavior-focused tests cover errors, retries, edge cases (empty data, vulnerability errors)
+- Some tests use loops (e.g. CLI severity tests), introducing logic in test files
+- printOutdated.branches.test.js name is misleading—tests table output edge cases, not 'branches'
+- Large node_modules fixtures in test/fixtures slow down E2E tests
 
 **Next Steps:**
-- Add the missing @vitest/coverage-v8 package (or switch to a supported coverage provider) so Vitest can run with coverage.
-- Fix the logic in printOutdated/CLI check-mode to ensure summary.safeUpdates is zero when no safe updates exist, so exit code is correct.
-- Verify and correct ESLint configuration so that `npm run lint` passes without errors or hangs.
-- Once dependencies and logic are corrected, re-run the full test suite (including CLI e2e tests) to confirm successful build and runtime behavior.
+- Refactor parameterized tests to remove loops/conditional logic (e.g. use vitest.each)
+- Rename misleading test files (e.g. printOutdated.branches.test.js → printOutdated.table-edgecases.test.js)
+- Trim or mock heavy fixtures to speed up E2E tests
+- Consider adding reusable test data builders/factories to reduce duplication and improve clarity
 
-## DOCUMENTATION ASSESSMENT (92% ± 17% COMPLETE)
-- The project’s documentation is comprehensive, up-to-date, and accurately reflects the implementation. Requirements, API, architectural decisions, and developer guidelines are all present and consistent with code. Public APIs include JSDoc comments, examples, and config file support is documented.
-- The README.md is thorough: setup instructions, CLI flags, examples, CI integration, and advanced usage sections all match the implemented options and behaviors.
-- docs/api.md accurately describes the public API (fetchVersionTimes, calculateAgeInDays, checkVulnerabilities, printOutdated, jsonFormatter, xmlFormatter) and includes runnable examples.
-- Technical documentation is complete: docs/architecture.md details module layout and design rationale; docs/developer-guidelines.md explains coding conventions and documentation rules.
-- ADRs in docs/decisions/ are present for module system, JSON/XML support, exit codes, and check-mode behavior, matching code references and CHANGELOG entries.
-- Code-level JSDoc is provided for all public functions, including parameters and return types, facilitating type-checking and automated doc generation.
-- Configuration-file schema is documented in docs/api.md and implemented in src/config-loader.js; examples in README match behavior.
-- Branching and release workflows are documented in docs/branching.md, aligning with CI workflows (.github/workflows) and trunk-based development approach.
-
-**Next Steps:**
-- Add explicit JSDoc @throws annotations for functions (e.g., checkVulnerabilities) to fully document error conditions.
-- Remove or narrow the @ts-nocheck in print-outdated.js by incrementally adding type annotations and JSDoc to satisfy TypeScript checks.
-- Consider documenting internal modules (build-rows, apply-filters, cli-options-helpers) in docs/ for maintainers and contributors who may need deeper insights.
-- Add a short note in README pointing to the prompts/ directory for requirements traceability, or surface key user stories in docs/ to improve discoverability.
-
-## DEPENDENCIES ASSESSMENT (55% ± 12% COMPLETE)
-- Dependencies are up-to-date and lockfile is committed, with no security vulnerabilities; however, there is a missing devDependency (@vitest/coverage-v8) causing the test suite to fail.
-- package.json contains no production dependencies and only devDependencies
-- npx dry-aged-deps reports no mature updates (>=7 days) for prod or dev dependencies
-- npm audit shows zero vulnerabilities
-- package-lock.json is committed to git
-- Running `npm test` fails with “Cannot find dependency '@vitest/coverage-v8'” due to missing vitest coverage provider
+## EXECUTION ASSESSMENT (92% ± 16% COMPLETE)
+- The project has a robust, automated runtime validation for its CLI, including unit tests, integration tests, E2E tests, and a full CI pipeline with smoke testing and vulnerability scanning. The build step is trivial (no build required), and the application handles errors and invalid inputs correctly at runtime.
+- Build process (`npm run build`) completes successfully (no build step required).
+- 129 Vitest tests (unit + CLI integration) all pass with ~92% statement coverage and ~86% branch coverage.
+- CLI integration tests (using execa) verify flags, help/version output, error handling, JSON/XML formatting, and update behavior.
+- An E2E CLI test runs against a real fixture in a temporary directory (mocking outdated data) and validates actual output and exit codes.
+- CI workflow runs lint, type-check, formatting checks, tests, duplicate code detection, CLI tests, E2E tests, vulnerability scan, and smoke tests a published package.
+- Runtime input validation works (invalid flags exit code 2 with error messages; `--help`/`--version` exit 0).
+- Errors in `npm outdated` or JSON/XML parsing generate structured error outputs with correct exit codes (2) without silent failures.
+- CLI version consistency is enforced in CI by comparing `dry-aged-deps --version` to package.json.
 
 **Next Steps:**
-- Add '@vitest/coverage-v8' to devDependencies to satisfy the coverage provider requirement
-- Run `npm install` and confirm that `npm test` passes successfully
-- Re-run dry-aged-deps and npm audit after installation to verify no new issues
-- Optionally review devDependencies for any other missing or outdated tools and add version constraints
+- Increase branch coverage (e.g., edge branches in xml-formatter and build-rows) to reach ≥90% branch coverage.
+- Add performance/load tests for very large dependency graphs to catch potential slowdowns or high memory use.
+- Consider adding caching or debouncing for repeated `fetchVersionTimes` calls in bulk to optimize E2E performance.
+- Implement monitoring or logging for long-running child processes to ensure proper cleanup in abnormal shutdowns.
 
-## SECURITY ASSESSMENT (100% ± 18% COMPLETE)
-- The project meets or exceeds all security requirements: no open vulnerabilities, proper handling of secrets, CI security tooling in place, and no conflicting automation.
-- No existing security incidents in docs/security-incidents – nothing to re-verify or skip
-- npm audit reports zero vulnerabilities (info/low/moderate/high/critical all at 0)
-- .env file is present locally, not tracked by git (`git ls-files .env` & `git log --all -- .env` both empty), and listed in .gitignore
-- .env.example exists with only placeholder values
-- No hard-coded credentials, API keys, tokens, or secrets in source code
-- No database code or SQL queries present (SQL injection not applicable)
-- CLI spawns subprocesses with validated inputs (fetchVersionTimes regex), no unvalidated user input in execFile arguments
-- CI pipeline runs CodeQL, ESLint security plugin, `npm audit --audit-level=moderate`, type-check, lint, tests, and lockfile drift checks
-- No Dependabot, Renovate or other conflicting dependency automation files/configurations detected
-
-**Next Steps:**
-- Continue monitoring dependencies via `npm audit` in CI and schedule quarterly dependency reviews
-- Maintain incident response readiness by updating docs/security-incidents when new residual risks are accepted
-- Periodically review CodeQL and ESLint security plugin configurations to cover any new threat vectors
-
-## VERSION_CONTROL ASSESSMENT (50% ± 18% COMPLETE)
-- The repository has robust CI/CD, trunk-based development, and pre-push hooks, but fails to maintain a clean working directory and push local changes.
-- Git status shows modified files outside of .voder/ (bin/dry-aged-deps.js, eslint.config.js, package-lock.json, package.json, src/print-outdated-handlers.js, src/print-outdated.js)
-- Untracked directory 'report/' present
-- Local main branch has 9 commits ahead of origin/main (unpushed commits)
-- Current branch is 'main' (trunk-based development)
-- Single unified GitHub Actions workflow (ci-publish.yml) covers CodeQL, build, tests, lint, type-check, formatting, vulnerability scan, and publishing via semantic-release
-- Post-publish smoke test implemented
-- Husky pre-push hook runs lint, type-check, prettier check, and tests; hooks auto-installed via prepare script
-- .voder/ directory is not listed in .gitignore and is available for tracking
+## DOCUMENTATION ASSESSMENT (88% ± 15% COMPLETE)
+- Comprehensive and mostly up-to-date documentation with strong API reference, architecture overview, ADRs, JSDoc coverage, and usage examples. Minor omissions in developer and README sections around type‐checking instructions, and slight inconsistency in ADR file naming.
+- README.md includes extensive CLI and API usage but omits mention of the `npm run typecheck` or `npm run validate` scripts
+- docs/developer-guidelines.md does not reference the new type‐checking step or validate script in the development workflow
+- Prompts directory contains requirements/user‐story specifications but is not linked from the main README or developer docs
+- Architecture and API documentation accurately reflect implementation and include runnable examples
+- Public APIs have full JSDoc annotations covering parameters, returns, and thrown errors
+- ADRs cover major decisions, are marked as accepted, and align with code changes (e.g., ES Modules, JSDoc type‐checking)
+- Type annotations and tsconfig.json support incremental JSDoc type‐checking, though one file uses @ts-nocheck as a TODO
+- Configuration file schema is documented in both README and API docs and matches code in config-loader.js
 
 **Next Steps:**
-- Commit or stash all changes outside of .voder/ to clean the working directory
-- Push all local commits to origin/main to ensure no unpushed work
-- Decide whether to track or properly ignore the 'report/' directory based on project needs
-- After cleaning and syncing, re-validate git status to confirm a clean working tree
+- Add type‐check and validate script instructions to README.md under development setup
+- Update docs/developer-guidelines.md to include type‐checking (`npm run typecheck`/`npm run validate`) as part of local quality gates
+- Link or reference the prompts/ user story map in README or developer guidelines for discoverability of requirements documentation
+- Rename ADR files for consistent naming (e.g., append `.accepted.md` to all accepted decisions)
+- Periodically review and update documentation when code changes (e.g., ensure any new flags or scripts are documented
+
+## DEPENDENCIES ASSESSMENT (95% ± 18% COMPLETE)
+- Dependencies are well managed: the project uses only devDependencies, all of which are current and mature, no known vulnerabilities, and the lock file is committed.
+- package-lock.json is present and tracked in git (git ls-files package-lock.json).
+- No runtime (prod) dependencies declared; only devDependencies, consistent with a CLI/tool project.
+- devDependencies are up to date: npx dry-aged-deps reports “No outdated packages with mature versions found (>= 7 days)”.
+- npm audit reports zero vulnerabilities.
+- npm ls --depth=0 shows a clean dependency tree with no version conflicts.
+- All tests pass, indicating that current dependency versions are compatible.
+
+**Next Steps:**
+- Continue running dry-aged-deps on a regular basis to catch newly mature (>7d) updates.
+- If critical security fixes appear in fresh releases (<7d), evaluate and apply a security-driven override.
+- When adding any production dependencies in the future, ensure they are declared under “dependencies” and follow the same smart selection process.
+- Review and bump the lock file after adding or updating dependencies to keep reproducible builds.
+
+## SECURITY ASSESSMENT (95% ± 18% COMPLETE)
+- The project shows a robust security posture: zero vulnerabilities in `npm audit`, proper secrets handling via `.env` and `.env.example`, comprehensive CI with CodeQL and audit, ESLint security rules, and no conflicting dependency automation tools.
+- No documented security incidents under `docs/security-incidents/` (only the template exists).
+- `npm audit --json` reports zero vulnerabilities (including production and dev deps).
+- `.env` is present locally but not tracked in git (`git ls-files .env` & git history empty) and is listed in `.gitignore` alongside a safe `.env.example`.
+- CI pipeline includes GitHub CodeQL analysis and runs `npm audit --audit-level=moderate` failing on moderate+ issues.
+- ESLint is configured with `eslint-plugin-security` recommended rules enabled.
+- Inputs to `execFile` for package names are validated with a strict regex to prevent command injection.
+- No Dependabot or Renovate configuration detected—no conflicting dependency automation.
+- No web or database layers in this CLI tool, so classic SQL-injection/XSS issues are not applicable.
+
+**Next Steps:**
+- Consider tightening the CI audit to fail on low-severity vulnerabilities (`--audit-level=low`) to catch all new issues early.
+- Add a scheduled weekly dependency check (e.g., GitHub Action) to catch emerging CVEs between releases.
+- Review and rotate any long-lived tokens referenced in `.env.example` and ensure they are scoped with least privilege.
+- Periodically run CodeQL against new code patterns and update ESLint security rules to cover newly discovered risks.
+
+## VERSION_CONTROL ASSESSMENT (60% ± 17% COMPLETE)
+- Strong CI/CD and version control practices present, but local working directory is dirty and there are unpushed commits, blocking full compliance with DORA and Voder requirements.
+- Working directory has uncommitted changes (eslint.config.js)
+- 12 local commits have not been pushed to origin/main
+- On `main` branch with trunk-based commits directly to main
+- `.voder/` directory is not listed in `.gitignore` and is tracked
+- Single unified GitHub Actions workflow (ci-publish.yml) runs all quality checks and publishing
+- Comprehensive quality gates: lint, type-check, format, tests, security scans, CodeQL
+- Automated publishing via semantic-release on push to main and tags
+- Smoke test of published package implemented
+- Pre-push hook via Husky runs lint, type-check, format-check, and tests
+- Husky hooks are installed via `prepare` script in package.json
+
+**Next Steps:**
+- Commit or stash local changes before pushing to maintain a clean working directory
+- Push all local commits to the remote `main` branch
+- Verify that CI/CD does not re-run tests in multiple jobs during publish
+- Ensure pre-push hooks are installed automatically on contributor machines (e.g., document `npm install` step)
+- Monitor CI history for stability trends and adjust job dependencies to optimize duration if needed
 
 ## FUNCTIONALITY ASSESSMENT (undefined% ± 95% COMPLETE)
-- Functionality assessment skipped - fix 5 deficient support area(s) first
+- Functionality assessment skipped - fix 3 deficient support area(s) first
 - Support areas must meet thresholds before assessing feature completion
-- Deficient areas: CODE_QUALITY (70%), TESTING (10%), EXECUTION (20%), DEPENDENCIES (55%), VERSION_CONTROL (50%)
+- Deficient areas: CODE_QUALITY (88%), DOCUMENTATION (88%), VERSION_CONTROL (60%)
 - Principle: "Improvement of daily work is higher priority than daily work" - fix foundation before building features
 
 **Next Steps:**
-- CODE_QUALITY: Run `npm install --save-dev @vitest/coverage-v8` and fix Vitest config so tests and coverage succeed.
-- CODE_QUALITY: Apply `prettier --write` to format bin/dry-aged-deps.js and package.json; integrate a Prettier check in CI/pre-commit.
-- TESTING: Add the missing '@vitest/coverage-v8' devDependency or adjust coverage provider in vitest.config.js.
-- TESTING: Fix the CLI check-mode behavior so that exit codes match expectations and update tests if requirements have changed.
-- EXECUTION: Add the missing @vitest/coverage-v8 package (or switch to a supported coverage provider) so Vitest can run with coverage.
-- EXECUTION: Fix the logic in printOutdated/CLI check-mode to ensure summary.safeUpdates is zero when no safe updates exist, so exit code is correct.
+- CODE_QUALITY: Run `npx prettier --write .` to fix style violations, commit the changes, and ensure `format:check` passes in CI.
+- CODE_QUALITY: Lower the ESLint `complexity` threshold from 25 to 20. Use `npx eslint src --rule '{"complexity":["error",{"max":20}]}' --ext .js` to locate offending functions; refactor them to reduce complexity.
+- DOCUMENTATION: Add type‐check and validate script instructions to README.md under development setup
+- DOCUMENTATION: Update docs/developer-guidelines.md to include type‐checking (`npm run typecheck`/`npm run validate`) as part of local quality gates
+- VERSION_CONTROL: Commit or stash local changes before pushing to maintain a clean working directory
+- VERSION_CONTROL: Push all local commits to the remote `main` branch

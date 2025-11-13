@@ -73,6 +73,7 @@ export default [
     files: ['bin/**/*.js'],
     rules: {
       'no-console': 'off',
+      'security/detect-child-process': 'off',
     },
   },
 
