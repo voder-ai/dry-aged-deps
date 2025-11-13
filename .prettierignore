@@ -1,5 +1,6 @@
 .voder/
 
-# Ignore CI workflow files
-.github/workflows/
-.husky/
+.github/**
+
+# Ignore Husky hooks
+.husky/**
