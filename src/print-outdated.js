@@ -11,6 +11,7 @@ import { loadPackageJson } from './load-package-json.js';
 import { buildRows } from './build-rows.js';
 import { applyFilters } from './apply-filters.js';
 import { handleJsonOutput } from './print-outdated-handlers.js';
+import { updatePackages } from './update-packages.js';
 
 // complexity is tolerated in this file due to CLI orchestration; review during refactors
 /**
@@ -102,67 +103,8 @@ export async function printOutdated(data, options = {}) {
   const timestamp = new Date().toISOString();
 
   if (updateMode) {
-    const pkgPath = path.join(process.cwd(), 'package.json');
-    if (safeRows.length === 0) {
-      console.log('No safe updates available.');
-      return summary;
-    }
-    console.log('The following packages will be updated:');
-    for (const [name, current, wanted] of safeRows) {
-      console.log(`  ${name}: ${current} → ${wanted}`);
-    }
-    if (!skipConfirmation) {
-      const { createInterface } = await import('readline');
-      const rl = createInterface({
-        input: process.stdin,
-        output: process.stdout,
-      });
-      const answer = await new Promise((resolve) => {
-        rl.question('Update package.json? [y/N] ', (ans) => {
-          rl.close();
-          resolve(ans.trim().toLowerCase());
-        });
-      });
-      if (answer !== 'y' && answer !== 'yes') {
-        console.log('Aborted.');
-        return summary;
-      }
-    }
-    // Create backup before applying changes
-    const backupPath = pkgPath + '.backup';
-    try {
-      fs.copyFileSync(pkgPath, backupPath);
-      console.log(`Created backup of package.json at ${backupPath}`);
-    } catch (err) {
-      console.error(`Failed to create backup: ${err.message}`);
-      return summary;
-    }
-    // Apply updates to package.json
-    try {
-      const pkgContent = fs.readFileSync(pkgPath, 'utf8');
-      const pkgData = JSON.parse(pkgContent);
-      /* eslint-disable security/detect-object-injection */
-      for (const [name, , wanted, , , depType] of safeRows) {
-        if (depType === 'prod') {
-          if (!pkgData.dependencies) pkgData.dependencies = {};
-          pkgData.dependencies[name] = wanted;
-        } else {
-          if (!pkgData.devDependencies) pkgData.devDependencies = {};
-          pkgData.devDependencies[name] = wanted;
-        }
-      }
-      /* eslint-enable security/detect-object-injection */
-      fs.writeFileSync(
-        pkgPath,
-        JSON.stringify(pkgData, null, 2) + '\n',
-        'utf8'
-      );
-      console.log(`Updated package.json with ${safeRows.length} safe packages`);
-      console.log("Run 'npm install' to install the updates");
-    } catch (err) {
-      console.error(`Failed to update package.json: ${err.message}`);
-    }
-    return summary;
+    const result = await updatePackages(safeRows, skipConfirmation, summary);
+    return result;
   }
 
   // XML output (enriched)
