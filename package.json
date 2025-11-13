@@ -17,7 +17,7 @@
     "test:cli": "vitest run",
     "lint": "eslint src bin --ext .js --ext .cjs --max-warnings=0",
     "prepare": "husky install",
-    "type-check": "tsc --noEmit -p tsconfig.json",
+    "type-check": "npx tsc --noEmit -p tsconfig.json",
     "validate": "npm run lint && npm run type-check && npm test",
     "release": "npm version patch && git push --follow-tags"
   },
