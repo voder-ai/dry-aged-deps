@@ -1,16 +1,13 @@
 ## NOW  
-Inspect the latest CI workflow logs to identify the failing step:  
-```bash
-gh run view --log
-```
+Lower the ESLint cyclomatic‐complexity threshold in `eslint.config.js` from 20 to 15 by updating the `complexity` rule.
 
 ## NEXT  
-- Pinpoint the exact error message and failing step in the logs (build, lint, type-check, test, etc.).  
-- Apply a targeted fix (code or configuration) for that failure locally.  
-- Re-run the failing command (e.g. `npm run lint` or `npm test`) to verify the error is resolved.  
-- Commit and push the fix to trigger a fresh CI run.
+- Run `npm run lint` locally to list all functions now failing the new complexity limit.  
+- Incrementally refactor each reported function (for example in `print-outdated.js`, `cli-options-helpers.js`, `config-loader.js`, `xml-formatter.js`)—extract smaller helpers, simplify conditionals—to bring their complexity below 15.  
+- Rerun `npm run lint` to verify no complexity violations remain and commit the refactored code.
 
 ## LATER  
-- Add automated notifications (e.g. Slack or email) on CI failures.  
-- Harden the pipeline by removing any `|| true` fallbacks so failures cannot be masked.  
-- Introduce periodic pipeline health checks and alerts for sustained failures.
+- Remove the temporary ESLint overrides (`complexity: 'off'` and `max-lines-per-function: 'off'`) from previously exempted files once they pass under the stricter rules.  
+- Consolidate and DRY‐up repetitive CLI flag‐parsing logic into shared helper functions to reduce duplication.  
+- Configure CI to enforce per-file branch coverage thresholds (e.g., ≥90%) and add targeted tests for uncovered branches.  
+- Enable `"checkJs": true` in `tsconfig.json` and complete missing JSDoc annotations on internal modules for full type‐checking coverage.
