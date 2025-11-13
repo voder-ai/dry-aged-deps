@@ -66,7 +66,9 @@ function parseIntegerFlag(args, flag, defaultValue, min = 1, max = Infinity) {
       if (args.length > idx + 1) {
         const str = args[idx + 1];
         if (!/^[0-9]+$/.test(str)) {
-          console.error(`Invalid ${flag}: ${str}. Must be an integer >= ${min}.`);
+          console.error(
+            `Invalid ${flag}: ${str}. Must be an integer >= ${min}.`
+          );
           process.exit(2);
         }
         num = parseInt(str, 10);
