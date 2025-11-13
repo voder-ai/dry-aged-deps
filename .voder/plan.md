@@ -1,21 +1,13 @@
 ## NOW  
-Add a Husky pre-push hook so that every git push runs the core quality checks locally and blocks the push on failure. Create the file `.husky/pre-push` (make sure it’s executable) containing:  
-```sh
-#!/usr/bin/env sh
-. "$(dirname "$0")/_/husky.sh"
-
-npm run lint
-npx prettier --check .
-npm test
-```  
+Extract the CLI argument parsing and configuration‐loading block from `bin/dry-aged-deps.js` into a new module `src/cli-options.js` that exports a single `parseOptions(argv: string[])` function, and update `bin/dry-aged-deps.js` to call this function for all flag, config file, and default‐value logic.
 
 ## NEXT  
-- Add a `"prepare": "husky install"` script to `package.json` so that Husky hooks are set up on `npm install`.  
-- Commit and push those changes, then run `npm install` locally to verify the `pre-push` hook is installed.  
-- Update the README’s **Development** and **Git Workflow** sections (and `docs/developer-guidelines.md`) to explain that a pre-push hook runs lint, formatting, and tests before push.  
+- Add JSDoc comments to `src/cli-options.js`, `bin/dry-aged-deps.js`, and all modules to fully document inputs, outputs, and thrown errors.  
+- Refactor `printOutdated.js` by extracting its concerns into smaller modules (e.g. `src/load-package-json.js`, `src/build-rows.js`, `src/apply-filters.js`, `src/output-formatters.js`) to reduce per-file complexity.  
+- Enforce maintainability rules by configuring ESLint “complexity” and “max-lines-per-function” limits in `eslint.config.js` and enabling them in CI.  
+- Turn on JSDoc type checking: set `"checkJs": true` in `tsconfig.json`, add a `"type-check": "tsc --noEmit"` script, and include it in the CI pipeline and Husky pre-push hook.
 
 ## LATER  
-- Enable JSDoc type-checking by turning on `checkJs: true` in `tsconfig.json`, add a real `type-check` script (`"type-check": "tsc --noEmit"`), and include it in both the pre-push hook and CI pipeline.  
-- Remove stale “coming soon” entries from CHANGELOG.md and bring it up to date with shipped features (config-file support, check mode, update mode, etc.).  
-- Revise or retire ADR 0006 in `docs/decisions` to reflect the chosen type-checking approach.  
-- Optionally add a duplication detector (e.g. jscpd) and an ESLint complexity rule to the pre-push hook for deeper quality enforcement.
+- Integrate a duplication detector (e.g. jscpd) into pre-push checks to catch copy-paste code.  
+- Update `docs/api.md` and `docs/developer-guidelines.md` with the new module boundaries and usage examples for `cli-options.js`.  
+- Plan a gradual migration of core modules to TypeScript (`.ts`) once JSDoc checking is stable.

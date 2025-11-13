@@ -2,8 +2,11 @@
 <traceability>
   <specification>prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-12T20:56:19.333Z</last_validated>
+  <last_validated>2025-11-13T02:16:26.852Z</last_validated>
   <last_modified>2025-11-10T21:23:22.067Z</last_modified>
-  <evidence>All 7 tests in test/cli.config-file.test.js passed under Vitest, verifying config file reading (default .dry-aged-deps.json and custom file via --config-file), JSON parsing and structure validation (invalid JSON and unknown keys exit code 2 with clear messages), merging logic (defaults ← config ← CLI flags), and format support. The implementation in bin/dry-aged-deps.js reads and validates `.dry-aged-deps.json`, applies thresholds and format from config, and correctly honors CLI overrides. README.md includes a detailed example and documents the --config-file option.</evidence>
-  <notes>The config-file support meets every acceptance criterion: correct location, schema validation, override precedence, error handling, optional usage, documentation, and sensible defaults. The JSON schema file is not present, but schema support was marked optional.</notes>
+  <evidence>- bin/dry-aged-deps.js contains config file parsing, validation, merge & CLI override logic (Story: prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md).
+- README.md documents .dry-aged-deps.json schema and usage under “Example: using a configuration file”.
+- test/cli.config-file.test.js covers defaults, overrides, invalid JSON, unknown keys, custom file name, missing file, invalid values.
+- Vitest summary: 44/44 test files, 94/94 tests passed (including cli.config-file tests).</evidence>
+  <notes>All acceptance criteria met: config file is optional, loaded from project root, schema validated, CLI flags override, defaults applied, errors handled, documentation updated. Implementation matches spec.</notes>
 </traceability>

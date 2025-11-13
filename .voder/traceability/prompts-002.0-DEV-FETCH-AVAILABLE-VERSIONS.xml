@@ -2,12 +2,8 @@
 <traceability>
   <specification>prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-12T20:55:56.260Z</last_validated>
+  <last_validated>2025-11-13T02:15:28.107Z</last_validated>
   <last_modified>2025-11-09T23:01:54.797Z</last_modified>
-  <evidence>• fetch-version-times.js always invokes `npm view <pkg> time --json` and returns all version–time entries, but there is no code that limits the fetch or subsequent processing to only versions newer than the current version (REQ-OPTIMIZATION).
-• print-outdated.js only ever looks up and calculates an age for `info.latest`, never iterating over or displaying all versions newer than the current version as described in acceptance (“fetch publish dates for all versions newer than my current version” and “show age alongside each version”).
-• No tests cover partial fetching or version‐range filtering; all existing tests assume only the latest version’s age is needed.
-
-Tests run: `npm test` (Vitest 93/93 passing, 97.6% coverage)</evidence>
-  <notes>While the code correctly fetches publish times, calculates age for the latest version, and displays that age, it does not implement the smart‐fetch optimization nor handle all newer versions as specified in the story. Therefore not all acceptance criteria are satisfied.</notes>
+  <evidence>Inspection of src/fetch-version-times.js shows that it always runs `npm view <pkg> time --json` and returns dates for all versions (excluding only “created”/“modified”), but there is no logic anywhere to restrict or filter the fetch to only versions newer than the current. In src/print-outdated.js, after fetching all version times, only the publish date of the single `latest` version is used to calculate and display an age; intermediate versions newer than current are neither filtered nor displayed. No tests cover or enforce any “smart fetching” behavior. This means the REQ-OPTIMIZATION (“Only fetch versions newer than current”) and the acceptance criterion “Smart Fetching” are not met.</evidence>
+  <notes>The code correctly uses `npm view ... time --json`, calculates age in days via age-calculator, and displays an age for the latest version, satisfying core functionality, age calculation, and display. However, it fails to implement the optimization to fetch or process only versions newer than the current version, and it does not display ages for all newer versions as scoped by the story.</notes>
 </traceability>

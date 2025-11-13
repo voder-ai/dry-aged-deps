@@ -2,14 +2,8 @@
 <traceability>
   <specification>prompts/009.0-DEV-XML-OUTPUT.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-12T21:00:04.269Z</last_validated>
+  <last_validated>2025-11-13T02:17:58.389Z</last_validated>
   <last_modified>2025-11-09T23:05:40.405Z</last_modified>
-  <evidence>• src/xml-formatter.js implements xmlFormatter with XML declaration, error block, packages, summary, thresholds, escaping, and dependency-type fields
-• bin/dry-aged-deps.js parses --format=xml, validates formats, suppresses non-XML logs, routes errors to XML, and returns exit codes 0/1/2 per spec
-• test/xml-formatter.*.test.js (10+ files) cover header, packages, object rows, escaping, vulnerabilities, summary, thresholds, omission of thresholds, error output, no-detail cases
-• test/cli.format-xml.test.js verifies valid XML root and no stderr noise
-• test/cli.format-xml.error.test.js exercises XML error block and exit code 2
-• test/cli.check-mode.test.js confirms XML check-mode exit code 1 and package elements
-• Help output includes xml as valid --format option in bin/dry-aged-deps.js</evidence>
-  <notes>All acceptance criteria for prompts/009.0-DEV-XML-OUTPUT.md are satisfied: the CLI flag is supported, output is valid XML and complete, summary statistics are included, exit codes behave correctly, console noise is suppressed in XML mode, errors are formatted as XML, and help text documents XML format. Comprehensive unit and CLI tests verify functionality.</notes>
+  <evidence>Ran `npm test` (vitest run) with all 94 tests passing, including 14 XML‐specific tests (e.g., test/cli.format-xml.test.js, test/cli.format-xml.error.test.js, test/xml-formatter*.test.js). Coverage shows 100% functions on xml-formatter.js and CLI exit‐code tests for XML mode all green. The code in bin/dry-aged-deps.js supports `--format=xml`, validates the flag, suppresses console noise, emits proper XML declaration, error blocks, package and summary sections, thresholds, and uses correct exit codes.</evidence>
+  <notes>All acceptance criteria from prompts/009.0-DEV-XML-OUTPUT.md are satisfied: XML flag, valid&well-formed output, complete data matching JSON output, summary section, exit codes (0/1/2), silent mode in XML, XML error handling, schema consistency per tests, and help text includes XML as a valid format option.</notes>
 </traceability>

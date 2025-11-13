@@ -2,8 +2,8 @@
 <traceability>
   <specification>prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-12T21:02:15.339Z</last_validated>
+  <last_validated>2025-11-13T02:15:09.004Z</last_validated>
   <last_modified>2025-11-09T23:02:37.596Z</last_modified>
-  <evidence>Review of src/filter-by-security.js and print-outdated.js shows that the code only calls checkVulnerabilities once per package on the single “latest” version. There is no logic to iterate over older mature versions when the latest is vulnerable (“smart checking” and working backwards). The Vitest suite includes no tests for selecting a fallback version. Thus the requirement to “start from the newest mature version and work backwards until finding a safe one” is not implemented.</evidence>
-  <notes>All other parts (core vulnerability checking, transitive audit via npm audit, filtering out vulnerable versions, and clear output when no safe versions exist) are present, but the smart search acceptance criterion is missing.</notes>
+  <evidence>In src/filter-by-security.js and src/print-outdated.js the code only checks the single latest version for vulnerabilities and outright filters it if vulnerable. There is no logic to fetch or iterate over earlier mature versions ‘working backwards’ until finding a safe one. Tests in test/filter-by-security.test.js validate simple filtering of a single version but do not cover selecting an earlier version when the newest is vulnerable.</evidence>
+  <notes>The core vulnerability check and output formatting are implemented, but the smart-search requirement (start from newest mature version and work backwards to find a safe one) is not satisfied. Instead, vulnerable latest versions are simply discarded, so no alternative safe version is ever recommended.</notes>
 </traceability>

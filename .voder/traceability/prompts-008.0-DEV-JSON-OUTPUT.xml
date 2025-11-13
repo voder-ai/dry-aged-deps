@@ -2,8 +2,13 @@
 <traceability>
   <specification>prompts/008.0-DEV-JSON-OUTPUT.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-12T20:54:22.289Z</last_validated>
+  <last_validated>2025-11-13T02:15:15.916Z</last_validated>
   <last_modified>2025-11-09T23:04:54.331Z</last_modified>
-  <evidence>In src/json-formatter.js the output schema only includes: timestamp, packages (with name,current,wanted,latest,age), summary (totalOutdated,safeUpdates,filteredByAge,filteredBySecurity,thresholds). It omits vulnerabilities (count,maxSeverity,details), recommended versions, filtered flags and filterReason required by the spec. In print-outdated.js, JSON mode bypasses vulnerability checks and always sets age to null, and error handling for JSON mode emits plain-text stderr or console.log, not a JSON object with an "error" field as specified. There are no tests covering JSON error output. </evidence>
-  <notes>While the CLI flag, valid JSON, summary, default behavior and help documentation exist and tests pass for basic JSON mode, core acceptance criteria around complete data (vulnerabilities, severity, recommended versions, filter reasons) and JSON-formatted error handling are not implemented.</notes>
+  <evidence>In src/print-outdated.js the JSON branch emits only name, current, wanted, latest, age (null) for each package and summary fields, e.g.:
+
+  const rows = entries.map(([name, info]) => [name, info.current, info.wanted, info.latest, null]);
+  console.log(jsonFormatter({ rows, summary, thresholds, timestamp }));
+
+The jsonFormatter then maps array rows to objects with properties {name, current, wanted, latest, age} only.  It does not include vulnerabilities, severity thresholds, recommended versions, package type, filtered flag or filterReason as required by the spec (see prompts/008.0-DEV-JSON-OUTPUT.md).</evidence>
+  <notes>The JSON output is syntactically valid and the CLI flag, summary, help text, error handling, and exit-code behavior in check mode are implemented and tested. However, the output omits critical fields (vulnerabilities, severity, recommended, type, filtered/filterReason) mandated by the story’s acceptance criteria, so the feature is incomplete.</notes>
 </traceability>

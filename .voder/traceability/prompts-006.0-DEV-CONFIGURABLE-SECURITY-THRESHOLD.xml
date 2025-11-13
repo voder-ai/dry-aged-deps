@@ -2,15 +2,8 @@
 <traceability>
   <specification>prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-12T20:56:21.343Z</last_validated>
+  <last_validated>2025-11-13T02:14:33.156Z</last_validated>
   <last_modified>2025-11-09T23:03:30.864Z</last_modified>
-  <evidence>In src/filter-by-security.js the filtering simply excludes any package with vulnCount > 0, ignoring prodMinSeverity/devMinSeverity thresholds:
-
-  if (vulnCount !== 0) {
-    include = false;
-    filterReasonMap.set(name, 'security');
-  }
-
-There is no logic to allow vulnerabilities below the configured threshold. The checkVulnerabilities function also only returns a count, not severity details. No tests cover allowing low-severity vulns when threshold is moderate or higher. All other criteria (CLI flag, config, validation, help output) are implemented, but the core filtering logic for severity thresholds is missing.</evidence>
-  <notes>The story’s acceptance criteria for parsing the --severity flag, config file support, validation, help text, and output of thresholds are implemented, but the actual filtering logic does not respect severity thresholds—it still blocks all vulnerabilities unconditionally. Tests for threshold-based filtering are absent. The feature is incomplete.</notes>
+  <evidence>In src/filter-by-security.js, the thresholds (prodMinSeverity, devMinSeverity) are passed in but never used—the code simply blocks any nonzero vulnerability count, ignoring severity levels. No logic compares vulnerability severities against the configured threshold. Additionally, the config parser in bin/dry-aged-deps.js reads a top-level config.severity key (not minSeverity as specified) and there are no tests covering severity thresholds or config precedence for severity.</evidence>
+  <notes>The configurable security threshold story is not implemented. The filtering logic does not respect severity thresholds, and config file support for minSeverity at the root level is inconsistent with the spec. No tests verify the new functionality.</notes>
 </traceability>

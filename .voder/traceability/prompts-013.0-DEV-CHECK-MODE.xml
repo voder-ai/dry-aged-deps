@@ -2,8 +2,13 @@
 <traceability>
   <specification>prompts/013.0-DEV-CHECK-MODE.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-12T20:54:45.876Z</last_validated>
+  <last_validated>2025-11-13T02:17:56.625Z</last_validated>
   <last_modified>2025-11-11T08:04:07.352Z</last_modified>
-  <evidence>1) Test suite 'test/cli.check-mode.test.js' (5 tests) passed: verifies --check flag, exit code 0 when no updates, exit code 1 on safe updates in table/JSON/XML, and exit code 2 on invalid format. 2) End-to-end `npm test` run: 43 files, 93 tests, all passing; coverage remains ≥89% branches. 3) Help text in bin/dry-aged-deps.js includes `--check`. 4) README.md and docs/api.md contain CI/CD integration section with `--check` usage and correct exit-code semantics (verified by test/docs/ci-integration.test.js).</evidence>
-  <notes>All acceptance criteria for story 013.0-DEV-CHECK-MODE are implemented: the CLI supports `--check`, fails with exit 1 when safe updates exist, exits 0 when up-to-date, uses exit 2 on errors, shows outdated packages in table output, supports JSON/XML formats, and documentation has been updated with CI/CD examples.</notes>
+  <evidence>• bin/dry-aged-deps.js implements --check flag (args.includes('--check')) and on checkMode uses summary.safeUpdates to exit 1 or 0 accordingly.
+• Help text includes “--check                 Check mode: exit code 1 if safe updates available, 0 if none, 2 on error”.
+• printOutdated returns a summary when returnSummary=true; code in main handles checkMode and exit codes 0,1,2 correctly.
+• Tests in test/cli.check-mode.test.js cover: exit code 0 (no updates), exit code 1 (safe updates) in table/JSON/XML, exit code 2 on invalid format—all passing.
+• test/docs/ci-integration.test.js verifies README.md and docs/api.md CI/CD sections with --check example, exit code semantics and “if: failure()”.
+• npm test (94 tests) and vitest coverage show all tests passing, including JSON/XML support and documentation checks.</evidence>
+  <notes>The implementation fully satisfies all acceptance criteria for check mode: flag support, correct exit codes (0,1,2), clear output listing updates, JSON/XML support, and updated documentation with CI/CD examples. All related tests are present and passing.</notes>
 </traceability>
