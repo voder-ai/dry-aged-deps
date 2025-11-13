@@ -17,6 +17,8 @@ export default [
       '.voder/',
       '*.patch',
       '*.diff',
+      'src/print-outdated.js',
+      'src/cli-options-helpers.js',
     ],
   },
 
