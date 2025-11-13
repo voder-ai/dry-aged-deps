@@ -496,47 +496,6 @@ async function main() {
     }
   }
 
-  // Shortcut for JSON check mode: skip npm outdated and directly output summary
-  if (format === 'json' && checkMode) {
-    const summary = await printOutdated({}, {
-      format,
-      fetchVersionTimes: undefined,
-      checkVulnerabilities: undefined,
-      prodMinAge,
-      devMinAge,
-      prodMinSeverity,
-      devMinSeverity,
-      updateMode,
-      skipConfirmation,
-      returnSummary: true,
-    });
-    if (summary.safeUpdates > 0) {
-      process.exit(1);
-    } else {
-      process.exit(0);
-    }
-  }
-
-  // Shortcut for JSON check mode: skip npm outdated and directly output summary
-  if (format === 'json' && checkMode) {
-    const summary = await printOutdated({}, {
-      format,
-      fetchVersionTimes: undefined,
-      checkVulnerabilities: undefined,
-      prodMinAge,
-      devMinAge,
-      prodMinSeverity,
-      devMinSeverity,
-      updateMode,
-      skipConfirmation,
-      returnSummary: true,
-    });
-    if (summary.safeUpdates > 0) {
-      process.exit(1);
-    }
-    process.exit(0);
-  }
-
   // Load data
   let data;
   let fetchVersionTimesOverride;
@@ -550,12 +509,16 @@ async function main() {
     data = mock.outdatedData;
     fetchVersionTimesOverride = mock.fetchVersionTimes;
     checkVulnerabilitiesOverride = mock.checkVulnerabilities;
+  } else if (format === 'json' && checkMode) {
+    // Skip running npm outdated in JSON check mode
+    data = {};
   } else {
     // Run npm outdated in JSON mode
     let outputStr;
     try {
       outputStr = execFileSync('npm', ['outdated', '--json'], {
         encoding: 'utf8',
+        stdio: ['ignore', 'pipe', 'ignore'],
       });
     } catch (err) {
       if (err.stdout) {
