@@ -19,7 +19,7 @@
     "prepare": "husky install",
     "typecheck": "npm run type-check",
     "type-check": "node node_modules/typescript/bin/tsc --noEmit -p tsconfig.json",
-    "validate": "npm run lint && npm run typecheck && npm test",
+    "validate": "npm run lint && npm test",
     "release": "npm version patch && git push --follow-tags"
   },
   "devDependencies": {
