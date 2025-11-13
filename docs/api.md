@@ -14,10 +14,10 @@ import { fetchVersionTimes } from 'dry-aged-deps';
 /**
  * Fetch version publish times for an npm package.
  * @param {string} packageName - The name of the npm package.
- * @returns {Record<string, string>} Mapping of version to ISO publish date string.
+ * @returns {Promise<Record<string, string>>} Promise resolving to a mapping of version to ISO publish date string.
  * @throws {Error} If the package name is invalid or npm view fails.
  */
-function fetchVersionTimes(packageName)
+async function fetchVersionTimes(packageName)
 ```
 
 ### Parameters
@@ -26,7 +26,7 @@ function fetchVersionTimes(packageName)
 
 ### Returns
 
-An object mapping each published version (e.g., `"1.2.3"`) to its publish date as an ISO string.
+A promise that resolves to an object mapping each published version (e.g., "1.2.3") to its publish date as an ISO string.
 
 ### Example
 

@@ -1,4 +1,3 @@
-// @ts-nocheck - TODO: Fix type annotations incrementally
 import { filterByAge } from './filter-by-age.js';
 import { filterBySecurity } from './filter-by-security.js';
 

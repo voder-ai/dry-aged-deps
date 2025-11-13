@@ -1,4 +1,3 @@
-// @ts-nocheck - TODO: Fix type annotations incrementally
 import { execFile } from 'child_process';
 
 /**

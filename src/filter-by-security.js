@@ -1,4 +1,3 @@
-// @ts-nocheck - TODO: Fix type annotations incrementally
 /**
  * Filter rows by security vulnerabilities.
  * @param {Array} rows - Array of [name, current, wanted, latest, age, depType].

@@ -1,4 +1,3 @@
-// @ts-nocheck - TODO: Fix type annotations incrementally
 import { fetchVersionTimes as defaultFetchVersionTimes } from './fetch-version-times.js';
 import { calculateAgeInDays as defaultCalculateAgeInDays } from './age-calculator.js';
 

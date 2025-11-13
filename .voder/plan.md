@@ -1,12 +1,12 @@
-## NOW  
-Edit CHANGELOG.md to remove the “Unreleased” section and add concrete entries for config-file support and the --check mode under the current version, documenting those features as shipped.
+## NOW
+Remove all `// @ts-nocheck` pragmas in `src/` and `bin/` and update JSDoc/type annotations so that `npm run type-check` (tsc --noEmit) passes without errors.
 
-## NEXT  
-- Update tsconfig.json per ADR 0006: enable strict type‐checking flags and include the bin directory in the “include” paths.  
-- Add or complete JSDoc annotations in `src/index.js` and any helpers missing `@throws`, parameter and return types.  
-- Revise docs/api.md and README.md examples to cover `--config-file` and `--check` usage, including exit-code semantics.
+## NEXT
+- Add a `npm run type-check` step to the Build & Test job in `.github/workflows/ci-publish.yml`.  
+- Update `docs/api.md` to document that `fetchVersionTimes` returns a `Promise` and detail its possible errors.  
+- Revise `README.md` examples to cover `--config-file` and `--check` usage along with exit-code semantics.
 
-## LATER  
-- Publish a JSON Schema file (e.g. `.dry-aged-deps.schema.json`) for the config file and reference it in `.dry-aged-deps.json`.  
-- Configure lint-staged in Husky to auto-run Prettier and ESLint --fix on staged files.  
-- Add snapshot tests for JSON and XML formatter output to guard against future regressions.
+## LATER
+- Implement in-memory caching in `src/fetch-version-times.js` to batch `npm view` calls.  
+- Configure lint-staged via Husky to auto-run Prettier and `eslint --fix` on staged files.  
+- Publish a JSON Schema (`.dry-aged-deps.schema.json`) for the CLI config file and reference it in the docs.
