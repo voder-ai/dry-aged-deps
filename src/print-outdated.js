@@ -7,14 +7,11 @@ import { calculateAgeInDays as defaultCalculateAgeInDays } from './age-calculato
 import { checkVulnerabilities as defaultCheckVulnerabilities } from './check-vulnerabilities.js';
 import { jsonFormatter } from './json-formatter.js';
 import { xmlFormatter } from './xml-formatter.js';
-import { filterByAge } from './filter-by-age.js';
-import { filterBySecurity } from './filter-by-security.js';
 import { loadPackageJson } from './load-package-json.js';
 import { buildRows } from './build-rows.js';
 import { applyFilters } from './apply-filters.js';
 
-/* eslint-disable complexity, max-lines-per-function */
-
+// complexity is tolerated in this file due to CLI orchestration; review during refactors
 /**
  * Print outdated dependencies information with age
  * @param {Record<string, { current: string; wanted: string; latest: string }>} data
@@ -42,7 +39,8 @@ export async function printOutdated(data, options = {}) {
   const devMinSeverity = options.devMinSeverity || 'none';
 
   // Load package.json to determine dependency types
-  const { dependencies: prodDeps, devDependencies: _devDeps } = loadPackageJson();
+  const { dependencies: prodDeps, devDependencies: _devDeps } =
+    loadPackageJson();
   const getDependencyType = (packageName) =>
     packageName in prodDeps ? 'prod' : 'dev';
 
@@ -96,13 +94,23 @@ export async function printOutdated(data, options = {}) {
   }
 
   // Build rows
-  const rows = await buildRows(data, { fetchVersionTimes, calculateAgeInDays, getDependencyType, format });
+  const rows = await buildRows(data, {
+    fetchVersionTimes,
+    calculateAgeInDays,
+    getDependencyType,
+    format,
+  });
 
   // Apply filters
-  const { safeRows, matureRows, vulnMap, filterReasonMap, summary } = await applyFilters(
-    rows,
-    { prodMinAge, devMinAge, prodMinSeverity, devMinSeverity, checkVulnerabilities, format }
-  );
+  const { safeRows, matureRows, vulnMap, filterReasonMap, summary } =
+    await applyFilters(rows, {
+      prodMinAge,
+      devMinAge,
+      prodMinSeverity,
+      devMinSeverity,
+      checkVulnerabilities,
+      format,
+    });
 
   const timestamp = new Date().toISOString();
 

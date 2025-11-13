@@ -31,7 +31,6 @@ export async function checkVulnerabilities(packageName, version) {
       },
     };
 
-    // eslint-disable-next-line security/detect-non-literal-fs-filename -- tempDir is created by mkdtemp
     await fs.writeFile(
       join(tempDir, 'package.json'),
       JSON.stringify(packageJson, null, 2)
