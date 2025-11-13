@@ -1,0 +1,385 @@
+{
+  "statistics": {
+    "detectionDate": "2025-11-13T11:45:19.663Z",
+    "formats": {
+      "javascript": {
+        "sources": {
+          "src/xml-formatter.js": {
+            "lines": 136,
+            "tokens": 1282,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "src/update-packages.js": {
+            "lines": 73,
+            "tokens": 668,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "src/print-outdated.js": {
+            "lines": 130,
+            "tokens": 1037,
+            "sources": 1,
+            "clones": 1,
+            "duplicatedLines": 9,
+            "duplicatedTokens": 92,
+            "percentage": 6.92,
+            "percentageTokens": 8.87,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "src/print-outdated-handlers.js": {
+            "lines": 113,
+            "tokens": 859,
+            "sources": 1,
+            "clones": 1,
+            "duplicatedLines": 9,
+            "duplicatedTokens": 92,
+            "percentage": 7.96,
+            "percentageTokens": 10.71,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "src/load-package-json.js": {
+            "lines": 23,
+            "tokens": 162,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "src/json-formatter.js": {
+            "lines": 60,
+            "tokens": 345,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "src/index.js": {
+            "lines": 12,
+            "tokens": 83,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "src/filter-by-security.js": {
+            "lines": 47,
+            "tokens": 372,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "src/filter-by-age.js": {
+            "lines": 11,
+            "tokens": 98,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "src/fetch-version-times.js": {
+            "lines": 58,
+            "tokens": 468,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "src/config-loader.js": {
+            "lines": 170,
+            "tokens": 1331,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "src/cli-options.js": {
+            "lines": 89,
+            "tokens": 581,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "src/cli-options-helpers.js": {
+            "lines": 289,
+            "tokens": 2311,
+            "sources": 1,
+            "clones": 6,
+            "duplicatedLines": 66,
+            "duplicatedTokens": 624,
+            "percentage": 22.84,
+            "percentageTokens": 27,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "src/check-vulnerabilities.js": {
+            "lines": 89,
+            "tokens": 650,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "src/build-rows.js": {
+            "lines": 45,
+            "tokens": 357,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "src/apply-filters.js": {
+            "lines": 35,
+            "tokens": 255,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "src/age-calculator.js": {
+            "lines": 11,
+            "tokens": 99,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          }
+        },
+        "total": {
+          "lines": 1391,
+          "tokens": 10958,
+          "sources": 17,
+          "clones": 4,
+          "duplicatedLines": 42,
+          "duplicatedTokens": 404,
+          "percentage": 3.02,
+          "percentageTokens": 3.69,
+          "newDuplicatedLines": 0,
+          "newClones": 0
+        }
+      }
+    },
+    "total": {
+      "lines": 1391,
+      "tokens": 10958,
+      "sources": 17,
+      "clones": 4,
+      "duplicatedLines": 42,
+      "duplicatedTokens": 404,
+      "percentage": 3.02,
+      "percentageTokens": 3.69,
+      "newDuplicatedLines": 0,
+      "newClones": 0
+    }
+  },
+  "duplicates": [
+    {
+      "format": "javascript",
+      "lines": 10,
+      "fragment": ",\n    filteredByAge: 0,\n    filteredBySecurity: 0,\n  };\n  const thresholds = {\n    prod: { minAge: prodMinAge, minSeverity: prodMinSeverity },\n    dev: { minAge: devMinAge, minSeverity: devMinSeverity },\n  };\n  const timestamp = new Date().toISOString();\n  console",
+      "tokens": 0,
+      "firstFile": {
+        "name": "src/print-outdated-handlers.js",
+        "start": 32,
+        "end": 41,
+        "startLoc": {
+          "line": 32,
+          "column": 14,
+          "position": 175
+        },
+        "endLoc": {
+          "line": 41,
+          "column": 8,
+          "position": 267
+        }
+      },
+      "secondFile": {
+        "name": "src/print-outdated.js",
+        "start": 66,
+        "end": 75,
+        "startLoc": {
+          "line": 66,
+          "column": 2,
+          "position": 578
+        },
+        "endLoc": {
+          "line": 75,
+          "column": 3,
+          "position": 670
+        }
+      }
+    },
+    {
+      "format": "javascript",
+      "lines": 12,
+      "fragment": "1];\n        if (!/^[0-9]+$/.test(v)) {\n          console.error(`Invalid min-age: ${v}. Must be an integer >= 1.`);\n          process.exit(2);\n        }\n        minAge = parseInt(v, 10);\n        if (minAge < 1) {\n          console.error(`Invalid min-age: ${v}. Must be an integer >= 1.`);\n          process.exit(2);\n        }\n      } else {\n        console",
+      "tokens": 0,
+      "firstFile": {
+        "name": "src/cli-options-helpers.js",
+        "start": 54,
+        "end": 65,
+        "startLoc": {
+          "line": 54,
+          "column": 2,
+          "position": 452
+        },
+        "endLoc": {
+          "line": 65,
+          "column": 8,
+          "position": 556
+        }
+      },
+      "secondFile": {
+        "name": "src/cli-options-helpers.js",
+        "start": 40,
+        "end": 51,
+        "startLoc": {
+          "line": 40,
+          "column": 2,
+          "position": 288
+        },
+        "endLoc": {
+          "line": 51,
+          "column": 6,
+          "position": 392
+        }
+      }
+    },
+    {
+      "format": "javascript",
+      "lines": 12,
+      "fragment": "1];\n        if (!/^[0-9]+$/.test(v)) {\n          console.error(`Invalid prod-min-age: ${v}. Must be an integer >= 1.`);\n          process.exit(2);\n        }\n        prodMinAge = parseInt(v, 10);\n        if (prodMinAge < 1) {\n          console.error(`Invalid prod-min-age: ${v}. Must be an integer >= 1.`);\n          process.exit(2);\n        }\n      } else {\n        console",
+      "tokens": 0,
+      "firstFile": {
+        "name": "src/cli-options-helpers.js",
+        "start": 139,
+        "end": 150,
+        "startLoc": {
+          "line": 139,
+          "column": 2,
+          "position": 1149
+        },
+        "endLoc": {
+          "line": 150,
+          "column": 8,
+          "position": 1253
+        }
+      },
+      "secondFile": {
+        "name": "src/cli-options-helpers.js",
+        "start": 125,
+        "end": 136,
+        "startLoc": {
+          "line": 125,
+          "column": 2,
+          "position": 985
+        },
+        "endLoc": {
+          "line": 136,
+          "column": 6,
+          "position": 1089
+        }
+      }
+    },
+    {
+      "format": "javascript",
+      "lines": 12,
+      "fragment": "1];\n        if (!/^[0-9]+$/.test(v)) {\n          console.error(`Invalid dev-min-age: ${v}. Must be an integer >= 1.`);\n          process.exit(2);\n        }\n        devMinAge = parseInt(v, 10);\n        if (devMinAge < 1) {\n          console.error(`Invalid dev-min-age: ${v}. Must be an integer >= 1.`);\n          process.exit(2);\n        }\n      } else {\n        console",
+      "tokens": 0,
+      "firstFile": {
+        "name": "src/cli-options-helpers.js",
+        "start": 183,
+        "end": 194,
+        "startLoc": {
+          "line": 183,
+          "column": 2,
+          "position": 1527
+        },
+        "endLoc": {
+          "line": 194,
+          "column": 8,
+          "position": 1631
+        }
+      },
+      "secondFile": {
+        "name": "src/cli-options-helpers.js",
+        "start": 169,
+        "end": 180,
+        "startLoc": {
+          "line": 169,
+          "column": 2,
+          "position": 1363
+        },
+        "endLoc": {
+          "line": 180,
+          "column": 6,
+          "position": 1467
+        }
+      }
+    }
+  ]
+}

@@ -1,22 +1,15 @@
 ## NOW  
-In eslint.config.js, change the complexity rule from  
-```js
-complexity: ['error', { max: 30 }]
-```  
-to  
-```js
-complexity: ['error', { max: 25 }]
-```  
+Install the missing Vitest coverage provider so tests can run with coverage:  
+```bash
+npm install --save-dev @vitest/coverage-v8
+```
 
 ## NEXT  
-- Run ESLint with the new threshold to identify remaining violations:  
-  ```bash
-  npx eslint src --rule 'complexity:["error",{"max":25}]'
-  ```  
-- Refactor the top offenders (for example, in src/print-outdated.js and src/cli-options-helpers.js) by extracting nested logic into smaller helper functions so each function’s cyclomatic complexity is ≤ 25.  
-- Consolidate duplicate validation code in src/cli-options-helpers.js into shared utilities to further reduce complexity.
+- Run the full test suite (`npm test`) and correct any test failures, including updating Vitest config if needed.  
+- Fix the CLI check-mode logic in `bin/dry-aged-deps.js`/`src/print-outdated.js` so that `--check` with no safe updates returns exit code 0 and matches test expectations.  
+- Run ESLint (`npm run lint`) and address any lint errors that appear.
 
 ## LATER  
-- Gradually lower the complexity threshold (e.g. to 20 then 15) and refactor additional modules as needed.  
-- Introduce stricter ESLint rules (e.g. `max-params`, `max-nested-callbacks`, tighter `max-lines-per-function`) and address any new violations.  
-- Remove remaining `// @ts-nocheck` pragmas and enforce full TypeScript/JSDoc type checking across all files.
+- Apply Prettier formatting across the codebase (`npm run format`) to enforce consistent style in CI.  
+- Refactor high-complexity functions and lower the ESLint `complexity` threshold (e.g. from 25 to 20), extracting helpers to reduce cyclomatic complexity.  
+- Consolidate duplicated validation logic in `src/cli-options-helpers.js` into shared utilities and continue tightening code quality rules.

@@ -10,7 +10,11 @@ import { xmlFormatter } from './xml-formatter.js';
 import { loadPackageJson } from './load-package-json.js';
 import { buildRows } from './build-rows.js';
 import { applyFilters } from './apply-filters.js';
-import { handleJsonOutput, handleXmlOutput, handleTableOutput } from './print-outdated-handlers.js';
+import {
+  handleJsonOutput,
+  handleXmlOutput,
+  handleTableOutput,
+} from './print-outdated-handlers.js';
 import { updatePackages } from './update-packages.js';
 
 // complexity is tolerated in this file due to CLI orchestration; review during refactors
