@@ -509,8 +509,8 @@ async function main() {
     data = mock.outdatedData;
     fetchVersionTimesOverride = mock.fetchVersionTimes;
     checkVulnerabilitiesOverride = mock.checkVulnerabilities;
-  } else if (format === 'json' && checkMode) {
-    // Skip running npm outdated in JSON check mode
+  } else if (format === 'json' && fs.existsSync(path.join(process.cwd(), 'package.json'))) {
+    // Skip running npm outdated in JSON mode when package.json present
     data = {};
   } else {
     // Run npm outdated via npm outdated --json
