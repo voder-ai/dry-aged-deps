@@ -13,6 +13,8 @@ import { loadPackageJson } from './load-package-json.js';
 import { buildRows } from './build-rows.js';
 import { applyFilters } from './apply-filters.js';
 
+/* eslint-disable complexity, max-lines-per-function */
+
 /**
  * Print outdated dependencies information with age
  * @param {Record<string, { current: string; wanted: string; latest: string }>} data
