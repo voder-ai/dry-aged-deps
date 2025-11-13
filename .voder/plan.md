@@ -1,13 +1,8 @@
 ## NOW  
-Lower the ESLint cyclomatic‐complexity threshold in `eslint.config.js` from 20 to 15 by updating the `complexity` rule.
+Create a new test file `test/functional-assessment.test.js` that declares a Vitest suite with `test.todo()` entries for each user‐story (001–013) acceptance criterion to track end-to-end CLI functionality coverage.
 
 ## NEXT  
-- Run `npm run lint` locally to list all functions now failing the new complexity limit.  
-- Incrementally refactor each reported function (for example in `print-outdated.js`, `cli-options-helpers.js`, `config-loader.js`, `xml-formatter.js`)—extract smaller helpers, simplify conditionals—to bring their complexity below 15.  
-- Rerun `npm run lint` to verify no complexity violations remain and commit the refactored code.
+Replace each `test.todo()` in `test/functional-assessment.test.js` with real `execa('node', ['bin/dry-aged-deps.js', …])` tests that verify the CLI’s behavior (exit codes and output) against each story’s acceptance criteria (maturity filtering, security filtering, JSON/XML formats, check/update modes, config-file support, error handling, etc.), then run `npm test` to ensure all scenarios pass.
 
 ## LATER  
-- Remove the temporary ESLint overrides (`complexity: 'off'` and `max-lines-per-function: 'off'`) from previously exempted files once they pass under the stricter rules.  
-- Consolidate and DRY‐up repetitive CLI flag‐parsing logic into shared helper functions to reduce duplication.  
-- Configure CI to enforce per-file branch coverage thresholds (e.g., ≥90%) and add targeted tests for uncovered branches.  
-- Enable `"checkJs": true` in `tsconfig.json` and complete missing JSDoc annotations on internal modules for full type‐checking coverage.
+Once all todos are implemented and passing, remove the todo entries and promote `test/functional-assessment.test.js` to a fully automated functional-coverage suite, integrating it into CI as a required check to prevent regressions.
