@@ -1,5 +1,5 @@
 // @ts-nocheck
-/* eslint security/detect-object-injection: off */
+/* eslint-disable security/detect-object-injection */
 /**
  * Compute vulnerability metrics from result object.
  * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
