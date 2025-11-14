@@ -26,5 +26,4 @@ describe('xmlFormatter error branch without details', () => {
     // Closing tag
     expect(xml.trim().endsWith('</outdated-packages>')).toBe(true);
   });
-}
-);
+});
