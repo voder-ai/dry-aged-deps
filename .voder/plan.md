@@ -1,13 +1,12 @@
 ## NOW
-Add comprehensive unit tests for `src/update-packages.js` that exercise every logical branch (successful update, backup failure, prompt abort, `--yes` auto-confirm, error handling) to raise its branch coverage above 90%.
+Extract the duplicated logic in `src/print-outdated.js` and `src/print-outdated-handlers.js` into a new shared module (e.g. `src/print-utils.js`), then refactor both files to import and use the shared functions.
 
 ## NEXT
-- Write targeted unit tests for `src/build-rows.js` to cover its error paths, invalid input branches, and additional scenarios.  
-- Add unit tests for `src/output-utils.js` to exercise all formatting branches and edge cases.  
-- Refactor the duplicated logic in `src/security-helpers.js` and `src/vulnerability-evaluator.js` into a shared utility module to eliminate remaining code clones.
+- Refactor `src/cli-options-helpers.js` by splitting it into smaller, single‐responsibility modules (e.g. parsing, validation, defaults) to reduce duplication and complexity.  
+- Update `docs/architecture.md` so it lists every current source file (including `apply-filters.js`, `config-loader.js`, `update-packages.js`, etc.), reflecting the actual module layout.  
+- Augment `docs/api.md` to document the `options.update` and `options.skipConfirmation` parameters of `printOutdated`, along with any other newly exposed functions.
 
 ## LATER
-- Integrate a jscpd duplication check (e.g. `npx jscpd --threshold 20 src`) into the CI workflow to enforce DRY automatically.  
-- Further refactor `src/cli-options-helpers.js` to reduce its duplication below 10%.  
-- Break up large, high-complexity functions in `src/xml-formatter.js` and `src/filter-by-security.js` into smaller units so ESLint complexity and max-lines rules can be re-enabled.  
-- Explore caching and parallelization of `npm view` and `npm audit` calls to improve performance on large dependency sets.
+- Draft and add ADRs under `docs/decisions/` for configuration‐file support (story 010) and the auto‐update (`--update`) feature (story 011).  
+- Provide a JSON Schema file (e.g. `dry-aged-deps.schema.json`) for `.dry-aged-deps.json` and link it in the documentation for editor validation.  
+- Integrate a `jscpd --threshold 20 src` step into the CI workflow to enforce DRY principles automatically.

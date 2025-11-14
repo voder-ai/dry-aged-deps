@@ -4,6 +4,7 @@
 import { jsonFormatter } from './json-formatter.js';
 import { xmlFormatter } from './xml-formatter.js';
 import { prepareJsonItems } from './output-utils.js';
+import { getTimestamp } from './print-utils.js';
 
 /**
  * Handle JSON output for printOutdated function.
@@ -15,7 +16,7 @@ import { prepareJsonItems } from './output-utils.js';
  * @returns {Object} summary
  */
 export function handleJsonOutput(rows, summary, thresholds, vulnMap, filterReasonMap) {
-  const timestamp = new Date().toISOString();
+  const timestamp = getTimestamp();
   const items = prepareJsonItems(rows, thresholds, vulnMap, filterReasonMap);
   console.log(jsonFormatter({ rows: items, summary, thresholds, timestamp }));
   return summary;
@@ -31,7 +32,7 @@ export function handleJsonOutput(rows, summary, thresholds, vulnMap, filterReaso
  * @returns {Object} summary
  */
 export function handleXmlOutput(rows, summary, thresholds, vulnMap, filterReasonMap) {
-  const timestamp = new Date().toISOString();
+  const timestamp = getTimestamp();
   const items = rows.map(([name, current, wanted, latest, age, depType]) => {
     const minAge = depType === 'prod' ? thresholds.prod.minAge : thresholds.dev.minAge;
     const filteredByAge = typeof age !== 'number' || age < minAge;
