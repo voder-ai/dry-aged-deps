@@ -16,18 +16,17 @@ describe('filterBySecurity fallback fetchVersionTimes error handling', () => {
   it('logs warning and uses original logic for table format', async () => {
     const rows = [['pkgX', '1.0.0', '1.2.0', '1.2.0', 5, 'prod']];
     // fetchVersionTimes throws error
-    const stubFetch = async () => { throw new Error('fetch-time error'); };
+    const stubFetch = async () => {
+      throw new Error('fetch-time error');
+    };
     // checkVuln returns safe
     const stubCheck = async (name, version) => 0;
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
-    const { safeRows, filterReasonMap, vulnMap } = await filterBySecurity(
-      rows,
-      stubCheck,
-      thresholds,
-      'table',
-      { fetchVersionTimes: stubFetch, calculateAgeInDays: stubCalc }
-    );
+    const { safeRows, filterReasonMap, vulnMap } = await filterBySecurity(rows, stubCheck, thresholds, 'table', {
+      fetchVersionTimes: stubFetch,
+      calculateAgeInDays: stubCalc,
+    });
 
     // Should log warning once
     expect(errorSpy).toHaveBeenCalledWith(
@@ -45,29 +44,25 @@ describe('filterBySecurity fallback fetchVersionTimes error handling', () => {
 
   it('does not log warning when fetchVersionTimes throws and format is json or xml', async () => {
     const rows = [['pkgY', '2.0.0', '2.2.0', '2.2.0', 9, 'dev']];
-    const stubFetch = async () => { throw new Error('fail'); };
+    const stubFetch = async () => {
+      throw new Error('fail');
+    };
     const stubCheck = async () => 0;
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
     // JSON format
-    const resultJson = await filterBySecurity(
-      rows,
-      stubCheck,
-      thresholds,
-      'json',
-      { fetchVersionTimes: stubFetch, calculateAgeInDays: stubCalc }
-    );
+    const resultJson = await filterBySecurity(rows, stubCheck, thresholds, 'json', {
+      fetchVersionTimes: stubFetch,
+      calculateAgeInDays: stubCalc,
+    });
     expect(errorSpy).not.toHaveBeenCalled();
     expect(resultJson.safeRows).toEqual(rows);
 
     // XML format
-    const resultXml = await filterBySecurity(
-      rows,
-      stubCheck,
-      thresholds,
-      'xml',
-      { fetchVersionTimes: stubFetch, calculateAgeInDays: stubCalc }
-    );
+    const resultXml = await filterBySecurity(rows, stubCheck, thresholds, 'xml', {
+      fetchVersionTimes: stubFetch,
+      calculateAgeInDays: stubCalc,
+    });
     expect(errorSpy).not.toHaveBeenCalled();
     expect(resultXml.safeRows).toEqual(rows);
 

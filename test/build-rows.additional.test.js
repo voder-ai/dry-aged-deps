@@ -8,7 +8,9 @@ import { buildRows } from '../src/build-rows.js';
 describe('buildRows error logging', () => {
   it('logs warning when fetchVersionTimes throws and format is table', async () => {
     const data = { pkg1: { current: '1.0.0', wanted: '1.1.0', latest: '1.1.0' } };
-    const stubFetch = async () => { throw new Error('fetch fail'); };
+    const stubFetch = async () => {
+      throw new Error('fetch fail');
+    };
     const stubCalc = vi.fn(() => {});
     const stubGetDep = () => 'prod';
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -30,7 +32,9 @@ describe('buildRows error logging', () => {
 
   it('does not log warning when format is json or xml', async () => {
     const data = { pkg1: { current: '1.0.0', wanted: '1.1.0', latest: '1.1.0' } };
-    const stubFetch = async () => { throw new Error('fetch error'); };
+    const stubFetch = async () => {
+      throw new Error('fetch error');
+    };
     const stubCalc = vi.fn(() => 42);
     const stubGetDep = () => 'dev';
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -64,7 +68,9 @@ describe('buildRows missing latestTime handling', () => {
   it('leaves age as "N/A" when versionTimes has no matching latest version', async () => {
     const data = { pkg2: { current: '2.0.0', wanted: '2.1.0', latest: '2.1.0' } };
     const stubFetch = async () => ({ '2.0.5': '2024-01-01T00:00:00.000Z' });
-    const stubCalc = vi.fn(() => { throw new Error('should not be called'); });
+    const stubCalc = vi.fn(() => {
+      throw new Error('should not be called');
+    });
     const stubGetDep = () => 'prod';
 
     const rows = await buildRows(data, {
