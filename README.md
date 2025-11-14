@@ -170,11 +170,12 @@ For programmatic API access and detailed architectural overview, see:
 1. Clone the repository
 2. Install dependencies: `npm ci --prefer-frozen-lockfile`
 3. Install Git hooks: `npm run prepare`
-4. Run tests: `npm test`
-5. Run linter: `npm run lint`
-6. Run type-check: `npm run typecheck`
-7. Validate code and tests: `npm run validate`
-8. Format code: `npm run format`
+4. The pre-push hook now enforces commitlint, lockfile drift check, lint, type-check, formatting checks, unit tests, CLI tests, duplicate code detection, and vulnerability scan before allowing a push.
+5. Run tests: `npm test`
+6. Run linter: `npm run lint`
+7. Run type-check: `npm run typecheck`
+8. Validate code and tests: `npm run validate`
+9. Format code: `npm run format`
 
 ### Development Tooling (Optional)
 

@@ -1,12 +1,12 @@
 ## NOW
-Extract the `evaluateVersionVulnerabilities` function from `src/filter-by-security.js` into a new module at `src/vulnerability-evaluator.js`, then update `src/filter-by-security.js` to import and use it.
+Remove the `exit 0` line from `.husky/pre-push` so that the hook will actually execute its quality-check commands.
 
 ## NEXT
-- Extract the “smart search” loop that finds the newest safe version into its own module (e.g. `src/security-smart-search.js`) and wire it into `src/filter-by-security.js`.  
-- Consolidate any duplicated logic (e.g. between `evaluateVersionVulnerabilities` and `processObjectResult`) into a shared helper module (e.g. `src/security-helpers.js`).  
-- In `eslint.config.js`, lower the `max-lines-per-function` rule from 150 to 100 and run `eslint` to identify other oversized functions to refactor.  
+- Update `.husky/pre-push` to include the same sequence of commands used by CI (lint, type-check, tests, format-check, duplicate-code detection, audit, etc.).
+- Commit the revised hook (`.husky/pre-push`) and verify locally (e.g. run `npm run validate`) that a failing check blocks the push.
+- Document in README.md that the pre-push hook now enforces the full suite of quality gates.
 
 ## LATER
-- Gradually tighten `max-lines-per-function` further (e.g. down to 50) and refactor remaining long functions.  
-- Rerun jscpd after each refactor and eliminate any newly detected clones.  
-- Once code‐quality metrics meet ≥ 90%, revisit functionality assessment and proceed with remaining feature stories.
+- Integrate a shared script (e.g. `scripts/validate.sh`) for both CI and Husky to avoid drift.
+- Add a CI job or GitHub Action that confirms Husky hooks are installed and runnable.
+- Once local hooks are enforced, resume code-quality refactoring: extract security logic modules, tighten ESLint rules (max-lines-per-function), and eliminate duplications per jscpd.
