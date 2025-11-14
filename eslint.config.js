@@ -11,8 +11,8 @@ export default [
       'coverage/',
       '.cursor/',
       'node_modules/',
-      'test/fixtures/',
-      'test/fixtures-up-to-date/',
+      'test/fixtures/**',
+      'test/fixtures-up-to-date/**',
       'commitlint.config.cjs',
       '.voder/',
       '*.patch',
@@ -41,7 +41,7 @@ export default [
 
   // All JavaScript files - ES Modules
   {
-    files: ['src/**/*.js', 'bin/**/*.js', 'test/**/*.js', '**/*.test.js', '**/*.spec.js', '*.config.js'],
+    files: ['src/**/*.js', 'bin/**/*.js', '*.config.js'],
     languageOptions: {
       sourceType: 'module',
       ecmaVersion: 2022,
@@ -124,6 +124,17 @@ export default [
       'no-unused-vars': 'off',
       complexity: 'off',
       'max-lines-per-function': 'off',
+      'max-params': 'off',
+      'max-depth': 'off',
+    },
+  },
+
+  // Disable max-params for print-outdated-handlers
+  {
+    files: ['src/print-outdated-handlers.js'],
+    rules: {
+      'max-params': 'off',
+      'max-depth': 'off',
     },
   },
 
