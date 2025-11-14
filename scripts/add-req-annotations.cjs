@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 // Script to add a placeholder @req JSDoc tag under the first @story header in each test file
-// Usage: node scripts/add-req-annotations.js
+// Usage: node scripts/add-req-annotations.cjs
 
 const fs = require('fs');
 const path = require('path');

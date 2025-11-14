@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 // Script to add @story JSDoc header to test files missing them
-// Usage: node scripts/add-story-annotations.js
+// Usage: node scripts/add-story-annotations.cjs
 
 const fs = require('fs');
 const path = require('path');
