@@ -176,6 +176,20 @@ const outdated = {
 await printOutdated(outdated, { format: 'json', prodMinAge: 7 });
 ```
 
+### Example: Update Mode
+
+```js
+import { printOutdated } from 'dry-aged-deps';
+
+const outdated = {
+  express: { current: '4.16.0', wanted: '4.17.1', latest: '4.17.1' },
+};
+await printOutdated(outdated, {
+  updateMode: true,
+  skipConfirmation: true,
+});
+```
+
 ## jsonFormatter({ rows, summary, thresholds, timestamp })
 
 Format outdated data into a JSON string.
@@ -306,6 +320,13 @@ Supported schema:
   },
   "format": "table" | "json" | "xml"
 }
+```
+
+### Example
+
+```bash
+# Use a custom configuration file
+dry-aged-deps --config-file=custom-config.json
 ```
 
 Merge precedence: CLI flags override config file values, which override built-in defaults.
