@@ -11,6 +11,9 @@ import { join } from 'path';
  * @param {string} packageName - The name of the npm package
  * @param {string} version - The version to check
  * @returns {Promise<{ count: number, vulnerabilities: { info: number, low: number, moderate: number, high: number, critical: number }, details: Array<Object> }>}
+ * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
+ * @req REQ-AUDIT-CHECK - Use `npm audit` or registry API to check for vulnerabilities
+ * @req REQ-TRANSITIVE-DEPS - Check the entire dependency tree (direct and transitive dependencies) for vulnerabilities
  *   Detailed vulnerability report including:
  *     - count: total number of vulnerabilities
  *     - vulnerabilities: breakdown by severity levels
