@@ -9,7 +9,7 @@ import { buildRows } from '../src/build-rows.js';
 describe('buildRows table format success path', () => {
   it('calculates age when fetchVersionTimes returns latest timestamp and default format is table', async () => {
     const data = {
-      pkgA: { current: '1.0.0', wanted: '1.1.0', latest: '1.1.0' }
+      pkgA: { current: '1.0.0', wanted: '1.1.0', latest: '1.1.0' },
     };
     const stubFetchVersionTimes = vi.fn(async (name) => ({ '1.1.0': '2025-01-01T12:00:00.000Z' }));
     const stubCalculateAgeInDays = vi.fn(() => 123);
@@ -18,7 +18,7 @@ describe('buildRows table format success path', () => {
     const rows = await buildRows(data, {
       fetchVersionTimes: stubFetchVersionTimes,
       calculateAgeInDays: stubCalculateAgeInDays,
-      getDependencyType: stubGetDependencyType
+      getDependencyType: stubGetDependencyType,
       // no format specified, default is 'table'
     });
 

@@ -27,7 +27,10 @@ describe('prepareJsonItems mapping logic', () => {
 
   it('returns filtered by security when vulnerabilities exist and age >= minAge', () => {
     const rows = [['pkg2', '1.0.0', '1.2.0', '1.2.0', 10, 'dev']];
-    const mockDetails = [ { severity: 'high', info: {} }, { severity: 'low', info: {} } ];
+    const mockDetails = [
+      { severity: 'high', info: {} },
+      { severity: 'low', info: {} },
+    ];
     const vulnInfo = { count: 2, maxSeverity: 'high', details: mockDetails };
     const vulnMap = new Map([['pkg2', vulnInfo]]);
     const filterReasonMap = new Map();
