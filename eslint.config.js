@@ -17,6 +17,9 @@ export default [
       '.voder/',
       '*.patch',
       '*.diff',
+      '*.md',
+      'docs/**',
+      'prompts/**',
     ],
   },
 
