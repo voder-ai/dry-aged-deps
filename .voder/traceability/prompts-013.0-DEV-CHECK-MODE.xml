@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<traceability>
+  <specification>prompts/013.0-DEV-CHECK-MODE.md</specification>
+  <status>PASSED</status>
+  <last_validated>2025-11-14T09:03:06.377Z</last_validated>
+  <last_modified>2025-11-11T08:04:07.352Z</last_modified>
+  <evidence>• prompts/013.0-DEV-CHECK-MODE.md defines acceptance criteria for --check mode
+• bin/dry-aged-deps.js: parseOptions recognizes --check, passes returnSummary flag; after printOutdated, checkMode true triggers process.exit(1) when summary.safeUpdates>0, 0 otherwise, 2 on error
+• src/cli-options.js: parseOptions includes returnSummary: args.includes('--check')
+• src/print-outdated.js: printOutdated returns summary when returnSummary=true for all formats (table, JSON, XML)
+• test/cli.check-mode.test.js: covers exit codes 0/1/2 across default, JSON, and XML modes; verifies clear output ("Outdated packages:", package names), JSON summary.safeUpdates, XML <package> tags, and error handling for invalid flags
+• README.md: documents --check flag in options table, usage examples including CLI and GitHub Actions snippets
+• CLI help (bin/dry-aged-deps.js) lists --check in help text</evidence>
+  <notes>All acceptance criteria for story 013.0-DEV-CHECK-MODE are implemented: the CLI accepts --check, correctly fails/passes with appropriate exit codes, supports table/JSON/XML outputs, prints clear update listings, handles errors with exit code 2, and is documented in README and help text. Existing tests cover the required behaviors.</notes>
+</traceability>

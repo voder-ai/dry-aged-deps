@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<traceability>
+  <specification>prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md</specification>
+  <status>PASSED</status>
+  <last_validated>2025-11-14T09:04:47.498Z</last_validated>
+  <last_modified>2025-11-09T23:03:02.030Z</last_modified>
+  <evidence>• Tests referencing the story (filter-by-age.test.js, cli-options-helpers.test.js, cli.flags.test.js, cli.config-file.test.js, functional-assessment.test.js) all pass under `vitest run` (165 tests, 0 failures).
+• CLI help text in bin/dry-aged-deps.js includes “--min-age=<days>       Minimum age in days (1-365) for including versions (default: 7)”.
+• parseOptions and parseMinAgeFlag in src/cli-options.js and src/cli-options-helpers.js implement the --min-age flag with validation (1–365).
+• loadConfigFile in src/config-loader.js reads minAge from .dry-aged-deps.json; tests cover valid, invalid, missing, unknown keys, custom config-file name.
+• Defaults to 7 days when no flag/config provided; CLI flag overrides config; both prod and dev thresholds supported and shown in JSON output’s summary.thresholds.</evidence>
+  <notes>All acceptance criteria for story 005.0 (CLI flag, config file support, override precedence, default behavior, validation, help documentation, output messages including thresholds) are fully implemented and covered by passing tests.</notes>
+</traceability>

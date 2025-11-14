@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<traceability>
+  <specification>prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md</specification>
+  <status>PASSED</status>
+  <last_validated>2025-11-14T09:07:16.084Z</last_validated>
+  <last_modified>2025-11-09T23:03:30.864Z</last_modified>
+  <evidence>- Prompts file exists at prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
+- CLI flag support: parseSeverityFlag in src/cli-options-helpers.js; parseOptions in src/cli-options.js; help text in bin/dry-aged-deps.js includes “--severity=<level>” with valid values.
+- Config file support: src/config-loader.js reads top-level “severity” and prod/dev “minSeverity” keys; parseOptions applies config.
+- Severity levels defined in code: ['none','low','moderate','high','critical'] in both CLI helpers and filterBySecurity severityWeights.
+- Filtering logic implemented in src/filter-by-security.js; tests in test/filter-by-security-severity.test.js verify allowing below-threshold and blocking at/above threshold
+- CLI override precedence tested in test/cli.config-file.test.js (flags override config)
+- Default behavior (no config): defaultSeverity='none' (block all vulnerabilities) tested in test/cli.flags.test.js
+- Validation of invalid severity values: CLI parseStringFlag exits code 2; tested in test/cli.flags.test.js
+- Help documentation includes severity option; tested in test/cli-entrypoint.test.js (“--help flag prints usage”) and manual inspection of help text
+- Output of thresholds in JSON/XML: JSON summary.thresholds tested in test/json-formatter.test.js and printOutdated.json.test.js; XML thresholds tested in test/xml-formatter.thresholds.test.js</evidence>
+  <notes>All acceptance criteria for configurable security threshold have been implemented and covered by unit and CLI tests. The code supports CLI flag, config file, correct severity levels, filtering logic, default behavior, validation, help text, and output of applied thresholds.</notes>
+</traceability>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<traceability>
+  <specification>prompts/011.0-DEV-AUTO-UPDATE.md</specification>
+  <status>PASSED</status>
+  <last_validated>2025-11-14T09:03:59.900Z</last_validated>
+  <last_modified>2025-11-11T08:04:07.327Z</last_modified>
+  <evidence>Implementation code in src/update-packages.js and print-outdated.js supports --update and --yes flags, preview & confirmation, backup creation, error handling, JSON write with 2-space indent, and install prompt. CLI options (src/cli-options.js) parse updateMode and skipConfirmation. Multiple Vitest test files reference prompts/011.0-DEV-AUTO-UPDATE.md and exercise happy path, abort flow, backup error, and summary (e.g. test/update-packages.test.js, test/printOutdated.update*.test.js). All tests covering this feature pass.</evidence>
+  <notes>All acceptance criteria for Auto-Update (011.0) are satisfied: update flag, safe-only updates, preview & confirm, --yes skip, backup, install reminder, summary report, and graceful error handling are implemented and tested. Formatting is preserved as 2-space JSON and property order maintained.</notes>
+</traceability>

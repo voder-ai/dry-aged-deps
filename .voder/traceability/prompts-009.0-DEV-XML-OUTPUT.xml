@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<traceability>
+  <specification>prompts/009.0-DEV-XML-OUTPUT.md</specification>
+  <status>PASSED</status>
+  <last_validated>2025-11-14T09:03:57.991Z</last_validated>
+  <last_modified>2025-11-09T23:05:40.405Z</last_modified>
+  <evidence>1) CLI flag support: src/cli-options-helpers.js validFormats includes 'xml'; parseOptions({ format: 'xml' }) flows through printOutdated → handleXmlOutput.
+2) Help text: bin/dry-aged-deps.js --help output lists “--format=<format>      Output format: table (default), json, xml”.
+3) xmlFormatter: src/xml-formatter.js always emits '<?xml version="1.0" encoding="UTF-8"?>', wraps content in <outdated-packages>…</outdated-packages>, handles both data and error branches, escapes special characters.
+4) Tests: 58 test files, 165/165 tests passed under `npm test`. Key suites passing:
+   • test/cli.format-xml.test.js (2 tests) – valid XML root, packages section, no stderr noise.
+   • test/cli.format-xml.error.test.js – XML error block, exit code 2, closing tag.
+   • test/xml-formatter*.test.js – header, root, packages, summary, thresholds, edge cases, object‐style entries, escaping, error branch.
+   • test/cli.check-mode.test.js covers exit code 1 in XML mode for --check.
+5) Coverage: xml-formatter.js 100% statements, 90.56% branches.
+6) All acceptance criteria from prompts/009.0-DEV-XML-OUTPUT.md — CLI flag, well-formed XML, complete data, summary, exit codes, silent console, XML error formatting, basic schema consistency, help docs — are satisfied and verified by automated tests.</evidence>
+  <notes>The XML output story is fully implemented. The CLI accepts --format=xml, emits valid XML for both normal and error cases, includes all required sections (packages, summary, thresholds), suppresses extra logging, returns correct exit codes, and is covered by a comprehensive suite of passing unit and integration tests.</notes>
+</traceability>

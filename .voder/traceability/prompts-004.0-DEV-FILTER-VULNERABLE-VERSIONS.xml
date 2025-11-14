@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<traceability>
+  <specification>prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md</specification>
+  <status>PASSED</status>
+  <last_validated>2025-11-14T09:03:05.212Z</last_validated>
+  <last_modified>2025-11-09T23:02:37.596Z</last_modified>
+  <evidence>All Vitest tests referencing prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md passed (filter-by-security.test.js, filter-by-security.smart-search.test.js, filter-by-security-severity.test.js, and related suites). src/filter-by-security.js and src/check-vulnerabilities.js include @story JSDoc annotations and implement REQ-AUDIT-CHECK, REQ-TRANSITIVE-DEPS, REQ-SMART-SEARCH, REQ-SAFE-ONLY, and REQ-CLEAR-OUTPUT. CLI integration via apply-filters and print-outdated produces correct npm-outdated–style output and handles the no-safe-version case.</evidence>
+  <notes>The security-filtering story is fully implemented. Mature versions are audited (including transitive dependencies), checked newest-first, vulnerable entries are removed, fallback smart-search works, and the final output meets the acceptance criteria.</notes>
+</traceability>

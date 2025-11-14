@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<traceability>
+  <specification>prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md</specification>
+  <status>PASSED</status>
+  <last_validated>2025-11-14T09:03:06.364Z</last_validated>
+  <last_modified>2025-11-10T21:23:22.067Z</last_modified>
+  <evidence>1) The new config-loader module in src/config-loader.js correctly locates and parses `.dry-aged-deps.json` from the project root, validates its keys and values, and emits clear error messages (e.g. invalid JSON, unknown keys, out-of-range values). 2) The CLI option parser (src/cli-options.js) merges config values with built-in defaults and then applies CLI flags on top (precedence: CLI > config > defaults). 3) A suite of 8 dedicated Vitest tests in test/cli.config-file.test.js exercises all acceptance criteria around defaults, overrides, invalid JSON, unknown keys, range validation, custom config-file names, and missing custom files. 4) README.md has been updated to document the `--config-file` option, show an example `.dry-aged-deps.json`, and list all supported fields. 5) A full test run (`npm test`) passes with 165/165 tests green and coverage unchanged.</evidence>
+  <notes>All mandatory acceptance criteria are satisfied: the tool reads a project-root config file, supports the JSON schema for thresholds and format, applies CLI flag precedence, validates key/value structure with clear errors, works without a config file (backward compatible), and is documented. The optional JSON-schema file for editor autocomplete was not added (it was marked 'optional but recommended'), so this does not block acceptance.</notes>
+</traceability>

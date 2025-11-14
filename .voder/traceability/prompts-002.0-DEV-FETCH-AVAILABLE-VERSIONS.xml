@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<traceability>
+  <specification>prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md</specification>
+  <status>FAILED</status>
+  <last_validated>2025-11-14T09:04:28.725Z</last_validated>
+  <last_modified>2025-11-09T23:01:54.797Z</last_modified>
+  <evidence>The implementation for fetching version publish times always uses `npm view <package> time --json` and retrieves all versions (see src/fetch-version-times.js). In buildRows (src/build-rows.js) it calls fetchVersionTimes(name) unconditionally and only looks up the single latest version’s time, calculating one age per package. There is no code to restrict the fetch to versions newer than the current version (REQ-OPTIMIZATION) nor are there tests covering that behavior.</evidence>
+  <notes>Core functionality (fetchVersionTimes and calculateAgeInDays) and age display for the latest version are implemented and tested, but the “Smart Fetching” acceptance criterion—only fetching versions newer than the current version—is not implemented or tested. Therefore this story is incomplete.</notes>
+</traceability>
