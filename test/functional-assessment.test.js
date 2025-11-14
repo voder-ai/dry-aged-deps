@@ -25,7 +25,7 @@ describe('Functional assessment - CLI end-to-end', () => {
   // Story: prompts/001.0-DEV-RUN-NPM-OUTDATED.md
   test('001.0-DEV-RUN-NPM-OUTDATED: Runs npm outdated and displays results', async () => {
     const result = await runCli([], { env: { DRY_AGED_DEPS_MOCK: '1' } });
-    expect(result.exitCode).toBe(0);
+    expect(result.exitCode).toBe(1);
     expect(result.stdout).toContain('Outdated packages:');
     expect(result.stdout).toContain('Name	Current	Wanted	Latest	Age (days)	Type');
     expect(result.stdout).toContain('fakepkg');
@@ -34,7 +34,7 @@ describe('Functional assessment - CLI end-to-end', () => {
   // Story: prompts/002.0-DEV-FETCH-VERSION-AGES.md
   test('002.0-DEV-FETCH-VERSION-AGES: Fetches version publish dates and calculates ages', async () => {
     const result = await runCli([], { env: { DRY_AGED_DEPS_MOCK: '1' } });
-    expect(result.exitCode).toBe(0);
+    expect(result.exitCode).toBe(1);
     const lines = result.stdout.split(/\r?\n/);
     const row = lines.find((line) => line.startsWith('fakepkg	'));
     expect(row).toBeDefined();
@@ -59,7 +59,7 @@ describe('Functional assessment - CLI end-to-end', () => {
     const result = await runCli(['--format=xml'], {
       env: { DRY_AGED_DEPS_MOCK: '1' },
     });
-    expect(result.exitCode).toBe(0);
+    expect(result.exitCode).toBe(1);
     const out = result.stdout;
     expect(out.startsWith('<?xml')).toBe(true);
     expect(out).toContain('<outdated-packages');
@@ -80,7 +80,7 @@ describe('Functional assessment - CLI end-to-end', () => {
     const ok = await runCli(['--min-age=1'], {
       env: { DRY_AGED_DEPS_MOCK: '1' },
     });
-    expect(ok.exitCode).toBe(0);
+    expect(ok.exitCode).toBe(1);
     expect(ok.stdout).toContain('fakepkg');
   });
 
@@ -101,7 +101,7 @@ describe('Functional assessment - CLI end-to-end', () => {
       cwd: tmpDir,
       env: { DRY_AGED_DEPS_MOCK: '1' },
     });
-    expect(cfg.exitCode).toBe(0);
+    expect(cfg.exitCode).toBe(1);
     expect(cfg.stdout).toContain('Outdated packages');
   });
 
@@ -122,7 +122,7 @@ describe('Functional assessment - CLI end-to-end', () => {
     const ok = await runCli(['--prod-min-age=1', '--dev-min-age=1'], {
       env: { DRY_AGED_DEPS_MOCK: '1' },
     });
-    expect(ok.exitCode).toBe(0);
+    expect(ok.exitCode).toBe(1);
     expect(ok.stdout).toContain('fakepkg');
     expect(ok.stdout).toContain('	dev');
   });
@@ -132,7 +132,7 @@ describe('Functional assessment - CLI end-to-end', () => {
     const result = await runCli(['--format=json'], {
       env: { DRY_AGED_DEPS_MOCK: '1' },
     });
-    expect(result.exitCode).toBe(0);
+    expect(result.exitCode).toBe(1);
     let obj;
     expect(() => {
       obj = JSON.parse(result.stdout);
@@ -155,7 +155,7 @@ describe('Functional assessment - CLI end-to-end', () => {
     const result = await runCli(['--format=xml'], {
       env: { DRY_AGED_DEPS_MOCK: '1' },
     });
-    expect(result.exitCode).toBe(0);
+    expect(result.exitCode).toBe(1);
     const out = result.stdout;
     expect(out.startsWith('<?xml')).toBe(true);
     expect(out).toContain('<outdated-packages');
@@ -175,7 +175,7 @@ describe('Functional assessment - CLI end-to-end', () => {
       cwd: tmpDir,
       env: { DRY_AGED_DEPS_MOCK: '1' },
     });
-    expect(result.exitCode).toBe(0);
+    expect(result.exitCode).toBe(1);
     // Should output JSON format
     expect(() => JSON.parse(result.stdout)).not.toThrow();
     expect(result.stdout.trim().startsWith('{')).toBe(true);

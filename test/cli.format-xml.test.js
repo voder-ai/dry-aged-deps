@@ -14,8 +14,9 @@ describe('dry-aged-deps CLI XML output format', () => {
     const result = await execa('node', [cliPath, '--format=xml'], {
       cwd: fixturesDir,
       env: { ...process.env, DRY_AGED_DEPS_MOCK: '1' },
+      reject: false,
     });
-    expect(result.exitCode).toBe(0);
+    expect(result.exitCode).toBe(1);
     const xml = result.stdout;
     expect(xml.startsWith('<?xml')).toBe(true);
     expect(xml).toContain('<outdated-packages');
@@ -28,6 +29,7 @@ describe('dry-aged-deps CLI XML output format', () => {
     const result = await execa('node', [cliPath, '--format=xml'], {
       cwd: fixturesDir,
       env: { ...process.env, DRY_AGED_DEPS_MOCK: '1' },
+      reject: false,
     });
     expect(result.stderr).toBe('');
   });

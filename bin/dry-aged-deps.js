@@ -162,11 +162,14 @@ async function main() {
       devMinSeverity,
       updateMode,
       skipConfirmation,
-      returnSummary: checkMode,
+      returnSummary: true,
     });
     if (checkMode) {
       if (summary.safeUpdates > 0) process.exit(1);
       else process.exit(0);
+    }
+    if (updateMode) {
+      process.exit(0);
     }
     if (summary.safeUpdates > 0) process.exit(1);
     process.exit(0);

@@ -41,9 +41,10 @@ describe('dry-aged-deps CLI E2E with real fixture (mocked)', () => {
     const result = await execa('node', [cliPath], {
       cwd: fixturesDir,
       env: { ...process.env, DRY_AGED_DEPS_MOCK: '1' },
+      reject: false,
     });
 
-    expect(result.exitCode).toBe(0);
+    expect(result.exitCode).toBe(1);
     // Ensure header is present
     expect(result.stdout).toContain('Age (days)');
 
