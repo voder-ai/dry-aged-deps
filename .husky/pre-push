@@ -2,7 +2,7 @@
 . "$(dirname -- "${0}")/_/husky.sh"
 
 # Lint commit messages
-npx --no-install commitlint --from=HEAD~1 --to=HEAD
+npm run lint:commits
 
 # Lint code
 npm run lint
