@@ -1,9 +1,17 @@
 // Tests for: prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { filterBySecurity } from '../src/filter-by-security.js';
 
 describe('filterBySecurity', () => {
+  beforeEach(() => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it('filters out rows with vulnerabilities and produces correct vulnMap and filterReasonMap', async () => {
     const rows = [
       ['pkg1', '1.0.0', '1.1.0', '1.1.0', 10, 'prod'],

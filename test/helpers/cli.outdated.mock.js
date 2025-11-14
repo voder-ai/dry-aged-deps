@@ -1,3 +1,4 @@
+/* eslint-disable security/detect-object-injection */
 // test/helpers/cli.outdated.mock.js
 // Stub module for dry-aged-deps CLI outdated testing
 
