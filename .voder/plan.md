@@ -1,12 +1,13 @@
 ## NOW  
-Add a JSDoc `@story` and `@req` annotation to the `fetchVersionTimes` function in `src/fetch-version-times.js`, linking it to `prompts/002.0-DEV-FETCH-VERSION-AGES.md` and `REQ-NPM-VIEW`.
+Add a JSDoc `@story` header to every test file in `test/`, referencing its corresponding `prompts/*.md` user‐story file (e.g. add `/** @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md */` at the top of each test file).
 
 ## NEXT  
-- Add or update JSDoc traceability annotations (`@story` and `@req`) on all remaining public API functions in `src/` (e.g. `calculateAgeInDays`, `checkVulnerabilities`, `jsonFormatter`, `xmlFormatter`, `printOutdated`, etc.), pointing to their corresponding prompt files and requirement IDs.  
-- Enhance **docs/api.md**: document the `--config-file` flag and the `updateMode` and `skipConfirmation` options for `printOutdated`, including parameter descriptions and examples.  
-- Update **README.md** CLI reference section to list every supported flag (including `--config-file`) with a brief usage example.
+- In each test file, extend that header to include the primary `@req` ID for the requirement under test.  
+- Replace all placeholder JSDoc tags (`@story ???`, `@req UNKNOWN`) in helper modules (e.g. `src/cli-options-helpers.js`, `src/config-loader.js`, `src/output-utils.js`, `src/print-outdated-handlers.js`) with the correct `@story` and `@req` tags.  
+- Update **docs/api.md** to document the `--config-file`, `--update`, and `--yes`/`--skipConfirmation` options for `printOutdated`, including parameter descriptions and usage examples.  
+- Update **README.md**’s CLI reference to list every supported flag (including `--config-file`, `--update`, `--yes`, `--check`) with a brief example.
 
 ## LATER  
-- Audit each source file to insert branch‐level `@story`/`@req` comments in significant `if`/`catch`/loop blocks to meet full traceability requirements.  
-- Create or update a JSON schema file for `.dry-aged-deps.json` and reference it in **docs/api.md** for editor autocomplete.  
-- Add a CI validation step that scans all `src/` and `test/` files for missing `@story` annotations and fails the build if any are absent.
+- Audit all `src/` files to insert branch-level `@story`/`@req` annotations on key `if`/`catch`/loop blocks for full traceability.  
+- Author or update a JSON Schema for `.dry-aged-deps.json` in the repo and reference it in **docs/api.md** for editor validation.  
+- Add a CI validation step that scans `src/` and `test/` for missing `@story` tags and fails the build if any are absent.

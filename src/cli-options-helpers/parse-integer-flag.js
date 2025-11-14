@@ -2,8 +2,8 @@
 import { getFlagRawValue } from './get-flag-raw-value.js';
 /**
  * Generic helper to parse integer flags with min/max bounds.
- * @story ???
- * @req UNKNOWN - Generic integer flag parsing helper
+ * @story prompts/014.0-DEV-INVALID-OPTION-ERROR.md
+ * @req REQ-INVALID-VALUE-ERROR - Display error message for invalid option values with valid choices
  * @param {string[]} args - CLI arguments.
  * @param {string} flag - Flag name, e.g., 'min-age', 'prod-min-age'.
  * @param {number} defaultValue - Default numeric value.

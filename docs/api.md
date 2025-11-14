@@ -157,6 +157,9 @@ async function printOutdated(data, options)
   - `devMinSeverity` (string): Severity threshold for dev dependencies.
   - `updateMode` (boolean): If true, updates dependencies to recommended versions instead of printing.
   - `skipConfirmation` (boolean): If true, skips confirmation prompts during update operations.
+  - `configFile` (string): Path to JSON config file (default: '.dry-aged-deps.json').
+  - `updateMode` (boolean): If true, updates dependencies to recommended versions instead of printing.
+  - `skipConfirmation` (boolean): If true, skips confirmation prompts during update operations (alias for yes flag).
 
 ### Returns
 
@@ -187,6 +190,21 @@ const outdated = {
   express: { current: '4.16.0', wanted: '4.17.1', latest: '4.17.1' },
 };
 await printOutdated(outdated, {
+  updateMode: true,
+  skipConfirmation: true,
+});
+```
+
+### Example: Custom Config File and Update Mode
+
+```js
+import { printOutdated } from 'dry-aged-deps';
+
+const outdated = {
+  express: { current: '4.16.0', wanted: '4.17.1', latest: '4.17.1' },
+};
+await printOutdated(outdated, {
+  configFile: 'custom-config.json',
   updateMode: true,
   skipConfirmation: true,
 });
@@ -365,4 +383,3 @@ jobs:
       - name: Show available updates on failure
         if: failure()
         run: npx dry-aged-deps --format=json
-```

@@ -1,8 +1,8 @@
 // @ts-nocheck
 /**
  * Extract raw flag value from CLI arguments.
- * @story ???
- * @req UNKNOWN - Extract raw CLI flag values for parsing.
+ * @story prompts/014.0-DEV-INVALID-OPTION-ERROR.md
+ * @req REQ-MISSING-VALUE-ERROR - Display error message when option is provided without a value
  * @param {string[]} args - CLI arguments.
  * @param {string} flag - Flag name without leading hyphens.
  * @returns {string|undefined} The raw flag value, or undefined if not present.

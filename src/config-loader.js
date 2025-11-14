@@ -73,6 +73,13 @@ function validateAgainstList(value, validList, name) {
  * @param {string[]} validFormats - List of valid formats.
  * @returns {object} Parsed config or empty object if none.
  */
+
+/**
+ * Load and validate configuration from a config file.
+ * @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
+ * @req REQ-CONFIG-LOCATION - Read .dry-aged-deps.json from project root
+ * @req REQ-VALIDATION - Validate config file structure and values
+ */
 export function loadConfigFile(configFileName, configFileArg, validSeverities, validFormats) {
   const configFilePath = path.resolve(process.cwd(), configFileName);
   let config = {};
