@@ -16,8 +16,8 @@
     "test": "vitest run --coverage",
     "test:watch": "vitest --coverage",
     "test:cli": "vitest run",
-    "check:lockfile": "HUSKY=0 npm ci --ignore-scripts --legacy-peer-deps && git diff --exit-code",
-    "check:duplication": "npx jscpd --threshold 20 src",
+    "check:lockfile": "npm install --package-lock-only --legacy-peer-deps && git diff --exit-code",
+    "check:duplication": "jscpd --threshold 20 src",
     "audit:ci": "npm audit --audit-level=moderate",
     "lint": "node node_modules/eslint/bin/eslint.js --config eslint.config.js --format stylish . --ext .js",
     "lint:commits": "commitlint --from=HEAD~1 --to=HEAD",
@@ -25,6 +25,7 @@
     "typecheck": "npm run type-check",
     "type-check": "node node_modules/typescript/bin/tsc --noEmit -p tsconfig.json",
     "validate": "npm run lint && npm test",
+    "prepush": "npm run lint:commits && npm run lint && npm run type-check && npm run format:check && npm test && npm run check:lockfile && npm run check:duplication && npm run test:cli && npm run test:cli -- test/cli.e2e.real-fixture.test.js && npm run audit:ci",
     "release": "npm version patch && git push --follow-tags"
   },
   "devDependencies": {
