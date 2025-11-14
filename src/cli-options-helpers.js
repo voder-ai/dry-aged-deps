@@ -70,52 +70,62 @@ function parseIntegerFlag(args, flag, defaultValue, min = 1, max = Infinity) {
 }
 
 /**
+ * Factory for string flag parsers.
+ *
+ * @param {string} flag - Flag name without leading hyphens.
+ * @returns {(args: string[], defaultValue: string, validValues?: string[]) => string}
+ */
+function createStringFlagParser(flag) {
+  return (args, defaultValue, validValues) =>
+    parseStringFlag(args, flag, defaultValue, validValues);
+}
+
+/**
+ * Factory for integer flag parsers.
+ *
+ * @param {string} flag - Flag name without leading hyphens.
+ * @param {number} [min=1] - Minimum allowed value.
+ * @param {number} [max=Infinity] - Maximum allowed value.
+ * @returns {(args: string[], defaultValue: number) => number}
+ */
+function createIntegerFlagParser(flag, min = 1, max = Infinity) {
+  return (args, defaultValue) =>
+    parseIntegerFlag(args, flag, defaultValue, min, max);
+}
+
+/**
  * Parse the --format flag.
  */
-export function parseFormatFlag(args, defaultFormat, validFormats) {
-  return parseStringFlag(args, 'format', defaultFormat, validFormats);
-}
+export const parseFormatFlag = createStringFlagParser('format');
+
+/**
+ * Parse the --severity flag.
+ */
+export const parseSeverityFlag = createStringFlagParser('severity');
+
+/**
+ * Parse the --prod-severity flag.
+ */
+export const parseProdSeverityFlag = createStringFlagParser('prod-severity');
+
+/**
+ * Parse the --dev-severity flag.
+ */
+export const parseDevSeverityFlag = createStringFlagParser('dev-severity');
 
 /**
  * Parse the --min-age flag.
  * @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
  * @req REQ-CLI-MIN-AGE-VALIDATION - CLI --min-age must be an integer between 1 and 365
  */
-export function parseMinAgeFlag(args, defaultMinAge) {
-  return parseIntegerFlag(args, 'min-age', defaultMinAge, 1, 365);
-}
-
-/**
- * Parse the --severity flag.
- */
-export function parseSeverityFlag(args, defaultSeverity, validSeverities) {
-  return parseStringFlag(args, 'severity', defaultSeverity, validSeverities);
-}
+export const parseMinAgeFlag = createIntegerFlagParser('min-age', 1, 365);
 
 /**
  * Parse the --prod-min-age flag.
  */
-export function parseProdMinAgeFlag(args, defaultProdMinAge) {
-  return parseIntegerFlag(args, 'prod-min-age', defaultProdMinAge, 1);
-}
+export const parseProdMinAgeFlag = createIntegerFlagParser('prod-min-age', 1);
 
 /**
  * Parse the --dev-min-age flag.
  */
-export function parseDevMinAgeFlag(args, defaultDevMinAge) {
-  return parseIntegerFlag(args, 'dev-min-age', defaultDevMinAge, 1);
-}
-
-/**
- * Parse the --prod-severity flag.
- */
-export function parseProdSeverityFlag(args, defaultProdMinSeverity, validSeverities) {
-  return parseStringFlag(args, 'prod-severity', defaultProdMinSeverity, validSeverities);
-}
-
-/**
- * Parse the --dev-severity flag.
- */
-export function parseDevSeverityFlag(args, defaultDevMinSeverity, validSeverities) {
-  return parseStringFlag(args, 'dev-severity', defaultDevMinSeverity, validSeverities);
-}
+export const parseDevMinAgeFlag = createIntegerFlagParser('dev-min-age', 1);
