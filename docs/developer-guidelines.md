@@ -93,11 +93,12 @@ We use [Conventional Commits](https://www.conventionalcommits.org/) format, enfo
 #### Commit Types
 
 - `feat:` - New feature that adds user-visible functionality (triggers minor version bump)
-- `fix:` - Bug fix (triggers patch version bump)
-- `chore:` - Changes that don't modify src or test files (e.g., dependency updates, build config)
+- `fix:` - Bug fix that corrects user-visible broken behavior (triggers patch version bump)
+  - **NOT** for formatting, linting, or type-checking fixes - use `style:` or `chore:` instead
+- `chore:` - Changes that don't modify src or test files (e.g., dependency updates, build config, linting rules)
 - `refactor:` - Code changes that neither fix bugs nor add features
 - `docs:` - Documentation only changes
-- `style:` - Code style changes (formatting, missing semicolons, etc.)
+- `style:` - Code style changes (formatting, missing semicolons, linting fixes, etc.)
 - `test:` - Adding or updating tests
 - `perf:` - Performance improvements
 - `ci:` - CI/CD configuration changes
