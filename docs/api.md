@@ -144,7 +144,17 @@ async function printOutdated(data, options)
 ### Parameters
 
 - `data` (object): Mapping of package names to outdated info (`current`, `wanted`, `latest`).
-- `options` (object, optional): Overrides and format settings.
+- `options` (object, optional): Configuration overrides and format settings:
+  - `fetchVersionTimes` (function): Custom fetchVersionTimes implementation.
+  - `calculateAgeInDays` (function): Custom calculateAgeInDays implementation.
+  - `checkVulnerabilities` (function): Custom checkVulnerabilities implementation.
+  - `format` (string): Output format: "table", "json", or "xml".
+  - `prodMinAge` (number): Minimum age in days for production dependencies.
+  - `devMinAge` (number): Minimum age in days for dev dependencies.
+  - `prodMinSeverity` (string): Severity threshold for production dependencies.
+  - `devMinSeverity` (string): Severity threshold for dev dependencies.
+  - `updateMode` (boolean): If true, updates dependencies to recommended versions instead of printing.
+  - `skipConfirmation` (boolean): If true, skips confirmation prompts during update operations.
 
 ### Returns
 
