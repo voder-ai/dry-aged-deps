@@ -199,12 +199,18 @@ describe('printOutdated unit tests - json output with data', () => {
     const data = {
       pkgY: { current: '1.0.0', wanted: '1.1.0', latest: '1.1.0' },
     };
+    const fetchStub = vi.fn().mockResolvedValue({ '1.1.0': '2020-01-01T00:00:00.000Z' });
+    const ageStub = vi.fn().mockReturnValue(5);
+    const vulnStub = vi.fn().mockResolvedValue(0);
     const summary = await printOutdated(data, {
       format: 'json',
       prodMinAge: 3,
       devMinAge: 3,
       prodMinSeverity: 'low',
       devMinSeverity: 'high',
+      fetchVersionTimes: fetchStub,
+      calculateAgeInDays: ageStub,
+      checkVulnerabilities: vulnStub,
     });
     expect(summary).toEqual({
       totalOutdated: 1,
@@ -214,8 +220,8 @@ describe('printOutdated unit tests - json output with data', () => {
     });
     expect(logSpy).toHaveBeenCalledTimes(1);
     const output = logSpy.mock.calls[0][0];
-    const parsed = JSON.parse(output);
-    expect(parsed.summary).toEqual({
+    const obj = JSON.parse(output);
+    expect(obj.summary).toEqual({
       totalOutdated: 1,
       safeUpdates: 1,
       filteredByAge: 0,
@@ -225,21 +231,19 @@ describe('printOutdated unit tests - json output with data', () => {
         dev: { minAge: 3, minSeverity: 'high' },
       },
     });
-    expect(Array.isArray(parsed.packages)).toBe(true);
-    // Verify full package entry fields
-    expect(parsed.packages).toEqual([
-      {
-        name: 'pkgY',
-        current: '1.0.0',
-        wanted: '1.1.0',
-        latest: '1.1.0',
-        recommended: '1.1.0',
-        age: null,
-        vulnerabilities: { count: 0, maxSeverity: 'none', details: [] },
-        filtered: false,
-        filterReason: '',
-        type: 'dev',
-      },
-    ]);
+    expect(Array.isArray(obj.packages)).toBe(true);
+    expect(obj.packages).toHaveLength(1);
+    expect(obj.packages[0]).toMatchObject({
+      name: 'pkgY',
+      current: '1.0.0',
+      wanted: '1.1.0',
+      latest: '1.1.0',
+      recommended: '1.1.0',
+      vulnerabilities: { count: 0, maxSeverity: 'none', details: [] },
+      filtered: false,
+      filterReason: '',
+      type: 'dev',
+    });
+    expect(typeof obj.packages[0].age).toBe('number');
   });
 });

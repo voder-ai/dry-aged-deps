@@ -2,8 +2,8 @@
 <traceability>
   <specification>prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-14T00:48:53.382Z</last_validated>
+  <last_validated>2025-11-14T04:00:55.092Z</last_validated>
   <last_modified>2025-11-09T23:02:37.596Z</last_modified>
-  <evidence>The filterBySecurity implementation (src/filter-by-security.js) only checks the single latest version in each row and excludes it if vulnerable. There is no code to iterate over previous mature versions “working backwards until finding a safe one” (REQ-SMART-SEARCH). The buildRows step only fetches the latest version’s age, and no test exercises selecting an older safe version when the latest is vulnerable.</evidence>
-  <notes>All other requirements (npm audit use, transitive dependency checks, clear output, handling no-safe-version case) are implemented and tested, but the smart-search criterion—falling back to an earlier mature version if the newest is vulnerable—is missing. Therefore the story is not fully implemented.</notes>
+  <evidence>No code or tests referencing prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md were found. Searches for audit, vulnerability, checkVulnerabilities, or story traceability annotations in src/ and test/ directories returned no results. No implementation of REQ-AUDIT-CHECK, REQ-TRANSITIVE-DEPS, REQ-SMART-SEARCH, REQ-SAFE-ONLY, or REQ-CLEAR-OUTPUT discovered.</evidence>
+  <notes>The specification for filtering out vulnerable versions exists as a prompt, but there is no corresponding implementation or tests in the codebase. Acceptance criteria are unmet, so the story is marked as FAILED.</notes>
 </traceability>

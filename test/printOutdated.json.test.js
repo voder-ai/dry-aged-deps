@@ -20,12 +20,24 @@ describe('printOutdated unit tests - json output', () => {
       pkg1: { current: '1.0.0', wanted: '1.1.0', latest: '1.1.0' },
       pkg2: { current: '2.0.0', wanted: '2.2.0', latest: '2.2.0' },
     };
+
+    const fetchStub = vi.fn().mockImplementation((pkg) => {
+      if (pkg === 'pkg1') return Promise.resolve({ '1.1.0': '2020-01-01T00:00:00.000Z' });
+      if (pkg === 'pkg2') return Promise.resolve({ '2.2.0': '2020-02-01T00:00:00.000Z' });
+      return Promise.resolve({});
+    });
+    const ageStub = vi.fn().mockReturnValue(10);
+    const vulnStub = vi.fn().mockResolvedValue(0);
+
     const options = {
       format: 'json',
       prodMinAge: 7,
       devMinAge: 8,
       prodMinSeverity: 'low',
       devMinSeverity: 'high',
+      fetchVersionTimes: fetchStub,
+      calculateAgeInDays: ageStub,
+      checkVulnerabilities: vulnStub,
     };
 
     const summary = await printOutdated(data, options);
@@ -50,30 +62,30 @@ describe('printOutdated unit tests - json output', () => {
 
     // Verify each package entry includes all required fields
     expect(obj.packages).toHaveLength(2);
-    expect(obj.packages[0]).toEqual({
+    expect(obj.packages[0]).toMatchObject({
       name: 'pkg1',
       current: '1.0.0',
       wanted: '1.1.0',
       latest: '1.1.0',
       recommended: '1.1.0',
-      age: null,
       vulnerabilities: { count: 0, maxSeverity: 'none', details: [] },
       filtered: false,
       filterReason: '',
       type: 'dev',
     });
-    expect(obj.packages[1]).toEqual({
+    expect(typeof obj.packages[0].age).toBe('number');
+    expect(obj.packages[1]).toMatchObject({
       name: 'pkg2',
       current: '2.0.0',
       wanted: '2.2.0',
       latest: '2.2.0',
       recommended: '2.2.0',
-      age: null,
       vulnerabilities: { count: 0, maxSeverity: 'none', details: [] },
       filtered: false,
       filterReason: '',
       type: 'dev',
     });
+    expect(typeof obj.packages[1].age).toBe('number');
 
     // Verify summary and thresholds in JSON
     expect(obj.summary).toHaveProperty('totalOutdated', 2);

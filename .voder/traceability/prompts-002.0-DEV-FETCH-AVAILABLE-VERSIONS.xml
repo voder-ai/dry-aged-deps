@@ -2,8 +2,11 @@
 <traceability>
   <specification>prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-14T00:48:43.734Z</last_validated>
+  <last_validated>2025-11-14T04:06:56.904Z</last_validated>
   <last_modified>2025-11-09T23:01:54.797Z</last_modified>
-  <evidence>All existing tests (unit and end-to-end) for prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md pass, confirming that fetchVersionTimes, calculateAgeInDays, and the display of a single age column work correctly. However, there is no implementation (and no tests) for “Smart Fetching” (REQ-OPTIMIZATION): the code always calls `npm view <pkg> time --json` and then only reads the timestamp for `info.latest`, without filtering out versions older than the current version. No logic prunes or limits the fetched versions to only those newer than the installed version.</evidence>
-  <notes>While core functionality, age calculation, and display are covered and tested, the optimization to fetch only versions newer than the current version (Acceptance Criterion #4) is missing. To fully satisfy the story, we need to implement and test REQ-OPTIMIZATION.</notes>
+  <evidence>The implementation does not honor the “Smart Fetching” acceptance criterion (REQ-OPTIMIZATION).  
+• fetch-version-times.js always runs `npm view <pkg> time --json` (fetching all versions) with no semver-based filter.  
+• build-rows.js blindly reads only the `latest` entry from the full time map—it never fetches or calculates ages for only those versions newer than the current.  
+• There are no tests around limiting the fetch to versions > current, nor any code path that applies such an optimization.</evidence>
+  <notes>Core fetch (REQ-NPM-VIEW), age calculation (REQ-AGE-CALC), and displaying the latest-version age are implemented and tested, but the required optimization to only fetch/check versions newer than the current version is missing.  To pass this story, add a version filter (semver compare > current) so that npm is only invoked for newer versions, and add corresponding tests.</notes>
 </traceability>

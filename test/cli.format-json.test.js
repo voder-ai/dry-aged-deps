@@ -33,4 +33,26 @@ describe('dry-aged-deps CLI JSON output format', () => {
     });
     expect(result.stderr).toBe('');
   });
+
+  it('filters packages younger than min-age', async () => {
+    const result = await execa('node', [cliPath, '--format=json', '--min-age=1000'], {
+      cwd: fixturesDir,
+      env: { ...process.env, DRY_AGED_DEPS_MOCK: '1', DRY_AGED_DEPS_MOCK_AGE_NOW: '1' },
+    });
+    expect(result.exitCode).toBe(0);
+    const obj = JSON.parse(result.stdout);
+    expect(obj.packages).toHaveLength(0);
+    expect(obj.summary.filteredByAge).toBeGreaterThan(0);
+  });
+
+  it('filters packages with vulnerabilities', async () => {
+    const result = await execa('node', [cliPath, '--format=json'], {
+      cwd: fixturesDir,
+      env: { ...process.env, DRY_AGED_DEPS_MOCK: '1', DRY_AGED_DEPS_MOCK_VULN: '1' },
+    });
+    expect(result.exitCode).toBe(0);
+    const obj = JSON.parse(result.stdout);
+    expect(obj.packages).toHaveLength(0);
+    expect(obj.summary.filteredBySecurity).toBeGreaterThan(0);
+  });
 });

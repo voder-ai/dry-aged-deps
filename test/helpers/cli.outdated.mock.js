@@ -5,16 +5,23 @@ export const outdatedData = {
   fakepkg: { current: '1.0.0', wanted: '1.1.0', latest: '2.0.0' },
 };
 
-// Stub fetchVersionTimes to return publish dates in the past
-export async function fetchVersionTimes(_packageName) {
+export async function fetchVersionTimes(packageName) {
+  const data = outdatedData[packageName];
+  if (!data) {
+    return {};
+  }
+  if (process.env.DRY_AGED_DEPS_MOCK_AGE_NOW === '1') {
+    return {
+      [data.latest]: new Date().toISOString(),
+    };
+  }
   return {
-    '1.0.0': '2020-01-01T00:00:00Z',
-    '1.1.0': '2020-06-01T00:00:00Z',
-    '2.0.0': '2021-01-01T00:00:00Z',
+    [data.current]: '2020-01-01T00:00:00Z',
+    [data.wanted]: '2020-06-01T00:00:00Z',
+    [data.latest]: '2021-01-01T00:00:00Z',
   };
 }
 
-// Stub checkVulnerabilities to always return 0 (no vulnerabilities)
 export async function checkVulnerabilities(_packageName, _version) {
-  return 0;
+  return process.env.DRY_AGED_DEPS_MOCK_VULN === '1' ? 1 : 0;
 }

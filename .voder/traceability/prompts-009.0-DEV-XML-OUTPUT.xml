@@ -2,13 +2,8 @@
 <traceability>
   <specification>prompts/009.0-DEV-XML-OUTPUT.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-14T00:50:07.421Z</last_validated>
+  <last_validated>2025-11-14T04:06:54.029Z</last_validated>
   <last_modified>2025-11-09T23:05:40.405Z</last_modified>
-  <evidence>- Presence of src/xml-formatter.js implementing XML declaration, packages, summary, thresholds, and error blocks per spec
-- src/cli-options.js includes ‘xml’ in validFormats and parseFormatFlag supports --format=xml
-- bin/dry-aged-deps.js help text lists xml as valid format
-- print-outdated and print-outdated-handlers route format='xml' through xmlFormatter and suppress other logs
-- Comprehensive Vitest suite passed 150/150 tests, including all xml-formatter.* and cli.format-xml.* tests
-- Tests validate valid XML output, complete data elements, summary, thresholds, error formatting, exit codes (0,1,2), and no console noise in XML mode</evidence>
-  <notes>All acceptance criteria for prompts/009.0-DEV-XML-OUTPUT.md have been met: CLI flag, well-formed XML, complete data, summary section, proper exit codes, suppressed console noise, error handling as XML, consistent schema, and help documentation updated.</notes>
+  <evidence>Ran `npm test` with Vitest: 163 tests passed (including xml-formatter.*, cli.format-xml.* and cli.check-mode XML tests). Help output (`node bin/dry-aged-deps.js --help`) lists `xml` in `--format` option. CLI handling in `bin/dry-aged-deps.js` invokes `xmlFormatter`, `parseOptions` validates `--format=xml`, and exit codes for normal, check mode, and error cases are covered by tests. Code in `src/xml-formatter.js` produces well-formed XML with declaration, packages, summary, thresholds, error blocks, and escapes special characters. Tests verify all acceptance points: CLI flag, valid XML, complete data, summary stats, exit codes, no console noise, error formatting, schema consistency, and help documentation.</evidence>
+  <notes>All acceptance criteria for 009.0-DEV-XML-OUTPUT are fully implemented and verified by automated tests.</notes>
 </traceability>

@@ -2,17 +2,19 @@
 <traceability>
   <specification>prompts/008.0-DEV-JSON-OUTPUT.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-14T00:49:01.149Z</last_validated>
+  <last_validated>2025-11-14T04:05:18.604Z</last_validated>
   <last_modified>2025-11-09T23:04:54.331Z</last_modified>
-  <evidence>The implementation of JSON output is exercised by multiple Vitest suites which all pass:
+  <evidence>Vitest suite ran 163 tests (59 files) including  CLI JSON output tests (cli.format-json.test.js, cli.format-json.error.test.js, cli.json.skip-outdated.test.js), jsonFormatter tests (json-formatter.test.js), printOutdated JSON branch tests (printOutdated.json.test.js) and CLI check‐mode tests for JSON exit codes; all passed. Help text, flag parsing, JSON validity, complete data, summary stats, exit codes (0/1/2), silent stderr in JSON mode, error‐as‐JSON behavior, default table mode, and --help documentation were verified.
 
-• test/cli.format-json.test.js  – verifies `--format=json` produces valid JSON with timestamp, packages array, summary object, and no stderr noise (exit code 0).
-• test/cli.format-json.error.test.js – verifies error from `npm outdated` in JSON mode produces JSON error object (with message, code, details, timestamp) and exit code 2, no stderr.
-• test/cli.json.skip-outdated.test.js – verifies early‐JSON branch skips npm outdated when package.json exists and outputs empty packages array, correct summary counts and default thresholds.
-• test/json-formatter.test.js – unit tests for jsonFormatter output schema, indentation, and threshold inclusion.
-• test/printOutdated.json.test.js – unit tests for printOutdated’s JSON branch, verifying console.log of JSON containing all required fields (name, current, wanted, latest, recommended, age, vulnerabilities, filtered, filterReason, dependencyType), correct summary and thresholds.
-• test/cli.check-mode.test.js (scoped JSON cases) – verifies correct exit codes (0/1) and summary.safeUpdates in JSON check mode, and invalid format handling exit code 2 with clear error message.
+npm test output snippet:
 
-Additionally, `src/cli-options.js` validates `--format=json` and rejects invalid formats, `bin/dry-aged-deps.js` handles JSON flag, error branches, and suppresses non-JSON logs, and help text includes the `--format` option.</evidence>
-  <notes>All acceptance criteria from prompts/008.0-DEV-JSON-OUTPUT.md are fully satisfied: JSON flag support, valid/complete output, summary stats, exit codes, error formatting, default table behavior unchanged, and help documentation.  </notes>
+  ✔  cli.format-json.test.js
+  ✔  cli.format-json.error.test.js
+  ✔  cli.json.skip-outdated.test.js
+  ✔  json-formatter.test.js
+  ✔  printOutdated.json.test.js
+  …
+  Tests 163 passed (163)
+  All acceptance criteria for prompts/008.0-DEV-JSON-OUTPUT.md are exercised by passing tests.</evidence>
+  <notes>The JSON output feature is fully implemented and covered by comprehensive unit and integration tests. All acceptance criteria (flag parsing, JSON schema, summary, exit codes, silent mode, error formatting, default behavior, and documentation) are validated and passing. The story is complete.</notes>
 </traceability>

@@ -2,14 +2,14 @@
 <traceability>
   <specification>prompts/001.0-DEV-RUN-NPM-OUTDATED.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-14T00:48:54.330Z</last_validated>
+  <last_validated>2025-11-14T04:04:15.232Z</last_validated>
   <last_modified>2025-11-09T23:01:40.301Z</last_modified>
-  <evidence>• The CLI entrypoint (bin/dry-aged-deps.js) invokes `npm outdated --json` via execFileSync and captures stdout/stderr.
-• JSON parsing of the `npm outdated` output is handled in both initial child_process block and in the catch for invalid JSON.
-• The `printOutdated` function (src/print-outdated.js) and its handlers (src/print-outdated-handlers.js) render table output with header “Outdated packages:” and columns Name, Current, Wanted, Latest, Age (days), Type.
-• No‐update case prints “All dependencies are up to date.” (tested in test/cli.upToDate.test.js).
-• Error scenarios are handled: invalid JSON from npm (exit code 2, stderr contains “Failed to parse npm outdated output”; tested in test/cli.error-cmd.test.js), JSON‐format error output and XML‐format error output (tested in test/cli.format-json.error.test.js and test/cli.format-xml.error.test.js).
-• End-to-end test for outdated fixtures passes (test/cli.outdated.test.js) and mocked outdated data is supported (test/cli.outdated.mock.test.js).
-• Full Vitest suite passes (150 tests, 96.2%+ coverage)</evidence>
-  <notes>All acceptance criteria from prompts/001.0-DEV-RUN-NPM-OUTDATED.md are satisfied: the CLI runs npm outdated, parses JSON output, displays results, and correctly handles both error cases and the no‐updates case. Unit and integration tests cover the core functionality. Continuous integration reports all tests passing.</notes>
+  <evidence>• Code in bin/dry-aged-deps.js executes `npm outdated --json` via child_process (execFileSync)
+• JSON.parse of the output is wrapped in try/catch in both command and parseError branches
+• printOutdated → handleTableOutput displays “Outdated packages:” header, columns, and rows
+• No‐outdated case prints “All dependencies are up to date.” (tested by test/cli.upToDate.test.js)
+• Error on invalid JSON is caught and exits with code 2 (tested by test/cli.error-cmd.test.js and cli.format-json.error.test.js)
+• Integration tests for real fixtures (test/cli.outdated.test.js) and mocks (test/cli.outdated.mock.test.js) all pass
+• Full Vitest suite (163 tests) passes with 93.5% statement coverage</evidence>
+  <notes>All acceptance criteria of prompts/001.0-DEV-RUN-NPM-OUTDATED.md are satisfied: running npm outdated, parsing JSON, displaying results, handling errors, and handling no‐update scenarios. CLI help text and documentation cover usage examples.</notes>
 </traceability>

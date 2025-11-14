@@ -2,11 +2,15 @@
 <traceability>
   <specification>prompts/013.0-DEV-CHECK-MODE.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-14T00:49:13.133Z</last_validated>
+  <last_validated>2025-11-14T04:03:42.019Z</last_validated>
   <last_modified>2025-11-11T08:04:07.352Z</last_modified>
-  <evidence>1. Test suite: `test/cli.check-mode.test.js` (6 tests) passes, exercising --check in default/table, JSON, XML modes, error conditions, and threshold edge case.  
-2. Full Vitest run (`npm test`) completed with 150/150 tests passing (96.21% coverage), including all check-mode tests.  
-3. Source: `src/cli-options.js` recognizes `--check`; `bin/dry-aged-deps.js` uses `returnSummary` to branch exit codes (0,1,2) per story.  
-4. Documentation: `README.md` contains `--check` flag description, CI/CD usage examples, and matches acceptance criteria.  </evidence>
-  <notes>All acceptance criteria for story 013.0-DEV-CHECK-MODE are satisfied: the CLI accepts `--check`, fails (exit 1) when safe updates exist, passes (exit 0) when up-to-date or filtered by thresholds, errors (exit 2) on invalid input or runtime errors; output is clear and supports table, JSON, and XML; README updated with examples.</notes>
+  <evidence>- src/cli-options.js detects `--check` and sets returnSummary=true
+- bin/dry-aged-deps.js exits with code 1 when summary.safeUpdates>0, 0 when no updates, and 2 on errors
+- print-outdated-handlers and printOutdated produce clear table output with “Outdated packages:” and list rows, and JSON/XML output include safeUpdates count
+- test/cli.check-mode.test.js (6 tests) covering exit codes 0/1/2 in table, JSON, XML, and threshold scenarios all pass
+- test/docs/ci-integration.test.js verifies README.md and docs/api.md include CI/CD integration example with `--check` and correct exit code semantics
+- `README.md` and `docs/api.md` contain `--check` flag usage and CI/CD workflow examples
+- `--help` output in bin/dry-aged-deps.js lists `--check` with correct description
+- `npm test` reports 163/163 tests passed, including all check‐mode and documentation tests</evidence>
+  <notes>All acceptance criteria for story 013.0-DEV-CHECK-MODE have been implemented and verified by unit, functional, and documentation tests. The CLI correctly handles the `--check` flag, exit codes, output formats, and help text.</notes>
 </traceability>

@@ -2,8 +2,15 @@
 <traceability>
   <specification>prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-14T00:47:46.006Z</last_validated>
+  <last_validated>2025-11-14T04:02:43.203Z</last_validated>
   <last_modified>2025-11-10T21:23:22.067Z</last_modified>
-  <evidence>All 7 tests in test/cli.config-file.test.js passed (config loading, default application, CLI override, invalid JSON, unknown key, minAge validation, custom/missing config-file). The implementation in src/config-loader.js and src/cli-options.js correctly locates and merges .dry-aged-deps.json from the project root, validates schema (unknown keys, ranges, lists), applies sensible defaults, honors CLI precedence, and emits clear error messages. README.md includes an example config section. No failures in npm test (150 tests passing).</evidence>
-  <notes>All acceptance criteria for prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md are satisfied. Configuration file support is fully implemented, optional, validated, and documented. JSON schema support was optional and may be added in a future enhancement.</notes>
+  <evidence>All 7 tests in test/cli.config-file.test.js passed under vitest, confirming:
+- Defaults applied from .dry-aged-deps.json
+- CLI flags override config values
+- Syntax errors in JSON exit with code 2 and clear message
+- Unknown keys exit with code 2 and ’Unknown config key’ error
+- Out-of-range values exit with code 2
+- Custom config-file flag is supported and missing files error correctly
+Additionally, README.md includes usage and schema examples, and existing tests for CLI options and defaults all pass. The implementation in src/config-loader.js and src/cli-options.js fully meets the specified acceptance criteria.</evidence>
+  <notes>Configuration file support is fully implemented per story 010.0: loading, merging, validation, error handling, CLI overrides, optionality, defaults, and documentation are all in place. JSON schema file remains optional per spec.</notes>
 </traceability>

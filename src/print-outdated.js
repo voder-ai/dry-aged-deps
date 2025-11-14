@@ -41,32 +41,6 @@ export async function printOutdated(data, options = {}) {
 
   const entries = Object.entries(data);
 
-  // Early JSON branch: programmatic API, raw data mapping without external fetch or check
-  if (format === 'json') {
-    const rows = entries.map(([name, info]) => [
-      name,
-      info.current,
-      info.wanted,
-      info.latest,
-      null,
-      getDependencyType(name),
-    ]);
-    const totalOutdated = rows.length;
-    const summary = {
-      totalOutdated,
-      safeUpdates: totalOutdated,
-      filteredByAge: 0,
-      filteredBySecurity: 0,
-    };
-    const thresholds = {
-      prod: { minAge: prodMinAge, minSeverity: prodMinSeverity },
-      dev: { minAge: devMinAge, minSeverity: devMinSeverity },
-    };
-    const vulnMap = new Map(entries.map(([name]) => [name, { count: 0, maxSeverity: 'none', details: [] }]));
-    const filterReasonMap = new Map();
-    return handleJsonOutput(rows, summary, thresholds, vulnMap, filterReasonMap);
-  }
-
   // No outdated dependencies
   if (entries.length === 0) {
     const summary = {
@@ -113,7 +87,7 @@ export async function printOutdated(data, options = {}) {
 
   if (format === 'json') {
     return handleJsonOutput(
-      rows,
+      safeRows,
       summary,
       {
         prod: { minAge: prodMinAge, minSeverity: prodMinSeverity },

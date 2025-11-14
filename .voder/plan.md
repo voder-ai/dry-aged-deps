@@ -1,17 +1,12 @@
 ## NOW  
-Add a new unit test for the legacy‐advisories branch of `checkVulnerabilities`, e.g. `test/check-vulnerabilities.advisories.test.js`, that mocks `npm audit` output with an `advisories` object and asserts `checkVulnerabilities` correctly parses `count`, `vulnerabilities`, and `details`.
+Remove the early JSON‐only branch in `src/print-outdated.js` (the top `if (format === 'json') { … return }` block) so that JSON output flows through the same `applyFilters` + `handleJsonOutput` pipeline and therefore honors maturity‐and‐security filtering.
 
 ## NEXT  
-- Write additional branch‐coverage tests for modules with low coverage:  
-  • `buildRows` (e.g. test JSON skip‐outdated and error paths)  
-  • `xmlFormatter` (hit all conditional branches around thresholds, no‐thresholds, and error formatting)  
-  • `filterBySecurity` (cover error paths and original single‐version logic without smart fallback)  
-  • `updatePackages` (cover confirmation prompt abort and successful apply branches)  
-- Run `npm test -- --coverage` and ensure **branch** coverage ≥ 80% on all affected modules.  
-- Commit tests (e.g. `test/check-vulnerabilities.advisories.test.js`, others) and push with message `test: add branch‐coverage tests for missing audit/advisories and edge cases`.
+- Update or add CLI tests (`test/cli.format-json.test.js`, `test/cli.json.skip-outdated.test.js`) to assert that JSON output excludes packages younger than the age threshold or with vulnerabilities.  
+- Update `README.md` and `docs/api.md` examples for `--format=json` to show filtered results.  
+- Run `npm test -- --coverage` and confirm branch coverage ≥ 80% on `print-outdated.js` (including the JSON path).
 
 ## LATER  
-- Refactor high‐complexity modules (`filter-by-security.js`, `xml-formatter.js`) into smaller helper functions to re-enable complexity and max-lines rules.  
-- Gradually ratchet down ESLint complexity and function-length thresholds, fixing violations as you go.  
-- Introduce caching or parallel execution in `fetchVersionTimes` to improve performance.  
-- Update documentation to note support for legacy `advisories` format in `checkVulnerabilities`.
+- Refactor `src/print-outdated.js` to simplify control flow and eliminate duplication between JSON, XML, and table handlers.  
+- Break down `filter-by-security.js` and `xml-formatter.js` into smaller helper functions to re-enable ESLint complexity/max-lines rules.  
+- Introduce caching or parallel execution in `src/check-vulnerabilities.js` for performance.

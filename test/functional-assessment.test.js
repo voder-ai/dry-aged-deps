@@ -146,8 +146,8 @@ describe('Functional assessment - CLI end-to-end', () => {
       current: '1.0.0',
       wanted: '1.1.0',
       latest: '2.0.0',
-      age: null,
     });
+    expect(typeof pkg.age).toBe('number');
   });
 
   // Story: prompts/009.0-DEV-XML-OUTPUT.md
