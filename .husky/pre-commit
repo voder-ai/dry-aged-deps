@@ -1,3 +1,4 @@
 #!/usr/bin/env sh
 # Husky pre-commit hook - currently empty, add checks here if needed
 echo "Pre-commit checks..."
+exit 0
