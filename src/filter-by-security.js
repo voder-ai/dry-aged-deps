@@ -30,7 +30,7 @@ export async function filterBySecurity(
   const filterReasonMap = new Map();
 
   for (const row of rows) {
-    const [name, current, wanted, latest, age, depType] = row;
+    const [name, current, wanted, latest, _age, depType] = row;
     const minSeverity = depType === 'prod' ? prodMinSeverity : devMinSeverity;
     const minWeight = severityWeights[minSeverity] || 0;
     const { fetchVersionTimes, calculateAgeInDays } = options;
