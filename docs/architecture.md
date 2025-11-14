@@ -8,13 +8,28 @@ This document provides an overview of the core architecture and module layout of
 bin/
   dry-aged-deps.js          # CLI entrypoint
 src/
-  fetch-version-times.js    # Fetch npm package version publish times
   age-calculator.js         # Calculate age in days since publish time
+  apply-filters.js          # Apply security and age filters to rows
+  build-rows.js             # Build dependency rows with version times and age
   check-vulnerabilities.js  # Check package vulnerabilities with npm audit
-  json-formatter.js         # JSON output formatter
-  xml-formatter.js          # XML output formatter
-  print-outdated.js         # Outdated dependencies printer logic
+  cli-options-helpers.js    # CLI flag parsing helpers
+  cli-options.js            # Parse CLI arguments and config file
+  config-loader.js          # Load and validate CLI config file
+  fetch-version-times.js    # Fetch npm package version publish times
+  filter-by-age.js          # Filter rows by age threshold
+  filter-by-security.js     # Filter rows by security threshold
   index.js                  # Programmatic API exports
+  json-formatter.js         # JSON output formatter
+  load-package-json.js      # Load dependencies from package.json
+  output-utils.js           # Utilities for output formatting
+  print-outdated-handlers.js# Output handlers for printOutdated (JSON, XML, table)
+  print-outdated.js         # Outdated dependencies printer logic
+  print-utils.js            # Utilities for threshold and timestamp for output
+  security-helpers.js       # Helper functions for security analysis
+  security-smart-search.js  # Smart search algorithm for security vulnerabilities
+  update-packages.js        # Update dependencies to safe versions
+  vulnerability-evaluator.js# Evaluate vulnerability report details
+  xml-formatter.js          # XML output formatter
 docs/
   api.md                    # Public API documentation
   architecture.md           # This architecture overview
