@@ -77,7 +77,7 @@ export async function checkVulnerabilities(packageName, version) {
       critical: 0,
     };
 
-    const total =
+    let total =
       (vulnerabilities.info || 0) +
       (vulnerabilities.low || 0) +
       (vulnerabilities.moderate || 0) +
@@ -90,6 +90,10 @@ export async function checkVulnerabilities(packageName, version) {
       details = Object.entries(auditResult.vulnerabilities).map(([moduleName, vuln]) => ({ moduleName, ...vuln }));
     } else if (auditResult.advisories && typeof auditResult.advisories === 'object') {
       details = Object.values(auditResult.advisories);
+    }
+
+    if (auditResult.advisories) {
+      total = details.length;
     }
 
     return {
