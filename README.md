@@ -92,6 +92,12 @@ dry-aged-deps --update --yes
 
 # Check for safe updates (exit code 1 if safe updates available, 0 if none, 2 on error (consistent across table, JSON, and XML formats))
 dry-aged-deps --check
+
+# Specify a custom configuration file
+dry-aged-deps --config-file=custom-config.json
+
+# Check using a specific configuration file
+dry-aged-deps --check --config-file=custom-config.json
 ```
 
 ```sh
