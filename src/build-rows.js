@@ -3,6 +3,8 @@ import { calculateAgeInDays as defaultCalculateAgeInDays } from './age-calculato
 
 /**
  * Build rows with age and dependency type.
+ * @story STORY-ID
+ * @req REQ-ID
  * @param {Record<string, { current: string; wanted: string; latest: string }>} data
  * @param {{
  *   fetchVersionTimes?: function,
