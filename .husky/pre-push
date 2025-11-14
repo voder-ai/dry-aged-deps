@@ -23,3 +23,5 @@ npx jscpd --threshold 20 src
 npm run test:cli
 npm run test:cli -- test/cli.e2e.real-fixture.test.js
 npm audit --audit-level=moderate
+
+exit 0
