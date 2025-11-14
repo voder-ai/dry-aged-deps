@@ -1,14 +1,12 @@
 ## NOW  
-Add a new unit test for the smart‐filter branch in `src/build-rows.js` by creating `test/build-rows.no-mature-version.test.js` that exercises the case where no available version meets the maturity threshold and asserts the correct “skip” behavior.  
+Add a JSDoc `@story` and `@req` annotation to the `fetchVersionTimes` function in `src/fetch-version-times.js`, linking it to `prompts/002.0-DEV-FETCH-VERSION-AGES.md` and `REQ-NPM-VIEW`.
 
 ## NEXT  
-- Add unit tests for the remaining untested branches in key modules:  
-  - `xml-formatter` error and threshold‐only paths (`test/xml-formatter.error-branch.test.js`)  
-  - `vulnerability-evaluator` edge cases for unexpected audit output (`test/vulnerability-evaluator.unexpected-format.test.js`)  
-  - `update-packages` abort, confirm, and backup‐error flows (`test/update-packages.abort-and-backup.test.js`)  
-- Run the full suite and verify branch coverage rises above 90%; iterate by adding any additional tests for still-missed branches.  
+- Add or update JSDoc traceability annotations (`@story` and `@req`) on all remaining public API functions in `src/` (e.g. `calculateAgeInDays`, `checkVulnerabilities`, `jsonFormatter`, `xmlFormatter`, `printOutdated`, etc.), pointing to their corresponding prompt files and requirement IDs.  
+- Enhance **docs/api.md**: document the `--config-file` flag and the `updateMode` and `skipConfirmation` options for `printOutdated`, including parameter descriptions and examples.  
+- Update **README.md** CLI reference section to list every supported flag (including `--config-file`) with a brief usage example.
 
 ## LATER  
-- Refactor all test files to include JSDoc `@story` annotations for requirement traceability.  
-- Introduce shared test data builders/fixtures to DRY repetitive setups.  
-- Gradually tighten coverage thresholds (aiming for 95%+ branch coverage) and add tests for any new gaps as they appear.
+- Audit each source file to insert branch‐level `@story`/`@req` comments in significant `if`/`catch`/loop blocks to meet full traceability requirements.  
+- Create or update a JSON schema file for `.dry-aged-deps.json` and reference it in **docs/api.md** for editor autocomplete.  
+- Add a CI validation step that scans all `src/` and `test/` files for missing `@story` annotations and fails the build if any are absent.

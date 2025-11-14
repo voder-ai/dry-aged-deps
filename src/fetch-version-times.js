@@ -4,6 +4,8 @@ import { execFile } from 'child_process';
  * Fetch version publish times for an npm package.
  * @param {string} packageName - The name of the npm package.
  * @returns {Promise<Record<string, string>>} A promise resolving to a mapping of version to publish date string.
+ * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
+ * @req REQ-NPM-VIEW - Use `npm view <package> time --json` to get publish dates
  */
 export async function fetchVersionTimes(packageName) {
   const pkgNameRegex = /^[a-z0-9@\-_/.]+$/i;
