@@ -1,4 +1,8 @@
-// Story: prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
+/**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ *//**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ */ // Story: prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
 // Story: prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
 // Tests for CLI options helper functions in src/cli-options-helpers.js
 

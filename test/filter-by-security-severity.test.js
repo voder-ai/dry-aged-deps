@@ -1,4 +1,8 @@
-// Story: prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
+/**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ *//**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ */ // Story: prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
 // Tests for severity threshold logic in filterBySecurity
 
 import { describe, it, expect } from 'vitest';

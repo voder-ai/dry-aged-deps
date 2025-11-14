@@ -1,4 +1,8 @@
-// Story: prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
+/**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ *//**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ */ // Story: prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
 // Tests for: buildRows success path
 
 import { describe, it, expect, vi } from 'vitest';

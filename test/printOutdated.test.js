@@ -1,4 +1,8 @@
-import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
+/**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ *//**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ */ import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { printOutdated } from '../src/print-outdated.js';
 import * as fetchModule from '../src/fetch-version-times.js';
 import * as ageModule from '../src/age-calculator.js';

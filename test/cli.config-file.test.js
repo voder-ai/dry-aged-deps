@@ -1,4 +1,8 @@
-// Story: prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
+/**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ *//**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ */ // Story: prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import fs from 'fs/promises';
 import os from 'os';

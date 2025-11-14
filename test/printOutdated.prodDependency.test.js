@@ -1,4 +1,8 @@
-// Story: docs/api.md
+/**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ *//**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ */ // Story: docs/api.md
 // Tests for: printOutdated table output for prod dependencies (getDependencyType)
 
 import fs from 'fs';

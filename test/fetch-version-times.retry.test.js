@@ -1,4 +1,8 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
+/**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ *//**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ */ import { describe, it, expect, vi, afterEach } from 'vitest';
 
 // Mock child_process.execFile
 vi.mock('child_process', () => ({

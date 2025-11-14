@@ -1,4 +1,6 @@
-import { execa } from 'execa';
+/**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ */ import { execa } from 'execa';
 
 /**
  * Helper to run the CLI with given arguments and return the result

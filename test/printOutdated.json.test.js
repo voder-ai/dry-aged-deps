@@ -1,4 +1,8 @@
-// Story: prompts/008.0-DEV-JSON-OUTPUT.md
+/**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ *//**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ */ // Story: prompts/008.0-DEV-JSON-OUTPUT.md
 // Tests for: printOutdated JSON output branch, ensuring correct rows, summary, and thresholds are logged
 
 import { printOutdated } from '../src/print-outdated.js';

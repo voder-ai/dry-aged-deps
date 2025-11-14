@@ -1,4 +1,8 @@
-// Story: prompts/013.0-DEV-CHECK-MODE.md
+/**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ *//**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ */ // Story: prompts/013.0-DEV-CHECK-MODE.md
 // Tests for CI/CD integration documentation in README.md and docs/api.md
 
 import fs from 'fs/promises';

@@ -1,4 +1,8 @@
-// Story: prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
+/**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ *//**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ */ // Story: prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
 // Tests for: fallback error handling in smart-search branch of filterBySecurity
 
 import { describe, it, expect, vi } from 'vitest';

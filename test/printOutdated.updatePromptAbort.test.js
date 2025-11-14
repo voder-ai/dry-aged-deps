@@ -1,4 +1,8 @@
-// Story: prompts/011.0-DEV-AUTO-UPDATE.md
+/**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ *//**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ */ // Story: prompts/011.0-DEV-AUTO-UPDATE.md
 // Tests for: REQ-PREVIEW, REQ-CONFIRMATION (abort flow)
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 

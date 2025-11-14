@@ -1,4 +1,8 @@
-// Story: docs/decisions/0002-json-xml-output-support.md
+/**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ *//**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ */ // Story: docs/decisions/0002-json-xml-output-support.md
 // Tests for: Missing <thresholds> element when no thresholds are provided
 
 import { describe, it, expect } from 'vitest';

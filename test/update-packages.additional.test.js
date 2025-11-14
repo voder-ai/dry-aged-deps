@@ -1,4 +1,8 @@
 /**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ *//**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ *//**
  * @story Additional branch scenarios for updatePackages
  * @req Validate user confirmation, backup and update error handling, and dependency absence handling
  */

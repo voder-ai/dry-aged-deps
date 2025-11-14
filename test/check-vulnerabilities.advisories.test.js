@@ -1,4 +1,8 @@
-// Story: prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
+/**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ *//**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ */ // Story: prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
 // Tests for: legacy advisories format in npm audit output
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';

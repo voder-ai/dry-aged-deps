@@ -1,4 +1,8 @@
-import { execa } from 'execa';
+/**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ *//**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ */ import { execa } from 'execa';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { readFileSync } from 'fs';
