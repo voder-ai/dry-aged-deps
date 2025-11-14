@@ -1,14 +1,18 @@
-## NOW
-Update the Husky pre-push hook (​.husky/pre-push​) to insert the commit-message lint step (`npx --no-install commitlint --from=HEAD~1 --to=HEAD`) immediately after the existing `husky.sh` invocation.
+## NOW  
+Create a new unit test (`test/filter-by-security.smart-search.test.js`) that asserts when the newest mature version is vulnerable, `filterBySecurity` falls back to the next‐newest mature version and sets that as the recommended safe version.
 
-## NEXT
-- Stage and commit the updated `.husky/pre-push` with a descriptive message, e.g.  
-  `ci: add commitlint to pre-push for commit message validation`  
-- Run `npm run prepare` to install the new hook locally  
-- Attempt a push with an invalid commit message to verify the hook blocks it, then push a valid commit to confirm the hook passes  
-- Update **docs/developer-guidelines.md** “Pre-push Hook” section to document the new commit-message lint check  
+## NEXT  
+- Implement the smart‐search loop in `src/filter-by-security.js` (or via a helper) to:  
+  1. Accept the full list of mature versions for each package (using `fetchVersionTimes` + `calculateAgeInDays`).  
+  2. Iterate from newest to oldest: call `checkVulnerabilities`; on first safe version, mark it `recommended` and include its row.  
+  3. If no safe version found, record the package as filtered by security.  
+- Update `print-outdated-handlers.js` (JSON/XML/table) to output the `recommended` version instead of always using `wanted`.  
+- Run the full test suite, ensure the new smart‐search test now passes alongside existing tests.  
+- Commit the changes with a descriptive message, e.g.  
+  `feat: implement smart-search fallback for secure, mature versions (story 004.0)`
 
-## LATER
-- Extract all pre-push commands into a reusable script `scripts/prepush.sh` and invoke that from `.husky/pre-push` for maintainability  
-- Add a CI job that runs the pre-push script in a clean environment to ensure hook/pipeline parity  
-- Periodically review and prune the pre-push script as CI requirements evolve (adjust thresholds, remove retired checks)
+## LATER  
+- Refactor the smart‐search logic into a dedicated helper function to reduce complexity and re‐enable complexity rules.  
+- Optimize performance by checking vulnerabilities for multiple packages in parallel, while preserving per‐package order.  
+- Update documentation (README, API reference) to describe the “fallback to next-newest mature version” behavior and examples.  
+- Monitor real-world usage and add metrics/logging on how often and for which packages fallbacks occur to guide threshold tuning.

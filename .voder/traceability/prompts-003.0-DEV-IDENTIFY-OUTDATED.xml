@@ -2,8 +2,8 @@
 <traceability>
   <specification>prompts/003.0-DEV-IDENTIFY-OUTDATED.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-13T22:07:11.061Z</last_validated>
+  <last_validated>2025-11-14T00:49:33.121Z</last_validated>
   <last_modified>2025-11-09T23:02:10.889Z</last_modified>
-  <evidence>The code always uses the `latest` version for age filtering (see buildRows → fetchVersionTimes → age = calculateAgeInDays(versionTimes[info.latest])). The filterByAge function simply removes rows whose age < threshold for their dependency type. There is no logic iterating over `versionTimes` entries to "start from the latest and work backwards until finding a mature version" and then selecting that version. No tests cover selecting a fallback mature version when the latest is too new.</evidence>
-  <notes>The ‘smart filtering’ acceptance criterion (selecting the newest mature version by walking backwards through all published versions) is not implemented. Only simple age-based filtering of the latest version is present, so the story is not fully satisfied.</notes>
+  <evidence>The current implementation only filters on the age of the single “latest” version for each package (src/filter-by-age.js + buildRows in src/build-rows.js) and drops any package whose latest version is younger than 7 days. There is no code that iterates backwards through older versions to find the newest mature one (REQ-SMART-SEARCH). Neither buildRows nor applyFilters ever examines versions other than info.latest, and no tests cover a fallback to an older version. Thus the “Smart Filtering” acceptance criterion—“start from the latest and work backwards until we find a mature version”—is not implemented.</evidence>
+  <notes>Core age-threshold filtering, missing-mature-message, and table/json output criteria are satisfied, but the smart backward search through version history is absent, so the story is not fully implemented.</notes>
 </traceability>

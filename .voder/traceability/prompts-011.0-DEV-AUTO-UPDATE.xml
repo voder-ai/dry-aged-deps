@@ -2,17 +2,8 @@
 <traceability>
   <specification>prompts/011.0-DEV-AUTO-UPDATE.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-13T22:07:30.396Z</last_validated>
+  <last_validated>2025-11-14T00:50:25.968Z</last_validated>
   <last_modified>2025-11-11T08:04:07.327Z</last_modified>
-  <evidence>• CLI parsing and help text include `--update` and `--yes` flags (bin/dry-aged-deps.js, src/cli-options.js)  
-• `printOutdated` recognizes `updateMode` and `skipConfirmation` and delegates to `updatePackages` (src/print-outdated.js)  
-• `updatePackages` implements preview listing, interactive confirmation, `--yes` bypass, backup creation, error handling, package.json rewrite (src/update-packages.js)  
-• README.md and help output document `--update`/`--yes` usage  
-• Vitest suite includes dedicated tests for:  
-  – Safe‐update flow and summary report (test/printOutdated.update.test.js)  
-  – No‐safe‐updates case (same)  
-  – Interactive abort path (test/printOutdated.updatePromptAbort.test.js)  
-  – Backup‐error handling (test/printOutdated.updateBackupError.test.js)  
-• All CLI and unit tests pass without failures</evidence>
-  <notes>All acceptance criteria for the auto-update story (flags, safe-only updates, preview & confirm, backup, summary, install prompt, error handling) are fully satisfied by the implementation and covered by tests.</notes>
+  <evidence>The implementation lives in src/update-packages.js (called from print-outdated.js when updateMode=true), parseOptions supports --update and --yes flags, and the CLI help text lists them. Unit tests tagged with “Story: prompts/011.0-DEV-AUTO-UPDATE.md” cover the happy-path update (printOutdated.update.test.js), empty/safe-rows path, prompt-abort flow (printOutdated.updatePromptAbort.test.js), and backup-error handling (printOutdated.updateBackupError.test.js). The functional e2e test in test/functional-assessment.test.js also verifies that --update -y updates package.json and creates a backup. Logging of the preview, confirmation, summary message (“Updated package.json with X safe packages”), and the post-update “Run 'npm install'” prompt are all validated.</evidence>
+  <notes>All of the acceptance criteria for 011.0-DEV-AUTO-UPDATE are implemented and exercised by tests: the --update/--yes flags, safe-only filtering, preview + interactive confirm (with skip), backup creation (and error handling), summary report, and post-update install reminder. JSON.stringify(null, 2) preserves two-space formatting, satisfying the format-preservation requirement. No unmet requirements were found.</notes>
 </traceability>

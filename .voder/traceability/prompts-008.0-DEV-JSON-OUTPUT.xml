@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <traceability>
   <specification>prompts/008.0-DEV-JSON-OUTPUT.md</specification>
-  <status>FAILED</status>
-  <last_validated>2025-11-13T22:07:55.900Z</last_validated>
+  <status>PASSED</status>
+  <last_validated>2025-11-14T00:49:01.149Z</last_validated>
   <last_modified>2025-11-09T23:04:54.331Z</last_modified>
-  <evidence>In src/print-outdated-handlers.js, handleJsonOutput builds rows as simple arrays [name, current, wanted, latest, null] and calls jsonFormatter, which for array rows only outputs {name, current, wanted, latest, age}. There is no inclusion of vulnerabilities, maxSeverity, details, filtered, or filterReason as required by the spec. The tests for JSON output (e.g., test/cli.format-json.test.js and test/printOutdated.json.test.js) only assert on timestamp, packages array, summary and thresholds, never on vulnerability fields. No code path populates those fields in JSON mode.</evidence>
-  <notes>Although CLI flag, exit codes, summary and thresholds, help text, and JSON validity are implemented and tested, the acceptance criterion “Complete Data: Includes all relevant information (name, current, latest, age, vulnerabilities, severity)” is not satisfied. JSON output omits vulnerability and filter information required by the story.</notes>
+  <evidence>The implementation of JSON output is exercised by multiple Vitest suites which all pass:
+
+• test/cli.format-json.test.js  – verifies `--format=json` produces valid JSON with timestamp, packages array, summary object, and no stderr noise (exit code 0).
+• test/cli.format-json.error.test.js – verifies error from `npm outdated` in JSON mode produces JSON error object (with message, code, details, timestamp) and exit code 2, no stderr.
+• test/cli.json.skip-outdated.test.js – verifies early‐JSON branch skips npm outdated when package.json exists and outputs empty packages array, correct summary counts and default thresholds.
+• test/json-formatter.test.js – unit tests for jsonFormatter output schema, indentation, and threshold inclusion.
+• test/printOutdated.json.test.js – unit tests for printOutdated’s JSON branch, verifying console.log of JSON containing all required fields (name, current, wanted, latest, recommended, age, vulnerabilities, filtered, filterReason, dependencyType), correct summary and thresholds.
+• test/cli.check-mode.test.js (scoped JSON cases) – verifies correct exit codes (0/1) and summary.safeUpdates in JSON check mode, and invalid format handling exit code 2 with clear error message.
+
+Additionally, `src/cli-options.js` validates `--format=json` and rejects invalid formats, `bin/dry-aged-deps.js` handles JSON flag, error branches, and suppresses non-JSON logs, and help text includes the `--format` option.</evidence>
+  <notes>All acceptance criteria from prompts/008.0-DEV-JSON-OUTPUT.md are fully satisfied: JSON flag support, valid/complete output, summary stats, exit codes, error formatting, default table behavior unchanged, and help documentation.  </notes>
 </traceability>

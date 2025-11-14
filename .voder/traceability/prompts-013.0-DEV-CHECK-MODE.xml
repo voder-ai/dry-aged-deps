@@ -2,12 +2,11 @@
 <traceability>
   <specification>prompts/013.0-DEV-CHECK-MODE.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-13T22:05:26.511Z</last_validated>
+  <last_validated>2025-11-14T00:49:13.133Z</last_validated>
   <last_modified>2025-11-11T08:04:07.352Z</last_modified>
-  <evidence>- Tests: `test/cli.check-mode.test.js` (6 tests) passed without failures
-- `npm test` shows all 145 tests passing including CLI check-mode tests and documentation tests (test/docs/ci-integration.test.js)
-- CLI code (`bin/dry-aged-deps.js`) supports `--check`, maps to `returnSummary`, and exits with codes 0/1/2 per spec
-- Help text includes `--check` flag description
-- README.md and docs/api.md contain CI/CD Integration sections with `--check` examples and exit code semantics</evidence>
-  <notes>All acceptance criteria for 013.0-DEV-CHECK-MODE are implemented: support for `--check`, correct exit codes for safe updates, no updates, and errors, clear output listing, JSON/XML support, and updated documentation. Tests confirm behavior end-to-end.</notes>
+  <evidence>1. Test suite: `test/cli.check-mode.test.js` (6 tests) passes, exercising --check in default/table, JSON, XML modes, error conditions, and threshold edge case.  
+2. Full Vitest run (`npm test`) completed with 150/150 tests passing (96.21% coverage), including all check-mode tests.  
+3. Source: `src/cli-options.js` recognizes `--check`; `bin/dry-aged-deps.js` uses `returnSummary` to branch exit codes (0,1,2) per story.  
+4. Documentation: `README.md` contains `--check` flag description, CI/CD usage examples, and matches acceptance criteria.  </evidence>
+  <notes>All acceptance criteria for story 013.0-DEV-CHECK-MODE are satisfied: the CLI accepts `--check`, fails (exit 1) when safe updates exist, passes (exit 0) when up-to-date or filtered by thresholds, errors (exit 2) on invalid input or runtime errors; output is clear and supports table, JSON, and XML; README updated with examples.</notes>
 </traceability>
