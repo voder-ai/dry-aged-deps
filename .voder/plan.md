@@ -1,12 +1,12 @@
 ## NOW  
-Modify the Husky pre-push hook (`.husky/pre-push`) to run the full local quality pipeline instead of just tests. Replace its contents with a single command sequence that invokes all project scripts for linting, type-checking, formatting-check, tests, lockfile drift, duplication check, and audit.  
+Modify `bin/dry-aged-deps.js` so that in the default (non-`--check`) mode, if `summary.safeUpdates > 0`, the CLI calls `process.exit(1)` instead of `process.exit(0)`.
 
 ## NEXT  
-- Ensure all required commands exist in `package.json` scripts: verify or add entries for `lint`, `type-check`, `format:check`, `test`, `lockfile` (e.g. `npm install --package-lock-only --legacy-peer-deps`), `jscpd --threshold 20 src`, and `npm audit --audit-level=moderate`.  
-- Update `docs/developer-guidelines.md` to describe the new pre-push hook commands and list the exact script names that will run before every push.  
-- Test the updated hook locally by attempting a push with an intentional lint or test failure to confirm it blocks.  
+- Update all CLI tests that assert exit codes for safe updates (e.g. `test/cli.outdated.test.js`, JSON/XML format tests) to expect exit code 1 in default mode when updates exist.  
+- Revise documentation in `README.md`, `docs/decisions/0003-exit-code-standardization.md`, `docs/decisions/0004-check-mode-behavior.md`, and the API docs to reflect that default mode now exits with code 1 when safe updates are available.  
+- Add a new integration test verifying that running `dry-aged-deps` without `--check` against a fixture with safe updates returns exit code 1.
 
 ## LATER  
-- Consolidate the full check sequence into a single npm script (e.g. `"prepush"`) in `package.json` and simplify `.husky/pre-push` to call that one script.  
-- Add a CI validation step that verifies the pre-push hook itself (for example, invoke `git push --dry-run` against a disposable branch) to guard against hook drift.  
-- Periodically review and tighten hook command thresholds (e.g. lower `jscpd` threshold, raise audit level) as project quality needs evolve.
+- Audit and align the CLI help (`--help`) text and man pages to include the updated exit-code behavior.  
+- Consider introducing a CLI flag (e.g. `--no-exit-on-updates`) for users who want the old 0-exit-code behavior as an option.  
+- Monitor downstream CI scripts and provide migration notes or a deprecation period for users updating their pipelines.

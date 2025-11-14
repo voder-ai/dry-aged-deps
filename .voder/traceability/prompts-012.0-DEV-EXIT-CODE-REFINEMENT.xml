@@ -1,23 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <traceability>
   <specification>prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md</specification>
-  <status>PASSED</status>
-  <last_validated>2025-11-14T09:03:32.912Z</last_validated>
+  <status>FAILED</status>
+  <last_validated>2025-11-14T17:18:38.141Z</last_validated>
   <last_modified>2025-11-11T08:04:07.339Z</last_modified>
-  <evidence>1. README.md ‘Exit Codes’ section lists 0,1,2 consistent across table, JSON, XML.
-2. bin/dry-aged-deps.js implements:
-   - process.exit(0) when no safe updates (checkMode && summary.safeUpdates===0)
-   - process.exit(1) when safe updates available (summary.safeUpdates>0)
-   - process.exit(2) on any error path (npm errors, parse errors, invalid flags).
-3. CLI help (–help) includes description: “--check … exit code 1 if safe updates available, 0 if none, 2 on error (consistent across table, JSON, and XML formats)”.
-4. test/cli.check-mode.test.js covers:
-   • exit 0 when no updates (JSON)
-   • exit 1 when updates (table, JSON, XML)
-   • exit 2 on invalid format
-   • exit 2 on out-of-range --min-age
-5. test/cli.error-cmd.test.js and test/cli.format-json.error.test.js verify exit 2 on npm command failures.
-6. test/cli.upToDate.test.js verifies default behavior still exit 0 when dependencies up to date.
-
-All acceptance criteria are covered by implementation and tests, and documentation is updated.</evidence>
-  <notes>The story’s acceptance criteria—exit code taxonomy (0,1,2), consistency across formats, documentation in README and help text, full test coverage, and backward compatibility—are fully satisfied. Tests for all scenarios pass, and code paths for errors and check mode align with the specification.</notes>
+  <evidence>The exit-code refinement story (prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md) specifies that when safe updates are available the CLI should exit with code 1, but in the current implementation (bin/dry-aged-deps.js) the default (non-check) mode always exits with code 0 for safe updates. All existing tests for default mode (`test/cli.outdated.test.js`, `test/cli.upToDate.test.js`) expect exit code 0, and no test asserts exit code 1 in default mode when updates are present. Only check mode (`--check`) returns exit code 1 for safe updates. Thus the ACCEPTANCE CRITERION “Exit 1: Safe updates available” is not met in default mode.</evidence>
+  <notes>The implementation preserved backward compatibility by keeping default mode exit code 0, but diverges from the story’s requirement to use exit code 1 whenever safe updates exist. To fully satisfy 012.0, the CLI should exit 1 on safe updates even without --check, or the story should be revised to scope exit code 1 to check mode only.</notes>
 </traceability>

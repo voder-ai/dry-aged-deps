@@ -2,8 +2,8 @@
 <traceability>
   <specification>prompts/001.0-DEV-RUN-NPM-OUTDATED.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-14T09:04:34.278Z</last_validated>
+  <last_validated>2025-11-14T17:16:24.139Z</last_validated>
   <last_modified>2025-11-09T23:01:40.301Z</last_modified>
-  <evidence>The CLI entrypoint (bin/dry-aged-deps.js) invokes execFileSync('npm', ['outdated','--json']) and parses the JSON output. printOutdated()/print-outdated-handlers.js properly handle: (a) displaying table output with header and rows, (b) printing “All dependencies are up to date.” when no outdated packages, and (c) emitting JSON or XML formatted output. Error paths for command failure and invalid JSON are caught and emit exit code 2 with correct error payload (covered by test/cli.error-cmd.test.js, test/cli.format-json.error.test.js, test/cli.format-xml.error.test.js). Integration tests for real fixtures (test/cli.outdated.test.js, test/cli.e2e.real-fixture.test.js, test/cli.upToDate.test.js) all pass. The full suite (165 tests) passes under `npm test`.</evidence>
-  <notes>All acceptance criteria for prompts/001.0-DEV-RUN-NPM-OUTDATED.md are satisfied: core npm outdated invocation, JSON parsing, presentation of results, error handling, and no-update scenario handling have been implemented and are fully tested.</notes>
+  <evidence>The CLI entrypoint (bin/dry-aged-deps.js) invokes `execFileSync('npm',['outdated','--json'])`, parses the JSON, and delegates to printOutdated which logs table output. The no-outdated case prints “All dependencies are up to date.” (covered by test/cli.upToDate.test.js), the outdated case prints the header and package rows (covered by test/cli.outdated.test.js), and JSON parsing errors and command failures exit with code 2 (covered by test/cli.error-cmd.test.js). All related lint, typecheck, and vitest runs pass.</evidence>
+  <notes>All acceptance criteria for story 001.0 (run npm outdated, parse JSON, display results, handle errors and no-update cases) are fully implemented and verified by unit and integration tests.</notes>
 </traceability>

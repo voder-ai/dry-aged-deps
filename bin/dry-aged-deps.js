@@ -168,6 +168,7 @@ async function main() {
       if (summary.safeUpdates > 0) process.exit(1);
       else process.exit(0);
     }
+    if (summary.safeUpdates > 0) process.exit(1);
     process.exit(0);
   } catch (err) {
     if (format === 'xml') {

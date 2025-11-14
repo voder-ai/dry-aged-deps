@@ -42,9 +42,10 @@ describe('dry-aged-deps CLI outdated output', () => {
     const result = await execa('node', [cliPath], {
       cwd: fixturesDir,
       env: process.env,
+      reject: false,
     });
 
-    expect(result.exitCode).toBe(0);
+    expect(result.exitCode).toBe(1);
     expect(result.stdout).toContain('Outdated packages:');
     expect(result.stdout).toContain('Name	Current	Wanted	Latest	Age (days)');
 

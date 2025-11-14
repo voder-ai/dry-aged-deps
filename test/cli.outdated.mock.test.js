@@ -11,8 +11,9 @@ describe('dry-aged-deps CLI mocked outdated output', () => {
   it('prints mocked outdated package information', async () => {
     const result = await execa('node', [cliPath], {
       env: { ...process.env, DRY_AGED_DEPS_MOCK: '1' },
+      reject: false,
     });
-    expect(result.exitCode).toBe(0);
+    expect(result.exitCode).toBe(1);
 
     const stdout = result.stdout;
     expect(stdout).toContain('Outdated packages:');

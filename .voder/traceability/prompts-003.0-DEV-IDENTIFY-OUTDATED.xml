@@ -2,8 +2,8 @@
 <traceability>
   <specification>prompts/003.0-DEV-IDENTIFY-OUTDATED.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-14T09:03:50.934Z</last_validated>
+  <last_validated>2025-11-14T17:18:12.952Z</last_validated>
   <last_modified>2025-11-09T23:02:10.889Z</last_modified>
-  <evidence>The implementation in src/filter-by-age.js simply filters the existing rows by checking whether the latest version’s age ≥ threshold. There is no code that, upon encountering a too-young latest version, walks backwards through earlier versions to find the newest mature version (i.e. no "smart filtering" logic). Additionally, the test suite only covers simple threshold filtering (test/filter-by-age.test.js) and does not include any tests for backward searching for mature versions as described in prompts/003.0-DEV-IDENTIFY-OUTDATED.md.</evidence>
-  <notes>The acceptance criterion for "Smart Filtering" (start from the latest and work backwards until finding a mature version) has not been implemented. Only basic age‐threshold filtering for the latest version is present, so the story is not fully satisfied.</notes>
+  <evidence>The current implementation only evaluates the age of the single "latest" version per package (buildRows returns one row with info.latest) and filterByAge simply drops rows with age < threshold. There is no logic to iterate over older versions (smart filtering) to find the newest mature version. For example, src/filter-by-age.js only checks typeof age === 'number' && age >= minAge, and src/build-rows.js never builds rows for versions other than info.latest. The spec’s requirement “Smart Filtering: start from the latest and work backwards until finding a mature version” is not implemented.</evidence>
+  <notes>Acceptance criteria for smart filtering (scanning older versions when the latest is too fresh) is not met. The code and tests only filter based on the latest version’s age, so additional logic is needed to satisfy the story.</notes>
 </traceability>

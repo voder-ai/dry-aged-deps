@@ -2,8 +2,12 @@
 <traceability>
   <specification>prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-14T09:03:05.212Z</last_validated>
+  <last_validated>2025-11-14T17:17:57.796Z</last_validated>
   <last_modified>2025-11-09T23:02:37.596Z</last_modified>
-  <evidence>All Vitest tests referencing prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md passed (filter-by-security.test.js, filter-by-security.smart-search.test.js, filter-by-security-severity.test.js, and related suites). src/filter-by-security.js and src/check-vulnerabilities.js include @story JSDoc annotations and implement REQ-AUDIT-CHECK, REQ-TRANSITIVE-DEPS, REQ-SMART-SEARCH, REQ-SAFE-ONLY, and REQ-CLEAR-OUTPUT. CLI integration via apply-filters and print-outdated produces correct npm-outdated–style output and handles the no-safe-version case.</evidence>
-  <notes>The security-filtering story is fully implemented. Mature versions are audited (including transitive dependencies), checked newest-first, vulnerable entries are removed, fallback smart-search works, and the final output meets the acceptance criteria.</notes>
+  <evidence>• filter-by-security.js and related modules include @story annotations for prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
+• filterBySecurity covers core functionality, transitive checks (via checkVulnerabilities/npm audit), smart-search fallback, and removes vulnerable versions
+• Tests in test/filter-by-security.test.js, test/filter-by-security.smart-search.test.js, and test/filter-by-security.fetchError-fallback.test.js exercise all branches of vulnerability filtering and error handling
+• Functional CLI test in test/functional-assessment.test.js (‘004.0-DEV-FILTER-VULNERABLE-VERSIONS: Filters out versions with known vulnerabilities (xml)’) confirms XML output shows correct <count>0</count> and <filtered>false</filtered> for safe versions
+• All vitest tests (186 total) pass, including those specifically verifying no safe version scenario and filterReasonMap usage</evidence>
+  <notes>The 004.0-DEV-FILTER-VULNERABLE-VERSIONS story is fully implemented: mature versions are audited transitively, smart-search fallback finds the newest safe version, vulnerable versions are filtered out, and both API and CLI outputs reflect the expected behavior under all tested scenarios.</notes>
 </traceability>

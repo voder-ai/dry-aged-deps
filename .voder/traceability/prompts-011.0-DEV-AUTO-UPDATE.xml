@@ -2,8 +2,30 @@
 <traceability>
   <specification>prompts/011.0-DEV-AUTO-UPDATE.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-14T09:03:59.900Z</last_validated>
+  <last_validated>2025-11-14T17:18:01.961Z</last_validated>
   <last_modified>2025-11-11T08:04:07.327Z</last_modified>
-  <evidence>Implementation code in src/update-packages.js and print-outdated.js supports --update and --yes flags, preview & confirmation, backup creation, error handling, JSON write with 2-space indent, and install prompt. CLI options (src/cli-options.js) parse updateMode and skipConfirmation. Multiple Vitest test files reference prompts/011.0-DEV-AUTO-UPDATE.md and exercise happy path, abort flow, backup error, and summary (e.g. test/update-packages.test.js, test/printOutdated.update*.test.js). All tests covering this feature pass.</evidence>
-  <notes>All acceptance criteria for Auto-Update (011.0) are satisfied: update flag, safe-only updates, preview & confirm, --yes skip, backup, install reminder, summary report, and graceful error handling are implemented and tested. Formatting is preserved as 2-space JSON and property order maintained.</notes>
+  <evidence>The auto-update feature is fully implemented and covered by automated tests. Key evidence:
+
+1) CLI supports the --update and --yes flags (parseOptions in src/cli-options.js includes updateMode and skipConfirmation). The help text in bin/dry-aged-deps.js lists these flags.
+
+2) printOutdated in src/print-outdated.js checks updateMode and delegates to updatePackages(safeRows, skipConfirmation, summary).
+
+3) updatePackages in src/update-packages.js:
+   - Logs preview of safeRows
+   - Prompts for confirmation unless skipConfirmation is true
+   - Creates backup file (package.json.backup) and logs success
+   - Reads, modifies, and writes package.json with 2-space indent
+   - Logs summary message and reminds user to run npm install
+   - Gracefully handles backup or write errors by logging and returning summary
+
+4) Unit tests in test/printOutdated.update.test.js verify:
+   - Safe updates are applied, backup created, package.json updated, summary returned, and log messages
+   - No safe updates branch: logs "No safe updates available." and does not create backup
+
+5) Additional tests in test/printOutdated.updatePromptAbort.test.js and test/printOutdated.updateBackupError.test.js cover confirmation abort flow and backup error handling.
+
+6) README.md includes usage examples for --update and --yes flags.
+
+All acceptance criteria (update flag, safety filtering, format preservation, preview/confirm, yes flag, backup, install prompt, summary, error handling) are satisfied and exercised by the test suite.</evidence>
+  <notes>The auto-update story (011.0-DEV-AUTO-UPDATE) has been fully implemented. All acceptance criteria are met, and the functionality is verified by comprehensive unit tests. CLI integration and documentation have been updated accordingly.</notes>
 </traceability>

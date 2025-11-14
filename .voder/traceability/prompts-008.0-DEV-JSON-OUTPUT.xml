@@ -2,15 +2,8 @@
 <traceability>
   <specification>prompts/008.0-DEV-JSON-OUTPUT.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-14T09:04:55.174Z</last_validated>
+  <last_validated>2025-11-14T17:18:49.043Z</last_validated>
   <last_modified>2025-11-09T23:04:54.331Z</last_modified>
-  <evidence>• src/cli-options.js: parseFormatFlag supports validFormats including 'json' and exits with code 2 on invalid value
-• bin/dry-aged-deps.js: recognizes --format=json, skips npm call when package.json present, outputs JSON via printOutdated and handles errors with JSON error objects and correct exit codes
-• src/print-outdated.js & handlers: on format==='json', routes through handleJsonOutput → prepareJsonItems → jsonFormatter, producing valid parseable JSON with timestamp, packages array, summary section, thresholds, and no extra console noise
-• test/cli.format-json.test.js, test/printOutdated.json.test.js, test/json-formatter.test.js verify valid JSON structure, complete data fields, summary and thresholds, and silent stderr
-• test/cli.format-json.error.test.js verifies JSON error output and exit 2 on npm failure
-• test/cli.check-mode.test.js covers exit codes 0/1 in JSON mode
-• test/cli-entrypoint.test.js verifies --help includes --format option
-• Default table output unchanged (test/cli.outdated.test.js checks default behavior)</evidence>
-  <notes>All acceptance criteria for JSON output format have tests verifying: CLI flag support, JSON validity, complete data (packages info, vulnerabilities, age), summary section, exit codes (0/1/2), suppressed console noise, error handling as JSON, default table mode, and help documentation. Implementation code and unit/integration tests confirm full compliance.</notes>
+  <evidence>Multiple automated tests for JSON output pass (e.g. test/cli.format-json.test.js, test/cli.format-json.error.test.js, test/printOutdated.json.test.js). The CLI honors `--format=json`, suppresses stderr, emits valid JSON with timestamp, packages array, summary (including thresholds, filtered counts), and exits with appropriate codes (0 on success, 2 on error). The implementation in bin/dry-aged-deps.js and src/json-formatter.js/print-outdated-handlers.js matches the story’s requirements, and help text includes the `--format` option.</evidence>
+  <notes>The JSON output feature (Story 008.0) is fully implemented. All acceptance criteria—CLI flag, valid and complete JSON schema, summary stats, error formatting, silent mode, default table behavior, exit codes, and documentation—are covered by code and verified by the existing test suite.</notes>
 </traceability>

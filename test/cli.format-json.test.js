@@ -14,8 +14,9 @@ describe('dry-aged-deps CLI JSON output format', () => {
     const result = await execa('node', [cliPath, '--format=json'], {
       cwd: fixturesDir,
       env: { ...process.env, DRY_AGED_DEPS_MOCK: '1' },
+      reject: false,
     });
-    expect(result.exitCode).toBe(0);
+    expect(result.exitCode).toBe(1);
     const json = result.stdout;
     expect(() => JSON.parse(json)).not.toThrow();
     const obj = JSON.parse(json);
@@ -30,6 +31,7 @@ describe('dry-aged-deps CLI JSON output format', () => {
     const result = await execa('node', [cliPath, '--format=json'], {
       cwd: fixturesDir,
       env: { ...process.env, DRY_AGED_DEPS_MOCK: '1' },
+      reject: false,
     });
     expect(result.stderr).toBe('');
   });

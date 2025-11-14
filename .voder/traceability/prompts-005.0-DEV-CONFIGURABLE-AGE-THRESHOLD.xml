@@ -2,12 +2,14 @@
 <traceability>
   <specification>prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-14T09:04:47.498Z</last_validated>
+  <last_validated>2025-11-14T17:16:24.138Z</last_validated>
   <last_modified>2025-11-09T23:03:02.030Z</last_modified>
-  <evidence>• Tests referencing the story (filter-by-age.test.js, cli-options-helpers.test.js, cli.flags.test.js, cli.config-file.test.js, functional-assessment.test.js) all pass under `vitest run` (165 tests, 0 failures).
-• CLI help text in bin/dry-aged-deps.js includes “--min-age=<days>       Minimum age in days (1-365) for including versions (default: 7)”.
-• parseOptions and parseMinAgeFlag in src/cli-options.js and src/cli-options-helpers.js implement the --min-age flag with validation (1–365).
-• loadConfigFile in src/config-loader.js reads minAge from .dry-aged-deps.json; tests cover valid, invalid, missing, unknown keys, custom config-file name.
-• Defaults to 7 days when no flag/config provided; CLI flag overrides config; both prod and dev thresholds supported and shown in JSON output’s summary.thresholds.</evidence>
-  <notes>All acceptance criteria for story 005.0 (CLI flag, config file support, override precedence, default behavior, validation, help documentation, output messages including thresholds) are fully implemented and covered by passing tests.</notes>
+  <evidence>- CLI flag support in src/cli-options-helpers.js: `parseMinAgeFlag = createIntegerFlagParser('min-age',1,365)` with validation and exit code 2 on invalid input.
+- Precedence logic in src/cli-options.js: uses `config.minAge ?? 7` as default, then `parseMinAgeFlag(args, defaultMinAge)`, and applies to both prod and dev thresholds.
+- Config file support in src/config-loader.js: reads `minAge`, validates range 1–365, and is consumed by parseOptions in src/cli-options.js.
+- Help text in bin/dry-aged-deps.js includes `--min-age=<days>` description.
+- Tests in test/cli.flags.test.js cover: rejecting non-numeric, out-of-range, missing values; default of 7; and override to 10.
+- Tests in test/cli.config-file.test.js cover: reading `minAge` and `prod.minAge`/`dev.minAge` from config file; CLI flags overriding config; invalid JSON and range errors; custom config-file name and missing file errors.
+- All related tests pass in the CI test suite (186 tests, 98% coverage).</evidence>
+  <notes>The implementation fully satisfies all acceptance criteria for configurable age threshold: CLI flag, config file support with correct precedence, default behavior, validation, help documentation, and output messages indicating applied thresholds.</notes>
 </traceability>
