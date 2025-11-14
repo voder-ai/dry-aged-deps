@@ -136,6 +136,8 @@ import { printOutdated } from 'dry-aged-deps';
  * @param {number} [options.devMinAge] - Minimum age in days for dev dependencies.
  * @param {string} [options.prodMinSeverity] - Severity threshold for production dependencies.
  * @param {string} [options.devMinSeverity] - Severity threshold for dev dependencies.
+ * @param {boolean} [options.updateMode] - If true, updates dependencies to recommended versions instead of printing.
+ * @param {boolean} [options.skipConfirmation] - If true, skips confirmation prompts during update operations.
  * @returns {Object|undefined} Returns a summary object in JSON/XML modes; undefined in table mode.
  */
 async function printOutdated(data, options)
@@ -363,4 +365,3 @@ jobs:
       - name: Show available updates on failure
         if: failure()
         run: npx dry-aged-deps --format=json
-```
