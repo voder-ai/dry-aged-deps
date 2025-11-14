@@ -8,8 +8,11 @@ npx prettier --check .
 npm test
 
 # Additional CI parity checks
-npm install --package-lock-only --legacy-peer-deps --ignore-scripts
-git diff --exit-code
+# Skip lockfile drift check if package.json has uncommitted changes (semantic-release scenario)
+if [ -z "$(git diff package.json)" ]; then
+  npm install --package-lock-only --legacy-peer-deps --ignore-scripts
+  git diff --exit-code
+fi
 npx jscpd --threshold 20 src || true
 npm run test:cli
 npm run test:cli -- test/cli.e2e.real-fixture.test.js
