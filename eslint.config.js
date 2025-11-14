@@ -20,6 +20,7 @@ export default [
       '*.md',
       'docs/**',
       'prompts/**',
+      '**/*.json',
       '.husky/**',
     ],
   },
