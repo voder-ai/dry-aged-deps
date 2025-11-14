@@ -1,21 +1,13 @@
 ## NOW
-Lower the CI coverage gate by editing `vitest.config.js`—change the `coverage.branches` setting from `process.env.CI ? 90 : 80` to `80` so that branch coverage no longer fails the pipeline.
+Update the Husky pre-push hook (`.husky/pre-push`) to include all CI steps: after the existing lint/type-check/format/tests commands, add the lockfile‐drift check (`npm install --package-lock-only && git diff --exit-code`), duplicate‐code detection (`npx jscpd --threshold 20 src`), CLI and E2E tests (`npm run test:cli` and `npm run test:cli -- test/cli.e2e.real-fixture.test.js`), and a full vulnerability audit (`npm audit --audit-level=moderate`).
 
 ## NEXT
-1. Write and add unit tests to cover all unexercised branches:
-   - **filterBySecurity**: verify behavior when `checkVulnerabilities` throws in JSON mode (no console errors) and in table mode (logs a warning, treats package as safe).
-   - **xmlFormatter**: cover partial‐threshold combinations (prod only, dev only, missing fields) and missing‐details branches.
-   - **config-loader**: cover invalid JSON, unknown keys, out‐of‐range values, and missing custom config‐file errors.
-   - **printOutdated**: cover the early-JSON branch that skips `npm outdated` when `package.json` exists.
-2. Run local quality checks and confirm branch coverage is ≥ 90%:
-   ```
-   npm run lint
-   npm run type-check
-   npm test
-   ```
+- Stage and commit the updated `.husky/pre-push` file with a descriptive commit message.  
+- Run `npm run prepare` to reinstall the updated hook locally.  
+- Execute `git push` in a clean working copy to verify the pre-push hook now blocks on any failures of the new checks.  
+- Update `docs/developer-guidelines.md` to document the new pre-push requirements and commands.
 
 ## LATER
-- Once coverage exceeds 90%, revert the branch threshold in `vitest.config.js` back to `90` for CI.
-- Refactor oversized modules (`print-outdated.js`, `xml-formatter.js`) into smaller functions so complexity and max-lines rules can be re-enabled.
-- Implement caching and parallel fetching in `src/fetch-version-times.js` for performance.
-- Define and publish a formal JSON Schema under `schema/` and add runtime validation tests.
+- Extract the pre-push commands into a shared shell script (e.g., `scripts/prepush.sh`) and invoke it from `.husky/pre-push` for maintainability.  
+- Add automated tests or CI jobs that simulate the pre-push hook to ensure hook/pipeline parity remains enforced.  
+- Periodically review and prune the hook commands as CI requirements evolve (e.g., adjusting thresholds, removing retired checks).

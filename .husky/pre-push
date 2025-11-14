@@ -5,3 +5,11 @@ npm run lint
 npm run type-check
 npx prettier --check .
 npm test
+
+# Additional CI parity checks
+npm install --package-lock-only --legacy-peer-deps
+git diff --exit-code
+npx jscpd --threshold 20 src
+npm run test:cli
+npm run test:cli -- test/cli.e2e.real-fixture.test.js
+npm audit --audit-level=moderate
