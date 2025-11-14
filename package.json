@@ -16,7 +16,7 @@
     "test": "vitest run --coverage",
     "test:watch": "vitest --coverage",
     "test:cli": "vitest run",
-    "lint": "eslint --ext .js src bin --max-warnings 0 --format stylish",
+    "lint": "eslint --max-warnings 0 --format stylish",
     "prepare": "husky install",
     "typecheck": "npm run type-check",
     "type-check": "node node_modules/typescript/bin/tsc --noEmit -p tsconfig.json",

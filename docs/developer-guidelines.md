@@ -53,6 +53,24 @@ npm run lint
 
 We use ESLint v9+ with flat config format. See [docs/eslint-flat-config.md](eslint-flat-config.md) for details.
 
+**Modern ESLint Best Practices:**
+
+- ESLint v9+ with flat config does **NOT** need the `--ext` option or directory arguments
+- Run ESLint from the project root without specifying directories: `eslint`
+- File selection is managed entirely through the `eslint.config.js` configuration
+- The flat config uses glob patterns to specify which files to lint
+- This approach is simpler, more maintainable, and aligns with ESLint's current architecture
+
+Example:
+
+```bash
+# Modern approach (ESLint v9+ flat config)
+eslint --max-warnings 0
+
+# Deprecated approach (avoid)
+eslint --ext .js src bin --max-warnings 0
+```
+
 ### Testing
 
 All code changes should include appropriate tests:
