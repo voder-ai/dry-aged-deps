@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<traceability>
-  <specification>prompts/013.0-DEV-CHECK-MODE.md</specification>
-  <status>PASSED</status>
-  <last_validated>2025-11-14T08:30:07.243Z</last_validated>
-  <last_modified>2025-11-11T08:04:07.352Z</last_modified>
-  <evidence>1) test/cli.check-mode.test.js exists and covers all acceptance criteria for check mode (REQ-CHECK-FLAG, REQ-EXIT-1-ON-UPDATES, REQ-EXIT-0-NO-UPDATES, REQ-EXIT-2-ON-ERROR, REQ-FORMAT-SUPPORT). All tests in this file pass. 2) bin/dry-aged-deps.js implements the --check flag, invokes printOutdated with returnSummary, and on check mode uses summary.safeUpdates to decide exit code (0 when none, 1 when updates, 2 on error). 3) README.md contains --check flag in the options table, usage examples (including CI/CD GitHub Actions snippet), and exit code documentation. 4) parseOptions and help text include --check. 5) JSON/XML test cases for check mode pass, confirming format support. 6) Invalid format (--format=bad) yields exit code 2 and appropriate stderr.</evidence>
-  <notes>The implementation fully satisfies all acceptance criteria: it supports --check, fails with exit code 1 when safe updates exist, exits 0 when none, uses 2 for errors, provides clear output in table/JSON/XML modes, and is documented in both CLI help and README with CI/CD examples. Unit tests comprehensively cover the behavior.</notes>
-</traceability>

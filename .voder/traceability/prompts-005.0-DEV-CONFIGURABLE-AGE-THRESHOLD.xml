@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<traceability>
-  <specification>prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md</specification>
-  <status>FAILED</status>
-  <last_validated>2025-11-14T08:30:33.272Z</last_validated>
-  <last_modified>2025-11-09T23:03:02.030Z</last_modified>
-  <evidence>In src/cli-options-helpers.js, parseMinAgeFlag calls parseIntegerFlag(args, 'min-age', defaultMinAge, 1) which sets no upper bound (max=Infinity). Thus CLI accepts --min-age values >365. For example, test cli.flags.test.js (“accepts values >365 without error”) demonstrates that --min-age=366 is accepted. However, the specification’s Requirements section (REQ-VALIDATION) mandates validating that age is an integer between 1 and 365.</evidence>
-  <notes>The implementation lacks enforcement of the upper bound of 365 days for the --min-age flag, contrary to the spec. All other acceptance criteria appear satisfied (CLI flag support, config file support, precedence, defaults, validation for negatives/non-numeric, help text, and output messaging).</notes>
-</traceability>

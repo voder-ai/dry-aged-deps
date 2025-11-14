@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<traceability>
-  <specification>prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md</specification>
-  <status>FAILED</status>
-  <last_validated>2025-11-14T08:31:27.236Z</last_validated>
-  <last_modified>2025-11-09T23:01:54.797Z</last_modified>
-  <evidence>The implementation in src/fetch-version-times.js always fetches the complete set of version timestamps via `npm view <pkg> time --json` and returns all entries. In src/build-rows.js and print-outdated, there is no logic that filters or limits the fetched versions to only those newer than the current version. No code or tests reference REQ-OPTIMIZATION, and the ‘smart fetching’ acceptance criterion is never exercised.</evidence>
-  <notes>Core fetching, age calculation, and display of ages are implemented and tested, but the requested optimization to fetch only newer versions is missing.</notes>
-</traceability>
