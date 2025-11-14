@@ -17,7 +17,7 @@
     "test:watch": "vitest --coverage",
     "test:cli": "vitest run",
     "check:lockfile": "npm ci --ignore-scripts --package-lock-only --legacy-peer-deps && git diff --exit-code",
-    "check:duplication": "jscpd --threshold 20 src",
+    "check:duplication": "npx jscpd --threshold 20 src",
     "audit:ci": "npm audit --audit-level=moderate",
     "lint": "node node_modules/eslint/bin/eslint.js --config eslint.config.js --format stylish . --ext .js",
     "prepare": "husky install .husky",
