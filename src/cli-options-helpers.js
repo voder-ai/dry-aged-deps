@@ -76,8 +76,7 @@ function parseIntegerFlag(args, flag, defaultValue, min = 1, max = Infinity) {
  * @returns {(args: string[], defaultValue: string, validValues?: string[]) => string}
  */
 function createStringFlagParser(flag) {
-  return (args, defaultValue, validValues) =>
-    parseStringFlag(args, flag, defaultValue, validValues);
+  return (args, defaultValue, validValues) => parseStringFlag(args, flag, defaultValue, validValues);
 }
 
 /**
@@ -89,8 +88,7 @@ function createStringFlagParser(flag) {
  * @returns {(args: string[], defaultValue: number) => number}
  */
 function createIntegerFlagParser(flag, min = 1, max = Infinity) {
-  return (args, defaultValue) =>
-    parseIntegerFlag(args, flag, defaultValue, min, max);
+  return (args, defaultValue) => parseIntegerFlag(args, flag, defaultValue, min, max);
 }
 
 /**
