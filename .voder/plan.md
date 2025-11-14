@@ -1,12 +1,12 @@
-## NOW
-Extract the duplicated logic in `src/print-outdated.js` and `src/print-outdated-handlers.js` into a new shared module (e.g. `src/print-utils.js`), then refactor both files to import and use the shared functions.
+## NOW  
+Modify the Husky pre-push hook (`.husky/pre-push`) to run the full local quality pipeline instead of just tests. Replace its contents with a single command sequence that invokes all project scripts for linting, type-checking, formatting-check, tests, lockfile drift, duplication check, and audit.  
 
-## NEXT
-- Refactor `src/cli-options-helpers.js` by splitting it into smaller, single‐responsibility modules (e.g. parsing, validation, defaults) to reduce duplication and complexity.  
-- Update `docs/architecture.md` so it lists every current source file (including `apply-filters.js`, `config-loader.js`, `update-packages.js`, etc.), reflecting the actual module layout.  
-- Augment `docs/api.md` to document the `options.update` and `options.skipConfirmation` parameters of `printOutdated`, along with any other newly exposed functions.
+## NEXT  
+- Ensure all required commands exist in `package.json` scripts: verify or add entries for `lint`, `type-check`, `format:check`, `test`, `lockfile` (e.g. `npm install --package-lock-only --legacy-peer-deps`), `jscpd --threshold 20 src`, and `npm audit --audit-level=moderate`.  
+- Update `docs/developer-guidelines.md` to describe the new pre-push hook commands and list the exact script names that will run before every push.  
+- Test the updated hook locally by attempting a push with an intentional lint or test failure to confirm it blocks.  
 
-## LATER
-- Draft and add ADRs under `docs/decisions/` for configuration‐file support (story 010) and the auto‐update (`--update`) feature (story 011).  
-- Provide a JSON Schema file (e.g. `dry-aged-deps.schema.json`) for `.dry-aged-deps.json` and link it in the documentation for editor validation.  
-- Integrate a `jscpd --threshold 20 src` step into the CI workflow to enforce DRY principles automatically.
+## LATER  
+- Consolidate the full check sequence into a single npm script (e.g. `"prepush"`) in `package.json` and simplify `.husky/pre-push` to call that one script.  
+- Add a CI validation step that verifies the pre-push hook itself (for example, invoke `git push --dry-run` against a disposable branch) to guard against hook drift.  
+- Periodically review and tighten hook command thresholds (e.g. lower `jscpd` threshold, raise audit level) as project quality needs evolve.

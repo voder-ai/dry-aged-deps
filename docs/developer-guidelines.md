@@ -166,17 +166,16 @@ BREAKING CHANGE: Added strict null checks
 A Husky pre-push hook is configured to run the following commands before allowing a push (matching the CI pipeline):
 
 ```sh
-npx --no-install commitlint --from=HEAD~1 --to=HEAD  # Commit message linting
-npm run lint                      # ESLint with zero warnings
-npm run type-check                # TypeScript type checking (tsc)
-npx prettier --check .            # Prettier formatting check
-npm test                          # Unit tests with coverage
-npm install --package-lock-only --legacy-peer-deps  # Lockfile drift check
-git diff --exit-code              # Fail on package-lock changes
-npx jscpd --threshold 20 src      # Duplicate code detection
-npm run test:cli                  # Run CLI integration tests
-npm run test:cli -- test/cli.e2e.real-fixture.test.js  # E2E CLI test
-npm audit --audit-level=moderate  # Vulnerability scan
+npx --no-install commitlint --from=HEAD~1 --to=HEAD        # Commit message linting
+npm run lint                                              # Lint code
+npm run type-check                                        # TypeScript type checking
+npm run format:check                                      # Prettier formatting check
+npm test                                                  # Unit tests with coverage
+npm run check:lockfile                                    # Lockfile drift check
+npm run check:duplication                                 # Duplicate code detection
+npm run test:cli                                          # CLI integration tests
+npm run test:cli -- test/cli.e2e.real-fixture.test.js     # E2E CLI test
+npm run audit:ci                                          # Vulnerability scan
 ```
 
 Ensure the hook is installed by running:

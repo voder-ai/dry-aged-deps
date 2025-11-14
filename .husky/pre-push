@@ -1,4 +1,32 @@
 #!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
+. "$(dirname -- "${0}")/_/husky.sh"
 
+# Lint commit messages
+npx --no-install commitlint --from=HEAD~1 --to=HEAD
+
+# Lint code
+npm run lint
+
+# TypeScript type checking
+npm run type-check
+
+# Check formatting
+npm run format:check
+
+# Run tests with coverage
 npm test
+
+# Check lockfile drift
+npm run check:lockfile
+
+# Detect duplicate code
+npm run check:duplication
+
+# Run CLI integration tests
+npm run test:cli
+
+# Run E2E CLI test
+npm run test:cli -- test/cli.e2e.real-fixture.test.js
+
+# Vulnerability scan
+npm run audit:ci
