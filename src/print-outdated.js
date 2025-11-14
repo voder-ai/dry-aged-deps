@@ -15,8 +15,14 @@ import { getThresholds } from './print-utils.js';
 // complexity is tolerated in this file due to CLI orchestration; review during refactors
 /**
  * Print outdated dependencies information with age
+ * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+ * @req REQ-NPM-COMMAND - Execute `npm outdated --json` using child_process
+ * @req REQ-OUTPUT-DISPLAY - Display results in npm outdated style output with filters
+ * @req REQ-FORMAT-SUPPORT - Support table, json, xml formats
  * @param {Record<string, { current: string; wanted: string; latest: string }>} data
  * @param {{ fetchVersionTimes?: function, calculateAgeInDays?: function, checkVulnerabilities?: function, format?: string, prodMinAge?: number, devMinAge?: number, prodMinSeverity?: string, devMinSeverity?: string, returnSummary?: boolean, updateMode?: boolean, skipConfirmation?: boolean }} [options]
+ * @param {boolean} [options.updateMode] - If true, updates dependencies to recommended versions instead of printing.
+ * @param {boolean} [options.skipConfirmation] - If true, skips confirmation prompts during update operations.
  * @returns {Object|undefined} summary for xml mode or if returnSummary is true
  */
 export async function printOutdated(data, options = {}) {
