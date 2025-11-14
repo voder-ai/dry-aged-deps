@@ -148,6 +148,7 @@ BREAKING CHANGE: Added strict null checks
 A Husky pre-push hook is configured to run the following commands before allowing a push (matching the CI pipeline):
 
 ```sh
+npx --no-install commitlint --from=HEAD~1 --to=HEAD  # Commit message linting
 npm run lint                      # ESLint with zero warnings
 npm run type-check                # TypeScript type checking (tsc)
 npx prettier --check .            # Prettier formatting check
