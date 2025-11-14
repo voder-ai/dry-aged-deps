@@ -53,6 +53,8 @@ export default [
       // Relax complexity to allow incremental refactors; we'll ratchet this down over time
       complexity: ['error', { max: 15 }],
       'max-lines-per-function': ['error', { max: 200, skipComments: true, skipBlankLines: true }],
+      'max-params': ['error', 5],
+      'max-depth': ['error', 4],
     },
   },
 

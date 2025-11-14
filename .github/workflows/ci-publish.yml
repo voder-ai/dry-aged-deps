@@ -68,7 +68,7 @@ jobs:
         run: npm test
 
       - name: Detect duplicate code
-        run: npx jscpd --threshold 20 src || true
+        run: npx jscpd --threshold 20 src
 
       - name: Prepare CLI fixture dependencies
         run: npm install --ignore-scripts --no-audit --no-fund
