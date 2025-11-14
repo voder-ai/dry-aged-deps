@@ -1,8 +1,9 @@
 // @ts-nocheck
 /**
- * Filter rows by security vulnerabilities.
- * @story prompts/004.0
- * @req smart-search-fallback
+ * Filter rows by security vulnerabilities with smart-search fallback support.
+ * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
+ * @req REQ-SMART-SEARCH - Check newest mature version first and work backwards to find a safe version
+ * @req REQ-SAFE-ONLY - Only recommend safe, non-vulnerable versions or indicate when none exist
  * @param {Array} rows - Array of [name, current, wanted, latest, age, depType].
  * @param {function} checkVulnerabilities - Async function(name, version) returning either a number of vulnerabilities (legacy) or an object with { count: number, details: Array<{ id: string, title: string, severity: string, cvssScore: number, url: string }> }.
  * @param {{ prodMinSeverity: string, devMinSeverity: string }} thresholds - Severity thresholds for prod/dev dependencies.
@@ -10,7 +11,13 @@
  * @param {{ fetchVersionTimes?: function, calculateAgeInDays?: function }} [options] - Optional functions for smart-search fallback.
  * @returns {Promise<{ safeRows: Array, vulnMap: Map<string, { count: number, maxSeverity: string, details: Array }>, filterReasonMap: Map<string, string> }>} Returns safe rows, a map of vulnerability info, and filter reasons.
  */
-export async function filterBySecurity(rows, checkVulnerabilities, { prodMinSeverity, devMinSeverity }, format, options = {}) {
+export async function filterBySecurity(
+  rows,
+  checkVulnerabilities,
+  { prodMinSeverity, devMinSeverity },
+  format,
+  options = {}
+) {
   const severityWeights = {
     none: 0,
     low: 1,
@@ -57,21 +64,23 @@ export async function filterBySecurity(rows, checkVulnerabilities, { prodMinSeve
               maxSeverityLevel = totalCount > 0 ? minSeverity : 'none';
               safe = totalCount === 0;
             } else if (result && typeof result === 'object') {
-              totalCount = typeof result.count === 'number'
-                ? result.count
-                : Array.isArray(result.details)
-                  ? result.details.length
-                  : 0;
+              totalCount =
+                typeof result.count === 'number'
+                  ? result.count
+                  : Array.isArray(result.details)
+                    ? result.details.length
+                    : 0;
               detailsList = Array.isArray(result.details) ? result.details : [];
               let highestWeight = 0;
               for (const vuln of detailsList) {
                 const weight = severityWeights[(vuln.severity || '').toLowerCase()] || 0;
                 if (weight > highestWeight) highestWeight = weight;
               }
-              maxSeverityLevel = Object.keys(severityWeights).find((k) => severityWeights[k] === highestWeight) || 'none';
-              const aboveThreshold = detailsList.filter((v) => (
-                severityWeights[(v.severity || '').toLowerCase()] || 0
-              ) >= minWeight).length;
+              maxSeverityLevel =
+                Object.keys(severityWeights).find((k) => severityWeights[k] === highestWeight) || 'none';
+              const aboveThreshold = detailsList.filter(
+                (v) => (severityWeights[(v.severity || '').toLowerCase()] || 0) >= minWeight
+              ).length;
               safe = aboveThreshold === 0;
             }
             if (safe) {
@@ -121,11 +130,7 @@ export async function filterBySecurity(rows, checkVulnerabilities, { prodMinSeve
         }
       } else if (result && typeof result === 'object') {
         totalCount =
-          typeof result.count === 'number'
-            ? result.count
-            : Array.isArray(result.details)
-              ? result.details.length
-              : 0;
+          typeof result.count === 'number' ? result.count : Array.isArray(result.details) ? result.details.length : 0;
         details = Array.isArray(result.details) ? result.details : [];
         let highestWeight = 0;
         for (const vuln of details) {
@@ -133,8 +138,8 @@ export async function filterBySecurity(rows, checkVulnerabilities, { prodMinSeve
           const weight = severityWeights[sevKey] || 0;
           if (weight > highestWeight) highestWeight = weight;
         }
-        maxSeverity = Object.keys(severityWeights).find(key => severityWeights[key] === highestWeight) || 'none';
-        const countAboveThreshold = details.filter(vuln => {
+        maxSeverity = Object.keys(severityWeights).find((key) => severityWeights[key] === highestWeight) || 'none';
+        const countAboveThreshold = details.filter((vuln) => {
           const weight = severityWeights[(vuln.severity || '').toLowerCase()] || 0;
           return weight >= minWeight;
         }).length;
