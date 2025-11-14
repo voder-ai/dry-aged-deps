@@ -2,15 +2,8 @@
 <traceability>
   <specification>prompts/013.0-DEV-CHECK-MODE.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-14T04:03:42.019Z</last_validated>
+  <last_validated>2025-11-14T08:30:07.243Z</last_validated>
   <last_modified>2025-11-11T08:04:07.352Z</last_modified>
-  <evidence>- src/cli-options.js detects `--check` and sets returnSummary=true
-- bin/dry-aged-deps.js exits with code 1 when summary.safeUpdates>0, 0 when no updates, and 2 on errors
-- print-outdated-handlers and printOutdated produce clear table output with “Outdated packages:” and list rows, and JSON/XML output include safeUpdates count
-- test/cli.check-mode.test.js (6 tests) covering exit codes 0/1/2 in table, JSON, XML, and threshold scenarios all pass
-- test/docs/ci-integration.test.js verifies README.md and docs/api.md include CI/CD integration example with `--check` and correct exit code semantics
-- `README.md` and `docs/api.md` contain `--check` flag usage and CI/CD workflow examples
-- `--help` output in bin/dry-aged-deps.js lists `--check` with correct description
-- `npm test` reports 163/163 tests passed, including all check‐mode and documentation tests</evidence>
-  <notes>All acceptance criteria for story 013.0-DEV-CHECK-MODE have been implemented and verified by unit, functional, and documentation tests. The CLI correctly handles the `--check` flag, exit codes, output formats, and help text.</notes>
+  <evidence>1) test/cli.check-mode.test.js exists and covers all acceptance criteria for check mode (REQ-CHECK-FLAG, REQ-EXIT-1-ON-UPDATES, REQ-EXIT-0-NO-UPDATES, REQ-EXIT-2-ON-ERROR, REQ-FORMAT-SUPPORT). All tests in this file pass. 2) bin/dry-aged-deps.js implements the --check flag, invokes printOutdated with returnSummary, and on check mode uses summary.safeUpdates to decide exit code (0 when none, 1 when updates, 2 on error). 3) README.md contains --check flag in the options table, usage examples (including CI/CD GitHub Actions snippet), and exit code documentation. 4) parseOptions and help text include --check. 5) JSON/XML test cases for check mode pass, confirming format support. 6) Invalid format (--format=bad) yields exit code 2 and appropriate stderr.</evidence>
+  <notes>The implementation fully satisfies all acceptance criteria: it supports --check, fails with exit code 1 when safe updates exist, exits 0 when none, uses 2 for errors, provides clear output in table/JSON/XML modes, and is documented in both CLI help and README with CI/CD examples. Unit tests comprehensively cover the behavior.</notes>
 </traceability>

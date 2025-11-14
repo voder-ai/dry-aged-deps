@@ -2,16 +2,20 @@
 <traceability>
   <specification>prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-14T04:03:46.750Z</last_validated>
+  <last_validated>2025-11-14T08:31:20.496Z</last_validated>
   <last_modified>2025-11-09T23:03:30.864Z</last_modified>
-  <evidence>• Vitest suite (163 tests) passes, including tests referencing prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md:
-  – test/filter-by-security-severity.test.js verifies blocking at/above threshold and safe cases
-  – test/cli.flags.test.js verifies --severity accepts valid values, rejects invalid/missing values
-  – test/functional-assessment.test.js covers invalid CLI flag exit code 2 and config file override of severity
-  – test/cli.config-file.test.js covers reading severity from .dry-aged-deps.json and CLI override
-• src/cli-options.js and helpers implement parseSeverityFlag, prod/dev variants, valid values [none, low, moderate, high, critical], and exit code 2 on invalid
-• src/config-loader.js reads config.severity and config.prod.minSeverity/dev.minSeverity with validation against the same allowed list
-• src/filter-by-security.js uses thresholds to block vulnerabilities at or above the configured severity
-• bin/dry-aged-deps.js help text (–help) includes “--severity=<level>     Vulnerability severity threshold: none, low, moderate, high, critical (default: none)”</evidence>
-  <notes>All acceptance criteria for configurable security threshold are implemented and covered by concrete tests. CLI flag and config file support, valid severity levels, filtering logic, precedence (CLI > config > default), default behavior (block all), validation of invalid values, help documentation, and output of applied thresholds are present and verified.</notes>
+  <evidence>1) CLI parsing: src/cli-options-helpers.js and src/cli-options.js implement `--severity`, with a validSeverities array ['none','low','moderate','high','critical'], defaulting to 'none'.
+
+2) Config‐file support: src/config-loader.js reads `severity` and `prod.minSeverity`/`dev.minSeverity` from .dry-aged-deps.json. 
+
+3) Filtering logic: src/filter-by-security.js uses severityWeights and blocks any vulnerability with weight ≥ the configured threshold.  
+
+4) Override precedence: parseOptions applies CLI > config file > default policy, and test/cli.config-file.test.js verifies that flags override the config file.  
+
+5) Defaults & validation: invalid or missing `--severity` exits with code 2 (test/cli.flags.test.js), and when omitted the default threshold is 'none' (blocking all) per test.  
+
+6) Help text: bin/dry-aged-deps.js’s `--help` includes `--severity=<level> Vulnerability severity threshold: none, low, moderate, high, critical (default: none)`.  
+
+7) Test coverage: test/filter-by-security-severity.test.js confirms correct behavior for below‐threshold, at/above‐threshold, and legacy numeric stubs.</evidence>
+  <notes>All acceptance criteria for story 006.0 (configurable security threshold) are fully satisfied and verified by concrete implementation and passing tests.</notes>
 </traceability>

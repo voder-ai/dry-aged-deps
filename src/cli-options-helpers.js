@@ -78,9 +78,11 @@ export function parseFormatFlag(args, defaultFormat, validFormats) {
 
 /**
  * Parse the --min-age flag.
+ * @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
+ * @req REQ-CLI-MIN-AGE-VALIDATION - CLI --min-age must be an integer between 1 and 365
  */
 export function parseMinAgeFlag(args, defaultMinAge) {
-  return parseIntegerFlag(args, 'min-age', defaultMinAge, 1);
+  return parseIntegerFlag(args, 'min-age', defaultMinAge, 1, 365);
 }
 
 /**

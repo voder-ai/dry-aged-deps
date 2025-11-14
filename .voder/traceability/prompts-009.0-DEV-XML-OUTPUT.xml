@@ -2,8 +2,15 @@
 <traceability>
   <specification>prompts/009.0-DEV-XML-OUTPUT.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-14T04:06:54.029Z</last_validated>
+  <last_validated>2025-11-14T08:30:38.011Z</last_validated>
   <last_modified>2025-11-09T23:05:40.405Z</last_modified>
-  <evidence>Ran `npm test` with Vitest: 163 tests passed (including xml-formatter.*, cli.format-xml.* and cli.check-mode XML tests). Help output (`node bin/dry-aged-deps.js --help`) lists `xml` in `--format` option. CLI handling in `bin/dry-aged-deps.js` invokes `xmlFormatter`, `parseOptions` validates `--format=xml`, and exit codes for normal, check mode, and error cases are covered by tests. Code in `src/xml-formatter.js` produces well-formed XML with declaration, packages, summary, thresholds, error blocks, and escapes special characters. Tests verify all acceptance points: CLI flag, valid XML, complete data, summary stats, exit codes, no console noise, error formatting, schema consistency, and help documentation.</evidence>
-  <notes>All acceptance criteria for 009.0-DEV-XML-OUTPUT are fully implemented and verified by automated tests.</notes>
+  <evidence>- src/xml-formatter.js implements XML output with declaration, error element, packages, summary, thresholds, and escaping
+- src/cli-options.js and cli-options-helpers.js accept and validate --format=xml alongside table/json
+- bin/dry-aged-deps.js help text includes xml as a valid format option
+- print-outdated-handlers.js’s handleXmlOutput logs only XML (no console noise) and returns summary
+- CLI exit codes for XML mode: 0 on success, 1 for updates in check mode, 2 on errors
+- test/cli.format-xml.test.js verifies valid XML structure and no stderr output
+- test/cli.format-xml.error.test.js verifies XML error output and exit code 2 on parse errors
+- test/cli.check-mode.test.js includes XML check-mode tests ensuring proper exit codes and output</evidence>
+  <notes>All specified acceptance criteria for the XML output format story are satisfied: the CLI flag works, XML is well-formed, includes data and summary, handles errors, suppresses noise, and help docs are updated. Tests cover normal, error, and check-mode scenarios.</notes>
 </traceability>

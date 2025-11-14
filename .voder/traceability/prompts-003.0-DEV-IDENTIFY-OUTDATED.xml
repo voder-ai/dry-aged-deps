@@ -2,11 +2,8 @@
 <traceability>
   <specification>prompts/003.0-DEV-IDENTIFY-OUTDATED.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-14T04:02:50.785Z</last_validated>
+  <last_validated>2025-11-14T08:31:27.543Z</last_validated>
   <last_modified>2025-11-09T23:02:10.889Z</last_modified>
-  <evidence>1) src/build-rows.js only ever computes the age of the “latest” version (it does not iterate backwards over older versions once the latest is too young).  
-2) src/filter-by-age.js simply filters out rows whose computed age < threshold—no logic to “start from latest and work backwards until finding a mature version” is present.  
-3) test/filter-by-age.test.js covers only simple threshold filtering on a single age value and makes no assertions about smart fallback across multiple versions.  
-4) There is no implementation or tests that compare candidate mature versions to the current version or search historical version times when the latest is too young.</evidence>
-  <notes>The story calls for REQ-SMART-SEARCH: for each package, inspect versions in descending order until a version ≥7 days old is found. The code only looks at the latest version’s age and drops it if too young, without falling back to earlier versions. Therefore the smart filtering requirement is not implemented.</notes>
+  <evidence>The `filterByAge` function (src/filter-by-age.js) simply filters rows by checking if the latest version’s age is ≥ the threshold. The `buildRows` function (src/build-rows.js) only ever calculates the age of the `info.latest` version and never attempts to search backwards through prior versions to find the first mature one. There is no code or tests that implement the “Smart Filtering” requirement (start from latest and work backwards until finding a mature version).</evidence>
+  <notes>Acceptance criterion “Smart Filtering: Checks latest first, works backwards until finding mature version” (REQ-SMART-SEARCH) is not implemented. The code only filters by latest version age and does not fall back to older versions when the latest is too young.</notes>
 </traceability>

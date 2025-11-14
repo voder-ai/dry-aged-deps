@@ -2,19 +2,16 @@
 <traceability>
   <specification>prompts/008.0-DEV-JSON-OUTPUT.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-14T04:05:18.604Z</last_validated>
+  <last_validated>2025-11-14T08:32:04.306Z</last_validated>
   <last_modified>2025-11-09T23:04:54.331Z</last_modified>
-  <evidence>Vitest suite ran 163 tests (59 files) including  CLI JSON output tests (cli.format-json.test.js, cli.format-json.error.test.js, cli.json.skip-outdated.test.js), jsonFormatter tests (json-formatter.test.js), printOutdated JSON branch tests (printOutdated.json.test.js) and CLI check‐mode tests for JSON exit codes; all passed. Help text, flag parsing, JSON validity, complete data, summary stats, exit codes (0/1/2), silent stderr in JSON mode, error‐as‐JSON behavior, default table mode, and --help documentation were verified.
-
-npm test output snippet:
-
-  ✔  cli.format-json.test.js
-  ✔  cli.format-json.error.test.js
-  ✔  cli.json.skip-outdated.test.js
-  ✔  json-formatter.test.js
-  ✔  printOutdated.json.test.js
-  …
-  Tests 163 passed (163)
-  All acceptance criteria for prompts/008.0-DEV-JSON-OUTPUT.md are exercised by passing tests.</evidence>
-  <notes>The JSON output feature is fully implemented and covered by comprehensive unit and integration tests. All acceptance criteria (flag parsing, JSON schema, summary, exit codes, silent mode, error formatting, default behavior, and documentation) are validated and passing. The story is complete.</notes>
+  <evidence>- All 164 Vitest tests passed, including 4 tests in test/cli.format-json.test.js, 1 in test/cli.format-json.error.test.js, 1 in test/json-formatter.test.js, and 1 in test/printOutdated.json.test.js
+- CLI accepts --format=json (parseOptions, parseFormatFlag)
+- jsonFormatter and handleJsonOutput produce valid, parseable JSON with timestamp, packages array, summary and thresholds
+- JSON output includes complete package data (name, current, wanted, latest, recommended, age, vulnerabilities, filtered, filterReason, type)
+- Summary contains totalOutdated, safeUpdates, filteredByAge, filteredBySecurity, thresholds
+- Exit codes for JSON mode: 0 (no updates), 1 (updates available via --check), 2 (errors) verified by tests
+- Console noise suppressed (stderr empty) in JSON mode
+- Default behavior remains table output when no --format specified (functional tests)
+- Help text includes --format option (bin/dry-aged-deps.js)</evidence>
+  <notes>The implementation fully satisfies the JSON output story (prompts/008.0-DEV-JSON-OUTPUT.md). All acceptance criteria are met, and traceability is present in code comments and tests reference the story. JSON output is valid, complete, and behaves correctly in success, filter, and error scenarios.</notes>
 </traceability>

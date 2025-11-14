@@ -1,27 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <traceability>
   <specification>prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md</specification>
-  <status>PASSED</status>
-  <last_validated>2025-11-14T04:04:21.362Z</last_validated>
+  <status>FAILED</status>
+  <last_validated>2025-11-14T08:30:33.272Z</last_validated>
   <last_modified>2025-11-09T23:03:02.030Z</last_modified>
-  <evidence>1. All 163 Vitest tests passed (npm test).
-2. CLI --min-age flag tests (test/cli.flags.test.js) cover:
-   • Rejecting non-numeric and negative values (exit code 2)
-   • Default to 7 days when not provided
-   • Overriding default with --min-age
-   • Accepting values >365 (in line with acceptance criteria which only specified rejecting negatives and non-numeric)
-3. Config‐file tests (test/cli.config-file.test.js) cover:
-   • Reading minAge, prod.minAge, dev.minAge from .dry-aged-deps.json
-   • CLI flags override config values
-   • Invalid JSON, unknown keys, invalid minAge in config file produce exit code 2 with clear errors
-   • Custom config‐file name via --config-file
-4. Functional assessment (test/functional-assessment.test.js) includes story 005.0 and verifies:
-   • Invalid CLI flag rejected
-   • Valid threshold of ≥1 works in mock mode
-5. Help documentation in bin/dry-aged-deps.js includes “--min-age=<days>” with description.
-6. README.md lists --min-age flag under Options and provides examples.
-7. Code in src/cli-options.js and src/cli-options-helpers.js implements parsing, precedence (CLI > config > default), and validation.
-8. Output JSON includes summary.thresholds.prod.minAge and dev.minAge, confirming applied threshold.
-</evidence>
-  <notes>The configurable age threshold feature is fully implemented: the CLI flag --min-age works as specified, the .dry-aged-deps.json config file is read with correct precedence, defaults remain at 7 days, invalid inputs are rejected, help text and README are updated, and output clearly indicates the applied threshold. All automated tests for this story pass.</notes>
+  <evidence>In src/cli-options-helpers.js, parseMinAgeFlag calls parseIntegerFlag(args, 'min-age', defaultMinAge, 1) which sets no upper bound (max=Infinity). Thus CLI accepts --min-age values >365. For example, test cli.flags.test.js (“accepts values >365 without error”) demonstrates that --min-age=366 is accepted. However, the specification’s Requirements section (REQ-VALIDATION) mandates validating that age is an integer between 1 and 365.</evidence>
+  <notes>The implementation lacks enforcement of the upper bound of 365 days for the --min-age flag, contrary to the spec. All other acceptance criteria appear satisfied (CLI flag support, config file support, precedence, defaults, validation for negatives/non-numeric, help text, and output messaging).</notes>
 </traceability>

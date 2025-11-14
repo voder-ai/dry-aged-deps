@@ -90,6 +90,18 @@ describe('CLI config-file support', () => {
     await expect(execa('node', [cliPath], { cwd: tempDir })).rejects.toMatchObject({ exitCode: 2 });
   });
 
+  // Story: prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
+  it('rejects config minAge >365', async () => {
+    const config = { minAge: 366, format: 'json' };
+    await writeConfig(tempDir, '.dry-aged-deps.json', JSON.stringify(config));
+    try {
+      await execa('node', [cliPath], { cwd: tempDir });
+    } catch (err) {
+      expect(err.exitCode).toBe(2);
+      expect(err.stderr).toContain('Invalid config value for minAge: 366. Must be integer 1-365');
+    }
+  });
+
   it('supports custom config file name via --config-file flag', async () => {
     const customName = 'custom.json';
     const cfg = { minAge: 12, severity: 'moderate', format: 'json' };

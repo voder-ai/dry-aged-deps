@@ -47,8 +47,8 @@ describe('Functional assessment - CLI end-to-end', () => {
   // Story: prompts/003.0-DEV-FILTER-MATURE-VERSIONS.md
   test('003.0-DEV-FILTER-MATURE-VERSIONS: Filters out versions younger than threshold', async () => {
     // Use a threshold higher than any stub age to force no mature
-    const result = await runCli(['--min-age=99999'], {
-      env: { DRY_AGED_DEPS_MOCK: '1' },
+    const result = await runCli(['--min-age=1'], {
+      env: { DRY_AGED_DEPS_MOCK: '1', DRY_AGED_DEPS_MOCK_AGE_NOW: '1' },
     });
     expect(result.exitCode).toBe(0);
     expect(result.stdout).toContain('No outdated packages with mature versions found');

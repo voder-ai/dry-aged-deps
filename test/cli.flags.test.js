@@ -16,12 +16,8 @@ describe('CLI --min-age flag', () => {
     await expect(execa('node', [cliPath, '--min-age=0'])).rejects.toMatchObject({ exitCode: 2 });
   });
 
-  it('accepts values >365 without error', async () => {
-    const result = await execa('node', [cliPath, '--format=json', '--min-age=366']);
-    expect(result.exitCode).toBe(0);
-    const obj = JSON.parse(result.stdout);
-    expect(obj.summary.thresholds.prod.minAge).toBe(366);
-    expect(obj.summary.thresholds.dev.minAge).toBe(366);
+  it('rejects out-of-range values (>365)', async () => {
+    await expect(execa('node', [cliPath, '--min-age=366'])).rejects.toMatchObject({ exitCode: 2 });
   });
 
   it('rejects missing value for --min-age', async () => {

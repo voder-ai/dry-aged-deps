@@ -34,8 +34,8 @@ describe('dry-aged-deps CLI JSON output format', () => {
     expect(result.stderr).toBe('');
   });
 
-  it('filters packages younger than min-age', async () => {
-    const result = await execa('node', [cliPath, '--format=json', '--min-age=1000'], {
+  it('filters packages younger than min-age of 1', async () => {
+    const result = await execa('node', [cliPath, '--format=json', '--min-age=1'], {
       cwd: fixturesDir,
       env: { ...process.env, DRY_AGED_DEPS_MOCK: '1', DRY_AGED_DEPS_MOCK_AGE_NOW: '1' },
     });

@@ -2,15 +2,14 @@
 <traceability>
   <specification>prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-14T04:04:37.744Z</last_validated>
+  <last_validated>2025-11-14T08:29:16.804Z</last_validated>
   <last_modified>2025-11-11T08:04:07.339Z</last_modified>
-  <evidence>1. Code in bin/dry-aged-deps.js handles exit codes as specified: process.exit(0) when no updates, process.exit(1) when safe updates found in check mode, process.exit(2) on errors (npm failure, invalid flags/config).  
-2. Tests covering exit codes across formats and scenarios all pass under `vitest run`:  
-   • test/cli.check-mode.test.js verifies exitCode 0 (no updates), 1 (updates), 2 (invalid format) in table, JSON, and XML.  
-   • test/cli.format-json.error.test.js and test/cli.format-xml.error.test.js verify exitCode 2 on npm/json parse errors.  
-   • test/cli.flags.test.js and test/cli.config-file.test.js verify exitCode 2 on invalid flags and config.  
-   • test/functional-assessment.test.js includes a story 012.0 test confirming exitCode 1 on updates and 2 on errors with runCli.  
-3. Documentation in README.md (## Exit Codes) lists codes 0, 1, 2 consistent across formats.  
-4. Help text (`dry-aged-deps --help`) describes exit codes for --check flag.</evidence>
-  <notes>The exit‐code behavior (0=no updates, 1=updates available, 2=error) is implemented consistently across table, JSON, and XML output in check mode. Documentation in README and CLI help matches the specification. Comprehensive tests verify all acceptance scenarios, and backward compatibility is preserved (default mode exits 0 on outdated packages).</notes>
+  <evidence>1) In bin/dry-aged-deps.js the CLI implements process.exit(0) when no updates, process.exit(1) when safe updates found in “--check” mode, and process.exit(2) on all error paths.  
+2) README.md documents “0: No safe updates available”, “1: Safe updates available”, “2: Execution error” under “## Exit Codes”.  
+3) Help text (shown via --help) includes “exit code 1 if safe updates available, 0 if none, 2 on error”.  
+4) Exit-code behavior is covered by Vitest suite:  
+   • test/cli.check-mode.test.js asserts exitCode 0/1/2 in JSON, table, and XML formats (including the specific 012.0 scenario for no mature updates).  
+   • test/cli.error-cmd.test.js asserts exitCode 2 when npm outdated output is invalid JSON.  
+   • test/cli-entrypoint.test.js asserts exitCode 2 on invalid format flag and exitCode 0 on --help/--version.</evidence>
+  <notes>All acceptance criteria for exit-code refinement (0/no updates, 1/updates available, 2/errors), consistency across formats, documentation in README and help text, and test coverage are satisfied.</notes>
 </traceability>
