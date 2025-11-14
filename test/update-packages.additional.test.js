@@ -1,7 +1,7 @@
-/ **
+/**
  * @story Additional branch scenarios for updatePackages
  * @req Validate user confirmation, backup and update error handling, and dependency absence handling
- * /
+ */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import path from 'path';
 import os from 'os';
