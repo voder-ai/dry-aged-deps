@@ -79,13 +79,7 @@ export async function printOutdated(data, options = {}) {
   });
 
   if (format === 'json') {
-    return handleJsonOutput(
-      safeRows,
-      summary,
-      thresholds,
-      vulnMap,
-      filterReasonMap
-    );
+    return handleJsonOutput(safeRows, summary, thresholds, vulnMap, filterReasonMap);
   }
 
   if (updateMode) {
@@ -94,13 +88,7 @@ export async function printOutdated(data, options = {}) {
   }
 
   if (format === 'xml') {
-    return handleXmlOutput(
-      rows,
-      summary,
-      thresholds,
-      vulnMap,
-      filterReasonMap
-    );
+    return handleXmlOutput(rows, summary, thresholds, vulnMap, filterReasonMap);
   }
 
   return handleTableOutput(safeRows, matureRows, summary, prodMinAge, devMinAge, returnSummary);
