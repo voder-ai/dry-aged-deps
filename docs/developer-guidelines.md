@@ -204,6 +204,8 @@ Use Markdown Architectural Decision Records (MADR) format for architectural deci
 
 The CI pipeline includes a commit message lint step that verifies commit messages adhere to Conventional Commits. A pull request template is provided at `.github/pull_request_template.md`; please follow this template when creating PRs.
 
+**Important:** Ensure commit types are correctly chosen to avoid versioning conflicts. Incorrect commit types can cause semantic-release to calculate wrong version numbers.
+
 All changes must pass CI checks:
 
 - Linting
