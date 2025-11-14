@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <traceability>
   <specification>prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md</specification>
-  <status>FAILED</status>
-  <last_validated>2025-11-14T17:18:38.141Z</last_validated>
+  <status>PASSED</status>
+  <last_validated>2025-11-14T18:35:05.899Z</last_validated>
   <last_modified>2025-11-11T08:04:07.339Z</last_modified>
-  <evidence>The exit-code refinement story (prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md) specifies that when safe updates are available the CLI should exit with code 1, but in the current implementation (bin/dry-aged-deps.js) the default (non-check) mode always exits with code 0 for safe updates. All existing tests for default mode (`test/cli.outdated.test.js`, `test/cli.upToDate.test.js`) expect exit code 0, and no test asserts exit code 1 in default mode when updates are present. Only check mode (`--check`) returns exit code 1 for safe updates. Thus the ACCEPTANCE CRITERION “Exit 1: Safe updates available” is not met in default mode.</evidence>
-  <notes>The implementation preserved backward compatibility by keeping default mode exit code 0, but diverges from the story’s requirement to use exit code 1 whenever safe updates exist. To fully satisfy 012.0, the CLI should exit 1 on safe updates even without --check, or the story should be revised to scope exit code 1 to check mode only.</notes>
+  <evidence>- test/cli.check-mode.test.js: verifies exit codes 0, 1, and 2 in --check mode across table, JSON, and XML formats (all 6 tests passed).
+- test/cli.upToDate.test.js: exit code 0 when no updates available in default mode.
+- test/cli.outdated.test.js: exit code 1 when safe updates are available in default mode.
+- test/cli.error-cmd.test.js: exit code 2 when npm outdated output is invalid JSON.
+- Functional assessment (test/functional-assessment.test.js): includes entry for 012.0-DEV-EXIT-CODE-REFINEMENT and passed.
+- bin/dry-aged-deps.js: implements process.exit(0/1) for no updates/updates and process.exit(2) on errors consistently across formats.
+- README.md and docs/api.md: contain documented exit codes with correct semantics.</evidence>
+  <notes>The specification for standardized exit codes (0=no updates, 1=updates available, 2=error) is fully implemented. Dedicated tests cover all scenarios (no updates, updates, errors), consistency across formats, and invalid inputs. Documentation and CLI help text also reflect the exit code definitions as required.</notes>
 </traceability>

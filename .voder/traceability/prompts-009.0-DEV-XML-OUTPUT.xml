@@ -2,16 +2,8 @@
 <traceability>
   <specification>prompts/009.0-DEV-XML-OUTPUT.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-14T17:16:58.563Z</last_validated>
+  <last_validated>2025-11-14T18:35:05.283Z</last_validated>
   <last_modified>2025-11-09T23:05:40.405Z</last_modified>
-  <evidence>- CLI `--format=xml` is supported (src/cli-options.js validFormats includes 'xml', bin/dry-aged-deps.js help text lists xml as option).
-- xmlFormatter implementation in src/xml-formatter.js produces XML declaration, root <outdated-packages>, <packages> entries, <summary>, and <thresholds> sections with proper escaping.
-- Error paths in bin/dry-aged-deps.js for format==='xml' print an <error> block and exit code 2.
-- Tests cover XML output format:
-  • test/cli.format-xml.test.js verifies valid XML, root tags, suppression of stderr.
-  • test/cli.format-xml.error.test.js verifies error XML, exit code 2, well-formed closing tag.
-  • test/xml-formatter.test.js and related xml-formatter.* tests verify XML structure, summary, thresholds, escaping, and edge cases.
-  • test/cli.check-mode.test.js ensures check mode works with XML format and correct exit codes.
-- All tests pass in the current cycle (186 passing tests, coverage 98%).</evidence>
-  <notes>The XML output feature satisfies all acceptance criteria and requirements. The CLI flag, formatter implementation, error handling, exit codes, and documentation are in place and thoroughly tested.</notes>
+  <evidence>All tests related to XML output passed in the test suite, including CLI integration tests (`test/cli.format-xml.test.js`, `test/cli.format-xml.error.test.js`) and unit tests for the XML formatter (`test/xml-formatter.*.test.js`). The CLI help text in `bin/dry-aged-deps.js` includes `--format=xml`, and error branches in the CLI correctly emit XML error blocks with exit code 2. Code inspection shows `src/xml-formatter.js` produces well-formed XML with declaration, summary section, full package data (including vulnerabilities and thresholds), and suppresses console errors (stderr empty). `src/cli-options.js` validates `--format=xml` among allowed values. CI runs `npm test` with 186 passing tests, covering XML functionality specifically.</evidence>
+  <notes>The XML output feature fully satisfies the specification in `prompts/009.0-DEV-XML-OUTPUT.md`. All acceptance criteria—CLI flag support, valid XML schema, complete data, summary statistics, exit codes, silent mode in XML, proper error handling, and documented help text—are implemented and verified by tests.</notes>
 </traceability>

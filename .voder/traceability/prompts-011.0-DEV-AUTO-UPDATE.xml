@@ -2,30 +2,13 @@
 <traceability>
   <specification>prompts/011.0-DEV-AUTO-UPDATE.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-14T17:18:01.961Z</last_validated>
+  <last_validated>2025-11-14T18:35:33.248Z</last_validated>
   <last_modified>2025-11-11T08:04:07.327Z</last_modified>
-  <evidence>The auto-update feature is fully implemented and covered by automated tests. Key evidence:
-
-1) CLI supports the --update and --yes flags (parseOptions in src/cli-options.js includes updateMode and skipConfirmation). The help text in bin/dry-aged-deps.js lists these flags.
-
-2) printOutdated in src/print-outdated.js checks updateMode and delegates to updatePackages(safeRows, skipConfirmation, summary).
-
-3) updatePackages in src/update-packages.js:
-   - Logs preview of safeRows
-   - Prompts for confirmation unless skipConfirmation is true
-   - Creates backup file (package.json.backup) and logs success
-   - Reads, modifies, and writes package.json with 2-space indent
-   - Logs summary message and reminds user to run npm install
-   - Gracefully handles backup or write errors by logging and returning summary
-
-4) Unit tests in test/printOutdated.update.test.js verify:
-   - Safe updates are applied, backup created, package.json updated, summary returned, and log messages
-   - No safe updates branch: logs "No safe updates available." and does not create backup
-
-5) Additional tests in test/printOutdated.updatePromptAbort.test.js and test/printOutdated.updateBackupError.test.js cover confirmation abort flow and backup error handling.
-
-6) README.md includes usage examples for --update and --yes flags.
-
-All acceptance criteria (update flag, safety filtering, format preservation, preview/confirm, yes flag, backup, install prompt, summary, error handling) are satisfied and exercised by the test suite.</evidence>
-  <notes>The auto-update story (011.0-DEV-AUTO-UPDATE) has been fully implemented. All acceptance criteria are met, and the functionality is verified by comprehensive unit tests. CLI integration and documentation have been updated accordingly.</notes>
+  <evidence>• Tests referencing the story present: test/update-packages.test.js and test/printOutdated.update*.test.js include `// Story: prompts/011.0-DEV-AUTO-UPDATE.md` comments and cover update behavior.
+• parseOptions recognizes `--update` and `--yes` flags (src/cli-options.js).
+• CLI help lists `--update` and `-y, --yes` options (bin/dry-aged-deps.js).
+• printOutdated invokes updatePackages when updateMode is true (src/print-outdated.js).
+• updatePackages handles preview, confirmation prompt, backup creation, JSON read/write with 2-space indent, summary logging, install reminder, and error handling (src/update-packages.js).
+• Unit tests pass for all scenarios: no safe updates, skipConfirmation, abort flow, backup error, and summary correctness (186 tests, 98.2% coverage).</evidence>
+  <notes>All acceptance criteria for auto-update mode are implemented and thoroughly tested. The CLI accepts `--update` and `--yes`, only safe updates are applied, formatting and backups are handled correctly, user confirmation and error paths are covered. Implementation aligns with the specification.</notes>
 </traceability>

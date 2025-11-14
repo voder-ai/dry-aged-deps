@@ -347,9 +347,41 @@ dry-aged-deps --format=xml
 
 ---
 
+### Release 0.6: Enhanced User Experience
+
+**Goal**: Improve usability with better error handling and user feedback
+
+**Stories**:
+
+- **014.0-DEV-INVALID-OPTION-ERROR**: Provide clear error messages for invalid command-line options
+
+**Success Metrics**:
+
+- Detects and reports unknown command-line options (e.g., `--json` instead of `--format=json`)
+- Provides "Did you mean..." suggestions for common typos
+- Shows clear error messages for invalid option values
+- Exits with appropriate error code (2) for usage errors
+- Outputs errors to stderr, not stdout
+- Helps users quickly identify and fix mistakes
+
+**Deliverable**: Better user experience through clear, actionable error messages
+
+**Example**:
+
+```bash
+$ dry-aged-deps --json
+Error: Unknown option '--json'
+
+Did you mean '--format=json'?
+
+Use 'dry-aged-deps --help' to see all available options.
+```
+
+---
+
 ## Complete Feature Set (MVP + Enhancements)
 
-With stories 001-009, we have a comprehensive, production-ready tool:
+With stories 001-014, we have a comprehensive, production-ready tool:
 
 - ✅ Shows which packages can be safely updated (MVP)
 - ✅ Protects against supply chain attacks (MVP)
@@ -361,3 +393,4 @@ With stories 001-009, we have a comprehensive, production-ready tool:
 - ✅ JSON output for automation (Enhancement)
 - ✅ XML output for tool compatibility (Enhancement)
 - ✅ Config file support for team consistency (Enhancement)
+- ✅ Clear error messages for invalid options (UX Enhancement)

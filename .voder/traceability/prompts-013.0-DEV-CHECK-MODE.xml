@@ -2,8 +2,8 @@
 <traceability>
   <specification>prompts/013.0-DEV-CHECK-MODE.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-14T17:15:52.734Z</last_validated>
+  <last_validated>2025-11-14T18:35:03.455Z</last_validated>
   <last_modified>2025-11-11T08:04:07.352Z</last_modified>
-  <evidence>1) Test coverage: `test/cli.check-mode.test.js` (6 tests) all pass (exit codes and output verified for table, JSON, XML, error, invalid flags). 2) CLI implementation in bin/dry-aged-deps.js correctly parses `--check`, returns summary, and calls process.exit(1|0|2) per spec. 3) README.md includes `--check` flag and usage examples. 4) Help text in bin/dry-aged-deps.js lists `--check` with correct description.</evidence>
-  <notes>All acceptance criteria for 013.0-DEV-CHECK-MODE are satisfied: the `--check` flag is recognized, exit codes are 1 on safe updates, 0 when up-to-date, 2 on error; output is clear in table mode and supported in JSON/XML modes; documentation and help text include `--check` usage.</notes>
+  <evidence>A dedicated test suite (test/cli.check-mode.test.js) covers all acceptance criteria for --check mode: it verifies exit code 0 when no updates are available (JSON output), exit code 1 when safe updates exist in table (default), JSON, and XML modes, and exit code 2 on invalid flags (e.g. --format=bad) or out‐of‐range values (e.g. --min-age=10000). The CLI entrypoint (bin/dry-aged-deps.js) parses --check into a returnSummary flag, invokes printOutdated with returnSummary, and applies the correct exit codes (1 on updates, 0 when none, 2 on error). README.md also documents the --check flag and provides CI/CD usage examples.</evidence>
+  <notes>The implementation fully satisfies prompts/013.0-DEV-CHECK-MODE.md. The --check flag is supported, exit codes are correct across table, JSON, and XML output modes, clear output is provided before failing, and documentation includes usage examples. All associated tests pass, confirming complete compliance.</notes>
 </traceability>
