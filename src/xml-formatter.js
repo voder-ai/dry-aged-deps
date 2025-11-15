@@ -1,20 +1,13 @@
 // @ts-nocheck
-// xml-formatter.js
-// Formats outdated dependencies and summary data into XML
-
-/**
- * Escape special XML characters in a string
- * @param {string} unsafe
- * @returns {string}
- */
-function escapeXml(unsafe) {
-  return String(unsafe)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&apos;');
-}
+import {
+  buildXmlDeclaration,
+  buildRootStart,
+  buildErrorSection,
+  buildPackagesSection,
+  buildSummarySection,
+  buildThresholdsSection,
+  buildRootEnd,
+} from './xml-formatter-utils.js';
 
 /**
  * Format data into XML string
@@ -32,106 +25,22 @@ function escapeXml(unsafe) {
  * @returns {string} XML string
  */
 export function xmlFormatter({ rows = [], summary = {}, thresholds = {}, timestamp = '', error = null } = {}) {
-  let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
-  xml += `<outdated-packages timestamp="${escapeXml(timestamp)}">\n`;
+  let xml = buildXmlDeclaration();
+  xml += buildRootStart(timestamp);
 
-  // Error output
   if (error) {
-    xml += '  <error>\n';
-    xml += `    <message>${escapeXml(error.message)}</message>\n`;
-    xml += `    <code>${escapeXml(error.code || '')}</code>\n`;
-    if (error.details) {
-      xml += `    <details>${escapeXml(error.details)}</details>\n`;
-    }
-    xml += '  </error>\n';
-    xml += '</outdated-packages>';
+    xml += buildErrorSection(error);
+    xml += buildRootEnd();
     return xml;
   }
 
-  // Packages
-  xml += '  <packages>\n';
-  for (const item of rows) {
-    xml += '    <package>\n';
-    if (Array.isArray(item)) {
-      const [name, current, wanted, latest, age] = item;
-      xml += `      <name>${escapeXml(name)}</name>\n`;
-      xml += `      <current>${escapeXml(current)}</current>\n`;
-      xml += `      <wanted>${escapeXml(wanted)}</wanted>\n`;
-      xml += `      <latest>${escapeXml(latest)}</latest>\n`;
-      xml += `      <age>${escapeXml(age)}</age>\n`;
-    } else {
-      // object-style item
-      xml += `      <name>${escapeXml(item.name)}</name>\n`;
-      xml += `      <current>${escapeXml(item.current)}</current>\n`;
-      xml += `      <wanted>${escapeXml(item.wanted)}</wanted>\n`;
-      xml += `      <latest>${escapeXml(item.latest)}</latest>\n`;
-      xml += `      <age>${escapeXml(item.age)}</age>\n`;
-      xml += `      <recommended>${escapeXml(item.recommended)}</recommended>\n`;
-      // Vulnerabilities block
-      xml += '      <vulnerabilities>\n';
-      const vuln = item.vulnerabilities || {};
-      const count = vuln.count != null ? vuln.count : '';
-      const maxSeverity = vuln.maxSeverity || '';
-      xml += `        <count>${escapeXml(count)}</count>\n`;
-      xml += `        <max-severity>${escapeXml(maxSeverity)}</max-severity>\n`;
-      xml += '        <details>\n';
-      if (Array.isArray(vuln.details)) {
-        for (const detail of vuln.details) {
-          xml += '          <vulnerability>\n';
-          xml += `            <name>${escapeXml(detail.name)}</name>\n`;
-          xml += `            <severity>${escapeXml(detail.severity)}</severity>\n`;
-          xml += `            <title>${escapeXml(detail.title)}</title>\n`;
-          xml += `            <url>${escapeXml(detail.url)}</url>\n`;
-          xml += '          </vulnerability>\n';
-        }
-      }
-      xml += '        </details>\n';
-      xml += '      </vulnerabilities>\n';
-      xml += `      <filtered>${item.filtered === true}</filtered>\n`;
-      xml += `      <filter-reason>${escapeXml(item.filterReason || '')}</filter-reason>\n`;
-      xml += `      <dependency-type>${escapeXml(item.dependencyType || '')}</dependency-type>\n`;
-    }
-    xml += '    </package>\n';
-  }
-  xml += '  </packages>\n';
+  xml += buildPackagesSection(rows);
+  xml += buildSummarySection(summary);
 
-  // Summary
-  xml += '  <summary>\n';
-  xml += `    <total-outdated>${escapeXml(summary.totalOutdated ?? 0)}</total-outdated>\n`;
-  xml += `    <safe-updates>${escapeXml(summary.safeUpdates ?? 0)}</safe-updates>\n`;
-  xml += `    <filtered-by-age>${escapeXml(summary.filteredByAge ?? 0)}</filtered-by-age>\n`;
-  xml += `    <filtered-by-security>${escapeXml(summary.filteredBySecurity ?? 0)}</filtered-by-security>\n`;
-  if (summary.minAge != null) {
-    xml += `    <min-age>${escapeXml(summary.minAge)}</min-age>\n`;
-  }
-  xml += '  </summary>\n';
-
-  // Thresholds
   if (thresholds && (thresholds.prod || thresholds.dev)) {
-    xml += '  <thresholds>\n';
-    if (thresholds.prod) {
-      xml += '    <prod>\n';
-      if (thresholds.prod.minAge != null) {
-        xml += `      <min-age>${escapeXml(thresholds.prod.minAge)}</min-age>\n`;
-      }
-      if (thresholds.prod.minSeverity != null) {
-        xml += `      <min-severity>${escapeXml(thresholds.prod.minSeverity)}</min-severity>\n`;
-      }
-      xml += '    </prod>\n';
-    }
-    if (thresholds.dev) {
-      xml += '    <dev>\n';
-      if (thresholds.dev.minAge != null) {
-        xml += `      <min-age>${escapeXml(thresholds.dev.minAge)}</min-age>\n`;
-      }
-      if (thresholds.dev.minSeverity != null) {
-        xml += `      <min-severity>${escapeXml(thresholds.dev.minSeverity)}</min-severity>\n`;
-      }
-      xml += '    </dev>\n';
-    }
-    xml += '  </thresholds>\n';
+    xml += buildThresholdsSection(thresholds);
   }
 
-  xml += '</outdated-packages>';
+  xml += buildRootEnd();
   return xml;
 }

@@ -91,15 +91,6 @@ export default [
     },
   },
 
-  // Disable complexity and max-lines-per-function for xml-formatter
-  {
-    files: ['src/xml-formatter.js'],
-    rules: {
-      complexity: 'off',
-      'max-lines-per-function': 'off',
-    },
-  },
-
   // Disable complexity and object injection detect for filter-by-security
   {
     files: ['src/filter-by-security.js'],
