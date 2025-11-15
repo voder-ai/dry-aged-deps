@@ -1,5 +1,3 @@
-// @ts-nocheck
-/* eslint-disable security/detect-object-injection */
 /**
  * Compute vulnerability metrics from result object.
  * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
@@ -15,11 +13,19 @@ export function computeVulnerabilityStats(result, severityWeights) {
 
   let highestWeight = 0;
   for (const vuln of detailsList) {
-    const weight = severityWeights[(vuln.severity || '').toLowerCase()] || 0;
+    const key = (vuln.severity || '').toLowerCase();
+    // eslint-disable-next-line security/detect-object-injection
+    const weight = Object.prototype.hasOwnProperty.call(severityWeights, key)
+      ? severityWeights[key]
+      : 0;
     if (weight > highestWeight) highestWeight = weight;
   }
 
-  const maxSeverity = Object.keys(severityWeights).find((k) => severityWeights[k] === highestWeight) || 'none';
+  const maxSeverity =
+    Object.keys(severityWeights).find((k) => {
+      // eslint-disable-next-line security/detect-object-injection
+      return severityWeights[k] === highestWeight;
+    }) || 'none';
   return { totalCount, detailsList, maxSeverity };
 }
 
@@ -33,5 +39,12 @@ export function computeVulnerabilityStats(result, severityWeights) {
  * @returns {number} Number of vulnerabilities above the threshold.
  */
 export function countAboveThreshold(detailsList, minWeight, severityWeights) {
-  return detailsList.filter((v) => (severityWeights[(v.severity || '').toLowerCase()] || 0) >= minWeight).length;
+  return detailsList.filter((v) => {
+    const key = (v.severity || '').toLowerCase();
+    // eslint-disable-next-line security/detect-object-injection
+    const weight = Object.prototype.hasOwnProperty.call(severityWeights, key)
+      ? severityWeights[key]
+      : 0;
+    return weight >= minWeight;
+  }).length;
 }

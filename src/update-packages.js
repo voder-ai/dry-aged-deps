@@ -53,17 +53,17 @@ export async function updatePackages(safeRows, skipConfirmation, summary) {
   try {
     const pkgContent = fs.readFileSync(pkgPath, 'utf8');
     const pkgData = JSON.parse(pkgContent);
-    /* eslint-disable security/detect-object-injection */
     for (const [name, , wanted, , , depType] of safeRows) {
       if (depType === 'prod') {
         if (!pkgData.dependencies) pkgData.dependencies = {};
+        // eslint-disable-next-line security/detect-object-injection
         pkgData.dependencies[name] = wanted;
       } else {
         if (!pkgData.devDependencies) pkgData.devDependencies = {};
+        // eslint-disable-next-line security/detect-object-injection
         pkgData.devDependencies[name] = wanted;
       }
     }
-    /* eslint-enable security/detect-object-injection */
     fs.writeFileSync(pkgPath, JSON.stringify(pkgData, null, 2) + '\n', 'utf8');
     console.log(`Updated package.json with ${safeRows.length} safe packages`);
     console.log("Run 'npm install' to install the updates");

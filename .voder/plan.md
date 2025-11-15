@@ -1,13 +1,12 @@
-## NOW
-Refactor `src/cli-options-helpers.js` to extract its duplicated flag-parsing and validation logic into shared utilities in `src/cli-options-helpers/utils-common.js`, reducing duplication below 20%.
+## NOW  
+Refactor `src/vulnerability-evaluator.js` to remove its file-wide `// eslint-disable security/detect-object-injection` directive by replacing dynamic property lookups with validated, safe access so that the module passes ESLint security rules without suppression.  
 
-## NEXT
-- Run `npm run check:duplication` to verify duplication is now under the threshold.  
-- Restore `checkJs` in `tsconfig.json` and update JSDoc in `src/xml-formatter-utils.js` so that `npm run type-check` passes without `// @ts-nocheck`.  
-- Run `node scripts/add-story-annotations.cjs` and `node scripts/add-req-annotations.cjs`, then review several test files to ensure every header has the correct `@story` and `@req` annotations.
+## NEXT  
+- Apply the same safe-access refactoring to `src/security-helpers.js` and `src/update-packages.js`, removing their `eslint-disable security/detect-object-injection` comments.  
+- Add targeted unit tests for every error and edge-case branch in those three modules to raise their test coverage above 90%.  
+- Update `docs/api.md` and the JSDoc in those modules to reflect any signature or behavior changes (e.g. implement or remove the `configFile` option in `printOutdated`) so code and documentation stay in sync.  
 
-## LATER
-- Author ADRs for Configuration File Support (010.0), Auto-Update Mode (011.0), and Invalid-Option Error Handling (014.0) in `docs/decisions/`.  
-- Annotate critical conditional branches in `print-outdated.js`, `output-utils.js`, and `load-package-json.js` with `// @story` and `// @req` comments.  
-- Expand `docs/developer-guidelines.md` with a “Traceability Conventions” section and add an `npm run check:traceability` script to enforce 100% coverage of `@story`/`@req` tags.  
-- After completing these steps, re-measure code quality, testing, and documentation metrics to confirm they exceed 90%.
+## LATER  
+- Extract and consolidate duplicated logic from `print-outdated.js` and its handler files into shared utility modules, reducing duplication and allowing complexity/max-lines rules to be re-enabled.  
+- Rename test files that include forbidden terms like “branch” to descriptive, scenario-based names and enforce this convention via a new ESLint rule.  
+- Integrate a documentation-lint step into CI that verifies every source and test file has correct `@story` and `@req` JSDoc annotations.
