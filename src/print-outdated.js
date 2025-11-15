@@ -17,7 +17,7 @@ import { getThresholds } from './print-utils.js';
  * @req REQ-FORMAT-SUPPORT - Support table, json, xml formats
  * @param {string} format - Output format ('table', 'json', 'xml').
  * @param {boolean} returnSummary - Whether to return summary object.
- * @param {Object} thresholds - Thresholds configuration.
+ * @param {{prod:{minAge:number,minSeverity:string},dev:{minAge:number,minSeverity:string}}} thresholds - Thresholds configuration.
  * @returns {Object|undefined} summary for xml mode or if returnSummary is true
  */
 export function handleNoOutdated(format, returnSummary, thresholds) {
@@ -46,9 +46,8 @@ export function handleNoOutdated(format, returnSummary, thresholds) {
  * @req REQ-FORMAT-SUPPORT - Support table, json, xml formats
  * @param {Record<string, { current: string; wanted: string; latest: string }>} data
  * @param {{ fetchVersionTimes?: function, calculateAgeInDays?: function, checkVulnerabilities?: function, format?: string, prodMinAge?: number, devMinAge?: number, prodMinSeverity?: string, devMinSeverity?: string, returnSummary?: boolean, updateMode?: boolean, skipConfirmation?: boolean }} [options]
- * @param {boolean} [options.updateMode] - If true, updates dependencies to recommended versions instead of printing.
- * @param {boolean} [options.skipConfirmation] - If true, skips confirmation prompts during update operations.
- * @returns {Object|undefined} summary for xml mode or if returnSummary is true
+ * @param {object} [options] - Options object containing CLI and function overrides.
+ * @returns {Promise<Object|undefined>} summary for xml mode or if returnSummary is true
  */
 export async function printOutdated(data, options = {}) {
   const fetchVersionTimes = options.fetchVersionTimes || defaultFetchVersionTimes;
@@ -64,11 +63,11 @@ export async function printOutdated(data, options = {}) {
   const devMinAge = typeof options.devMinAge === 'number' ? options.devMinAge : 7;
   const prodMinSeverity = options.prodMinSeverity || 'none';
   const devMinSeverity = options.devMinSeverity || 'none';
-  const thresholds = getThresholds(prodMinAge, prodMinSeverity, devMinAge, devMinSeverity);
+  const thresholds = /** @type {any} */ (getThresholds(prodMinAge, prodMinSeverity, devMinAge, devMinSeverity));
 
   // Load package.json to determine dependency types
   const { dependencies: prodDeps, devDependencies: _devDeps } = loadPackageJson();
-  const getDependencyType = (packageName) => (packageName in prodDeps ? 'prod' : 'dev');
+  const getDependencyType = (/** @type {string} */ packageName) => (packageName in prodDeps ? 'prod' : 'dev');
 
   const entries = Object.entries(data);
 

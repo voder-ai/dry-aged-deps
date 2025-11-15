@@ -87,12 +87,13 @@ async function main() {
         stdio: ['ignore', 'pipe', 'ignore'],
       });
     } catch (err) {
-      if (err.stdout && err.stdout.toString().trim()) {
-        outputStr = err.stdout.toString();
+      const errorAny = /** @type {any} */ (err);
+      if (errorAny.stdout && errorAny.stdout.toString().trim()) {
+        outputStr = errorAny.stdout.toString();
       } else {
         if (format === 'xml') {
           const timestamp = new Date().toISOString();
-          console.log(xmlFormatter({ timestamp, error: err }));
+          console.log(xmlFormatter({ timestamp, error: /** @type {Error} */ (errorAny) }));
           process.exit(2);
         } else if (format === 'json') {
           const ts = new Date().toISOString();
@@ -101,9 +102,9 @@ async function main() {
               {
                 timestamp: ts,
                 error: {
-                  message: err.message,
-                  code: err.code || '',
-                  details: err.details || '',
+                  message: errorAny.message,
+                  code: errorAny.code || '',
+                  details: errorAny.details || '',
                   story: 'prompts/008.0-DEV-JSON-OUTPUT.md',
                 },
               },
@@ -113,7 +114,7 @@ async function main() {
           );
           process.exit(2);
         }
-        console.error('Error running npm outdated:', err.message);
+        console.error('Error running npm outdated:', errorAny.message);
         process.exit(2);
       }
     }
@@ -121,9 +122,10 @@ async function main() {
     try {
       data = outputStr ? JSON.parse(outputStr) : {};
     } catch (parseErr) {
+      const errorAny = /** @type {any} */ (parseErr);
       if (format === 'xml') {
         const timestamp = new Date().toISOString();
-        console.log(xmlFormatter({ timestamp, error: parseErr }));
+        console.log(xmlFormatter({ timestamp, error: /** @type {Error} */ (errorAny) }));
         process.exit(2);
       } else if (format === 'json') {
         const ts = new Date().toISOString();
@@ -132,9 +134,9 @@ async function main() {
             {
               timestamp: ts,
               error: {
-                message: parseErr.message,
-                code: parseErr.code || '',
-                details: parseErr.details || '',
+                message: errorAny.message,
+                code: errorAny.code || '',
+                details: errorAny.details || '',
                 story: 'prompts/008.0-DEV-JSON-OUTPUT.md',
               },
             },
@@ -144,13 +146,14 @@ async function main() {
         );
         process.exit(2);
       }
-      console.error('Failed to parse npm outdated output:', parseErr.message);
+      console.error('Failed to parse npm outdated output:', errorAny.message);
       process.exit(2);
     }
   }
 
   // Print results
   try {
+    /** @type {any} */
     const summary = await printOutdated(data, {
       format,
       fetchVersionTimes: fetchVersionTimesOverride,
@@ -173,9 +176,10 @@ async function main() {
     if (summary.safeUpdates > 0) process.exit(1);
     process.exit(0);
   } catch (err) {
+    const errorAny = /** @type {any} */ (err);
     if (format === 'xml') {
       const timestamp = new Date().toISOString();
-      console.log(xmlFormatter({ timestamp, error: err }));
+      console.log(xmlFormatter({ timestamp, error: /** @type {Error} */ (errorAny) }));
       process.exit(2);
     } else if (format === 'json') {
       const ts = new Date().toISOString();
@@ -184,9 +188,9 @@ async function main() {
           {
             timestamp: ts,
             error: {
-              message: err.message,
-              code: err.code || '',
-              details: err.details || '',
+              message: errorAny.message,
+              code: errorAny.code || '',
+              details: errorAny.details || '',
               story: 'prompts/008.0-DEV-JSON-OUTPUT.md',
             },
           },
@@ -196,12 +200,13 @@ async function main() {
       );
       process.exit(2);
     }
-    console.error(err.message);
+    console.error(errorAny.message);
     process.exit(2);
   }
 }
 
 main().catch((err) => {
-  console.error(err);
+  const errorAny = /** @type {any} */ (err);
+  console.error(errorAny);
   process.exit(2);
 });
