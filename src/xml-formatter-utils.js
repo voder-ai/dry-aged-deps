@@ -116,17 +116,17 @@ export function buildPackagesSection(rows) {
 
 /**
  * Build XML for summary section
- * @param {{ totalOutdated?: number; safeUpdates?: number; filteredByAge?: number; filteredBySecurity?: number; minAge?: number }} summary
+ * @param {{ totalOutdated?: number; safeUpdates?: number; filteredByAge?: number; filteredBySecurity?: number; minAge?: number }} [summary]
  * @returns {string}
  */
-export function buildSummarySection(summary) {
+export function buildSummarySection({ totalOutdated = 0, safeUpdates = 0, filteredByAge = 0, filteredBySecurity = 0, minAge } = {}) {
   let xml = '  <summary>\n';
-  xml += `    <total-outdated>${escapeXml(summary.totalOutdated ?? 0)}</total-outdated>\n`;
-  xml += `    <safe-updates>${escapeXml(summary.safeUpdates ?? 0)}</safe-updates>\n`;
-  xml += `    <filtered-by-age>${escapeXml(summary.filteredByAge ?? 0)}</filtered-by-age>\n`;
-  xml += `    <filtered-by-security>${escapeXml(summary.filteredBySecurity ?? 0)}</filtered-by-security>\n`;
-  if (summary.minAge != null) {
-    xml += `    <min-age>${escapeXml(summary.minAge)}</min-age>\n`;
+  xml += `    <total-outdated>${escapeXml(totalOutdated)}</total-outdated>\n`;
+  xml += `    <safe-updates>${escapeXml(safeUpdates)}</safe-updates>\n`;
+  xml += `    <filtered-by-age>${escapeXml(filteredByAge)}</filtered-by-age>\n`;
+  xml += `    <filtered-by-security>${escapeXml(filteredBySecurity)}</filtered-by-security>\n`;
+  if (minAge != null) {
+    xml += `    <min-age>${escapeXml(minAge)}</min-age>\n`;
   }
   xml += '  </summary>\n';
   return xml;
@@ -134,28 +134,28 @@ export function buildSummarySection(summary) {
 
 /**
  * Build XML for thresholds section
- * @param {{ prod?: { minAge?: number; minSeverity?: string }; dev?: { minAge?: number; minSeverity?: string } }} thresholds
+ * @param {{ prod?: { minAge?: number; minSeverity?: string }; dev?: { minAge?: number; minSeverity?: string } }} [thresholds]
  * @returns {string}
  */
-export function buildThresholdsSection(thresholds) {
+export function buildThresholdsSection({ prod, dev } = {}) {
   let xml = '  <thresholds>\n';
-  if (thresholds.prod) {
+  if (prod) {
     xml += '    <prod>\n';
-    if (thresholds.prod.minAge != null) {
-      xml += `      <min-age>${escapeXml(thresholds.prod.minAge)}</min-age>\n`;
+    if (prod.minAge != null) {
+      xml += `      <min-age>${escapeXml(prod.minAge)}</min-age>\n`;
     }
-    if (thresholds.prod.minSeverity != null) {
-      xml += `      <min-severity>${escapeXml(thresholds.prod.minSeverity)}</min-severity>\n`;
+    if (prod.minSeverity != null) {
+      xml += `      <min-severity>${escapeXml(prod.minSeverity)}</min-severity>\n`;
     }
     xml += '    </prod>\n';
   }
-  if (thresholds.dev) {
+  if (dev) {
     xml += '    <dev>\n';
-    if (thresholds.dev.minAge != null) {
-      xml += `      <min-age>${escapeXml(thresholds.dev.minAge)}</min-age>\n`;
+    if (dev.minAge != null) {
+      xml += `      <min-age>${escapeXml(dev.minAge)}</min-age>\n`;
     }
-    if (thresholds.dev.minSeverity != null) {
-      xml += `      <min-severity>${escapeXml(thresholds.dev.minSeverity)}</min-severity>\n`;
+    if (dev.minSeverity != null) {
+      xml += `      <min-severity>${escapeXml(dev.minSeverity)}</min-severity>\n`;
     }
     xml += '    </dev>\n';
   }
