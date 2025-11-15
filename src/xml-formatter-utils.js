@@ -93,19 +93,19 @@ export function buildPackagesSection(rows) {
       xml += `      <current>${escapeXml(current)}</current>\n`;
       xml += `      <wanted>${escapeXml(wanted)}</wanted>\n`;
       xml += `      <latest>${escapeXml(latest)}</latest>\n`;
-      xml += `      <age>${escapeXml(age)}</age>\n`;
+      xml += `      <age>${escapeXml(String(age))}</age>\n`;
     } else {
       xml += `      <name>${escapeXml(item.name)}</name>\n`;
       xml += `      <current>${escapeXml(item.current)}</current>\n`;
       xml += `      <wanted>${escapeXml(item.wanted)}</wanted>\n`;
       xml += `      <latest>${escapeXml(item.latest)}</latest>\n`;
-      xml += `      <age>${escapeXml(item.age)}</age>\n`;
+      xml += `      <age>${escapeXml(String(item.age))}</age>\n`;
       xml += `      <recommended>${escapeXml(item.recommended)}</recommended>\n`;
       xml += '      <vulnerabilities>\n';
       const vuln = item.vulnerabilities || {};
-      const count = vuln.count != null ? vuln.count : '';
+      const countStr = vuln.count != null ? String(vuln.count) : '';
       const maxSeverity = vuln.maxSeverity || '';
-      xml += `        <count>${escapeXml(count)}</count>\n`;
+      xml += `        <count>${escapeXml(countStr)}</count>\n`;
       xml += `        <max-severity>${escapeXml(maxSeverity)}</max-severity>\n`;
       xml += '        <details>\n';
       if (Array.isArray(vuln.details)) {
@@ -143,10 +143,10 @@ export function buildSummarySection({
   minAge,
 } = {}) {
   let xml = '  <summary>\n';
-  xml += `    <total-outdated>${escapeXml(totalOutdated)}</total-outdated>\n`;
-  xml += `    <safe-updates>${escapeXml(safeUpdates)}</safe-updates>\n`;
-  xml += `    <filtered-by-age>${escapeXml(filteredByAge)}</filtered-by-age>\n`;
-  xml += `    <filtered-by-security>${escapeXml(filteredBySecurity)}</filtered-by-security>\n`;
+  xml += `    <total-outdated>${escapeXml(String(totalOutdated))}</total-outdated>\n`;
+  xml += `    <safe-updates>${escapeXml(String(safeUpdates))}</safe-updates>\n`;
+  xml += `    <filtered-by-age>${escapeXml(String(filteredByAge))}</filtered-by-age>\n`;
+  xml += `    <filtered-by-security>${escapeXml(String(filteredBySecurity))}</filtered-by-security>\n`;
   if (minAge != null) {
     xml += `    <min-age>${escapeXml(minAge)}</min-age>\n`;
   }
@@ -164,7 +164,7 @@ export function buildThresholdsSection({ prod, dev } = {}) {
   if (prod) {
     xml += '    <prod>\n';
     if (prod.minAge != null) {
-      xml += `      <min-age>${escapeXml(prod.minAge)}</min-age>\n`;
+      xml += `      <min-age>${escapeXml(String(prod.minAge))}</min-age>\n`;
     }
     if (prod.minSeverity != null) {
       xml += `      <min-severity>${escapeXml(prod.minSeverity)}</min-severity>\n`;
@@ -174,7 +174,7 @@ export function buildThresholdsSection({ prod, dev } = {}) {
   if (dev) {
     xml += '    <dev>\n';
     if (dev.minAge != null) {
-      xml += `      <min-age>${escapeXml(dev.minAge)}</min-age>\n`;
+      xml += `      <min-age>${escapeXml(String(dev.minAge))}</min-age>\n`;
     }
     if (dev.minSeverity != null) {
       xml += `      <min-severity>${escapeXml(dev.minSeverity)}</min-severity>\n`;
