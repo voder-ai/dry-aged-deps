@@ -1,7 +1,11 @@
+/** @story prompts/dry-aged-deps-user-story-map.md */
 /**
  * @story prompts/dry-aged-deps-user-story-map.md
+ *//**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ *//**
+ * Functional assessment - CLI end-to-end tests for user stories 001-013
  */
-
 import { describe, test, expect } from 'vitest';
 import { execa } from 'execa';
 import fs from 'fs/promises';

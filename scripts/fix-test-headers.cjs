@@ -7,9 +7,9 @@ const fs = require('fs');
 const path = require('path');
 
 const testDir = path.resolve(__dirname, '../test');
-const files = fs.readdirSync(testDir).filter(f => f.endsWith('.test.js'));
+const files = fs.readdirSync(testDir).filter((f) => f.endsWith('.test.js'));
 
-files.forEach(file => {
+files.forEach((file) => {
   const filePath = path.join(testDir, file);
   const content = fs.readFileSync(filePath, 'utf8');
   const lines = content.split('\n');
@@ -21,7 +21,7 @@ files.forEach(file => {
   }
   const storyPath = storyMatch[1].trim();
 
-  const codeStartIndex = lines.findIndex(line => /^(import|const|let|var|describe|it|test)/.test(line));
+  const codeStartIndex = lines.findIndex((line) => /^(import|const|let|var|describe|it|test)/.test(line));
   if (codeStartIndex === -1) {
     console.warn(`No code start found in ${file}`);
     return;
@@ -31,7 +31,7 @@ files.forEach(file => {
     '/**',
     ` * @story ${storyPath}`,
     ' * @req UNKNOWN - TODO: specify requirement ID and description',
-    ' */'
+    ' */',
   ];
 
   const newLines = [...header, '', ...lines.slice(codeStartIndex)];

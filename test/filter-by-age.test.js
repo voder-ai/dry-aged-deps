@@ -1,6 +1,10 @@
+/** @story prompts/dry-aged-deps-user-story-map.md */
 /**
  * @story prompts/dry-aged-deps-user-story-map.md
- */
+ *//**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ */ // Tests for: prompts/003.0-DEV-FILTER-MATURE-VERSIONS.md
+// Tests for: prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
 
 import { describe, it, expect } from 'vitest';
 import { filterByAge } from '../src/filter-by-age.js';

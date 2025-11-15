@@ -1,6 +1,10 @@
+/** @story prompts/dry-aged-deps-user-story-map.md */
 /**
  * @story prompts/dry-aged-deps-user-story-map.md
- */
+ *//**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ */ // Story: prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
+// Tests for smart-search fallback logic in filterBySecurity
 
 import { describe, it, expect } from 'vitest';
 import { filterBySecurity } from '../src/filter-by-security.js';

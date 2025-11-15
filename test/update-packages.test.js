@@ -1,7 +1,10 @@
+/** @story prompts/dry-aged-deps-user-story-map.md */
 /**
  * @story prompts/dry-aged-deps-user-story-map.md
- */
-
+ *//**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ */ // Story: prompts/011.0-DEV-AUTO-UPDATE.md
+// Tests for: updatePackages module (safeRows empty and skipConfirmation behavior)
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import path from 'path';
 import os from 'os';

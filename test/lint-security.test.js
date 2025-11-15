@@ -1,7 +1,9 @@
+/** @story prompts/dry-aged-deps-user-story-map.md */
 /**
  * @story prompts/dry-aged-deps-user-story-map.md
- */
-
+ *//**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ */ import { ESLint } from 'eslint';
 import path from 'path';
 import { fileURLToPath } from 'url';
 

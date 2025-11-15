@@ -1,7 +1,13 @@
+/** @story prompts/dry-aged-deps-user-story-map.md */
 /**
  * @story prompts/dry-aged-deps-user-story-map.md
+ *//**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ *//**
+ * Tests for: buildRows handling when no versions available in versionTimes
+ * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
+ * @req REQ-NO-MATURE-VERSION - Age remains "N/A" when no latest version present
  */
-
 import { describe, it, expect, vi } from 'vitest';
 import { buildRows } from '../src/build-rows.js';
 

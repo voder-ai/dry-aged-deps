@@ -1,7 +1,10 @@
+/** @story prompts/dry-aged-deps-user-story-map.md */
 /**
  * @story prompts/dry-aged-deps-user-story-map.md
- */
-
+ *//**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ */ // Story: prompts/013.0-DEV-CHECK-MODE.md
+// Tests for: REQ-CHECK-FLAG, REQ-EXIT-1-ON-UPDATES, REQ-EXIT-0-NO-UPDATES, REQ-EXIT-2-ON-ERROR, REQ-FORMAT-SUPPORT
 import { describe, it, expect } from 'vitest';
 import { execa } from 'execa';
 import path from 'path';

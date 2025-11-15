@@ -1,7 +1,9 @@
+/** @story prompts/dry-aged-deps-user-story-map.md */
 /**
  * @story prompts/dry-aged-deps-user-story-map.md
- */
-
+ *//**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ */ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { execa } from 'execa';
 import fs from 'fs';
 import os from 'os';

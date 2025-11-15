@@ -1,6 +1,10 @@
+/** @story prompts/dry-aged-deps-user-story-map.md */
 /**
  * @story prompts/dry-aged-deps-user-story-map.md
- */
+ *//**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ */ // Tests for: prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
+// Story: 002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
 
 import { describe, it, expect, vi } from 'vitest';
 import { buildRows } from '../src/build-rows.js';

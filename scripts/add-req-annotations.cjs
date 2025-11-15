@@ -9,7 +9,7 @@ const path = require('path');
 const testDir = path.resolve(__dirname, '../test');
 const files = fs.readdirSync(testDir);
 
-files.forEach(file => {
+files.forEach((file) => {
   if (!file.endsWith('.test.js')) return;
   const filePath = path.join(testDir, file);
   let content = fs.readFileSync(filePath, 'utf8');
@@ -26,7 +26,7 @@ files.forEach(file => {
   // Insert @req placeholder after the @story line
   const storyLine = storyMatch[0];
   const lines = content.split('\n');
-  const idx = lines.findIndex(line => line.includes(storyLine));
+  const idx = lines.findIndex((line) => line.includes(storyLine));
   if (idx === -1) {
     console.warn(`Story line not found in lines for ${file}`);
     return;

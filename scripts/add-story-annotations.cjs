@@ -9,7 +9,7 @@ const path = require('path');
 const testDir = path.resolve(__dirname, '../test');
 const files = fs.readdirSync(testDir);
 
-files.forEach(file => {
+files.forEach((file) => {
   if (!file.endsWith('.test.js')) return;
   const filePath = path.join(testDir, file);
   const content = fs.readFileSync(filePath, 'utf8');
