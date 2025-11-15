@@ -1,3 +1,4 @@
+/** @story prompts/dry-aged-deps-user-story-map.md */
 /**
  * Tests for Fetch Version Ages for Outdated Packages: success path
  * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md

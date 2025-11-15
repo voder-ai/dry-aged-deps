@@ -116,7 +116,7 @@ export function buildPackagesSection(rows) {
 
 /**
  * Build XML for summary section
- * @param {Object} summary
+ * @param {{ totalOutdated?: number; safeUpdates?: number; filteredByAge?: number; filteredBySecurity?: number; minAge?: number }} summary
  * @returns {string}
  */
 export function buildSummarySection(summary) {
@@ -134,7 +134,7 @@ export function buildSummarySection(summary) {
 
 /**
  * Build XML for thresholds section
- * @param {Object} thresholds
+ * @param {{ prod?: { minAge?: number; minSeverity?: string }; dev?: { minAge?: number; minSeverity?: string } }} thresholds
  * @returns {string}
  */
 export function buildThresholdsSection(thresholds) {
