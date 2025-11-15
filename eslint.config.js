@@ -91,14 +91,6 @@ export default [
     },
   },
 
-  // Disable complexity and object injection detect for filter-by-security
-  {
-    files: ['src/filter-by-security.js'],
-    rules: {
-      'security/detect-object-injection': 'off',
-    },
-  },
-
   // Test files with additional testing globals
   {
     files: ['test/**/*.js', '**/*.test.js', '**/*.spec.js'],
@@ -126,15 +118,6 @@ export default [
       'no-unused-vars': 'off',
       complexity: 'off',
       'max-lines-per-function': 'off',
-      'max-params': 'off',
-      'max-depth': 'off',
-    },
-  },
-
-  // Disable max-params for print-outdated-handlers
-  {
-    files: ['src/print-outdated-handlers.js'],
-    rules: {
       'max-params': 'off',
       'max-depth': 'off',
     },

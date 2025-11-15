@@ -56,10 +56,10 @@ export async function printOutdated(data, options = {}) {
       filteredBySecurity: 0,
     };
     if (format === 'json') {
-      return handleJsonOutput([], summary, thresholds, new Map(), new Map());
+      return handleJsonOutput({ rows: [], summary, thresholds, vulnMap: new Map(), filterReasonMap: new Map() });
     }
     if (format === 'xml') {
-      return handleXmlOutput([], summary, thresholds, new Map(), new Map());
+      return handleXmlOutput({ rows: [], summary, thresholds, vulnMap: new Map(), filterReasonMap: new Map() });
     }
     console.log('All dependencies are up to date.');
     if (returnSummary) return summary;
@@ -85,7 +85,7 @@ export async function printOutdated(data, options = {}) {
   });
 
   if (format === 'json') {
-    return handleJsonOutput(safeRows, summary, thresholds, vulnMap, filterReasonMap);
+    return handleJsonOutput({ rows: safeRows, summary, thresholds, vulnMap, filterReasonMap });
   }
 
   if (updateMode) {
@@ -94,8 +94,8 @@ export async function printOutdated(data, options = {}) {
   }
 
   if (format === 'xml') {
-    return handleXmlOutput(rows, summary, thresholds, vulnMap, filterReasonMap);
+    return handleXmlOutput({ rows, summary, thresholds, vulnMap, filterReasonMap });
   }
 
-  return handleTableOutput(safeRows, matureRows, summary, prodMinAge, devMinAge, returnSummary);
+  return handleTableOutput({ safeRows, matureRows, summary, prodMinAge, devMinAge, returnSummary });
 }
