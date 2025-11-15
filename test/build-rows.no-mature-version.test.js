@@ -1,11 +1,9 @@
-/** @story prompts/dry-aged-deps-user-story-map.md */
 /**
- * @story prompts/dry-aged-deps-user-story-map.md
- *//**
- * @story prompts/dry-aged-deps-user-story-map.md
- *//**
- * Tests for: buildRows handling when no versions available in versionTimes
+ * Tests for Fetch Version Ages for Outdated Packages: missing latestTime
  * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
+ * @req REQ-FETCH-TIMES - Fetch version times and calculate age
+ * @req REQ-AGE-CALC - calculate days since publication
+ * @req REQ-OPTIMIZATION - fetch only newer versions
  * @req REQ-NO-MATURE-VERSION - Age remains "N/A" when no latest version present
  */
 import { describe, it, expect, vi } from 'vitest';

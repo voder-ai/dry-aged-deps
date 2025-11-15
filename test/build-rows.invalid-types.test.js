@@ -1,10 +1,10 @@
-/** @story prompts/dry-aged-deps-user-story-map.md */
 /**
- * @story prompts/dry-aged-deps-user-story-map.md
- *//**
- * @story prompts/dry-aged-deps-user-story-map.md
- */ // Story: prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
-// Tests for: buildRows handling when versionTimes is not an object
+ * Tests for Fetch Version Ages for Outdated Packages: non-object versionTimes
+ * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
+ * @req REQ-FETCH-TIMES - Fetch version times and calculate age
+ * @req REQ-AGE-CALC - calculate days since publication
+ * @req REQ-OPTIMIZATION - fetch only newer versions
+ */
 
 import { describe, it, expect, vi } from 'vitest';
 import { buildRows } from '../src/build-rows.js';
