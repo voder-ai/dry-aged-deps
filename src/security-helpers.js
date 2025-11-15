@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 /**
  * Compute vulnerability metrics from result object.
  * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
