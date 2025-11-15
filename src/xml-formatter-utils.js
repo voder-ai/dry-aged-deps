@@ -9,7 +9,7 @@
 
 /**
  * Escape special XML characters in a string
- * @param {string} unsafe
+ * @param {*} unsafe
  * @returns {string}
  */
 export function escapeXml(unsafe) {
