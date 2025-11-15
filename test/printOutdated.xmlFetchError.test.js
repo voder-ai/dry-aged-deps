@@ -1,12 +1,3 @@
-/** @story prompts/dry-aged-deps-user-story-map.md */
-* @req UNKNOWN - TODO: specify requirement ID and description
-/**
- * @story prompts/dry-aged-deps-user-story-map.md
- *//**
- * @story prompts/dry-aged-deps-user-story-map.md
- */ // Story: docs/decisions/0002-json-xml-output-support.md
-// Tests for: xml fetch error suppression and N/A age in xml output
-
 import { printOutdated } from '../src/print-outdated.js';
 import { vi, describe, expect } from 'vitest';
 

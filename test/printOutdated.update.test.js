@@ -1,11 +1,3 @@
-/** @story prompts/dry-aged-deps-user-story-map.md */
-* @req UNKNOWN - TODO: specify requirement ID and description
-/**
- * @story prompts/dry-aged-deps-user-story-map.md
- *//**
- * @story prompts/dry-aged-deps-user-story-map.md
- */ // Story: prompts/011.0-DEV-AUTO-UPDATE.md
-// Tests for: REQ-UPDATE-FLAG, REQ-YES-FLAG, REQ-BACKUP, REQ-PACKAGE-JSON, REQ-SUMMARY, REQ-POST-UPDATE
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import fs from 'fs/promises';
 import path from 'path';

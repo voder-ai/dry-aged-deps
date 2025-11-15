@@ -1,22 +1,9 @@
-/** @story prompts/dry-aged-deps-user-story-map.md */
-* @req UNKNOWN - TODO: specify requirement ID and description
-/**
- * @story prompts/dry-aged-deps-user-story-map.md
- *//**
- * @story prompts/dry-aged-deps-user-story-map.md
- */ import { describe, it, expect, vi, afterEach } from 'vitest';
-
-// Mock child_process at the module level
-vi.mock('child_process', () => ({
-  execFile: vi.fn(),
-}));
-
-import { fetchVersionTimes } from '../src/fetch-version-times.js';
-import { execFile } from 'child_process';
+import { fetchVersionTimes, execFile } from '../src/fetch-version-times.js';
 
 describe('fetchVersionTimes error paths', () => {
   afterEach(() => {
     vi.clearAllMocks();
+    execFile.mockReset();
   });
 
   it('rejects for invalid package names', async () => {
@@ -29,11 +16,11 @@ describe('fetchVersionTimes error paths', () => {
     });
 
     await expect(fetchVersionTimes('validpkg')).rejects.toThrow(SyntaxError);
-    expect(execFile).toHaveBeenCalledWith(
-      'npm',
-      ['view', 'validpkg', 'time', '--json'],
-      { encoding: 'utf8' },
-      expect.any(Function)
-    );
+    expect(execFile.mock.calls).toHaveLength(1);
+    const [cmd, args, options, callback] = execFile.mock.calls[0];
+    expect(cmd).toBe('npm');
+    expect(args).toEqual(['view', 'validpkg', 'time', '--json']);
+    expect(options).toEqual({ encoding: 'utf8' });
+    expect(typeof callback).toBe('function');
   });
 });

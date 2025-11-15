@@ -1,13 +1,7 @@
-/** @story prompts/dry-aged-deps-user-story-map.md */
-* @req UNKNOWN - TODO: specify requirement ID and description
-/**
- * @story prompts/dry-aged-deps-user-story-map.md
- *//**
- * @story prompts/dry-aged-deps-user-story-map.md
- */ import { execa } from 'execa';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { readFileSync } from 'fs';
+import { execa } from 'execa';
 
 describe('CLI entrypoint', () => {
   const __filename = fileURLToPath(import.meta.url);

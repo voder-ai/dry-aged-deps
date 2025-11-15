@@ -1,22 +1,9 @@
-/** @story prompts/dry-aged-deps-user-story-map.md */
-* @req UNKNOWN - TODO: specify requirement ID and description
-/**
- * @story prompts/dry-aged-deps-user-story-map.md
- *//**
- * @story prompts/dry-aged-deps-user-story-map.md
- */ import { describe, it, expect, vi, afterEach } from 'vitest';
-
-// Mock child_process at the module level
-vi.mock('child_process', () => ({
-  execFile: vi.fn(),
-}));
-
-import { fetchVersionTimes } from '../src/fetch-version-times.js';
-import { execFile } from 'child_process';
+import { fetchVersionTimes, execFile } from '../src/fetch-version-times.js';
 
 describe('fetchVersionTimes', () => {
   afterEach(() => {
     vi.clearAllMocks();
+    execFile.mockReset();
   });
 
   it('parses npm view output and excludes created and modified entries', async () => {
@@ -32,12 +19,13 @@ describe('fetchVersionTimes', () => {
     });
 
     const result = await fetchVersionTimes('mypackage');
-    expect(execFile).toHaveBeenCalledWith(
-      'npm',
-      ['view', 'mypackage', 'time', '--json'],
-      { encoding: 'utf8' },
-      expect.any(Function)
-    );
+    expect(execFile.mock.calls).toHaveLength(1);
+    const [cmd, args, options, callback] = execFile.mock.calls[0];
+    expect(cmd).toBe('npm');
+    expect(args).toEqual(['view', 'mypackage', 'time', '--json']);
+    expect(options).toEqual({ encoding: 'utf8' });
+    expect(typeof callback).toBe('function');
+
     expect(result).toEqual({
       '1.0.0': '2022-01-01T00:00:00Z',
       '2.0.0': '2023-01-01T00:00:00Z',

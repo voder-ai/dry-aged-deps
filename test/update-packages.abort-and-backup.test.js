@@ -1,12 +1,3 @@
-/** @story prompts/dry-aged-deps-user-story-map.md */
-/**
- * @story prompts/dry-aged-deps-user-story-map.md
- *//**
- * @story prompts/dry-aged-deps-user-story-map.md
- *//**
- * Story: prompts/011.0-DEV-AUTO-UPDATE.md
- * @req REQ-ABORT-BACKUP-ERROR - Handle abort, confirm, and backup-error flows in updatePackages
- */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import path from 'path';
 import os from 'os';

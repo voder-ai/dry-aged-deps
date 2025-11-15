@@ -1,22 +1,9 @@
-/** @story prompts/dry-aged-deps-user-story-map.md */
-* @req UNKNOWN - TODO: specify requirement ID and description
-/**
- * @story prompts/dry-aged-deps-user-story-map.md
- *//**
- * @story prompts/dry-aged-deps-user-story-map.md
- */ import { describe, it, expect, vi, afterEach } from 'vitest';
-
-// Mock child_process.execFile
-vi.mock('child_process', () => ({
-  execFile: vi.fn(),
-}));
-
-import { fetchVersionTimes } from '../src/fetch-version-times.js';
-import { execFile } from 'child_process';
+import { fetchVersionTimes, execFile } from '../src/fetch-version-times.js';
 
 describe('fetchVersionTimes retry logic', () => {
   afterEach(() => {
     vi.clearAllMocks();
+    execFile.mockReset();
   });
 
   it('retries on transient errors and resolves on retry', async () => {
@@ -50,6 +37,6 @@ describe('fetchVersionTimes retry logic', () => {
 
     await expect(fetchVersionTimes('anotherpkg')).rejects.toThrow('Persistent error');
     // maxRetries = 2 + initial try = total of 3 calls
-    expect(execFile).toHaveBeenCalledTimes(3);
+    expect(execFile.mock.calls).toHaveLength(3);
   });
 });

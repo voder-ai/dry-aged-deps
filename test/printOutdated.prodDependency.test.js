@@ -1,12 +1,3 @@
-/** @story prompts/dry-aged-deps-user-story-map.md */
-* @req UNKNOWN - TODO: specify requirement ID and description
-/**
- * @story prompts/dry-aged-deps-user-story-map.md
- *//**
- * @story prompts/dry-aged-deps-user-story-map.md
- */ // Story: docs/api.md
-// Tests for: printOutdated table output for prod dependencies (getDependencyType)
-
 import fs from 'fs';
 import os from 'os';
 import path from 'path';

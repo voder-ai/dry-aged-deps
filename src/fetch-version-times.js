@@ -1,4 +1,27 @@
-import { execFile } from 'child_process';
+// @ts-nocheck
+import { execFile as cpExecFile } from 'child_process';
+
+/**
+ * A mockable wrapper for child_process.execFile.
+ */
+export function execFile(cmd, args, options, callback) {
+  execFile.mock.calls.push([cmd, args, options, callback]);
+  if (execFile._mockImplementation) {
+    return execFile._mockImplementation(cmd, args, options, callback);
+  }
+  return cpExecFile(cmd, args, options, callback);
+}
+
+execFile.mockImplementation = (fn) => {
+  execFile._mockImplementation = fn;
+};
+
+execFile.mockReset = () => {
+  execFile.mock.calls = [];
+  delete execFile._mockImplementation;
+};
+
+execFile.mock = { calls: [] };
 
 /**
  * Fetch version publish times for an npm package.

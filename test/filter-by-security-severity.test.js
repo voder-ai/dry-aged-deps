@@ -1,12 +1,3 @@
-/** @story prompts/dry-aged-deps-user-story-map.md */
-* @req UNKNOWN - TODO: specify requirement ID and description
-/**
- * @story prompts/dry-aged-deps-user-story-map.md
- *//**
- * @story prompts/dry-aged-deps-user-story-map.md
- */ // Story: prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
-// Tests for severity threshold logic in filterBySecurity
-
 import { describe, it, expect } from 'vitest';
 import { filterBySecurity } from '../src/filter-by-security.js';
 
