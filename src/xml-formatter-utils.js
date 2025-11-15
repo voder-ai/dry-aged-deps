@@ -148,7 +148,7 @@ export function buildSummarySection({
   xml += `    <filtered-by-age>${escapeXml(String(filteredByAge))}</filtered-by-age>\n`;
   xml += `    <filtered-by-security>${escapeXml(String(filteredBySecurity))}</filtered-by-security>\n`;
   if (minAge != null) {
-    xml += `    <min-age>${escapeXml(minAge)}</min-age>\n`;
+    xml += `    <min-age>${escapeXml(String(minAge))}</min-age>\n`;
   }
   xml += '  </summary>\n';
   return xml;
