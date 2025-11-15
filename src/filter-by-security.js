@@ -147,8 +147,8 @@ async function trySmartSearchFallback(name, current, wanted, depType, context) {
  * @param {Function} checkVulnerabilities - Function to check vulnerabilities for a package version.
  * @param {{ prodMinSeverity: string, devMinSeverity: string }} thresholds - Minimum severity thresholds for prod and dev.
  * @param {string} format - Output format (table, json, xml).
- * @param {object} [options] - Additional options like fetchVersionTimes, calculateAgeInDays.
- * @returns {Promise<{ safeRows: Array<[string,string,string,string,number|string,string]>, vulnMap: Map<string,object>, filterReasonMap: Map<string,string> }>} Filtered results and vulnerability info.
+ * @param {Object} [options] - Additional options like fetchVersionTimes, calculateAgeInDays.
+ * @returns {Promise<{ safeRows: Array<[string,string,string,string,number|string,string]>, vulnMap: Map<string,{count:number,maxSeverity:string,details:any[]}>, filterReasonMap: Map<string,string> }>} Filtered results and vulnerability info.
  */
 export async function filterBySecurity(
   rows,
