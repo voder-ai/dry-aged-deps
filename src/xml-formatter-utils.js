@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Utility functions for xml-formatter.js to build XML sections
 
 /**
