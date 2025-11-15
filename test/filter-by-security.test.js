@@ -1,9 +1,11 @@
-/** @story prompts/dry-aged-deps-user-story-map.md */
 /**
- * @story prompts/dry-aged-deps-user-story-map.md
- *//**
- * @story prompts/dry-aged-deps-user-story-map.md
- */ // Tests for: prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
+ * Tests for Filter Out Vulnerable Versions
+ * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
+ * @req REQ-AUDIT-CHECK - check vulnerabilities using audit API
+ * @req REQ-TRANSITIVE-DEPS - check transitive dependencies for vulnerabilities
+ * @req REQ-SMART-SEARCH - search newest mature versions first
+ * @req REQ-SAFE-ONLY - only include safe versions
+ */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { filterBySecurity } from '../src/filter-by-security.js';
