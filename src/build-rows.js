@@ -5,6 +5,8 @@ import { calculateAgeInDays as defaultCalculateAgeInDays } from './age-calculato
  * Build rows with age and dependency type.
  * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
  * @req REQ-FETCH-TIMES - Fetch version times and calculate age
+ * @req REQ-AGE-CALC - calculate days since publication
+ * @req REQ-OPTIMIZATION - fetch only newer versions
  * @param {Record<string, { current: string; wanted: string; latest: string }>} data
  * @param {{
  *   fetchVersionTimes?: function,

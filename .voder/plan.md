@@ -1,12 +1,17 @@
+## Plan to Achieve Full Traceability Annotations
+
 ## NOW  
-Remove all `@ts-nocheck` directives from `src/print-outdated.js` and `bin/dry-aged-deps.js`, run `npm run type-check`, and fix any resulting type errors to restore full JSDoc-based type coverage.
+Modify **src/filter-by-age.js** to add JSDoc traceability to its main function:
+- Add a `@story prompts/003.0-DEV-FILTER-MATURE-VERSIONS.md` tag.
+- Add `@req REQ-AGE-THRESHOLD - enforce minimum age threshold`, `@req REQ-SMART-SEARCH - search newest first`, and `@req REQ-COMPARISON - only versions > current` tags to the function’s JSDoc.
 
 ## NEXT  
-- Re-enable ESLint complexity and max-lines-per-function rules on `src/print-outdated.js`, then refactor its largest functions into smaller, testable units so they satisfy those rules.  
-- Run `npm test -- --coverage` to generate a branch-coverage report, identify any uncovered code paths, and add unit tests to raise branch coverage above 95%.  
-- Audit every exported function in `src/` for missing `@story` and `@req` JSDoc tags and add them (including key `if`/`switch`/`catch` branches) to achieve 100% traceability.
+1. In **src/filter-by-security.js**, annotate its exported functions with  
+   `@story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md` and all relevant `@req` tags (e.g. `REQ-AUDIT-CHECK`, `REQ-TRANSITIVE-DEPS`, `REQ-SMART-SEARCH`, `REQ-SAFE-ONLY`).  
+2. In **src/build-rows.js** and **src/apply-filters.js**, add `@story prompts/002.0-DEV-FETCH-VERSION-AGES.md` / `prompts/003.0-DEV-FILTER-MATURE-VERSIONS.md` and corresponding `@req` tags around the core functions and branches.  
+3. Update each **test/** file header to include `@story prompts/XXX.md` matching the story under test, and add individual `@req` annotations in `describe` or `it` blocks for the acceptance criteria being verified.
 
 ## LATER  
-- Define and commit a JSON Schema file for `.dry-aged-deps.json` under `docs/` and update `docs/api.md` to reference it for editor validation.  
-- Introduce in-memory caching or throttling for `npm view … time` and `npm audit` calls to improve performance on large projects; instrument a CI smoke test to catch regressions.  
-- Gradually ratchet up other ESLint rules (e.g., max-params, sonarjs) across the codebase as complexity and duplication shrink under refactoring.
+- Create a script (e.g., `scripts/check-traceability.js`) to scan `src/` and `test/` for missing `@story`/`@req` tags and fail when gaps are found; integrate it into the CI pipeline under `npm run lint` or a new `npm run check:traceability` command.  
+- Document the traceability requirements and `@story`/`@req` conventions in **docs/developer-guidelines.md** so all future code and tests include proper annotations.  
+- Periodically audit newly added modules and tests to ensure 100% traceability as part of the Definition of Done for each story.

@@ -4,6 +4,9 @@ import { computeVulnerabilityStats, countAboveThreshold } from './security-helpe
 
 /**
  * Process object-based vulnerability result.
+ * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
+ * @req REQ-AUDIT-CHECK - check vulnerabilities using audit API
+ * @req REQ-TRANSITIVE-DEPS - check transitive dependencies for vulnerabilities
  * @param {object} result - Vulnerability result object.
  * @param {string} minSeverity - Minimum severity threshold.
  * @param {{ [key: string]: number }} severityWeights - Severity weight mapping.
@@ -133,6 +136,20 @@ async function trySmartSearchFallback(name, current, wanted, depType, context) {
   }
 }
 
+/**
+ * Filter rows by security vulnerabilities.
+ * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
+ * @req REQ-AUDIT-CHECK - check vulnerabilities using audit API
+ * @req REQ-TRANSITIVE-DEPS - check transitive dependencies for vulnerabilities
+ * @req REQ-SMART-SEARCH - search newest mature versions first
+ * @req REQ-SAFE-ONLY - only include safe versions
+ * @param {Array<[string,string,string,string,number|string,string]>} rows - Array of [name, current, wanted, latest, age, depType].
+ * @param {function} checkVulnerabilities - Function to check vulnerabilities for a package version.
+ * @param {{ prodMinSeverity: string, devMinSeverity: string }} thresholds - Minimum severity thresholds for prod and dev.
+ * @param {string} format - Output format (table, json, xml).
+ * @param {object} [options] - Additional options like fetchVersionTimes, calculateAgeInDays.
+ * @returns {Promise<{ safeRows: Array<[string,string,string,string,number|string,string]>, vulnMap: Map<string,object>, filterReasonMap: Map<string,string> }>} Filtered results and vulnerability info.
+ */
 export async function filterBySecurity(
   rows,
   checkVulnerabilities,
