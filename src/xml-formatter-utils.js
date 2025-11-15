@@ -1,3 +1,4 @@
+// @ts-check
 // Utility functions for xml-formatter.js to build XML sections
 
 /**
@@ -5,6 +6,21 @@
  * @property {string} message
  * @property {string} [code]
  * @property {string} [details]
+ */
+
+/**
+ * @typedef {Object} SummaryOptions
+ * @property {number} [totalOutdated]
+ * @property {number} [safeUpdates]
+ * @property {number} [filteredByAge]
+ * @property {number} [filteredBySecurity]
+ * @property {number} [minAge]
+ */
+
+/**
+ * @typedef {Object} ThresholdsOptions
+ * @property {{minAge?: number; minSeverity?: string}} [prod]
+ * @property {{minAge?: number; minSeverity?: string}} [dev]
  */
 
 /**
@@ -116,10 +132,16 @@ export function buildPackagesSection(rows) {
 
 /**
  * Build XML for summary section
- * @param {{ totalOutdated?: number; safeUpdates?: number; filteredByAge?: number; filteredBySecurity?: number; minAge?: number }} [summary]
+ * @param {SummaryOptions} [summary]
  * @returns {string}
  */
-export function buildSummarySection({ totalOutdated = 0, safeUpdates = 0, filteredByAge = 0, filteredBySecurity = 0, minAge } = {}) {
+export function buildSummarySection({
+  totalOutdated = 0,
+  safeUpdates = 0,
+  filteredByAge = 0,
+  filteredBySecurity = 0,
+  minAge,
+} = {}) {
   let xml = '  <summary>\n';
   xml += `    <total-outdated>${escapeXml(totalOutdated)}</total-outdated>\n`;
   xml += `    <safe-updates>${escapeXml(safeUpdates)}</safe-updates>\n`;
@@ -134,7 +156,7 @@ export function buildSummarySection({ totalOutdated = 0, safeUpdates = 0, filter
 
 /**
  * Build XML for thresholds section
- * @param {{ prod?: { minAge?: number; minSeverity?: string }; dev?: { minAge?: number; minSeverity?: string } }} [thresholds]
+ * @param {ThresholdsOptions} [thresholds]
  * @returns {string}
  */
 export function buildThresholdsSection({ prod, dev } = {}) {
