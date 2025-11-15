@@ -1,4 +1,6 @@
-/** @story prompts/dry-aged-deps-user-story-map.md */
+/**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ */
 
 import { fetchVersionTimes } from '../src/fetch-version-times.js';
 import { execFile } from 'child_process';

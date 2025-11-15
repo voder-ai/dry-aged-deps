@@ -1,4 +1,6 @@
-/** @story prompts/dry-aged-deps-user-story-map.md */
+/**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ */
 
 import { vi, describe, test, expect, beforeEach, afterEach } from 'vitest';
 

@@ -1,4 +1,6 @@
-/** @story prompts/dry-aged-deps-user-story-map.md */
+/**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ */
 
 import { checkVulnerabilities } from '../src/check-vulnerabilities.js';
 import { execFile } from 'child_process';

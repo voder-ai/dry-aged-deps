@@ -1,4 +1,6 @@
-/** @story prompts/dry-aged-deps-user-story-map.md */
+/**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ */
 
 import { printOutdated } from '../src/print-outdated.js';
 import * as fetchModule from '../src/fetch-version-times.js';
