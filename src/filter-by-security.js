@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { findSafeVersionSmartSearch } from './security-smart-search.js';
 import { computeVulnerabilityStats, countAboveThreshold } from './security-helpers.js';
 

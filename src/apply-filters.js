@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { filterByAge } from './filter-by-age.js';
 import { filterBySecurity } from './filter-by-security.js';
 
