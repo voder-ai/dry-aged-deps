@@ -1,12 +1,4 @@
-/**
 /** @story prompts/dry-aged-deps-user-story-map.md */
-
-* @req UNKNOWN - TODO: specify requirement ID and description
-/**
- * @story prompts/dry-aged-deps-user-story-map.md
- *//**
- * @story prompts/dry-aged-deps-user-story-map.md
- */ // Tests for: prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { filterBySecurity } from '../src/filter-by-security.js';

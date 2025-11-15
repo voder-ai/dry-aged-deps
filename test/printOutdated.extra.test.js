@@ -1,12 +1,5 @@
-/**
 /** @story prompts/dry-aged-deps-user-story-map.md */
 
-* @req UNKNOWN - TODO: specify requirement ID and description
-/**
- * @story prompts/dry-aged-deps-user-story-map.md
- *//**
- * @story prompts/dry-aged-deps-user-story-map.md
- */ import { printOutdated } from '../src/print-outdated.js';
 import { vi, describe, test, expect, beforeEach, afterEach } from 'vitest';
 
 // Table output normal case

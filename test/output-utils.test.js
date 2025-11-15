@@ -1,15 +1,5 @@
-/**
 /** @story prompts/dry-aged-deps-user-story-map.md */
 
-/**
- * @story prompts/dry-aged-deps-user-story-map.md
- *//**
- * @story prompts/dry-aged-deps-user-story-map.md
- *//**
- * Tests for prepareJsonItems in output-utils module
- * @story docs/decisions/0002-json-xml-output-support.md
- * @req REQ-JSON-MAPPING - Extract mapping logic for JSON output
- */
 import { describe, it, expect } from 'vitest';
 import { prepareJsonItems } from '../src/output-utils.js';
 

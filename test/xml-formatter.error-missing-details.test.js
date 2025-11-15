@@ -1,7 +1,4 @@
-/**
 /** @story prompts/dry-aged-deps-user-story-map.md */
-
-// Tests for: xmlFormatter error output branch without details
 
 import { describe, it, expect } from 'vitest';
 import { xmlFormatter } from '../src/xml-formatter.js';

@@ -1,12 +1,4 @@
-/**
 /** @story prompts/dry-aged-deps-user-story-map.md */
-
-* @req UNKNOWN - TODO: specify requirement ID and description
-/**
- * @story prompts/dry-aged-deps-user-story-map.md
- *//**
- * @story prompts/dry-aged-deps-user-story-map.md
- */ // Tests for: prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { buildRows } from '../src/build-rows.js';

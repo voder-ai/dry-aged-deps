@@ -1,4 +1,3 @@
-/**
 /** @story prompts/dry-aged-deps-user-story-map.md */
 
 import { describe, it, expect, vi } from 'vitest';

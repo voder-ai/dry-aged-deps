@@ -1,13 +1,4 @@
-/**
 /** @story prompts/dry-aged-deps-user-story-map.md */
-
-* @req UNKNOWN - TODO: specify requirement ID and description
-/**
- * @story prompts/dry-aged-deps-user-story-map.md
- *//**
- * @story prompts/dry-aged-deps-user-story-map.md
- */ // Story: docs/decisions/0002-json-xml-output-support.md
-// Tests for: xmlFormatter thresholds partial branches for dev.minAge only
 
 import { describe, it, expect } from 'vitest';
 import { xmlFormatter } from '../src/xml-formatter.js';

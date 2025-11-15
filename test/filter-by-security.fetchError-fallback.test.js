@@ -1,13 +1,4 @@
-/**
 /** @story prompts/dry-aged-deps-user-story-map.md */
-
-* @req UNKNOWN - TODO: specify requirement ID and description
-/**
- * @story prompts/dry-aged-deps-user-story-map.md
- *//**
- * @story prompts/dry-aged-deps-user-story-map.md
- */ // Story: prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-// Tests for: fallback error handling in smart-search branch of filterBySecurity
 
 import { describe, it, expect, vi } from 'vitest';
 import { filterBySecurity } from '../src/filter-by-security.js';

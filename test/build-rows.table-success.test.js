@@ -1,15 +1,5 @@
-/**
 /** @story prompts/dry-aged-deps-user-story-map.md */
 
-/**
- * @story prompts/dry-aged-deps-user-story-map.md
- *//**
- * @story prompts/dry-aged-deps-user-story-map.md
- *//**
- * Tests for buildRows success in default table format
- * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
- * @req REQ-FETCH-TIMES - Verify buildRows calculates age for table format
- */
 import { describe, it, expect, vi } from 'vitest';
 import { buildRows } from '../src/build-rows.js';
 
