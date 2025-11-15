@@ -1,17 +1,14 @@
-## Plan to Achieve Full Traceability Annotations
+## NOW
+Run `npm install --ignore-scripts --package-lock-only` to regenerate the project’s `package-lock.json` and eliminate the current lockfile drift.
 
-## NOW  
-Modify **src/filter-by-age.js** to add JSDoc traceability to its main function:
-- Add a `@story prompts/003.0-DEV-FILTER-MATURE-VERSIONS.md` tag.
-- Add `@req REQ-AGE-THRESHOLD - enforce minimum age threshold`, `@req REQ-SMART-SEARCH - search newest first`, and `@req REQ-COMPARISON - only versions > current` tags to the function’s JSDoc.
+## NEXT
+- Stage and commit the updated `package-lock.json` to git.
+- Run `npm run check:lockfile` to confirm the lockfile is now in sync.
+- Execute `npm run validate` (lint, typecheck, tests, duplication, lockfile) to verify all quality gates still pass.
 
-## NEXT  
-1. In **src/filter-by-security.js**, annotate its exported functions with  
-   `@story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md` and all relevant `@req` tags (e.g. `REQ-AUDIT-CHECK`, `REQ-TRANSITIVE-DEPS`, `REQ-SMART-SEARCH`, `REQ-SAFE-ONLY`).  
-2. In **src/build-rows.js** and **src/apply-filters.js**, add `@story prompts/002.0-DEV-FETCH-VERSION-AGES.md` / `prompts/003.0-DEV-FILTER-MATURE-VERSIONS.md` and corresponding `@req` tags around the core functions and branches.  
-3. Update each **test/** file header to include `@story prompts/XXX.md` matching the story under test, and add individual `@req` annotations in `describe` or `it` blocks for the acceptance criteria being verified.
-
-## LATER  
-- Create a script (e.g., `scripts/check-traceability.js`) to scan `src/` and `test/` for missing `@story`/`@req` tags and fail when gaps are found; integrate it into the CI pipeline under `npm run lint` or a new `npm run check:traceability` command.  
-- Document the traceability requirements and `@story`/`@req` conventions in **docs/developer-guidelines.md** so all future code and tests include proper annotations.  
-- Periodically audit newly added modules and tests to ensure 100% traceability as part of the Definition of Done for each story.
+## LATER
+- Annotate the CLI entrypoint (`bin/dry-aged-deps.js`) and the `parseOptions` function in `src/cli-options.js` with complete `@story` and `@req` JSDoc tags.
+- Insert branch-level `// @story …` and `// @req …` comments in key error-handling blocks (e.g., `print-outdated.js`, `output-utils.js`, `load-package-json.js`).
+- Refactor any remaining large or duplicated modules (such as `src/cli-options-helpers.js`) to reduce complexity and improve maintainability.
+- Expand `docs/developer-guidelines.md` with a “Traceability Conventions” section and author an `npm run check:traceability` script to enforce 100% coverage of `@story`/`@req` tags in CI.
+- After completing these steps, re-measure Documentation and Code Quality metrics to ensure they exceed 90%.
