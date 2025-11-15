@@ -14,10 +14,11 @@ export function computeVulnerabilityStats(result, severityWeights) {
   let highestWeight = 0;
   for (const vuln of detailsList) {
     const key = (vuln.severity || '').toLowerCase();
-    // eslint-disable-next-line security/detect-object-injection
-    const weight = Object.prototype.hasOwnProperty.call(severityWeights, key)
-      ? severityWeights[key]
-      : 0;
+    let weight = 0;
+    if (Object.prototype.hasOwnProperty.call(severityWeights, key)) {
+      // eslint-disable-next-line security/detect-object-injection
+      weight = severityWeights[key];
+    }
     if (weight > highestWeight) highestWeight = weight;
   }
 
@@ -39,12 +40,15 @@ export function computeVulnerabilityStats(result, severityWeights) {
  * @returns {number} Number of vulnerabilities above the threshold.
  */
 export function countAboveThreshold(detailsList, minWeight, severityWeights) {
-  return detailsList.filter((v) => {
+  let count = 0;
+  for (const v of detailsList) {
     const key = (v.severity || '').toLowerCase();
-    // eslint-disable-next-line security/detect-object-injection
-    const weight = Object.prototype.hasOwnProperty.call(severityWeights, key)
-      ? severityWeights[key]
-      : 0;
-    return weight >= minWeight;
-  }).length;
+    let weight = 0;
+    if (Object.prototype.hasOwnProperty.call(severityWeights, key)) {
+      // eslint-disable-next-line security/detect-object-injection
+      weight = severityWeights[key];
+    }
+    if (weight >= minWeight) count++;
+  }
+  return count;
 }
