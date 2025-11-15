@@ -1,5 +1,11 @@
-// @ts-nocheck
 // Utility functions for xml-formatter.js to build XML sections
+
+/**
+ * @typedef {Object} XmlError
+ * @property {string} message
+ * @property {string} [code]
+ * @property {string} [details]
+ */
 
 /**
  * Escape special XML characters in a string
@@ -42,7 +48,7 @@ export function buildRootEnd() {
 
 /**
  * Build XML for error section
- * @param {Error} error
+ * @param {XmlError} error
  * @returns {string}
  */
 export function buildErrorSection(error) {
