@@ -1,6 +1,4 @@
 #!/usr/bin/env node
-// @ts-nocheck
-/* eslint-disable complexity */
 
 import { fetchVersionTimes as defaultFetchVersionTimes } from './fetch-version-times.js';
 import { calculateAgeInDays as defaultCalculateAgeInDays } from './age-calculator.js';
@@ -12,7 +10,34 @@ import { handleJsonOutput, handleXmlOutput, handleTableOutput } from './print-ou
 import { updatePackages } from './update-packages.js';
 import { getThresholds } from './print-utils.js';
 
-// complexity is tolerated in this file due to CLI orchestration; review during refactors
+/**
+ * Handle scenario when there are no outdated dependencies.
+ * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+ * @req REQ-OUTPUT-DISPLAY - Display results in npm outdated style output with filters
+ * @req REQ-FORMAT-SUPPORT - Support table, json, xml formats
+ * @param {string} format - Output format ('table', 'json', 'xml').
+ * @param {boolean} returnSummary - Whether to return summary object.
+ * @param {Object} thresholds - Thresholds configuration.
+ * @returns {Object|undefined} summary for xml mode or if returnSummary is true
+ */
+export function handleNoOutdated(format, returnSummary, thresholds) {
+  const summary = {
+    totalOutdated: 0,
+    safeUpdates: 0,
+    filteredByAge: 0,
+    filteredBySecurity: 0,
+  };
+  if (format === 'json') {
+    return handleJsonOutput({ rows: [], summary, thresholds, vulnMap: new Map(), filterReasonMap: new Map() });
+  }
+  if (format === 'xml') {
+    return handleXmlOutput({ rows: [], summary, thresholds, vulnMap: new Map(), filterReasonMap: new Map() });
+  }
+  console.log('All dependencies are up to date.');
+  if (returnSummary) return summary;
+  return;
+}
+
 /**
  * Print outdated dependencies information with age
  * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
@@ -49,21 +74,7 @@ export async function printOutdated(data, options = {}) {
 
   // No outdated dependencies
   if (entries.length === 0) {
-    const summary = {
-      totalOutdated: 0,
-      safeUpdates: 0,
-      filteredByAge: 0,
-      filteredBySecurity: 0,
-    };
-    if (format === 'json') {
-      return handleJsonOutput({ rows: [], summary, thresholds, vulnMap: new Map(), filterReasonMap: new Map() });
-    }
-    if (format === 'xml') {
-      return handleXmlOutput({ rows: [], summary, thresholds, vulnMap: new Map(), filterReasonMap: new Map() });
-    }
-    console.log('All dependencies are up to date.');
-    if (returnSummary) return summary;
-    return;
+    return handleNoOutdated(format, returnSummary, thresholds);
   }
 
   // Build rows
