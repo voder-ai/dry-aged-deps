@@ -13,10 +13,18 @@ function processObjectResult(result, minSeverity, severityWeights) {
   const { totalCount, detailsList, maxSeverity } = computeVulnerabilityStats(result, severityWeights);
   let minWeight = severityWeights.none;
   switch (minSeverity) {
-    case 'low': minWeight = severityWeights.low; break;
-    case 'moderate': minWeight = severityWeights.moderate; break;
-    case 'high': minWeight = severityWeights.high; break;
-    case 'critical': minWeight = severityWeights.critical; break;
+    case 'low':
+      minWeight = severityWeights.low;
+      break;
+    case 'moderate':
+      minWeight = severityWeights.moderate;
+      break;
+    case 'high':
+      minWeight = severityWeights.high;
+      break;
+    case 'critical':
+      minWeight = severityWeights.critical;
+      break;
     case 'none':
     default:
       minWeight = severityWeights.none;
