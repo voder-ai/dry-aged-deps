@@ -1,13 +1,7 @@
 /**
- * @story prompts/dry-aged-deps-user-story-map.md
- * @req UNKNOWN - TODO: specify requirement ID and description
- */
-* @req UNKNOWN - TODO: specify requirement ID and description
-/**
- * @story prompts/dry-aged-deps-user-story-map.md
- *//**
- * @story prompts/dry-aged-deps-user-story-map.md
- */ import { describe, it, expect, vi } from 'vitest';
+/** @story prompts/dry-aged-deps-user-story-map.md */
+
+import { describe, it, expect, vi } from 'vitest';
 import { calculateAgeInDays } from '../src/age-calculator';
 
 describe('calculateAgeInDays', () => {

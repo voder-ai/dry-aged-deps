@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-// Script to fix test file headers: ensure proper JSDoc block with @story and placeholder @req
+// Script to fix test file headers: ensure proper JSDoc block with @story
 // Usage: node scripts/fix-test-headers.cjs
 
 const fs = require('fs');
@@ -39,10 +39,8 @@ files.forEach(file => {
 
   // Construct new header
   const header = [
-    '/**',
-    ` * @story ${storyPath}`,
-    ` * @req UNKNOWN - TODO: specify requirement ID and description`,
-    ' */',
+    `/** @story ${storyPath} */`,
+    '',
   ];
 
   // Replace lines [storyLineIndex..endIndex] with new header
