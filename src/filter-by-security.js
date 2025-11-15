@@ -42,7 +42,7 @@ function processObjectResult(result, minSeverity, severityWeights) {
  * @param {string} latest - Latest version.
  * @param {object} options - Processing options.
  * @param {string} options.minSeverity - Minimum severity threshold.
- * @param {function} options.checkVulnerabilities - Vulnerability check function.
+ * @param {Function} options.checkVulnerabilities - Vulnerability check function.
  * @param {{ [key: string]: number }} options.severityWeights - Severity weight mapping.
  * @param {string} options.format - Output format.
  * @returns {Promise<{ include: boolean, vulnInfo: object }>} Processing result.
@@ -144,7 +144,7 @@ async function trySmartSearchFallback(name, current, wanted, depType, context) {
  * @req REQ-SMART-SEARCH - search newest mature versions first
  * @req REQ-SAFE-ONLY - only include safe versions
  * @param {Array<[string,string,string,string,number|string,string]>} rows - Array of [name, current, wanted, latest, age, depType].
- * @param {function} checkVulnerabilities - Function to check vulnerabilities for a package version.
+ * @param {Function} checkVulnerabilities - Function to check vulnerabilities for a package version.
  * @param {{ prodMinSeverity: string, devMinSeverity: string }} thresholds - Minimum severity thresholds for prod and dev.
  * @param {string} format - Output format (table, json, xml).
  * @param {object} [options] - Additional options like fetchVersionTimes, calculateAgeInDays.

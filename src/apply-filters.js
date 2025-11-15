@@ -8,7 +8,7 @@ import { filterBySecurity } from './filter-by-security.js';
  * @req REQ-AGE-THRESHOLD - enforce minimum age threshold
  * @req REQ-AUDIT-CHECK - check vulnerabilities using audit API
  * @param {Array<[string, string, string, string, number|string, string]>} rows - Array of [name, current, wanted, latest, age, depType].
- * @param {{ prodMinAge: number, devMinAge: number, prodMinSeverity: string, devMinSeverity: string, checkVulnerabilities: function, format: string }} options
+ * @param {{ prodMinAge: number, devMinAge: number, prodMinSeverity: string, devMinSeverity: string, checkVulnerabilities: Function, format: string }} options
  * @returns {Promise<{ safeRows: Array<[string, string, string, string, number|string, string]>, matureRows: Array<[string, string, string, string, number|string, string]>, vulnMap: Map<string, {count: number, maxSeverity: string, details: Array<any>}>, filterReasonMap: Map<string, string>, summary: { totalOutdated: number, safeUpdates: number, filteredByAge: number, filteredBySecurity: number } }>} Filtered results and summary.
  */
 export async function applyFilters(rows, options) {

@@ -9,9 +9,9 @@ import { calculateAgeInDays as defaultCalculateAgeInDays } from './age-calculato
  * @req REQ-OPTIMIZATION - fetch only newer versions
  * @param {Record<string, { current: string; wanted: string; latest: string }>} data
  * @param {{
- *   fetchVersionTimes?: function,
- *   calculateAgeInDays?: function,
- *   getDependencyType: function,
+ *   fetchVersionTimes?: Function,
+ *   calculateAgeInDays?: Function,
+ *   getDependencyType: Function,
  *   format?: string
  * }} options
  * @returns {Promise<Array<[string, string, string, string, number|string, string]>>}
