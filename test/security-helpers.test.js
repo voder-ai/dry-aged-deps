@@ -14,8 +14,8 @@ describe('computeVulnerabilityStats', () => {
       details: [
         { id: 'a', severity: 'low' },
         { id: 'b', severity: 'high' },
-        { id: 'c', severity: 'moderate' }
-      ]
+        { id: 'c', severity: 'moderate' },
+      ],
     };
     const stats = computeVulnerabilityStats(result, severityWeights);
     expect(stats.totalCount).toBe(3);
@@ -24,7 +24,10 @@ describe('computeVulnerabilityStats', () => {
   });
 
   it('infers count from details length when count missing', () => {
-    const details = [{ id: 'a', severity: 'critical' }, { id: 'b', severity: 'none' }];
+    const details = [
+      { id: 'a', severity: 'critical' },
+      { id: 'b', severity: 'none' },
+    ];
     const stats = computeVulnerabilityStats({ details }, severityWeights);
     expect(stats.totalCount).toBe(2);
     expect(stats.maxSeverity).toBe('critical');
@@ -48,19 +51,12 @@ describe('countAboveThreshold', () => {
   const severityWeights = { none: 0, low: 1, moderate: 2, high: 3, critical: 4 };
 
   it('counts vulnerabilities meeting threshold', () => {
-    const list = [
-      { severity: 'low' },
-      { severity: 'moderate' },
-      { severity: 'high' }
-    ];
+    const list = [{ severity: 'low' }, { severity: 'moderate' }, { severity: 'high' }];
     expect(countAboveThreshold(list, 2, severityWeights)).toBe(2);
   });
 
   it('includes vulnerabilities equal to threshold', () => {
-    const list = [
-      { severity: 'moderate' },
-      { severity: 'high' }
-    ];
+    const list = [{ severity: 'moderate' }, { severity: 'high' }];
     expect(countAboveThreshold(list, 2, severityWeights)).toBe(2);
   });
 
