@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { findSafeVersionSmartSearch } from './security-smart-search.js';
 import { computeVulnerabilityStats, countAboveThreshold } from './security-helpers.js';
 
@@ -164,8 +163,11 @@ export async function filterBySecurity(
     high: 3,
     critical: 4,
   };
+  /** @type {Array<[string,string,string,string,number|string,string]>} */
   const safeRows = [];
+  /** @type {Map<string,{count:number,maxSeverity:string,details:any[]}>} */
   const vulnMap = new Map();
+  /** @type {Map<string,string>} */
   const filterReasonMap = new Map();
 
   for (const row of rows) {
