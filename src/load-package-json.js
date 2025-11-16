@@ -3,9 +3,8 @@ import path from 'path';
 
 /**
  * Load and parse package.json from the current working directory.
- * Returns an object with dependencies and devDependencies fields.
- * If the file cannot be read or parsed, returns an object with empty dependencies.
- *
+ * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+ * @req REQ-LOAD-PACKAGE_JSON - Load and parse package.json for dependencies
  * @returns {{ dependencies: Record<string, string>, devDependencies: Record<string, string> }}
  */
 export function loadPackageJson() {
