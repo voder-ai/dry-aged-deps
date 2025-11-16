@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { loadConfigFile } from './config-loader.js';
 import {
   parseFormatFlag,
@@ -103,19 +102,28 @@ export function parseOptions(argv) {
   const configFileName = configFileArg ? configFileArg.split('=')[1] : '.dry-aged-deps.json';
   const config = loadConfigFile(configFileName, configFileArg, validSeverities, validFormats);
 
+  // @ts-expect-error -- config properties may not be recognized by TS
   const defaultFormat = config.format ?? 'table';
   const format = parseFormatFlag(args, defaultFormat, validFormats);
 
+  // @ts-expect-error -- config properties may not be recognized by TS
   const defaultMinAge = config.minAge ?? 7;
   const minAge = parseMinAgeFlag(args, defaultMinAge);
+
+  // @ts-expect-error -- config properties may not be recognized by TS
   const defaultProdMinAge = config.prod?.minAge ?? minAge;
+  // @ts-expect-error -- config properties may not be recognized by TS
   const defaultDevMinAge = config.dev?.minAge ?? minAge;
   const prodMinAge = parseProdMinAgeFlag(args, defaultProdMinAge);
   const devMinAge = parseDevMinAgeFlag(args, defaultDevMinAge);
 
+  // @ts-expect-error -- config properties may not be recognized by TS
   const defaultSeverity = config.severity ?? 'none';
   const severity = parseSeverityFlag(args, defaultSeverity, validSeverities);
+
+  // @ts-expect-error -- config properties may not be recognized by TS
   const defaultProdMinSeverity = config.prod?.minSeverity ?? severity;
+  // @ts-expect-error -- config properties may not be recognized by TS
   const defaultDevMinSeverity = config.dev?.minSeverity ?? severity;
   const prodMinSeverity = parseProdSeverityFlag(args, defaultProdMinSeverity, validSeverities);
   const devMinSeverity = parseDevSeverityFlag(args, defaultDevMinSeverity, validSeverities);

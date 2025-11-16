@@ -1,4 +1,3 @@
-// @ts-nocheck
 // Utility factories for CLI option parsers
 
 import { parseStringFlag } from './parse-string-flag.js';

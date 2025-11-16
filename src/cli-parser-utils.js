@@ -1,4 +1,3 @@
-/* eslint-disable security/detect-object-injection -- computed property names safe */
 import { createStringFlagParser, createIntegerFlagParser } from './cli-options-helpers/utils-common.js';
 
 /**
@@ -35,6 +34,7 @@ export function generateStringFlagParsers(flags) {
   const parsers = {};
   for (const flagName of flags) {
     const exportName = deriveParserName(flagName);
+    // eslint-disable-next-line security/detect-object-injection -- computed parser name derived from trusted flags
     parsers[exportName] = createStringFlagParser(flagName);
   }
   return parsers;
@@ -55,8 +55,10 @@ export function generateIntegerFlagParsers(configs) {
     const [flagName, min, max] = config;
     const exportName = deriveParserName(flagName);
     if (max !== undefined) {
+      // eslint-disable-next-line security/detect-object-injection -- computed parser name derived from trusted flags
       parsers[exportName] = createIntegerFlagParser(flagName, min, max);
     } else {
+      // eslint-disable-next-line security/detect-object-injection -- computed parser name derived from trusted flags
       parsers[exportName] = createIntegerFlagParser(flagName, min);
     }
   }

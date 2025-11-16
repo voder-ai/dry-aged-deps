@@ -53,7 +53,7 @@ export default [
 
   // All JavaScript files - ES Modules
   {
-    files: ['src/**/*.js', 'bin/**/*.js', '*.config.js'],
+    files: ['src/**/*.js', 'bin/**/*.js'],
     languageOptions: {
       sourceType: 'module',
       ecmaVersion: 2022,
@@ -67,6 +67,17 @@ export default [
       'max-lines-per-function': ['error', { max: 100, skipComments: true, skipBlankLines: true }],
       'max-params': ['error', 5],
       'max-depth': ['error', 4],
+      'max-lines': ['error', { max: 500, skipComments: true, skipBlankLines: true }],
+    },
+  },
+
+  // Config files - disable complexity, max-lines-per-function, and max-lines
+  {
+    files: ['*.config.js'],
+    rules: {
+      complexity: 'off',
+      'max-lines-per-function': 'off',
+      'max-lines': 'off',
     },
   },
 
@@ -118,15 +129,7 @@ export default [
       'max-lines-per-function': 'off',
       'max-params': 'off',
       'max-depth': 'off',
-    },
-  },
-
-  // Disable complexity and max-lines-per-function for ESLint config file
-  {
-    files: ['eslint.config.js'],
-    rules: {
-      complexity: 'off',
-      'max-lines-per-function': 'off',
+      'max-lines': 'off',
     },
   },
 ];
