@@ -1,6 +1,7 @@
 /**
- * @story prompts/dry-aged-deps-user-story-map.md
- * @req UNKNOWN - Placeholder traceability annotation
+ * Tests for filterByAge function behavior.
+ * @story prompts/003.0-DEV-FILTER-MATURE-VERSIONS.md
+ * @req REQ-AGE-THRESHOLD - enforce minimum age threshold for filtering
  */
 
 import { describe, it, expect } from 'vitest';
