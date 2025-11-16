@@ -72,6 +72,8 @@ export async function printOutdated(data, options = {}) {
   const entries = Object.entries(data);
 
   // No outdated dependencies
+  // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+  // @req REQ-NO-OUTDATED-BRANCH - Handle no outdated dependencies scenario
   if (entries.length === 0) {
     return handleNoOutdated(format, returnSummary, thresholds);
   }
@@ -94,15 +96,21 @@ export async function printOutdated(data, options = {}) {
     format,
   });
 
+  // @story prompts/008.0-DEV-JSON-OUTPUT.md
+  // @req REQ-FORMAT-JSON - Delegate JSON output branch
   if (format === 'json') {
     return handleJsonOutput({ rows: safeRows, summary, thresholds, vulnMap, filterReasonMap });
   }
 
+  // @story prompts/011.0-DEV-AUTO-UPDATE.md
+  // @req REQ-UPDATE-MODE - Delegate update mode branch
   if (updateMode) {
     const result = await updatePackages(safeRows, skipConfirmation, summary);
     return result;
   }
 
+  // @story prompts/009.0-DEV-XML-OUTPUT.md
+  // @req REQ-FORMAT-XML - Delegate XML output branch
   if (format === 'xml') {
     return handleXmlOutput({ rows, summary, thresholds, vulnMap, filterReasonMap });
   }
