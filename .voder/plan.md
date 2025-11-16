@@ -1,12 +1,12 @@
-## NOW
-Refactor src/cli-options-helpers.js to extract its duplicated flag-parsing logic into a new src/cli-parser-utils.js helper module, reducing per-file duplication in cli-options-helpers.js below 20%.
+## NOW  
+Refactor `src/security-helpers.js` to eliminate the inline `/* eslint-disable security/detect-object-injection */` by replacing any dynamic property access with `Object.prototype.hasOwnProperty.call(vulns, key)`, then remove the disable comment.
 
-## NEXT
-- Audit all source modules and test files, adding missing JSDoc `@story` and `@req` tags to every public function, aligning each annotation with the appropriate prompt file.  
-- Enhance JSDoc in key public APIs (e.g., src/config-loader.js, src/output-utils.js, src/print-outdated-handlers.js) to include full parameter and return descriptions, plus traceability annotations; update docs/api.md to reflect these changes.  
-- Insert inline traceability comments for each significant branch (if/else blocks, loops, try/catch) in heavy-logic modules (e.g., src/print-outdated.js, security modules), referencing the requirement IDs they implement.
+## NEXT  
+- Remove all remaining `security/detect-object-injection` ESLint disables in `src/fetch-version-times.js`, `src/vulnerability-evaluator.js`, and `src/update-packages.js` by refactoring dynamic lookups into safe utilities.  
+- Write unit tests to exercise the untested branches in `src/build-rows.js` and `src/filter-by-security.js` (as flagged by coverage gaps) to push branch coverage above 90%.  
+- Audit and add missing `@story`/`@req` JSDoc annotations in `src/load-package-json.js`, `src/xml-formatter-utils.js`, and any other modules still lacking traceability tags.
 
-## LATER
-- Update the Husky pre-commit hook to run a documentation-lint step that verifies presence and correctness of all `@story`/`@req` tags before allowing a commit.  
-- Integrate a CI documentation-lint workflow that fails the build if traceability annotations or JSDoc coverage fall below defined thresholds.  
-- Review remaining modules (e.g., security-helpers, update-packages) for duplication and complexity, and refactor shared logic or split large functions to meet duplication (<20%) and complexity (<15 cyclomatic) targets.
+## LATER  
+- Introduce a Husky “documentation-lint” pre-commit hook and CI step that enforces the presence and correctness of all `@story` and `@req` annotations in source and test files.  
+- Continuously refactor any functions exceeding cyclomatic complexity >12 or length >80 lines by extracting smaller helpers.  
+- Periodically tighten ESLint duplication and complexity thresholds, remediating new violations as they arise.
