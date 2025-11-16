@@ -1,12 +1,13 @@
-## NOW  
-Refactor `src/vulnerability-evaluator.js` to remove its file-wide `// eslint-disable security/detect-object-injection` directive by replacing dynamic property lookups with validated, safe access so that the module passes ESLint security rules without suppression.  
+## NOW
+Refactor `src/cli-options-helpers.js` to extract its duplicated flag-parsing logic into a new shared helper module (e.g. `src/cli-parser-utils.js`), reducing `src/cli-options-helpers.js` duplication below 20%.
 
-## NEXT  
-- Apply the same safe-access refactoring to `src/security-helpers.js` and `src/update-packages.js`, removing their `eslint-disable security/detect-object-injection` comments.  
-- Add targeted unit tests for every error and edge-case branch in those three modules to raise their test coverage above 90%.  
-- Update `docs/api.md` and the JSDoc in those modules to reflect any signature or behavior changes (e.g. implement or remove the `configFile` option in `printOutdated`) so code and documentation stay in sync.  
+## NEXT
+- Add missing `@story` and `@req` JSDoc tags to every source function and test file to satisfy traceability requirements.
+- Enrich code documentation by writing complete JSDoc comments for all public APIs (e.g. in `src/output-utils.js`, `src/config-loader.js`) and update `docs/api.md` accordingly.
+- Update the Husky pre-commit hook (`.husky/pre-commit`) to run fast checks (`npm run lint && npm run type-check && npm run format:check`) before allowing commits.
 
-## LATER  
-- Extract and consolidate duplicated logic from `print-outdated.js` and its handler files into shared utility modules, reducing duplication and allowing complexity/max-lines rules to be re-enabled.  
-- Rename test files that include forbidden terms like “branch” to descriptive, scenario-based names and enforce this convention via a new ESLint rule.  
-- Integrate a documentation-lint step into CI that verifies every source and test file has correct `@story` and `@req` JSDoc annotations.
+## LATER
+- Integrate a CI documentation-lint step that verifies presence and correctness of traceability annotations and JSDoc coverage.
+- Consolidate shared logic from `print-outdated.js` and its handlers into utility modules to further reduce duplication and re-enable complexity rules.
+- Rename test files that include forbidden terms and enforce naming conventions via a new ESLint rule.
+- Gradually tighten per-file duplication and complexity thresholds in CI, ensuring ongoing code quality.
