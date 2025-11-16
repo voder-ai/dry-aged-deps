@@ -1,6 +1,7 @@
 /**
- * @story prompts/dry-aged-deps-user-story-map.md
- * @req UNKNOWN - Placeholder traceability annotation
+ * Tests for calculateAgeInDays function
+ * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
+ * @req REQ-AGE-CALC - Calculate days since publication
  */
 
 import { calculateAgeInDays } from '../src/age-calculator';

@@ -4,7 +4,7 @@ const stringParsers = generateStringFlagParsers(['format', 'severity', 'prod-sev
 const integerParsers = generateIntegerFlagParsers([
   ['min-age', 1, 365],
   ['prod-min-age', 1],
-  ['dev-min-age', 1]
+  ['dev-min-age', 1],
 ]);
 
 /**

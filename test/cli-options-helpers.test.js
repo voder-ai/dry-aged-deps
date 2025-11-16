@@ -1,6 +1,11 @@
 /**
- * @story prompts/dry-aged-deps-user-story-map.md
- * @req UNKNOWN - Placeholder traceability annotation
+ * Tests for CLI flag parsing helpers
+ * @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
+ * @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
+ * @story prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md
+ * @story prompts/008.0-DEV-JSON-OUTPUT.md
+ * @story prompts/009.0-DEV-XML-OUTPUT.md
+ * @req REQ-CLI-FLAG-PARSER - Generic CLI flag parsing logic for CLI flags
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
