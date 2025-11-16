@@ -1,3 +1,8 @@
+/**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ * @req UNKNOWN - Placeholder traceability annotation
+ */
+
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { checkVulnerabilities } from '../src/check-vulnerabilities.js';
 import { execFile } from 'child_process';

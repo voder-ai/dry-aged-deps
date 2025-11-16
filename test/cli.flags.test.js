@@ -1,3 +1,8 @@
+/**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ * @req UNKNOWN - Placeholder traceability annotation
+ */
+
 import { execa } from 'execa';
 import path from 'path';
 import { fileURLToPath } from 'url';

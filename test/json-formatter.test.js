@@ -1,3 +1,8 @@
+/**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ * @req UNKNOWN - Placeholder traceability annotation
+ */
+
 import { jsonFormatter } from '../src/json-formatter.js';
 
 describe('jsonFormatter', () => {

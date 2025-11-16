@@ -1,3 +1,8 @@
+/**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ * @req UNKNOWN - Placeholder traceability annotation
+ */
+
 import { runCli } from './helpers/cli-helper';
 
 describe('dry-aged-deps CLI', () => {

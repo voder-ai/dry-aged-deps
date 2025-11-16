@@ -1,3 +1,8 @@
+/**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ * @req UNKNOWN - Placeholder traceability annotation
+ */
+
 import fs from 'fs/promises';
 import path from 'path';
 import { describe, it, expect } from 'vitest';

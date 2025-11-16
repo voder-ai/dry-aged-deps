@@ -1,3 +1,8 @@
+/**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ * @req UNKNOWN - Placeholder traceability annotation
+ */
+
 import { printOutdated } from '../src/print-outdated.js';
 import * as xmlFormatterModule from '../src/xml-formatter.js';
 

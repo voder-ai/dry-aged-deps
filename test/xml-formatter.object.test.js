@@ -1,3 +1,8 @@
+/**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ * @req UNKNOWN - Placeholder traceability annotation
+ */
+
 import { xmlFormatter } from '../src/xml-formatter.js';
 
 describe('xmlFormatter object-style package entries', () => {
