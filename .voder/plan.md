@@ -1,14 +1,13 @@
-## NOW
-Remove the `// @ts-nocheck` directive from the top of `src/cli-parser-utils.js` and correct any resulting type errors so that `npm run typecheck` passes without disabling checks.
+## NOW  
+Extract common formatting and filtering logic from `src/print-outdated.js` and `src/print-outdated-handlers.js` into a new module `src/print-outdated-utils.js`.  
 
-## NEXT
-- Remove all remaining file-level `// @ts-nocheck` directives across the `src/` directory, refactoring code or adding precise JSDoc annotations to satisfy the TypeScript checker.
-- Refactor `src/cli-options-helpers.js` to eliminate duplicated parsing logic by extracting shared helper functions, then verify duplication metrics fall below acceptable thresholds.
-- Add `@story` and `@req` JSDoc annotations to each exported function in `src/update-packages.js`, referencing `prompts/011.0-DEV-AUTO-UPDATE.md`.
-- Insert `@story` annotations into the headers of test files that currently lack them, mapping each test file to its specific prompt/story file.
+## NEXT  
+- Update `src/print-outdated.js` and `src/print-outdated-handlers.js` to import and use `src/print-outdated-utils.js`, then run `npm run check:duplication` to confirm duplication falls below the threshold.  
+- Audit source files for missing JSDoc `@story`/`@req` annotations and add them to every exported function in modules such as `src/cli-parser-utils.js`, `src/apply-filters.js`, and `src/build-rows.js`.  
+- Update the README Attribution section to exactly “Created autonomously by voder.ai” with a link to https://voder.ai.  
+- Identify any functions exceeding the ESLint cyclomatic complexity limit and refactor them into smaller helper functions.  
 
-## LATER
-- Introduce a Husky “documentation-lint” pre-commit hook and corresponding CI step to enforce the presence and correctness of all `@story`/`@req` annotations and prevent new `// @ts-nocheck` directives.
-- Add a CI check that fails the build on any file-level disables or broad ESLint-disable comments to prevent regressions.
-- Gradually tighten ESLint duplication and complexity thresholds, remediating any violations as they arise.
-- Periodically audit and refactor functions or modules that exceed line-count or cyclomatic complexity limits by extracting smaller helpers.
+## LATER  
+- Introduce a Husky “documentation-lint” pre-commit hook and CI step to enforce presence and correctness of all `@story`/`@req` annotations and prevent new `// @ts-nocheck` or broad ESLint-disable comments.  
+- Add a CI check that fails the build if jscpd reports duplication above a tightened threshold (e.g., 15%) or if ESLint reports cyclomatic complexity above a lower limit (e.g., 12).  
+- Gradually ratchet down duplication and complexity thresholds in lint and jscpd configurations, remediating any violations in small, verifiable increments.

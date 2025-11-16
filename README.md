@@ -205,4 +205,4 @@ See `.env.example` for the full list of required environment variables.
 
 ## Attribution
 
-This project was created by [Voder - AI Coding Without the Slop](https://voder.ai).
+Created autonomously by [voder.ai](https://voder.ai)
