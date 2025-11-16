@@ -1,6 +1,8 @@
 /**
- * @story prompts/dry-aged-deps-user-story-map.md
- * @req UNKNOWN - Placeholder traceability annotation
+ * Tests for CLI severity flag parsing
+ * @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
+ * @req REQ-CLI-FLAG-PARSER - Generic CLI flag parsing logic for --severity
+ * @req REQ-INVALID-VALUE-ERROR - Error on invalid severity values
  */
 
 import { execa } from 'execa';
@@ -69,14 +71,13 @@ describe('CLI --severity flag', () => {
     expect(obj.summary.thresholds.prod.minSeverity).toBe('none');
   });
 
-  it('accepts valid severity values', { timeout: 30000 }, async () => {
-    const valid = ['none', 'low', 'moderate', 'high', 'critical'];
-    for (const level of valid) {
-      const result = await execa('node', [cliPath, '--format=json', `--severity=${level}`]);
-      expect(result.exitCode).toBe(0);
-      const obj = JSON.parse(result.stdout);
-      expect(obj.summary.thresholds.prod.minSeverity).toBe(level);
-      expect(obj.summary.thresholds.dev.minSeverity).toBe(level);
-    }
+  const valid = ['none', 'low', 'moderate', 'high', 'critical'];
+
+  it.each(valid)('parses valid severity %s', { timeout: 30000 }, async (level) => {
+    const result = await execa('node', [cliPath, '--format=json', `--severity=${level}`]);
+    expect(result.exitCode).toBe(0);
+    const obj = JSON.parse(result.stdout);
+    expect(obj.summary.thresholds.prod.minSeverity).toBe(level);
+    expect(obj.summary.thresholds.dev.minSeverity).toBe(level);
   });
 });

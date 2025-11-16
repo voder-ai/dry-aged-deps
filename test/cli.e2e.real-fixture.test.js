@@ -66,7 +66,7 @@ describe('dry-aged-deps CLI E2E with real fixture (mocked)', () => {
     expect(dataLines.length).toBeGreaterThan(0);
 
     // Check if at least one age cell is a positive integer
-    const foundPositive = dataLines.some(line => {
+    const foundPositive = dataLines.some((line) => {
       const cols = line.split('	');
       const age = parseInt(cols[4], 10);
       return !isNaN(age) && age > 0;
