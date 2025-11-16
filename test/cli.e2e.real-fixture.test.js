@@ -1,8 +1,10 @@
 /**
- * @story prompts/dry-aged-deps-user-story-map.md
- * @req UNKNOWN - Placeholder traceability annotation
+ * Tests for CLI E2E real fixture behavior and positive age detection
+ * @story prompts/003.0-DEV-IDENTIFY-OUTDATED.md
+ * @story prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md
+ * @req REQ-AGE-THRESHOLD - Ensure mature versions (age > threshold) appear in output
+ * @req REQ-EXIT-1 - Exit code 1 when safe updates available
  */
-
 import { execa } from 'execa';
 import fs from 'fs/promises';
 import path from 'path';
@@ -64,16 +66,11 @@ describe('dry-aged-deps CLI E2E with real fixture (mocked)', () => {
     expect(dataLines.length).toBeGreaterThan(0);
 
     // Check if at least one age cell is a positive integer
-    let foundPositive = false;
-    for (const line of dataLines) {
+    const foundPositive = dataLines.some(line => {
       const cols = line.split('	');
-      const ageCell = cols[4];
-      const age = parseInt(ageCell, 10);
-      if (!isNaN(age) && age > 0) {
-        foundPositive = true;
-        break;
-      }
-    }
+      const age = parseInt(cols[4], 10);
+      return !isNaN(age) && age > 0;
+    });
     expect(foundPositive).toBe(true);
   }, 60000);
 });

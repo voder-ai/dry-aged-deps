@@ -1,12 +1,21 @@
 ## NOW
-Add a JSDoc header to `test/vulnerability-evaluator.test.js` with the precise `@story` and matching `@req` annotations for prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md.
+Add a precise JSDoc traceability header to `test/exit-codes.test.js`, for example:
+```js
+/**
+ * Tests for CLI exit code behaviors
+ * @story prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md
+ * @req REQ-EXIT-0    - Exit code 0 when no safe updates available
+ * @req REQ-EXIT-1    - Exit code 1 when safe updates are available
+ * @req REQ-EXIT-2    - Exit code 2 on errors
+ */
+```
 
 ## NEXT
-- Annotate each of the remaining test files under `test/` (`json-formatter.test.js`, `xml-formatter.test.js`, `update-packages.test.js`, `exit-codes.test.js`, `check-mode.test.js`, `invalid-options.test.js`) with their correct `@story` and `@req` tags.
-- Run `npm test` and verify that coverage remains ≥ 90% and that every `.test.js` file contains at least one `@story` annotation.
-- Add a CI lint rule (or Husky pre-commit hook) that fails if any test file is missing a `@story` tag.
+- Annotate `test/invalid-options.test.js` with its `@story` (prompts/014.0-DEV-INVALID-OPTION-ERROR.md) and matching `@req` tags.
+- Locate any test files containing loops (e.g. `for`, `while`) and refactor them into individual or parameterized `it()` cases.
+- Run `npm test` and verify that coverage remains ≥ 90% and that every `.test.js` file has a `@story` annotation.
 
 ## LATER
-- Remove the placeholder traceability-injection script once all tests are annotated.
-- Refactor tests to use shared test-data builders and eliminate complex logic in test bodies.
-- Document test traceability conventions in `docs/developer-guidelines.md` and enforce them via an ESLint plugin or CI validation.
+- Add a CI lint rule or Husky pre-push hook to fail if a test file is missing an `@story` tag or contains loop constructs.
+- Update `docs/developer-guidelines.md` with the test‐traceability and “no logic in tests” conventions.
+- Remove any placeholder traceability-injection scripts now that all tests are properly annotated.

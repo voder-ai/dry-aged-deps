@@ -1,6 +1,9 @@
 /**
- * @story prompts/dry-aged-deps-user-story-map.md
- * @req UNKNOWN - Placeholder traceability annotation
+ * Tests for CLI invalid option error handling
+ * @story prompts/014.0-DEV-INVALID-OPTION-ERROR.md
+ * @req REQ-INVALID-VALUE-ERROR - Error on invalid format values
+ * @req REQ-ERROR-EXIT-CODE - Exit with code 2 for usage/option errors
+ * @req REQ-HELP-SUGGESTION - Suggest using --help in error message
  */
 
 import path from 'path';

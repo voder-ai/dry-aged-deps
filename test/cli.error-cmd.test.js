@@ -1,6 +1,7 @@
 /**
- * @story prompts/dry-aged-deps-user-story-map.md
- * @req UNKNOWN - Placeholder traceability annotation
+ * Tests for CLI error exit code behaviors
+ * @story prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md
+ * @req REQ-EXIT-2 - Exit code 2 on errors
  */
 
 import { execa } from 'execa';
