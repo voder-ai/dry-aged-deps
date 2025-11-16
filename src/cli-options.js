@@ -26,6 +26,20 @@ import {
 
 /**
  * Parse CLI arguments and optional config file to derive options for dry-aged-deps.
+ * @story prompts/013.0-DEV-CHECK-MODE.md
+ * @story prompts/011.0-DEV-AUTO-UPDATE.md
+ * @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
+ * @story prompts/008.0-DEV-JSON-OUTPUT.md
+ * @story prompts/009.0-DEV-XML-OUTPUT.md
+ * @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
+ * @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
+ * @req REQ-PARSE-OPTIONS - Parse and validate CLI flags and config file options
+ * @param {string[]} argv - CLI arguments (excluding node and script path).
+ * @returns {{ format: string, prodMinAge: number, devMinAge: number, prodMinSeverity: string, devMinSeverity: string, updateMode: boolean, skipConfirmation: boolean, returnSummary: boolean }} Parsed CLI options.
+ */
+
+/**
+ * Parse CLI arguments and optional config file to derive options for dry-aged-deps.
  * Exits the process with code 2 on invalid input or configuration.
  *
  * @param {string[]} argv - CLI arguments (excluding node and script path).
