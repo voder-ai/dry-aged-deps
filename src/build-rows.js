@@ -35,7 +35,7 @@ export async function buildRows(data, options) {
         }
       } catch (err) {
         if (format !== 'xml' && format !== 'json') {
-          const message = err instanceof Error ? err.message : String(err);
+          const message = err instanceof Error ? err.message ?? err.toString() : String(err);
           console.error(`Warning: failed to fetch version times for ${name}: ${message}`);
         }
       }
