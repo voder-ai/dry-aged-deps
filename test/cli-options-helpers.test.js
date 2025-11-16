@@ -1,4 +1,7 @@
-/** @story prompts/dry-aged-deps-user-story-map.md */
+/**
+ * Tests for CLI option helpers.
+ * @story prompts/014.0-DEV-INVALID-OPTION-ERROR.md
+ */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import {
   parseFormatFlag,
