@@ -1,11 +1,8 @@
-## NOW  
-Refactor `src/cli-options-helpers.js` to extract its repeated flag-parsing logic into a new helper module and reduce its duplication below 20% (then verify with `npm run check:duplication`).
+## NOW
+Remove the `// @ts-nocheck` directive from `src/cli-options-helpers.js` and replace it with precise JSDoc type annotations so that `npm run type-check` passes without suppressions.
 
-## NEXT  
-- Remove any remaining `// eslint-disable complexity` directives in `bin/dry-aged-deps.js` and split its long functions into smaller, focused modules so ESLint’s cyclomatic-complexity rule passes (verify with `npm run lint`).  
-- Consolidate shared logic between `src/print-outdated-handlers.js` and `src/print-outdated.js` into common helper functions to further reduce duplication and improve maintainability (verify with both `npm run lint` and `npm run check:duplication`).
+## NEXT
+Add missing `@story` and `@req` JSDoc tags to every public function and key code branch in `src/update-packages.js`, then run the traceability checker (ESLint or custom) to verify 100% coverage of traceability annotations.
 
-## LATER  
-- Add CI checks to enforce jscpd duplication < 20% and ESLint complexity < 12 across all production files.  
-- Gradually tighten those thresholds in `eslint.config.js` and jscpd configuration, remediating any new violations in small, incremental refactors.  
-- Schedule regular audits of other large modules (e.g., `src/print-outdated.js`, `src/filter-by-security.js`) for further refactoring as needed.
+## LATER
+Refactor all test files to reference their specific story prompt (not the user-story-map), include requirement IDs in `describe` and `it` blocks, and rewrite tests into clear GIVEN-WHEN-THEN structure; then add a CI check to enforce test traceability.

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { generateStringFlagParsers, generateIntegerFlagParsers } from './cli-parser-utils.js';
 
 /** @type {string[]} */
@@ -14,7 +13,6 @@ const integerFlagConfigs = [
 const { parseFormatFlag, parseSeverityFlag, parseProdSeverityFlag, parseDevSeverityFlag } =
   generateStringFlagParsers(stringFlags);
 
-// @ts-ignore
 const { parseMinAgeFlag, parseProdMinAgeFlag, parseDevMinAgeFlag } = generateIntegerFlagParsers(integerFlagConfigs);
 
 /**

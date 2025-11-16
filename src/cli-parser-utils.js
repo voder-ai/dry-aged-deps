@@ -46,10 +46,10 @@ export function generateStringFlagParsers(flags) {
  * @story prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md
  * @req REQ-CLI-INTEGER-FLAG-PARSER - Generic integer flag parsing logic for CLI.
  * @param {Array.<[string, number, number?]>} configs - Array of [flagName, min, max] definitions.
- * @returns {Object.<string, Function>} Mapping from parser export name to parser functions.
+ * @returns {{ [parserName: string]: (args: string[], defaultValue: number) => number }} Mapping from parser export name to parser functions.
  */
 export function generateIntegerFlagParsers(configs) {
-  /** @type {Object.<string, Function>} */
+  /** @type {{ [parserName: string]: (args: string[], defaultValue: number) => number }} */
   const parsers = {};
   for (const config of configs) {
     const [flagName, min, max] = config;
