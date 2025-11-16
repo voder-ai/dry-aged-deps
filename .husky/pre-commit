@@ -1,5 +1,4 @@
 #!/usr/bin/env sh
-. "$(dirname "$0")/_/husky.sh"
 
 # Fast pre-commit checks (<10s): auto-format, lint, type-check
 npm run format
