@@ -1,6 +1,8 @@
 /**
- * @story prompts/dry-aged-deps-user-story-map.md
- * @req UNKNOWN - Placeholder traceability annotation
+ * Tests for buildRows handling version-fetch errors.
+ * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
+ * @req REQ-NPM-VIEW - Use npm view to fetch publish dates for newer versions
+ * @req REQ-AGE-CALC - Calculate days since publication
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';

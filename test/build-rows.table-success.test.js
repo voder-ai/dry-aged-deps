@@ -1,6 +1,9 @@
 /**
- * @story prompts/dry-aged-deps-user-story-map.md
- * @req UNKNOWN - Placeholder traceability annotation
+ * Tests for buildRows table format success path.
+ * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+ * @req REQ-NPM-COMMAND - Execute `npm outdated --json` using child_process
+ * @req REQ-JSON-PARSE - Parse the JSON output from npm outdated
+ * @req REQ-OUTPUT-DISPLAY - Display outdated package results
  */
 
 import { describe, it, expect, vi } from 'vitest';

@@ -1,6 +1,7 @@
-/**
- * @story prompts/dry-aged-deps-user-story-map.md
- * @req UNKNOWN - Placeholder traceability annotation
+/****
+ * Tests for buildRows error logging and missing latestTime handling.
+ * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+ * @req REQ-OUTPUT-DISPLAY - Display outdated package results including warnings and missing data handling
  */
 
 import { describe, it, expect, vi } from 'vitest';
