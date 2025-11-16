@@ -1,6 +1,10 @@
 /**
- * @story prompts/dry-aged-deps-user-story-map.md
- * @req UNKNOWN - Placeholder traceability annotation
+ * Tests for XML Formatter
+ * @story prompts/009.0-DEV-XML-OUTPUT.md
+ * @req REQ-XML-SCHEMA - Define consistent XML output schema
+ * @req REQ-COMPLETE-DATA - Include all relevant package data in XML output
+ * @req REQ-SUMMARY-STATS - Include summary statistics in XML output
+ * @req REQ-XML-DECLARATION - Include proper XML declaration and encoding
  */
 
 import { xmlFormatter } from '../src/xml-formatter.js';

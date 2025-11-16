@@ -1,6 +1,11 @@
 /**
- * @story prompts/dry-aged-deps-user-story-map.md
- * @req UNKNOWN - Placeholder traceability annotation
+ * Tests for CLI Check Mode (--check)
+ * @story prompts/013.0-DEV-CHECK-MODE.md
+ * @req REQ-CHECK-FLAG - Support --check flag to enable check mode
+ * @req REQ-EXIT-1-ON-UPDATES - Exit code 1 when safe updates available in check mode
+ * @req REQ-EXIT-0-NO-UPDATES - Exit code 0 when no safe updates available in check mode
+ * @req REQ-EXIT-2-ON-ERROR - Exit code 2 on errors in check mode
+ * @req REQ-FORMAT-SUPPORT - Check mode works with JSON and XML formats
  */
 
 import { describe, it, expect } from 'vitest';

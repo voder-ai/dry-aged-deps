@@ -1,23 +1,12 @@
 ## NOW
-Modify `test/build-rows.fetchError.test.js` to replace its placeholder JSDoc header with a traceable header, for example:
-```js
-/**
- * Tests for buildRows handling version‐fetch errors.
- * @story prompts/002.0-DEV-FETCH-VERSION-AGES.md
- * @req REQ-NPM-VIEW - use npm view to fetch version publish dates
- * @req REQ-AGE-CALC - calculate age in days for each version
- */
-```
+Add a JSDoc header to `test/vulnerability-evaluator.test.js` with the precise `@story` and matching `@req` annotations for prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md.
 
 ## NEXT
-- Update the remaining test files to include precise `@story` and `@req` JSDoc annotations:
-  - `test/build-rows.success.test.js` → story 001 / REQ-NPM-COMMAND, REQ-JSON-PARSE, REQ-OUTPUT-DISPLAY  
-  - `test/build-rows.table-success.test.js` → story 001 / same requirements  
-  - `test/build-rows.additional.test.js` → story 001 / REQ-OUTPUT-DISPLAY additional cases  
-  - `test/build-rows.invalid-types.test.js` → story 001 / REQ-OUTPUT-DISPLAY error handling  
-- Run `npm test` and `npm run type-check` to verify no regressions.
+- Annotate each of the remaining test files under `test/` (`json-formatter.test.js`, `xml-formatter.test.js`, `update-packages.test.js`, `exit-codes.test.js`, `check-mode.test.js`, `invalid-options.test.js`) with their correct `@story` and `@req` tags.
+- Run `npm test` and verify that coverage remains ≥ 90% and that every `.test.js` file contains at least one `@story` annotation.
+- Add a CI lint rule (or Husky pre-commit hook) that fails if any test file is missing a `@story` tag.
 
 ## LATER
-- Introduce a lint rule or CI check that fails if any test file lacks a `@story` tag.
-- Remove the placeholder traceability script (`scripts/add-test-traceability.cjs`) once all tests are annotated.
-- Refine ESLint security rule disables by replacing any remaining broad disables with targeted inline comments and justification.
+- Remove the placeholder traceability-injection script once all tests are annotated.
+- Refactor tests to use shared test-data builders and eliminate complex logic in test bodies.
+- Document test traceability conventions in `docs/developer-guidelines.md` and enforce them via an ESLint plugin or CI validation.

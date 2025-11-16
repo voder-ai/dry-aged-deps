@@ -1,6 +1,10 @@
-/**
- * @story prompts/dry-aged-deps-user-story-map.md
- * @req UNKNOWN - Placeholder traceability annotation
+/****
+ * Tests for updatePackages function
+ * @story prompts/011.0-DEV-AUTO-UPDATE.md
+ * @req REQ-UPDATE-FLAG - Support --update flag to enable auto-update mode
+ * @req REQ-YES-FLAG - Skip confirmation when --yes flag provided
+ * @req REQ-BACKUP - Create backup of package.json before applying updates
+ * @req REQ-PACKAGE-JSON - Read, modify, and write package.json preserving format
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';

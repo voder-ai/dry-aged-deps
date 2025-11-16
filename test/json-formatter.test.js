@@ -1,6 +1,9 @@
 /**
- * @story prompts/dry-aged-deps-user-story-map.md
- * @req UNKNOWN - Placeholder traceability annotation
+ * Tests for JSON Formatter
+ * @story prompts/008.0-DEV-JSON-OUTPUT.md
+ * @req REQ-JSON-SCHEMA - Define consistent JSON output schema
+ * @req REQ-COMPLETE-DATA - Include all relevant package data in JSON output
+ * @req REQ-SUMMARY-STATS - Include summary statistics in JSON output
  */
 
 import { jsonFormatter } from '../src/json-formatter.js';
