@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { generateStringFlagParsers, generateIntegerFlagParsers } from './cli-parser-utils.js';
 
 // Generate string-based flag parsers
