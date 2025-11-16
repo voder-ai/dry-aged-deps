@@ -9,6 +9,10 @@ import { xmlFormatter } from '../src/xml-formatter.js';
 import { parseOptions } from '../src/cli-options.js';
 
 /**
+ * @typedef {import('../src/cli-options.js').CliOptions} CliOptions
+ */
+
+/**
  * Print usage help for the CLI.
  * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
  * @req REQ-CLI-HELP - Provide help documentation for CLI options.
@@ -63,7 +67,7 @@ function printVersion() {
 
 /**
  * Handle errors by formatting output according to the selected format.
- * @param {Error} error - The error to handle.
+ * @param {Error & {code?: string, details?: string}} error - The error to handle.
  * @param {string} format - The output format.
  * @story prompts/008.0-DEV-JSON-OUTPUT.md
  * @story prompts/009.0-DEV-XML-OUTPUT.md
@@ -126,6 +130,7 @@ async function loadOutdatedData(format) {
         stdio: ['ignore', 'pipe', 'ignore'],
       });
     } catch (err) {
+      /** @type {any} */
       const errorAny = err;
       if (errorAny.stdout && errorAny.stdout.toString().trim()) {
         outputStr = errorAny.stdout.toString();
@@ -137,9 +142,11 @@ async function loadOutdatedData(format) {
       data = outputStr ? JSON.parse(outputStr) : {};
     } catch (parseErr) {
       if (format === 'json' || format === 'xml') {
-        throw parseErr;
+        throw /** @type {Error} */ (parseErr);
       }
-      throw new Error(`Failed to parse npm outdated output: ${parseErr.message}`);
+      /** @type {Error} */
+      const errObj = parseErr;
+      throw new Error(`Failed to parse npm outdated output: ${errObj.message}`);
     }
   }
   return { data, fetchVersionTimesOverride, checkVulnerabilitiesOverride };
@@ -147,6 +154,7 @@ async function loadOutdatedData(format) {
 
 /**
  * Main CLI entrypoint.
+ * @returns {Promise<void>}
  */
 async function main() {
   const args = process.argv.slice(2);
@@ -161,6 +169,7 @@ async function main() {
     return;
   }
 
+  /** @type {CliOptions} */
   const options = parseOptions(args);
   const {
     format,
@@ -177,22 +186,25 @@ async function main() {
   try {
     ({ data, fetchVersionTimesOverride, checkVulnerabilitiesOverride } = await loadOutdatedData(format));
   } catch (error) {
-    handleError(error, format);
+    handleError(/** @type {Error & {code?: string, details?: string}} */ (error), format);
   }
 
   try {
-    const summary = await printOutdated(data, {
-      format,
-      fetchVersionTimes: fetchVersionTimesOverride,
-      checkVulnerabilities: checkVulnerabilitiesOverride,
-      prodMinAge,
-      devMinAge,
-      prodMinSeverity,
-      devMinSeverity,
-      updateMode,
-      skipConfirmation,
-      returnSummary: true,
-    });
+    const summary = /** @type {{ safeUpdates: number }} */ (await printOutdated(
+      /** @type {any} */ (data),
+      {
+        format,
+        fetchVersionTimes: fetchVersionTimesOverride,
+        checkVulnerabilities: checkVulnerabilitiesOverride,
+        prodMinAge,
+        devMinAge,
+        prodMinSeverity,
+        devMinSeverity,
+        updateMode,
+        skipConfirmation,
+        returnSummary: true,
+      }
+    ));
 
     if (checkMode) {
       process.exit(summary.safeUpdates > 0 ? 1 : 0);
@@ -202,7 +214,7 @@ async function main() {
     }
     process.exit(summary.safeUpdates > 0 ? 1 : 0);
   } catch (error) {
-    handleError(error, format);
+    handleError(/** @type {Error & {code?: string, details?: string}} */ (error), format);
   }
 }
 
