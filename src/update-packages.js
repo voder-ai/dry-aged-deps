@@ -87,10 +87,18 @@ export async function updatePackages(safeRows, skipConfirmation, summary) {
 
   try {
     createBackup(pkgPath);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error(`Failed to create backup: ${message}`);
+    return summary;
+  }
+
+  try {
     applyUpdates(pkgPath, safeRows);
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
-    console.error(`Error during update: ${message}`);
+    console.error(`Failed to update package.json: ${message}`);
+    return summary;
   }
 
   return summary;
