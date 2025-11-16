@@ -10,7 +10,7 @@ import { getTimestamp } from './print-utils.js';
  * @param {{ rows: Array<[string, string, string, string, number|string, string]>, summary: Object, thresholds: Object, vulnMap: Map<string, object>, filterReasonMap: Map<string,string> }} options - Options for JSON output handler.
  * @returns {Object} summary object returned from filtering.
  */
-export function outputJson({ rows, summary, thresholds, vulnMap, filterReasonMap }) {
+export function handleJsonOutput({ rows, summary, thresholds, vulnMap, filterReasonMap }) {
   const timestamp = getTimestamp();
   const items = prepareJsonItems(rows, thresholds, vulnMap, filterReasonMap);
   console.log(jsonFormatter({ rows: items, summary, thresholds, timestamp }));
@@ -24,7 +24,7 @@ export function outputJson({ rows, summary, thresholds, vulnMap, filterReasonMap
  * @param {{ rows: Array<any>, summary: Object, thresholds: Object, vulnMap: Map<string, object>, filterReasonMap: Map<string,string> }} options - Options for XML output handler.
  * @returns {Object} summary object returned from filtering.
  */
-export function outputXml({ rows, summary, thresholds, vulnMap, filterReasonMap }) {
+export function handleXmlOutput({ rows, summary, thresholds, vulnMap, filterReasonMap }) {
   const timestamp = getTimestamp();
   const items = rows.map(([name, current, wanted, latest, age, depType]) => {
     const minAge = depType === 'prod' ? thresholds.prod.minAge : thresholds.dev.minAge;
@@ -57,7 +57,7 @@ export function outputXml({ rows, summary, thresholds, vulnMap, filterReasonMap 
  * @param {{ safeRows: Array<Array>, matureRows: Array<Array>, summary: Object, prodMinAge: number, devMinAge: number, returnSummary: boolean }} options - Options for table output handler.
  * @returns {Object|undefined} summary when returnSummary is true or undefined otherwise.
  */
-export function outputTable({ safeRows, matureRows, summary, prodMinAge, devMinAge, returnSummary }) {
+export function handleTableOutput({ safeRows, matureRows, summary, prodMinAge, devMinAge, returnSummary }) {
   console.log('Outdated packages:');
   console.log(['Name', 'Current', 'Wanted', 'Latest', 'Age (days)', 'Type'].join('	'));
 
