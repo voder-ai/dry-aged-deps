@@ -1,3 +1,7 @@
+/**
+ * Configuration loader for CLI options, supports JSON config file.
+ * @module config-loader
+ */
 import fs from 'fs';
 import path from 'path';
 
