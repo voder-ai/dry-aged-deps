@@ -1,4 +1,7 @@
 #!/usr/bin/env sh
-# Husky pre-commit hook - currently empty, add checks here if needed
-echo "Pre-commit checks..."
-exit 0
+. "$(dirname "$0")/_/husky.sh"
+
+# Fast pre-commit checks (<10s): auto-format, lint, type-check
+npm run format
+npm run lint
+npm run type-check

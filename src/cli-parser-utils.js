@@ -3,6 +3,11 @@ import { createStringFlagParser, createIntegerFlagParser } from './cli-options-h
 
 /**
  * Generate named string flag parsers.
+ * @story prompts/008.0-DEV-JSON-OUTPUT.md
+ * @story prompts/009.0-DEV-XML-OUTPUT.md
+ * @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
+ * @story prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md
+ * @req REQ-CLI-FLAG-PARSER - Generic string flag parsing logic for CLI.
  * @param {string[]} flags - List of flag names to generate parsers for.
  * @returns {Object.<string, Function>} Mapping from parser export name to parser functions.
  */
@@ -22,6 +27,9 @@ export function generateStringFlagParsers(flags) {
 
 /**
  * Generate named integer flag parsers.
+ * @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
+ * @story prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md
+ * @req REQ-CLI-INTEGER-FLAG-PARSER - Generic integer flag parsing logic for CLI.
  * @param {Array.<[string, number, number?]>} configs - Array of [flagName, min, max] definitions.
  * @returns {Object.<string, Function>} Mapping from parser export name to parser functions.
  */
