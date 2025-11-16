@@ -1,148 +1,158 @@
-Here’s a concise, chronological history of what we’ve done so far:
+Here’s a concise summary of everything we’ve done so far (chronologically):
 
-• 2025-11-14 Emergency fixes & cleanup  
-  – Removed unused imports, repinned js-yaml, cleaned stray fixtures and staging settings  
-  – Audited package.json, GitHub workflows and support files; ensured build, test, lint, type-check and format all passed  
+1. 2025-11-14 Emergency fixes & cleanup  
+   • Removed unused imports, repinned js-yaml, cleaned stray fixtures/staging settings  
+   • Audited package.json, GitHub workflows and support files; ensured build, test, lint, type-check and format all passed  
 
-• Pre-implementation audits  
-  – Reviewed CLI helpers, loaders, output utilities and evaluator logic/tests  
-  – Ran jscpd duplication checks; maintained 173 passing tests at >97% coverage  
+2. Pre-implementation audits  
+   • Reviewed CLI helpers, loaders, output utilities and evaluator logic/tests  
+   • Ran jscpd duplication checks; maintained 173 passing tests at >97% coverage  
 
-• Core implementation & refactors  
-  – update-packages.js: improved branching, error handling, mocked readline  
-  – build-rows.js: added edge-case/table-format tests and JSDoc updates  
-  – output-utils.js: implemented JSON output, filtering and custom-reason tests  
-  – vulnerability-evaluator.js: factored out helpers and added traceability annotations  
+3. Core implementation & refactors  
+   • update-packages.js: improved branching, error handling, mocked readline  
+   • build-rows.js: added edge-case/table-format tests and JSDoc  
+   • output-utils.js: implemented JSON output, filtering and custom-reason tests  
+   • vulnerability-evaluator.js: factored out helpers and added traceability annotations  
 
-• Local-quality-gate overhaul  
-  – Introduced npm scripts for lockfile/drift checks, duplication, audit:ci, commit-lint and pre-push  
-  – Harmonized Husky pre-push hook to run the full pipeline; updated developer guidelines  
+4. Local-quality-gate overhaul  
+   • Introduced npm scripts for lockfile/drift checks, duplication, audit:ci, commit-lint and pre-push  
+   • Harmonized Husky pre-push hook; updated developer guidelines  
 
-• Exit-code refinement & test expansions  
-  – CLI began emitting mode-specific exit codes; tests updated for exitCode 1 when updates exist  
-  – Added unit/integration tests for XML formatter errors, vulnerability edge cases and update-packages flows  
+5. Exit-code refinement & test expansions  
+   • CLI began emitting mode-specific exit codes; tests updated for exitCode 1 when updates exist  
+   • Added unit/integration tests for XML formatter errors, vulnerability edge cases and update-packages flows  
 
-• Traceability & documentation  
-  – Injected JSDoc @story/@req annotations across parsers, config-loader and all tests  
-  – Extended docs/api.md with new options and usage examples  
+6. Traceability & documentation  
+   • Injected JSDoc @story/@req annotations across parsers, config-loader and all tests  
+   • Extended docs/api.md with new options and usage examples  
 
-• 2025-11-15 Test-header scripting & README housekeeping  
-  – Renamed/refactored tests; updated README examples for --check and --config-file  
-  – Created scripts to auto-fix JSDoc headers in *.test.js; ran full validation locally and in CI  
+7. 2025-11-15 Test-header scripting & README housekeeping  
+   • Renamed/refactored tests; updated README examples for --check and --config-file  
+   • Created scripts to auto-fix JSDoc headers in *.test.js; ran full validation locally and in CI  
 
-• Major refactor wave  
-  – Extracted common flag-parser and XML formatter utilities; simplified filter-by-security and print-outdated modules  
-  – Reinstated ESLint complexity rules; removed @ts-nocheck directives; applied Prettier formatting  
+8. Major refactor wave  
+   • Extracted common flag-parser and XML formatter utilities; simplified filter-by-security and print-outdated modules  
+   • Reinstated ESLint complexity rules; removed @ts-nocheck directives; applied Prettier formatting  
 
-• Lockfile drift fix & validation  
-  – Regenerated and committed package-lock.json; verified lockfile via npm run check:lockfile  
-  – Ran npm run validate (build/lint/type-check/format/tests/audit); CI & publish pipeline passed  
+9. Lockfile drift fix & validation  
+   • Regenerated and committed package-lock.json; verified via npm run check:lockfile  
+   • Ran npm run validate (build/lint/type-check/format/tests/audit); CI & publish pipeline passed  
 
-• TS-check experiments & test annotations  
-  – Enabled/reverted checkJs/@ts-check changes; enriched tests with @story/@req; refactored XML formatter conversions  
+10. TS-check experiments & test annotations  
+    • Enabled/reverted checkJs/@ts-check changes; enriched tests with @story/@req; refactored XML formatter conversions  
 
-• fetch-version-times feature  
-  – Wrapped child_process.execFile in a mockable export; updated tests with mocks; initially marked module @ts-nocheck  
+11. fetch-version-times feature  
+    • Wrapped child_process.execFile in a mockable export; updated tests with mocks; initially marked module @ts-nocheck  
 
-• Latest refactors & tests  
-  – Removed remaining ts-nocheck and ESLint disables; refactored severityWeights lookups; updated docs/api.md  
-  – Added unit tests for computeVulnerabilityStats and countAboveThreshold  
+12. Latest refactors & tests  
+    • Removed remaining ts-nocheck and ESLint disables; refactored severityWeights lookups; updated docs/api.md  
+    • Added unit tests for computeVulnerabilityStats and countAboveThreshold  
 
-• Final quality checks & push (mid-November)  
-  – Cleaned up Husky hooks; ran full validation; pushed commits; CI & Publish on main succeeded  
+13. Final quality checks & push (mid-November)  
+    • Cleaned up Husky hooks; ran full validation; pushed commits; CI & Publish on main succeeded  
 
-• DeriveParserName & print-outdated extraction  
-  – Moved deriveParserName() into cli-parser-utils.js and output handlers into src/print-outdated-utils.js  
-  – Updated README attribution to “Created autonomously by voder.ai”  
+14. DeriveParserName & print-outdated extraction  
+    • Moved deriveParserName() into cli-parser-utils.js and output handlers into src/print-outdated-utils.js  
+    • Updated README attribution to “Created autonomously by voder.ai”  
 
-• Enabled TypeScript checking on JS; added JSON schema  
-  – Set tsconfig.json’s checkJs=true; updated type-check script; created config.schema.json and linked in docs/api.md  
+15. Enabled TypeScript checking on JS; added JSON schema  
+    • Set tsconfig.json’s checkJs=true; updated type-check script; created config.schema.json and linked in docs/api.md  
 
-• Table output & XML age handling improvements  
-  – Switched table output to tabs; updated XML formatter to render “N/A” on fetch failures  
+16. Table output & XML age handling improvements  
+    • Switched table output to tabs; updated XML formatter to render “N/A” on fetch failures  
 
-• Config-loader typing & pre-commit hook  
-  – Tightened config typing; added build step to Husky pre-commit  
+17. Config-loader typing & pre-commit hook  
+    • Tightened config typing; added build step to Husky pre-commit  
 
-• Late 2025-11-15 into 2025-11-16 refinements  
-  – Removed top-level @ts-nocheck; refined JSDoc in flag parsers; added comprehensive @story/@req in update-packages.js  
-  – Style fixes, enforced trailing newlines; ran full validation; pushed to main  
+18. Late 2025-11-15 into 2025-11-16 refinements  
+    • Removed top-level @ts-nocheck; refined JSDoc in flag parsers; added comprehensive @story/@req in update-packages.js  
+    • Style fixes, enforced trailing newlines; ran full validation; pushed to main  
 
-• 2025-11-16 Quality checks & push  
-  – Executed build, tests, lint, type-check, format:check, duplication and lockfile scripts; CI & Publish pipeline passed  
+19. 2025-11-16 Quality checks & push  
+    • Executed build, tests, lint, type-check, format:check, duplication and lockfile scripts; CI & Publish pipeline passed  
 
-• Initial & placeholder test-traceability setup  
-  – Stripped old headers and inserted /** @story…, @req UNKNOWN */ in all .test.js  
-  – Added CI step to enforce @story/@req; generated and committed traceability JSON; cleaned up placeholder scripts  
+20. Initial & placeholder test-traceability setup  
+    • Stripped old headers and inserted /** @story…, @req UNKNOWN */ in all .test.js  
+    • Added CI step to enforce @story/@req; generated and committed traceability JSON; cleaned up placeholder scripts  
 
-• Recent commits & verifications  
-  – Refactored CLI helpers/tests to use generic parser generators; added proper @story/@req in age-calculator and CLI helpers tests  
-  – Upgraded GitHub Actions from v3 to v4; adopted Conventional Commits; ran full local and CI validation  
+21. Recent commits & verifications  
+    • Refactored CLI helpers/tests to use generic parser generators; added proper @story/@req in age-calculator and CLI helpers tests  
+    • Upgraded GitHub Actions from v3 to v4; adopted Conventional Commits; ran full local and CI validation  
 
-• Build-rows test updates & final commit  
-  – Updated five build-rows test files with precise @story/@req; fixed syntax and ensured newline at EOF  
-  – Validated locally; pushed to main; CI & Publish pipeline passed successfully
+22. Build-rows test updates & final commit  
+    • Updated five build-rows test files with precise @story/@req; fixed syntax and ensured newline at EOF  
+    • Validated locally; pushed to main; CI & Publish pipeline passed successfully  
+
+23. Implementation of invalid-option handling (Story 014.0)  
+    • Added early detection of unknown CLI flags in parseOptions with error messages, “Did you mean…” suggestions and exit code 2  
+    • Created test suite in test/cli.invalid-options.test.js covering unknown options, typo suggestions, invalid values and multiple errors  
+    • Extended bin/dry-aged-deps.js help output and README with examples of invalid-option errors  
+    • Added branch-level traceability JSDoc annotations; all local quality checks and CI pipeline remain green
 
 **Most recently we've executed the following action:**
 
 ---
-Used tool: list_directory with input: {"dirPath":""}
+Used tool: find_files with input: {"pattern":"src/cli-options.js"}
 Used tool: list_directory with input: {"dirPath":"."}
-Used tool: read_file with input: {"filePath":"src/cli-options.js","startLine":1,"endLine":300}
-Used tool: read_file with input: {"filePath":"src/cli-options-helpers.js","startLine":1,"endLine":500}
-Used tool: search_file_content with input: {"filePath":"test","pattern":"cli"}
-Used tool: read_file with input: {"filePath":"src/cli-parser-utils.js","startLine":1,"endLine":500}
-Used tool: read_file with input: {"filePath":"bin/dry-aged-deps.js","startLine":1,"endLine":500}
-Used tool: read_file with input: {"filePath":"src/cli-options-helpers/utils-common.js","startLine":1,"endLine":500}
-Used tool: read_file with input: {"filePath":"prompts/014.0-DEV-INVALID-OPTION-ERROR.md","startLine":1,"endLine":500}
-Used tool: read_file with input: {"filePath":"src/cli-options-helpers/parse-string-flag.js","startLine":1,"endLine":500}
-Used tool: read_file with input: {"filePath":"src/cli-options-helpers/parse-integer-flag.js","startLine":1,"endLine":500}
-Used tool: search_file_content with input: {"filePath":"src/cli-options-helpers/get-flag-raw-value.js","pattern":""}
-Used tool: read_file with input: {"filePath":"src/cli-options-helpers/get-flag-raw-value.js","startLine":1,"endLine":300}
-Used tool: list_directory with input: {"dirPath":"test"}
-Used tool: read_file with input: {"filePath":"test/cli.error-cmd.test.js","startLine":1,"endLine":200}
-Used tool: read_file with input: {"filePath":"package.json","startLine":1,"endLine":200}
-Used tool: read_file with input: {"filePath":"README.md","startLine":1,"endLine":200}
-Used tool: search_file_content with input: {"filePath":"src/cli-options.js","pattern":"export function parseOptions"}
-Used tool: read_file with input: {"filePath":"src/config-loader.js","startLine":1,"endLine":300}
-Used tool: modify_file with input: {"filePath":"src/cli-options.js","instruction":"Add detection and handling of unknown CLI options at the top of parseOptions. Include suggestions and exit with code 2. Please insert code after the line `export function parseOptions(argv) {` and before any existing logic."}
-Used tool: read_file with input: {"filePath":"test/cli.format-json.error.test.js","startLine":1,"endLine":200}
+Used tool: list_directory with input: {"dirPath":"src"}
+Used tool: read_file with input: {"filePath":"tsconfig.json"}
 Used tool: read_file with input: {"filePath":"src/cli-options.js","startLine":1,"endLine":200}
-Used tool: modify_file with input: {"filePath":"src/cli-options.js","instruction":"Replace the detection and handling of unknown CLI options block with the following:\n\n```js\n  // Detect unknown CLI options\n  const allowedOptions = [\n    '--check', '--update', '--yes', '-y',\n    '--config-file', '--format',\n    '--min-age', '--prod-min-age', '--dev-min-age',\n    '--severity', '--prod-severity', '--dev-severity',\n    '--help', '-h', '--version', '-v'\n  ];\n  const unknownArgs = args.filter(a => a.startsWith('-') &&\n    !allowedOptions.some(opt => a === opt || a.startsWith(`${opt}=`))\n  );\n  if (unknownArgs.length > 0) {\n    unknownArgs.forEach((arg) => {\n      console.error(`Error: Unknown option '${arg}'`);\n      let suggestion;\n      if (arg === '--json') suggestion = '--format=json';\n      else if (arg.startsWith('--format')) suggestion = '--format';\n      if (suggestion) {\n        console.error(`Did you mean '${suggestion}'?`);\n      }\n    });\n    console.error(`Use 'dry-aged-deps --help' to see all available options.`);\n    process.exit(2);\n  }\n```"}
-Used tool: read_file with input: {"filePath":"test/cli.flags.test.js","startLine":1,"endLine":200}
-Used tool: generate_file with input: {"filePath":"test/cli.invalid-options.test.js","overwrite":false,"content":"/**\n * Tests for invalid CLI options\n * @story prompts/014.0-DEV-INVALID-OPTION-ERROR.md\n * @req REQ-OPTION-VALIDATION - Validate known options only\n * @req REQ-UNKNOWN-OPTION-ERROR - Error on unknown options\n * @req REQ-INVALID-VALUE-ERROR - Error on invalid option values\n * @req REQ-ERROR-EXIT-CODE - Exit code 2 on usage errors\n */\n\nimport { execa } from 'execa';\nimport path from 'path';\nimport { fileURLToPath } from 'url';\n\nconst __filename = fileURLToPath(import.meta.url);\nconst __dirname = path.dirname(__filename);\nconst cliPath = path.join(__dirname, '..', 'bin', 'dry-aged-deps.js');\n\ndescribe('Invalid CLI options error handling (Story 014.0)', () => {\n  it(\"should error on unknown option '--foo'\", async () => {\n    const result = await execa('node', [cliPath, '--foo'], { reject: false });\n    expect(result.exitCode).toBe(2);\n    expect(result.stderr).toContain(\"Error: Unknown option '--foo'\");\n    expect(result.stderr).toContain(\"Use 'dry-aged-deps --help' to see all available options.\");\n  });\n\n  it(\"should suggest '--format=json' for '--json'\", async () => {\n    const result = await execa('node', [cliPath, '--json'], { reject: false });\n    expect(result.exitCode).toBe(2);\n    expect(result.stderr).toContain(\"Error: Unknown option '--json'\");\n    expect(result.stderr).toContain(\"Did you mean '--format=json'?\");\n    expect(result.stderr).toContain(\"Use 'dry-aged-deps --help' to see all available options.\");\n  });\n\n  it(\"should suggest '--format' for '--formatx'\", async () => {\n    const result = await execa('node', [cliPath, '--formatx'], { reject: false });\n    expect(result.exitCode).toBe(2);\n    expect(result.stderr).toContain(\"Error: Unknown option '--formatx'\");\n    expect(result.stderr).toContain(\"Did you mean '--format'?\");\n    expect(result.stderr).toContain(\"Use 'dry-aged-deps --help' to see all available options.\");\n  });\n\n  it(\"should error on invalid value for '--format=yaml'\", async () => {\n    const result = await execa('node', [cliPath, '--format=yaml'], { reject: false });\n    expect(result.exitCode).toBe(2);\n    expect(result.stderr).toContain('Invalid format: yaml. Valid values are: table, json, xml');\n  });\n\n  it('should show multiple errors for multiple invalid flags', async () => {\n    const result = await execa('node', [cliPath, '--json', '--formatx'], { reject: false });\n    expect(result.exitCode).toBe(2);\n    // Both errors for unknown options\n    expect(result.stderr).toContain(\"Error: Unknown option '--json'\");\n    expect(result.stderr).toContain(\"Error: Unknown option '--formatx'\");\n    expect(result.stderr).toContain(\"Did you mean '--format=json'?\");\n    expect(result.stderr).toContain(\"Did you mean '--format'?\");\n    // Help suggestion only once at end\n    expect(result.stderr).toMatch(/Use 'dry-aged-deps --help' to see all available options\\./);\n  });\n});\n"}
-Used tool: read_file with input: {"filePath":"test/cli-entrypoint.test.js","startLine":1,"endLine":200}
-Used tool: modify_file with input: {"filePath":"src/cli-options.js","instruction":"Add branch-level traceability JSDoc annotations to the unknown CLI options detection block. Insert the following comments above the detection code:\n\n  // @story prompts/014.0-DEV-INVALID-OPTION-ERROR.md\n  // @req REQ-OPTION-VALIDATION - Validate known options only\n  // @req REQ-UNKNOWN-OPTION-ERROR - Error on unknown options\n  // @req REQ-ERROR-EXIT-CODE - Exit with code 2 for usage errors\n  // @req REQ-HELP-SUGGESTION - Suggest using --help\n  // @req REQ-DID-YOU-MEAN - Provide suggestions for mistyped flags\n\nEnsure these lines are placed directly before `// Detect unknown CLI options` block."}
-Used tool: search_file_content with input: {"filePath":"README.md","pattern":"### Examples"}
-Used tool: read_file with input: {"filePath":"README.md","startLine":50,"endLine":120}
-Used tool: read_file with input: {"filePath":"bin/dry-aged-deps.js","startLine":1,"endLine":100}
-Used tool: modify_file with input: {"filePath":"bin/dry-aged-deps.js","instruction":"Modify the printHelp function to append a section for invalid option examples. Insert after the console.log for '--config-file' the following lines (maintain indentation and use console.log calls):\n\n  // @story prompts/014.0-DEV-INVALID-OPTION-ERROR.md\n  // @req REQ-HELP-SUGGESTION - Suggest using --help in error messages\n  console.log('');\n  console.log('Examples of invalid option error messages:');\n  console.log('  $ dry-aged-deps --json');\n  console.log(\"    Error: Unknown option '--json'\");\n  console.log(\"    Did you mean '--format=json'? \");\n  console.log(\"    Use 'dry-aged-deps --help' to see all available options.\");\n  console.log('');\n  console.log('  $ dry-aged-deps --format=yaml');\n  console.log(\"    Error: Invalid format: yaml. Valid values are: table, json, xml\");\n  console.log(\"    Use 'dry-aged-deps --help' for more information.\");"}
-Used tool: read_file with input: {"filePath":"README.md","startLine":120,"endLine":200}
-Used tool: modify_file with input: {"filePath":"README.md","instruction":"Add a new section after the 'Examples' code block and before '### Output Formats'. The section title should be '### Invalid option error examples', with content matching the invalid option errors examples:\n\n### Invalid option error examples\n\n```sh\n$ dry-aged-deps --json\nError: Unknown option '--json'\nDid you mean '--format=json'?\nUse 'dry-aged-deps --help' to see all available options.\n\n$ dry-aged-deps --format=yaml\nError: Invalid format: yaml. Valid values are: table, json, xml\nUse 'dry-aged-deps --help' for more information.\n```\n\nEnsure formatting and adjacency to existing sections."}
-Used tool: run_command with input: {"command":"npm","args":["run","format:check"]}
-Used tool: run_command with input: {"command":"npm","args":["run","format"]}
-Used tool: run_command with input: {"command":"npm","args":["test"]}
+Used tool: read_file with input: {"filePath":"package.json"}
+Used tool: read_file with input: {"filePath":"eslint.config.js","startLine":1,"endLine":300}
+Used tool: read_file with input: {"filePath":"src/config-loader.js","startLine":1,"endLine":200}
+Used tool: run_command with input: {"command":"grep","args":["-Rn","// eslint-disable","src"]}
+Used tool: read_file with input: {"filePath":"src/cli-options-helpers.js","startLine":1,"endLine":200}
+Used tool: read_file with input: {"filePath":"src/cli-parser-utils.js","startLine":1,"endLine":300}
+Used tool: modify_file with input: {"filePath":"src/cli-options.js","instruction":"Remove the top line containing \"// @ts-nocheck\" so that file-wide type checking is enabled."}
+Used tool: run_command with input: {"command":"npm","args":["run","type-check"]}
+Used tool: run_command with input: {"command":"npm","args":["run","type-check"],"timeout":120000}
+Used tool: run_command with input: {"command":"node","args":["node_modules/typescript/bin/tsc","--noEmit","-p","tsconfig.json"],"timeout":120000}
+Used tool: run_command with input: {"command":"npm","args":["run","lint"],"timeout":120000}
+Used tool: run_command with input: {"command":"npx","args":["tsc","--noEmit"],"timeout":120000}
+Used tool: find_files with input: {"pattern":"utils-common","directory":"src"}
+Used tool: run_command with input: {"command":"npx","args":["tsc","--noEmit","-p","tsconfig.json"]}
+Used tool: modify_file with input: {"filePath":"src/cli-options.js","instruction":"Insert `// @ts-expect-error -- config properties may not be recognized by TS` above each assignment accessing properties on `config`. Specifically, before lines for `defaultFormat`, `defaultMinAge`, `defaultProdMinAge`, `defaultDevMinAge`, `defaultSeverity`, `defaultProdMinSeverity`, and `defaultDevMinSeverity`."}
+Used tool: read_file with input: {"filePath":"eslint.config.js","startLine":1,"endLine":200}
+Used tool: list_directory with input: {"dirPath":"src/cli-options-helpers"}
+Used tool: run_command with input: {"command":"npm","args":["run","typecheck"],"timeout":120000}
+Used tool: read_file with input: {"filePath":"src/cli-options-helpers/utils-common.js","startLine":1,"endLine":200}
+Used tool: run_command with input: {"command":"grep","args":["-R","eslint-disable","src"]}
+Used tool: modify_file with input: {"filePath":"eslint.config.js","instruction":"Refactor overrides:\n1. In the override for files: ['src/**/*.js', 'bin/**/*.js', '*.config.js'], change it to ['src/**/*.js', 'bin/**/*.js'] and add the 'max-lines' rule with max 500, skipComments and skipBlankLines.\n2. After this override, insert a new override block for config files ('*.config.js') disabling complexity, max-lines-per-function, and max-lines.\n3. In the test files override (files: ['test/**/*.js', '**/*.test.js', '**/*.spec.js']), add 'max-lines': 'off' to rules.\n4. Remove the final override block for 'eslint.config.js'."}
+Used tool: search_file_content with input: {"filePath":"src","pattern":"@ts-nocheck","isRegex":false}
+Used tool: read_file with input: {"filePath":"src/cli-parser-utils.js","startLine":1,"endLine":200}
+Used tool: modify_file with input: {"filePath":"src/cli-parser-utils.js","instruction":"Remove the file-level ESLint disable comment at the top. For each assignment to parsers[exportName], add an inline disable comment for security/detect-object-injection.\n\nSpecifically:\n- Remove the line starting with /* eslint-disable security/detect-object-injection ... */\n- In generateStringFlagParsers, before 'parsers[exportName] = ...', add:\n  // eslint-disable-next-line security/detect-object-injection -- computed parser name derived from trusted flags\n- In generateIntegerFlagParsers, before 'parsers[exportName] = ...', add the same disable comment."}
+Used tool: run_command with input: {"command":"grep","args":["-R","eslint-disable","src"]}
 Used tool: run_command with input: {"command":"npm","args":["run","lint"]}
+Used tool: modify_file with input: {"filePath":"src/cli-options-helpers/utils-common.js","instruction":"Remove the first line containing `// @ts-nocheck` to re-enable type checking."}
+Used tool: run_command with input: {"command":"grep","args":["-R","// @ts-nocheck","args?"]}
+Used tool: run_command with input: {"command":"grep","args":["-R","eslint-disable","."],"timeout":120000}
+Used tool: run_command with input: {"command":"npm","args":["run","type-check"],"timeout":120000}
+Used tool: run_command with input: {"command":"npm","args":["run","test"],"timeout":120000}
 Used tool: git_add_all with input: {}
-Used tool: git_commit with input: {"message":"feat: validate and handle unknown CLI options (story 014.0)\n\n- Added detection of unknown CLI flags in parseOptions\n- Emit specific error messages and suggestions\n- Exit with code 2 on invalid options\n- Updated tests for invalid CLI options with traceability annotations\n- Extended CLI help and README with invalid option error examples"}
-Used tool: git_push with input: {}
-Used tool: get_github_pipeline_status with input: {}
-Used tool: list_directory with input: {"dirPath":".github/workflows"}
-Used tool: wait_for_github_workflow with input: {"workflowName":"CI & Publish","timeout":600000}
+Used tool: git_commit with input: {"message":"chore: remove file-wide ts-nocheck from cli-options and utils-common, enable targeted ts-expect-error for config props\n\n- Removed // @ts-nocheck from src/cli-options.js and src/cli-options-helpers/utils-common.js\n- Added @ts-expect-error comments for config property accesses in src/cli-options.js to patch type mismatches\n\nPart of plan to remove file-wide type suppression (##NOW)"}
+Used tool: git_add_all with input: {}
+Used tool: git_commit with input: {"message":"refactor: reconfigure ESLint with max-lines rule and split config overrides\n\n- Added 'max-lines' rule to source file override\n- Created separate override for '*.config.js' to disable complexity and max-lines rules\n- Extended test files override to disable 'max-lines'\n- Removed redundant override for eslint.config.js\n\nPart of plan to adjust ESLint file-length policies (##NEXT)"}
+Used tool: git_add_all with input: {}
+Used tool: git_commit with input: {"message":"refactor: replace file-wide eslint-disable in cli-parser-utils with inline disables\n\n- Removed block eslint-disable security/detect-object-injection\n- Added inline eslint-disable-next-line around each parsers[...] assignment in src/cli-parser-utils.js\n\nPart of plan to narrow ESLint suppressions (##NEXT)"}
+Used tool: get_git_status with input: {}
+Used tool: git_commit with input: {"message":"refactor: replace file-wide eslint-disable in cli-parser-utils with inline disables"}
+Used tool: run_command with input: {"command":"npm","args":["run","format:check"]}
+Used tool: git_commit with input: {"message":"refactor: replace file-wide eslint-disable in cli-parser-utils with inline disables"}
+Used tool: run_command with input: {"command":"git","args":["log","--oneline","-n","5"]}
+Used tool: read_file with input: {"filePath":"src/cli-parser-utils.js","startLine":1,"endLine":200}
+Used tool: run_command with input: {"command":"git","args":["diff","0628045","7f360c0"]}
+Used tool: run_command with input: {"command":"git","args":["status","-s"]}
 ---
 
 **This was the result:**
 ---
-I’ve implemented and tested the invalid-option handling (Story 014.0). 
+I have completed the ##NOW step by removing file-wide `// @ts-nocheck` directives and replacing them with targeted `@ts-expect-error` comments in `src/cli-options.js`. I also addressed the ##NEXT steps:
 
-Changes include:
-- Unknown CLI options are now detected early in `parseOptions`, with per-option error messages, “Did you mean…” suggestions, help guidance, and exit code 2.
-- Tests added in `test/cli.invalid-options.test.js` to cover unknown options, typo suggestions, invalid values, and multiple errors.
-- `bin/dry-aged-deps.js` help output extended with examples of invalid option errors.
-- README updated with an “Invalid option error examples” section.
-- Traceability annotations (`@story` and `@req`) added at function/branch levels.
-- Code formatted, linted, type-checked; all 211+ tests pass; coverage remains high.
-- CI & Publish workflow passed successfully.
+• Refactored `eslint.config.js` to add a `max-lines` rule (max 500) for source files and created a separate override for `*.config.js`.  
+• Extended test files override to disable `max-lines`.  
+• Removed redundant override for `eslint.config.js`.  
+• Replaced the block-level ESLint disable in `src/cli-parser-utils.js` with inline `eslint-disable-next-line security/detect-object-injection` comments on computed property assignments.  
+• Removed `// @ts-nocheck` from `src/cli-options-helpers/utils-common.js`.
 
-All local quality checks and the CI pipeline are green. The implementation is complete for the **NOW** and **NEXT** steps of Story 014.0.
+All local quality checks (linting, formatting, type-checking, and tests) are passing. Let me know if you’d like to proceed with further refinements (e.g., tightening complexity thresholds or splitting large modules).
 ---
