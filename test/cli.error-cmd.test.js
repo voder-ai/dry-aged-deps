@@ -1,6 +1,8 @@
 /**
- * Tests for CLI error exit code behaviors
+ * Tests for CLI exit code behaviors
  * @story prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md
+ * @req REQ-EXIT-0 - Exit code 0 on successful execution
+ * @req REQ-EXIT-1 - Exit code 1 on usage errors
  * @req REQ-EXIT-2 - Exit code 2 on errors
  */
 
