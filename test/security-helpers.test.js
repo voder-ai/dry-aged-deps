@@ -1,6 +1,7 @@
 /**
- * @story prompts/dry-aged-deps-user-story-map.md
- * @req UNKNOWN - Placeholder traceability annotation
+ * Tests for vulnerability statistics functions (computeVulnerabilityStats and countAboveThreshold).
+ * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
+ * @req REQ-SAFE-ONLY - Compute and count vulnerabilities correctly
  */
 
 import { describe, it, expect } from 'vitest';
