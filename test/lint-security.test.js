@@ -1,3 +1,4 @@
+/** @story prompts/dry-aged-deps-user-story-map.md */
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { ESLint } from 'eslint';

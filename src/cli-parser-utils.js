@@ -1,4 +1,5 @@
 // @ts-nocheck
+/* eslint-disable security/detect-object-injection -- computed property names safe */
 import { createStringFlagParser, createIntegerFlagParser } from './cli-options-helpers/utils-common.js';
 
 /**

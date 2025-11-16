@@ -1,3 +1,4 @@
+/** @story prompts/dry-aged-deps-user-story-map.md */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { buildRows } from '../src/build-rows.js';
 

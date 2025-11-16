@@ -2,16 +2,11 @@
 import { generateStringFlagParsers, generateIntegerFlagParsers } from './cli-parser-utils.js';
 
 // Generate string-based flag parsers
-const {
-  parseFormatFlag,
-  parseSeverityFlag,
-  parseProdSeverityFlag,
-  parseDevSeverityFlag
-} = generateStringFlagParsers([
+const { parseFormatFlag, parseSeverityFlag, parseProdSeverityFlag, parseDevSeverityFlag } = generateStringFlagParsers([
   'format',
   'severity',
   'prod-severity',
-  'dev-severity'
+  'dev-severity',
 ]);
 
 /**
@@ -35,14 +30,10 @@ export { parseProdSeverityFlag };
 export { parseDevSeverityFlag };
 
 // Generate integer-based flag parsers
-const {
-  parseMinAgeFlag,
-  parseProdMinAgeFlag,
-  parseDevMinAgeFlag
-} = generateIntegerFlagParsers([
+const { parseMinAgeFlag, parseProdMinAgeFlag, parseDevMinAgeFlag } = generateIntegerFlagParsers([
   ['min-age', 1, 365],
   ['prod-min-age', 1],
-  ['dev-min-age', 1]
+  ['dev-min-age', 1],
 ]);
 
 /**

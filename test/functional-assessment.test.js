@@ -1,3 +1,4 @@
+/** @story prompts/dry-aged-deps-user-story-map.md */
 import { describe, test, expect } from 'vitest';
 import { execa } from 'execa';
 import fs from 'fs/promises';

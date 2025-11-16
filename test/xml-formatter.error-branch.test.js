@@ -1,3 +1,4 @@
+/** @story prompts/dry-aged-deps-user-story-map.md */
 import { describe, it, expect } from 'vitest';
 import { xmlFormatter } from '../src/xml-formatter.js';
 

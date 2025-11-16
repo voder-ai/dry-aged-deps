@@ -1,3 +1,4 @@
+/** @story prompts/dry-aged-deps-user-story-map.md */
 import { fetchVersionTimes, execFile } from '../src/fetch-version-times.js';
 
 describe('fetchVersionTimes error paths', () => {

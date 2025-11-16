@@ -1,3 +1,4 @@
+/** @story prompts/dry-aged-deps-user-story-map.md */
 import { vi, describe, test, expect, beforeEach, afterEach } from 'vitest';
 import { printOutdated } from '../src/print-outdated.js';
 

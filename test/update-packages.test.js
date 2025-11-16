@@ -1,3 +1,4 @@
+/** @story prompts/dry-aged-deps-user-story-map.md */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import path from 'path';
 import os from 'os';

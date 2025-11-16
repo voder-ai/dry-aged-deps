@@ -1,3 +1,4 @@
+/** @story prompts/dry-aged-deps-user-story-map.md */
 import { runCli } from './helpers/cli-helper';
 
 describe('dry-aged-deps CLI', () => {

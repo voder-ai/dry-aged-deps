@@ -1,3 +1,4 @@
+/** @story prompts/dry-aged-deps-user-story-map.md */
 /**
  * Tests for computeVulnerabilityStats and countAboveThreshold functions
  * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md

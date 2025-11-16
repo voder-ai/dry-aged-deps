@@ -1,3 +1,4 @@
+/** @story prompts/dry-aged-deps-user-story-map.md */
 import { calculateAgeInDays } from '../src/age-calculator';
 
 describe('calculateAgeInDays', () => {

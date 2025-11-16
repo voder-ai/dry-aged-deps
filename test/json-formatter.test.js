@@ -1,3 +1,4 @@
+/** @story prompts/dry-aged-deps-user-story-map.md */
 import { jsonFormatter } from '../src/json-formatter.js';
 
 describe('jsonFormatter', () => {
