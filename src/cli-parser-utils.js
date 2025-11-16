@@ -3,6 +3,25 @@
 import { createStringFlagParser, createIntegerFlagParser } from './cli-options-helpers/utils-common.js';
 
 /**
+ * Derive the parser function export name from a flag name.
+ * @story prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md
+ * @story prompts/008.0-DEV-JSON-OUTPUT.md
+ * @story prompts/009.0-DEV-XML-OUTPUT.md
+ * @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
+ * @req REQ-CLI-PARSER-NAME-GENERATION - Central generic logic for flag parser name derivation
+ * @param {string} flagName - Flag name without hyphens.
+ * @returns {string} Parser export name, e.g., 'parseMinAgeFlag'.
+ */
+function deriveParserName(flagName) {
+  const camel = flagName
+    .split('-')
+    .map((part, idx) => (idx === 0 ? part : part[0].toUpperCase() + part.slice(1)))
+    .join('');
+  const cap = camel.charAt(0).toUpperCase() + camel.slice(1);
+  return `parse${cap}Flag`;
+}
+
+/**
  * Generate named string flag parsers.
  * @story prompts/008.0-DEV-JSON-OUTPUT.md
  * @story prompts/009.0-DEV-XML-OUTPUT.md
@@ -15,12 +34,7 @@ import { createStringFlagParser, createIntegerFlagParser } from './cli-options-h
 export function generateStringFlagParsers(flags) {
   const parsers = {};
   for (const flagName of flags) {
-    const camel = flagName
-      .split('-')
-      .map((part, idx) => (idx === 0 ? part : part[0].toUpperCase() + part.slice(1)))
-      .join('');
-    const cap = camel.charAt(0).toUpperCase() + camel.slice(1);
-    const exportName = `parse${cap}Flag`;
+    const exportName = deriveParserName(flagName);
     parsers[exportName] = createStringFlagParser(flagName);
   }
   return parsers;
@@ -38,12 +52,7 @@ export function generateIntegerFlagParsers(configs) {
   const parsers = {};
   for (const config of configs) {
     const [flagName, min, max] = config;
-    const camel = flagName
-      .split('-')
-      .map((part, idx) => (idx === 0 ? part : part[0].toUpperCase() + part.slice(1)))
-      .join('');
-    const cap = camel.charAt(0).toUpperCase() + camel.slice(1);
-    const exportName = `parse${cap}Flag`;
+    const exportName = deriveParserName(flagName);
     if (max !== undefined) {
       parsers[exportName] = createIntegerFlagParser(flagName, min, max);
     } else {

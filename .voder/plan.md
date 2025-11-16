@@ -1,13 +1,12 @@
 ## NOW
-Refactor `src/cli-options-helpers.js` to extract its duplicated flag-parsing logic into a new shared helper module (e.g. `src/cli-parser-utils.js`), reducing `src/cli-options-helpers.js` duplication below 20%.
+Refactor src/cli-options-helpers.js to extract its duplicated flag-parsing logic into a new src/cli-parser-utils.js helper module, reducing per-file duplication in cli-options-helpers.js below 20%.
 
 ## NEXT
-- Add missing `@story` and `@req` JSDoc tags to every source function and test file to satisfy traceability requirements.
-- Enrich code documentation by writing complete JSDoc comments for all public APIs (e.g. in `src/output-utils.js`, `src/config-loader.js`) and update `docs/api.md` accordingly.
-- Update the Husky pre-commit hook (`.husky/pre-commit`) to run fast checks (`npm run lint && npm run type-check && npm run format:check`) before allowing commits.
+- Audit all source modules and test files, adding missing JSDoc `@story` and `@req` tags to every public function, aligning each annotation with the appropriate prompt file.  
+- Enhance JSDoc in key public APIs (e.g., src/config-loader.js, src/output-utils.js, src/print-outdated-handlers.js) to include full parameter and return descriptions, plus traceability annotations; update docs/api.md to reflect these changes.  
+- Insert inline traceability comments for each significant branch (if/else blocks, loops, try/catch) in heavy-logic modules (e.g., src/print-outdated.js, security modules), referencing the requirement IDs they implement.
 
 ## LATER
-- Integrate a CI documentation-lint step that verifies presence and correctness of traceability annotations and JSDoc coverage.
-- Consolidate shared logic from `print-outdated.js` and its handlers into utility modules to further reduce duplication and re-enable complexity rules.
-- Rename test files that include forbidden terms and enforce naming conventions via a new ESLint rule.
-- Gradually tighten per-file duplication and complexity thresholds in CI, ensuring ongoing code quality.
+- Update the Husky pre-commit hook to run a documentation-lint step that verifies presence and correctness of all `@story`/`@req` tags before allowing a commit.  
+- Integrate a CI documentation-lint workflow that fails the build if traceability annotations or JSDoc coverage fall below defined thresholds.  
+- Review remaining modules (e.g., security-helpers, update-packages) for duplication and complexity, and refactor shared logic or split large functions to meet duplication (<20%) and complexity (<15 cyclomatic) targets.
