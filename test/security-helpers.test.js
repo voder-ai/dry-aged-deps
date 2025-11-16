@@ -1,8 +1,3 @@
-/**
- * @story ??? - TODO: specify story file
- * @req UNKNOWN - TODO: specify requirement ID and description
- */
-
 import { describe, it, expect } from 'vitest';
 import { computeVulnerabilityStats, countAboveThreshold } from '../src/security-helpers.js';
 

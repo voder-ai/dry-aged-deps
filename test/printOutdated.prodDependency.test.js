@@ -1,8 +1,3 @@
-/**
- * @story ??? - TODO: specify story file
- * @req UNKNOWN - TODO: specify requirement ID and description
- */
-
 import fs from 'fs';
 import os from 'os';
 import path from 'path';

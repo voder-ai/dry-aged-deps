@@ -1,8 +1,3 @@
-/**
- * @story ??? - TODO: specify story file
- * @req UNKNOWN - TODO: specify requirement ID and description
- */
-
 import { describe, test, expect } from 'vitest';
 import { execa } from 'execa';
 import fs from 'fs/promises';

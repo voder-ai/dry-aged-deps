@@ -1,8 +1,3 @@
-/**
- * @story ??? - TODO: specify story file
- * @req UNKNOWN - TODO: specify requirement ID and description
- */
-
 import { describe, it, expect, vi } from 'vitest';
 import { buildRows } from '../src/build-rows.js';
 

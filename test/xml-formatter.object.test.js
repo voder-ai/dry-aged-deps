@@ -1,8 +1,3 @@
-/**
- * @story ??? - TODO: specify story file
- * @req UNKNOWN - TODO: specify requirement ID and description
- */
-
 import { xmlFormatter } from '../src/xml-formatter.js';
 
 describe('xmlFormatter object-style package entries', () => {

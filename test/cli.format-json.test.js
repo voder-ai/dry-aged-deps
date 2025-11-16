@@ -1,8 +1,3 @@
-/**
- * @story ??? - TODO: specify story file
- * @req UNKNOWN - TODO: specify requirement ID and description
- */
-
 import { execa } from 'execa';
 import path from 'path';
 import { fileURLToPath } from 'url';

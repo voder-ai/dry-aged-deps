@@ -1,8 +1,3 @@
-/**
- * @story ??? - TODO: specify story file
- * @req UNKNOWN - TODO: specify requirement ID and description
- */
-
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { checkVulnerabilities } from '../src/check-vulnerabilities.js';
 import { execFile } from 'child_process';
