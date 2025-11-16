@@ -1,4 +1,4 @@
-/** @story prompts/dry-aged-deps-user-story-map.md */
+/** @story prompts/008.0-DEV-JSON-OUTPUT.md */
 import { jsonFormatter } from '../src/json-formatter.js';
 
 describe('jsonFormatter', () => {

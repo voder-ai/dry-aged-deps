@@ -1,12 +1,12 @@
 /**
  * Prepare JSON items for JSON output.
- * @story docs/decisions/0002-json-xml-output-support.md
+ * @story prompts/008.0-DEV-JSON-OUTPUT.md
  * @req REQ-JSON-MAPPING - Extract mapping logic for JSON output
- * @param {Array<[string, string, string, string, number|string, string]>} rows
- * @param {{ prod: { minAge: number, minSeverity: string }, dev: { minAge: number, minSeverity: string } }} thresholds
- * @param {Map<string, {count: number, maxSeverity: string, details: Array<any>}>} vulnMap
- * @param {Map<string, string>} filterReasonMap
- * @returns {Array<Object>} items
+ * @param {Array<[string, string, string, string, number|string, string]>} rows - Each row tuple: [name, current, wanted, latest, age, dependencyType]
+ * @param {{ prod: { minAge: number, minSeverity: string }, dev: { minAge: number, minSeverity: string } }} thresholds - Age and severity thresholds for filtering logic.
+ * @param {Map<string, {count: number, maxSeverity: string, details: Array<any>}>} vulnMap - Mapping of package names to vulnerability info.
+ * @param {Map<string, string>} filterReasonMap - Mapping of package names to filter reasons ("age" or "security").
+ * @returns {Array<Object>} JSON item objects ready for serialization.
  */
 export function prepareJsonItems(rows, thresholds, vulnMap, filterReasonMap) {
   return rows.map(([name, current, wanted, latest, age, depType]) => {
