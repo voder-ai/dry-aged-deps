@@ -190,9 +190,8 @@ async function main() {
   }
 
   try {
-    const summary = /** @type {{ safeUpdates: number }} */ (await printOutdated(
-      /** @type {any} */ (data),
-      {
+    const summary = /** @type {{ safeUpdates: number }} */ (
+      await printOutdated(/** @type {any} */ (data), {
         format,
         fetchVersionTimes: fetchVersionTimesOverride,
         checkVulnerabilities: checkVulnerabilitiesOverride,
@@ -203,8 +202,8 @@ async function main() {
         updateMode,
         skipConfirmation,
         returnSummary: true,
-      }
-    ));
+      })
+    );
 
     if (checkMode) {
       process.exit(summary.safeUpdates > 0 ? 1 : 0);
