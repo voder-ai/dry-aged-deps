@@ -1,12 +1,14 @@
-## NOW  
-Refactor `src/security-helpers.js` to eliminate the inline `/* eslint-disable security/detect-object-injection */` by replacing any dynamic property access with `Object.prototype.hasOwnProperty.call(vulns, key)`, then remove the disable comment.
+## NOW
+Remove the `// @ts-nocheck` directive from the top of `src/cli-parser-utils.js` and correct any resulting type errors so that `npm run typecheck` passes without disabling checks.
 
-## NEXT  
-- Remove all remaining `security/detect-object-injection` ESLint disables in `src/fetch-version-times.js`, `src/vulnerability-evaluator.js`, and `src/update-packages.js` by refactoring dynamic lookups into safe utilities.  
-- Write unit tests to exercise the untested branches in `src/build-rows.js` and `src/filter-by-security.js` (as flagged by coverage gaps) to push branch coverage above 90%.  
-- Audit and add missing `@story`/`@req` JSDoc annotations in `src/load-package-json.js`, `src/xml-formatter-utils.js`, and any other modules still lacking traceability tags.
+## NEXT
+- Remove all remaining file-level `// @ts-nocheck` directives across the `src/` directory, refactoring code or adding precise JSDoc annotations to satisfy the TypeScript checker.
+- Refactor `src/cli-options-helpers.js` to eliminate duplicated parsing logic by extracting shared helper functions, then verify duplication metrics fall below acceptable thresholds.
+- Add `@story` and `@req` JSDoc annotations to each exported function in `src/update-packages.js`, referencing `prompts/011.0-DEV-AUTO-UPDATE.md`.
+- Insert `@story` annotations into the headers of test files that currently lack them, mapping each test file to its specific prompt/story file.
 
-## LATER  
-- Introduce a Husky “documentation-lint” pre-commit hook and CI step that enforces the presence and correctness of all `@story` and `@req` annotations in source and test files.  
-- Continuously refactor any functions exceeding cyclomatic complexity >12 or length >80 lines by extracting smaller helpers.  
-- Periodically tighten ESLint duplication and complexity thresholds, remediating new violations as they arise.
+## LATER
+- Introduce a Husky “documentation-lint” pre-commit hook and corresponding CI step to enforce the presence and correctness of all `@story`/`@req` annotations and prevent new `// @ts-nocheck` directives.
+- Add a CI check that fails the build on any file-level disables or broad ESLint-disable comments to prevent regressions.
+- Gradually tighten ESLint duplication and complexity thresholds, remediating any violations as they arise.
+- Periodically audit and refactor functions or modules that exceed line-count or cyclomatic complexity limits by extracting smaller helpers.

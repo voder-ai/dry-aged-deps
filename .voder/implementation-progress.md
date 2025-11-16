@@ -1,152 +1,145 @@
 # Implementation Progress Assessment
 
-**Generated:** 2025-11-16T01:25:53.836Z
+**Generated:** 2025-11-16T02:09:24.829Z
 
 ![Progress Chart](./progress-chart.png)
 
 Projection: flat (no recent upward trend)
 
-## IMPLEMENTATION STATUS: INCOMPLETE (71.875% ± 5% COMPLETE)
+## IMPLEMENTATION STATUS: INCOMPLETE (72.25% ± 5% COMPLETE)
 
 ## OVERALL ASSESSMENT
-Several foundational areas score below required thresholds: code quality (55%), testing (80%), documentation (55%), and functionality (skipped). These must be addressed before further progress.
+Three foundational areas (code_quality, testing, documentation) are below required thresholds; functionality assessment is deferred. These support areas must be improved before continuing.
 
 ## NEXT PRIORITY
-Address code quality, testing, and documentation deficiencies to meet 90% thresholds before reassessing functionality.
+Focus on raising code_quality by removing TypeScript disables and reducing duplication, enhance test traceability and completeness, and add missing documentation annotations to meet thresholds.
 
 
 
-## CODE_QUALITY ASSESSMENT (55% ± 15% COMPLETE)
-- The codebase has solid tooling (ESLint, Prettier, TypeScript JSDoc-based type checking) with passing lint, format, and type-check runs and high test coverage. However, there is notable technical debt: one core helper module exceeds 20% duplication and multiple files disable security rules via ESLint comments. These issues, while justified, bypass quality checks and incur cumulative penalties.
-- Linting passes with zero errors under ESLint v9 flat config (complexity ≤15, max-lines-per-function ≤100, max-params ≤5, max-depth ≤4).
-- Prettier formatting is enforced (`format:check`) and no formatting errors were detected.
-- Type checking via `tsc --noEmit` with JSDoc annotations runs cleanly under strict mode.
-- jscpd report shows overall duplication at 3%, but `src/cli-options-helpers.js` has 22.8% duplication (above 20% per-file threshold).
-- Five source files disable the `security/detect-object-injection` rule (rule-specific ESLint disables), bypassing security checks:
--   • src/cli-parser-utils.js (file-wide disable)
-  • src/vulnerability-evaluator.js (inline)
-  • src/security-helpers.js (3 inline)
-  • src/fetch-version-times.js (inline)
-  • src/update-packages.js (2 inline)
-- Eight inline `eslint-disable-next-line` occurrences across the codebase (–2% penalty for inline suppressions).
-- No `@ts-nocheck`, no silent TypeScript or ESLint disables beyond justified rule exceptions.
-- ESLint complexity and function-length rules are set at or below defaults and enforced without overrides in production code.
-- Files and functions stay within recommended size and nesting limits; no god classes or deep nesting detected.
+## CODE_QUALITY ASSESSMENT (45% ± 8% COMPLETE)
+- While linting and type‐checking pass and complexity/formatting are well configured, the codebase contains excessive file-level disables of TypeScript checks (@ts-nocheck in 16 files) and notable duplication in cli-options-helpers.js (~23% duplicated).
+- 16 source files start with “// @ts-nocheck”, disabling TypeScript checking for entire files (–7.5% each)
+- 1 file (src/cli-parser-utils.js) has a broad eslint-disable comment at the top
+- src/cli-options-helpers.js shows 22.8% code duplication (jscpd), penalized at –12%
+- Overall code duplication is low (3% of code), but file-level duplication hotspots exist
+- Complexity rules are set to max:15 (stricter than default), good practice
+- No lint errors or type errors, but disabled checks hide potential issues
 
 **Next Steps:**
-- Refactor `src/cli-options-helpers.js` to eliminate duplicated parsing logic (extract shared helpers) to bring duplication below 20%.
-- Review rule-specific ESLint disables for `security/detect-object-injection`. Where safe, replace with safe-by-construction code or wrap in a small utility, then remove inline disables.
-- Consolidate repeated validation code in CLI helpers to reduce inline disables and duplication.
-- Add focused unit tests around refactored parsing utilities to ensure no regression when removing disables.
-- Continue incremental ratcheting: consider gradually reducing `max-lines-per-function` from 100 → 80 and `complexity` from 15 → 12, fixing violations as they arise.
+- Remove or justify all file-level “@ts-nocheck” directives; migrate to JSDoc/TypeScript checks or use inline ts-ignore with specific comments
+- Eliminate duplication in cli-options-helpers.js by refactoring shared parsing logic into helper functions
+- Replace broad eslint-disable comments with targeted rule exceptions and add inline justifications
+- Add plan to ratchet down complexity and lines-per-function thresholds if any functions exceed limits in future
+- Introduce CI enforcement of no new disables and require justification for any suppressions
 
-## TESTING ASSESSMENT (80% ± 8% COMPLETE)
-- The test suite is comprehensive, non-interactive, isolated, and passes 100% of tests with high overall coverage. Tests are well organized and use proper temporary directories for file operations. However, most test files only reference the user-story-map in their @story headers instead of the specific prompt/story files, violating traceability requirements.
-- All 202 tests pass (67 files) with overall coverage 97.62% statements and 90.41% branches, exceeding project thresholds.
-- Tests run non-interactively via `vitest run --coverage`, use `mkdtemp` for file I/O, and clean up temp dirs, so they don’t modify the repository.
-- Test files follow ARRANGE-ACT-ASSERT structure, use descriptive names, and avoid complex logic in tests.
-- No test file names contain coverage terminology; names accurately reflect content.
-- Several modules show branch gaps (e.g., build-rows.js at lines 20–21,38; filter-by-security.js at lines 20–21,33,105), suggesting untested paths.
-- Most test files have a JSDoc @story annotation pointing only to prompts/dry-aged-deps-user-story-map.md rather than the specific story prompt, breaking traceability guidelines.
+## TESTING ASSESSMENT (75% ± 18% COMPLETE)
+- The project has a comprehensive, well‐structured test suite with 202 passing tests and very high coverage, and tests are isolated, non-interactive, and clean up temporary resources. However, critical traceability requirements are not met: test files reference the user-story-map rather than specific story files, and some test filenames use coverage terminology (“branch”) inappropriately, both of which incur high penalties under the traceability guidelines.
+- All 202 Vitest tests pass and the suite runs non-interactively via `vitest run --coverage`.
+- Overall coverage is 97.62% statements, 90.41% branches, 98.68% functions, 98.57% lines.
+- Tests use temporary directories for file-system operations and clean up in afterEach/afterAll handlers—no repository files are modified.
+- Test names are descriptive and focused; test file organization follows a clear pattern.
+- One test file is named `xml-formatter.error-branch.test.js`, using the term “branch” in the filename (coverage terminology), which violates naming guidelines.
+- No test files include `@story` annotations referencing specific story files; instead they reference the generic user-story-map (`prompts/dry-aged-deps-user-story-map.md`), failing the traceability requirement.
+- Minimal logic in tests (one loop in the E2E suite) and meaningful test data are generally acceptable.
+- The suite includes unit, integration, and E2E tests; all run quickly except the E2E tests (~2s each), which is reasonable.
 
 **Next Steps:**
-- Update each test file’s JSDoc header to reference the exact story prompt (e.g., prompts/001.0-DEV-RUN-NPM-OUTDATED.md) and include @req tags for requirement IDs.
-- Add targeted tests to cover missing branches in build-rows.js and filter-by-security.js to close branch coverage gaps.
-- Introduce a lint or CI check to enforce that every test file has a valid @story annotation referencing a specific story file.
-- Review test data usage and replace generic pkg1/pkg2 names with more meaningful examples where helpful for readability.
+- Add `@story` JSDoc annotations in each test file header pointing to the specific prompt/story (e.g., `prompts/001.0-DEV-RUN-NPM-OUTDATED.md`) to satisfy traceability requirements.
+- Rename or reorganize any test files using coverage terminology (e.g., replace `error-branch` with a feature- or scenario-based name).
+- Verify that traceability annotations appear in describe blocks where relevant (reference story IDs or requirement IDs).
+- Consider adding test data builders or fixtures for repeated setup patterns to improve maintainability.
+- Review and enforce a policy to avoid coverage-term names and ensure each test file references the exact story it covers.
 
 ## EXECUTION ASSESSMENT (95% ± 18% COMPLETE)
-- The CLI runs reliably in its target Node.js environment, with a successful build (trivially echo), zero lint/type errors, 202 passing tests (97.6% coverage), and a full E2E real-fixture test exercising core functionality and exit codes.
-- Build script (`npm run build`) completes successfully (echo placeholder).
-- Linting (`npm run lint`) and type-checking (`npm run type-check`) pass with zero warnings or errors.
-- All Vitest tests (202) pass, including unit, integration, and CLI-level tests, achieving 97.6% code coverage.
-- E2E test (`test/cli.e2e.real-fixture.test.js`) runs the real CLI against a fixture package.json and confirms positive age output and correct exit code.
-- CLI help output (`dry-aged-deps --help`) lists all flags and aligns with documented behavior.
-- Error handling at runtime: unknown flags, invalid JSON output, npm failures, and config errors produce clear messages and appropriate exit codes.
-- Temporary resources (in `checkVulnerabilities`) are cleaned up (temp directories removed).
-- Exit codes standardized and consistent across modes (normal, check, JSON/XML) as per ADR 0003/0004.
+- The CLI has a solid, fully automated build and test setup, comprehensive end-to-end and integration tests, and proper exit-code and error-handling behaviors. All core runtimes are validated with high coverage and no silent failures.
+- Build script (`npm run build`) completes successfully (no build required).
+- Linting (`npm run lint`) passes with zero errors or warnings.
+- All 202 tests passed (unit, integration, and CLI E2E) in ~12s with 97.62% code coverage.
+- Exit codes are standardized and tested: 0=no updates, 1=updates available, 2=errors.
+- E2E CLI test against a real fixture confirms correct runtime behavior and output format.
+- Error scenarios (invalid JSON, missing config, invalid flags) produce clear messages and exit code 2.
 
 **Next Steps:**
-- Introduce caching or parallelization for `fetchVersionTimes` and `checkVulnerabilities` to improve performance on large projects.
-- Add lightweight performance benchmarks or CI timing alerts to detect slow operations (e.g., multiple npm installs in vulnerability checks).
-- Monitor real-world runtime (without DRY_AGED_DEPS_MOCK) to validate resource usage and address any unexpected slowdown or memory pressure.
-- Consider adding timeouts or fallback strategies for long-running npm commands to prevent blocking in CI under network issues.
+- Implement caching or memoization of version‐time fetches to speed up repeated runs.
+- Parallelize version‐time and vulnerability‐check calls to reduce overall execution time for large projects.
+- Add resource‐usage monitoring or timeouts for extremely large dependency sets to prevent runaway processes.
 
-## DOCUMENTATION ASSESSMENT (55% ± 12% COMPLETE)
-- The project has extensive high-level documentation—comprehensive README, detailed API reference, architecture overview, developer guidelines, branching strategy, and a full set of ADRs. The user stories and acceptance criteria in the prompts directory match implemented features, and examples abound. However, code‐level traceability documentation is inconsistent: key modules (e.g., CLI entrypoint, xml-formatter-utils, load-package-json, and others) lack the required @story/@req annotations, and some annotations reference ADRs instead of prompt files. This breaks the code traceability requirement and hinders automated parsing of requirement–code alignment.
-- README.md usage and flag descriptions match implementation and include CLI help, config-file support, exit codes, and examples.
-- docs/api.md accurately documents public API functions with signatures and examples.
-- docs/architecture.md, developer-guidelines, eslint-flat-config, branching.md, and ADRs (0001–0007) are present, up-to-date, and well-structured.
-- Prompt files under prompts/ detail stories 001–014 with clear acceptance criteria and are referenced in code via @story tags.
-- Several source modules (e.g., src/load-package-json.js, src/xml-formatter-utils.js, bin/dry-aged-deps.js) do not include @story/@req JSDoc annotations, violating traceability requirements.
-- Some @story tags reference docs/decisions ADRs instead of the corresponding prompt/story files.
-- No JSON schema file for the config file is provided (optional but recommended).
-
-**Next Steps:**
-- Audit all source modules and functions to ensure every public function and significant code branch includes JSDoc @story (pointing to prompts/*.md) and @req annotations.
-- Standardize annotation format: remove references to docs/decisions in @story, always use the prompts directory paths.
-- Add missing ADRs for major features (config-file support, auto-update) or confirm that existing ADRs adequately cover them.
-- Provide a JSON schema file for .dry-aged-deps.json and reference it in docs/api.md or a new docs/config-schema.json.
-- Run a script (or add a CI step) to validate presence and format of @story and @req tags to prevent future omissions.
-
-## DEPENDENCIES ASSESSMENT (100% ± 18% COMPLETE)
-- Dependency management is excellent: the lockfile is committed, installs cleanly with no deprecation warnings or vulnerabilities, and the dry-aged-deps tool reports no safe, mature updates currently available.
-- package-lock.json is tracked in git (git ls-files confirms it)
-- npm install completes without errors or deprecation warnings
-- npm audit reports 0 vulnerabilities (audit-level=moderate)
-- npx dry-aged-deps --format=json reports no safe mature updates (totalOutdated=0, safeUpdates=0)
-- Dependencies and devDependencies install correctly and tests pass (202 vitest tests, 97.62% coverage)
+## DOCUMENTATION ASSESSMENT (75% ± 15% COMPLETE)
+- The project’s user-facing and technical documentation is comprehensive and up-to-date (README, API reference, ADRs, developer guidelines all present and accurate, and README contains the required “Attribution” section). However, code traceability annotations are incomplete in several modules (notably update-packages.js and a few helper functions), violating the requirement that every significant function and branch include parseable @story and @req tags.
+- README.md is comprehensive, matches implementation, and includes an ## Attribution linking to https://voder.ai as required.
+- docs/api.md accurately documents public APIs (fetchVersionTimes, calculateAgeInDays, checkVulnerabilities, printOutdated, jsonFormatter, xmlFormatter) with correct signatures and examples.
+- All ADRs (docs/decisions/0001–0007) are present, accepted, and reflect the current architecture and feature set.
+- Developer guidelines and ESLint flat config docs are detailed and up-to-date.
+- Most source modules include JSDoc with @story and @req annotations in a consistent format, enabling traceability to user stories.
+- Missing @story/@req annotations in src/update-packages.js (promptConfirmation, createBackup, applyUpdates, updatePackages) — a high-penalty gap in traceability.
+- A few inline branches (e.g., smart-search fallback in filter-by-security) rely on helper modules without individual @story tags for all code paths.
 
 **Next Steps:**
-- Continue to run `npx dry-aged-deps` regularly (e.g., in CI) to catch new mature updates
-- Monitor `npm outdated` periodically; rely on dry-aged-deps to surface only safe upgrades
-- Ensure CI includes the dry-aged-deps check to enforce maturity/safety policies over time
+- Add @story and @req JSDoc tags to all public and significant functions in src/update-packages.js to satisfy CODE_STORY_ALIGNMENT requirements.
+- Audit remaining modules for any unannotated functions or branches and add parseable, consistent @story/@req comments.
+- Run a documentation coverage check to ensure no placeholders (@story ??? or @req UNKNOWN) remain and that all annotations refer to specific prompt files.
 
-## SECURITY ASSESSMENT (92% ± 17% COMPLETE)
-- The project demonstrates strong security practices: all dependencies are currently free of vulnerabilities, CI runs CodeQL and npm audit, secrets are properly handled, and there are no conflicting dependency bots. Minor improvements could include formal documentation of past js-yaml vulnerability resolution and periodic verification of overrides.
-- npm audit --json reports zero vulnerabilities across all dependency categories.
-- CI pipeline includes both CodeQL analysis and npm audit --audit-level=moderate for comprehensive scanning.
-- No Dependabot or Renovate configurations detected—avoids automation conflicts.
-- .env is correctly git-ignored; .env.example provides safe placeholders.
-- No hardcoded credentials or tokens found in source code.
-- Dependency override for js-yaml@^4.1.1 ensures known CVEs are addressed.
-- CLI uses execFile with argument arrays, preventing shell injection.
-- Security policy (SECURITY.md) and incident response template are in place.
+## DEPENDENCIES ASSESSMENT (95% ± 15% COMPLETE)
+- Dependencies are well-managed: lockfile tracked, no safe mature updates available, no deprecation warnings or vulnerabilities, and installation succeeds cleanly.
+- package-lock.json exists and is committed to git (verified by `git ls-files package-lock.json`)
+- npx dry-aged-deps reports zero outdated packages within the safe (>=7 days old, no vulnerabilities) criteria
+- npm install completes with no deprecation warnings or errors
+- npm audit shows zero vulnerabilities across production and dev dependencies
+- All dependencies install correctly (`npm ls --depth=0` shows expected top-level packages)
+- Override for js-yaml is in place to pin a safe version, indicating proactive risk management
 
 **Next Steps:**
-- Consider adding a formal security incident record for the js-yaml override to document historical vulnerability and resolution.
-- Establish regular (e.g., weekly) automated vulnerability scans and ensure npm audit reports remain clean.
-- Monitor upstream dependencies for new CVEs and update the override in package.json as needed.
-- Review and update the SECURITY.md process periodically to ensure SLA timelines and contact information stay current.
-- Optionally integrate automated dependency update checks (e.g., via a scheduled CI job) without auto-PR creation to alert on new patches.
+- Schedule regular runs of dry-aged-deps (e.g., via GitHub Actions) to catch newly matured updates
+- Consider enabling Dependabot or Renovate for broader update visibility (outside safe-mature filter)
+- Monitor upstream advisories for emerging vulnerabilities and adjust overrides if necessary
+- Incorporate automated notifications or PR creation when new safe updates become available
 
-## VERSION_CONTROL ASSESSMENT (98% ± 15% COMPLETE)
-- The repository follows excellent version control practices: a single, unified CI/CD workflow covers comprehensive quality gates and automated publish, trunk-based development is in use with all commits going directly to main, and local pre-commit and pre-push hooks enforce parity with CI checks. The working directory is clean, .voder/ is properly tracked (not ignored), and commit history uses clear, conventional-commit messages.
-- CI/CD pipeline (.github/workflows/ci-publish.yml) runs on every push/PR to main and tags, includes CodeQL, lint, type check, formatting, tests, duplication detection, CLI/E2E tests, lockfile drift, vulnerability scan, and automated semantic-release publishing with a smoke test.
-- No deprecated GitHub Actions versions found (uses actions/checkout@v3, setup-node@v3, codeql-action@v3).
-- Single unified workflow handles both quality checks and publishing; no duplicate test or lint steps across separate workflows.
-- Working directory is clean (no uncommitted changes outside .voder/); all commits are pushed to origin/main.
-- Repository is on the main branch with trunk-based development; no feature branches or PR gates required.
-- .gitignore is appropriate and does NOT ignore the .voder/ directory (per developer guidelines), ensuring AI state is tracked.
-- Conventional Commits are enforced via commitlint (pre-push and commit-msg hooks) and recent history shows clear, descriptive messages.
-- Husky pre-commit hook runs fast checks (format, lint, type-check) and pre-push hook runs comprehensive CI-mirror checks (lint:commits, lint, type-check, format:check, test suites, lockfile & duplication checks, CLI/E2E tests, audit), maintaining parity with CI pipeline.
+## SECURITY ASSESSMENT (95% ± 17% COMPLETE)
+- The project demonstrates strong security hygiene: no known vulnerabilities in dependencies, secrets are correctly managed, CodeQL and npm audit are integrated into CI, and there are no conflicting automated dependency update tools.
+- npm audit --json reports zero vulnerabilities (info/low/moderate/high/critical = 0).
+- CI pipeline includes npm audit (audit:ci) at moderate level and CodeQL analysis step.
+- No Dependabot or Renovate configuration found (no .github/dependabot.yml or renovate.json).
+- .env is properly ignored by git (git ls-files .env and git history show it is never tracked) and .env.example provides safe placeholders.
+- No security incident files exist in docs/security-incidents/, indicating no unresolved or recurring vulnerabilities.
+- package.json overrides js-yaml to ^4.1.1, ensuring avoidance of known vulnerabilities in older versions.
+- Lockfile drift is checked and prevented in CI (npm run check:lockfile).
+- Pre-push hook and CI pre-publish pipeline include a vulnerability scan (npm audit --audit-level=moderate).
 
 **Next Steps:**
-- Monitor GitHub Actions marketplace for upcoming deprecations (e.g., CodeQL v3→v4) and plan version upgrades to avoid warnings.
-- Review branch protection settings in GitHub to confirm they align with the documented trunk-based development policy (no manual PR approvals or required reviews).
-- Periodically audit .voder/ to ensure it remains tracked and not inadvertently added to .gitignore.
-- Ensure pipeline dependencies (actions, tools) are kept up to date to maintain security and compatibility.
+- Continue monitoring new vulnerabilities by keeping npm audit and CodeQL steps in CI.
+- Establish a weekly schedule to review audit reports and update dependencies promptly.
+- Consider adding automated notifications or PRs for new security patches.
+- Document the security review process and incident response procedure using the provided template in docs/security-incidents.
+
+## VERSION_CONTROL ASSESSMENT (98% ± 18% COMPLETE)
+- The repository exhibits excellent version control practices: trunk‐based development on main, clean working directory excluding .voder, comprehensive CI/CD with a single workflow that runs tests, linting, type checks, security scans, and automatic releases via semantic-release, pre-commit and pre-push hooks mirroring pipeline checks, and proper tracking of the .voder directory. Minor enhancements could include proactively upgrading CodeQL actions when v4 is available and aligning pre-push fixture preparation more closely with CI steps.
+- Current branch is main, and all commits are pushed directly (trunk-based development).
+- Working directory is clean except for .voder changes, which are correctly ignored for status checks but tracked in git.
+- .gitignore does not include the .voder directory; .voder files are tracked as required.
+- Pre-commit hook runs fast checks (format, lint, type-check) in <10s, and pre-push hook runs full quality gate (commit-msg lint, lint, type-check, format-check, tests, lockfile drift, duplication, CLI integration, E2E, audit).
+- CI workflow (ci-publish.yml) uses actions/checkout@v3 and actions/setup-node@v3, CodeQL v3, and consolidated build & test steps without duplicating tests in multiple workflows.
+- Pipeline includes comprehensive quality gates (lint, type-check, formatting, tests, duplication scan, lockfile drift, vulnerability scan) and smoke testing of the published package.
+- Automated publishing via semantic-release with release on tag pushes, no manual approvals, and proper version/tag matching checks.
+- Commit history uses Conventional Commits format, with clear types (`fix:`, `docs:`), and commitlint enforces message standards.
+- No deprecated GitHub Actions versions detected; current actions versions are up-to-date.
+- .gitignore appropriately excludes build artifacts, cache, and local config but does not ignore necessary source or .voder state.
+
+**Next Steps:**
+- Monitor CodeQL Action deprecation notices and plan upgrade to v4 when it becomes generally available.
+- Consider adding fixture preparation steps to the pre-push hook to more closely mirror CI environment behavior for E2E tests.
+- Periodically review .gitignore and .voderignore to ensure no unintended files are ignored or tracked.
+- Continue to watch for new versions of core GitHub Actions (e.g., actions/setup-node, actions/checkout) to adopt as soon as stable updates release.
 
 ## FUNCTIONALITY ASSESSMENT (undefined% ± 95% COMPLETE)
 - Functionality assessment skipped - fix 3 deficient support area(s) first
 - Support areas must meet thresholds before assessing feature completion
-- Deficient areas: CODE_QUALITY (55%), TESTING (80%), DOCUMENTATION (55%)
+- Deficient areas: CODE_QUALITY (45%), TESTING (75%), DOCUMENTATION (75%)
 - Principle: "Improvement of daily work is higher priority than daily work" - fix foundation before building features
 
 **Next Steps:**
-- CODE_QUALITY: Refactor `src/cli-options-helpers.js` to eliminate duplicated parsing logic (extract shared helpers) to bring duplication below 20%.
-- CODE_QUALITY: Review rule-specific ESLint disables for `security/detect-object-injection`. Where safe, replace with safe-by-construction code or wrap in a small utility, then remove inline disables.
-- TESTING: Update each test file’s JSDoc header to reference the exact story prompt (e.g., prompts/001.0-DEV-RUN-NPM-OUTDATED.md) and include @req tags for requirement IDs.
-- TESTING: Add targeted tests to cover missing branches in build-rows.js and filter-by-security.js to close branch coverage gaps.
-- DOCUMENTATION: Audit all source modules and functions to ensure every public function and significant code branch includes JSDoc @story (pointing to prompts/*.md) and @req annotations.
-- DOCUMENTATION: Standardize annotation format: remove references to docs/decisions in @story, always use the prompts directory paths.
+- CODE_QUALITY: Remove or justify all file-level “@ts-nocheck” directives; migrate to JSDoc/TypeScript checks or use inline ts-ignore with specific comments
+- CODE_QUALITY: Eliminate duplication in cli-options-helpers.js by refactoring shared parsing logic into helper functions
+- TESTING: Add `@story` JSDoc annotations in each test file header pointing to the specific prompt/story (e.g., `prompts/001.0-DEV-RUN-NPM-OUTDATED.md`) to satisfy traceability requirements.
+- TESTING: Rename or reorganize any test files using coverage terminology (e.g., replace `error-branch` with a feature- or scenario-based name).
+- DOCUMENTATION: Add @story and @req JSDoc tags to all public and significant functions in src/update-packages.js to satisfy CODE_STORY_ALIGNMENT requirements.
+- DOCUMENTATION: Audit remaining modules for any unannotated functions or branches and add parseable, consistent @story/@req comments.

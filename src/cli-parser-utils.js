@@ -1,4 +1,3 @@
-// @ts-nocheck
 /* eslint-disable security/detect-object-injection -- computed property names safe */
 import { createStringFlagParser, createIntegerFlagParser } from './cli-options-helpers/utils-common.js';
 
@@ -32,6 +31,7 @@ function deriveParserName(flagName) {
  * @returns {Object.<string, Function>} Mapping from parser export name to parser functions.
  */
 export function generateStringFlagParsers(flags) {
+  /** @type {Object.<string, Function>} */
   const parsers = {};
   for (const flagName of flags) {
     const exportName = deriveParserName(flagName);
@@ -49,6 +49,7 @@ export function generateStringFlagParsers(flags) {
  * @returns {Object.<string, Function>} Mapping from parser export name to parser functions.
  */
 export function generateIntegerFlagParsers(configs) {
+  /** @type {Object.<string, Function>} */
   const parsers = {};
   for (const config of configs) {
     const [flagName, min, max] = config;
