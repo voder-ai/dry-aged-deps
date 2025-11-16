@@ -1,19 +1,4 @@
-import { generateStringFlagParsers, generateIntegerFlagParsers } from './cli-parser-utils.js';
-
-/** @type {string[]} */
-const stringFlags = ['format', 'severity', 'prod-severity', 'dev-severity'];
-
-/** @type {[string, number, number?][]} */
-const integerFlagConfigs = [
-  ['min-age', 1, 365],
-  ['prod-min-age', 1],
-  ['dev-min-age', 1],
-];
-
-const { parseFormatFlag, parseSeverityFlag, parseProdSeverityFlag, parseDevSeverityFlag } =
-  generateStringFlagParsers(stringFlags);
-
-const { parseMinAgeFlag, parseProdMinAgeFlag, parseDevMinAgeFlag } = generateIntegerFlagParsers(integerFlagConfigs);
+import { createStringFlagParser, createIntegerFlagParser } from './cli-options-helpers/utils-common.js';
 
 /**
  * Parse the --format flag.
@@ -21,46 +6,46 @@ const { parseMinAgeFlag, parseProdMinAgeFlag, parseDevMinAgeFlag } = generateInt
  * @story prompts/009.0-DEV-XML-OUTPUT.md
  * @req REQ-CLI-FLAG-FORMAT - CLI --format must accept 'table', 'json', or 'xml'
  */
-export { parseFormatFlag };
+export const parseFormatFlag = createStringFlagParser('format');
 
 /**
  * Parse the --severity flag.
  * @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
  * @req REQ-CLI-FLAG-SEVERITY - CLI --severity must accept valid severity levels
  */
-export { parseSeverityFlag };
+export const parseSeverityFlag = createStringFlagParser('severity');
 
 /**
  * Parse the --prod-severity flag.
  * @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
  * @req REQ-CLI-FLAG-SEVERITY - CLI --prod-severity must accept valid severity levels
  */
-export { parseProdSeverityFlag };
+export const parseProdSeverityFlag = createStringFlagParser('prod-severity');
 
 /**
  * Parse the --dev-severity flag.
  * @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
  * @req REQ-CLI-FLAG-SEVERITY - CLI --dev-severity must accept valid severity levels
  */
-export { parseDevSeverityFlag };
+export const parseDevSeverityFlag = createStringFlagParser('dev-severity');
 
 /**
  * Parse the --min-age flag.
  * @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
  * @req REQ-CLI-MIN-AGE-VALIDATION - CLI --min-age must be an integer between 1 and 365
  */
-export { parseMinAgeFlag };
+export const parseMinAgeFlag = createIntegerFlagParser('min-age', 1, 365);
 
 /**
  * Parse the --prod-min-age flag.
  * @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
  * @req REQ-CLI-FLAG-PROD-MIN-AGE - CLI --prod-min-age must be an integer >= 1
  */
-export { parseProdMinAgeFlag };
+export const parseProdMinAgeFlag = createIntegerFlagParser('prod-min-age', 1);
 
 /**
  * Parse the --dev-min-age flag.
  * @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
  * @req REQ-CLI-FLAG-DEV-MIN-AGE - CLI --dev-min-age must be an integer >= 1
  */
-export { parseDevMinAgeFlag };
+export const parseDevMinAgeFlag = createIntegerFlagParser('dev-min-age', 1);
