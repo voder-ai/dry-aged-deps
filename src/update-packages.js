@@ -111,10 +111,9 @@ export async function updatePackages(safeRows, skipConfirmation, summary) {
 
   try {
     createBackup(pkgPath);
-  }
-  // @story prompts/011.0-DEV-AUTO-UPDATE.md
-  // @req REQ-ERROR-HANDLING - Handle backup creation failure gracefully
-  catch (err) {
+  } catch (err) {
+    // @story prompts/011.0-DEV-AUTO-UPDATE.md
+    // @req REQ-ERROR-HANDLING - Handle backup creation failure gracefully
     const message = err instanceof Error ? err.message : String(err);
     console.error(`Failed to create backup: ${message}`);
     return summary;
@@ -122,10 +121,9 @@ export async function updatePackages(safeRows, skipConfirmation, summary) {
 
   try {
     applyUpdates(pkgPath, safeRows);
-  }
-  // @story prompts/011.0-DEV-AUTO-UPDATE.md
-  // @req REQ-ERROR-HANDLING - Handle package.json update failure gracefully
-  catch (err) {
+  } catch (err) {
+    // @story prompts/011.0-DEV-AUTO-UPDATE.md
+    // @req REQ-ERROR-HANDLING - Handle package.json update failure gracefully
     const message = err instanceof Error ? err.message : String(err);
     console.error(`Failed to update package.json: ${message}`);
     return summary;
