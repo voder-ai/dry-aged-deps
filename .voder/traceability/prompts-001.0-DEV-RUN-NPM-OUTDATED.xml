@@ -2,8 +2,15 @@
 <traceability>
   <specification>prompts/001.0-DEV-RUN-NPM-OUTDATED.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-14T18:34:05.920Z</last_validated>
+  <last_validated>2025-11-16T13:21:32.000Z</last_validated>
   <last_modified>2025-11-09T23:01:40.301Z</last_modified>
-  <evidence>The CLI entrypoint (bin/dry-aged-deps.js) invokes `execFileSync('npm', ['outdated','--json'])`, parses the JSON output, and on success delegates to print-outdated which prints a human-readable table.  Error cases are caught and produce exit code 2 with appropriate error messages (e.g. invalid JSON test in test/cli.error-cmd.test.js).  When there are no outdated packages, it prints “All dependencies are up to date.” and exits 0 (verified by test/cli.upToDate.test.js).  When there are outdated packages, it prints “Outdated packages:” and the header row, then package rows, and exits 1 (verified by test/cli.outdated.test.js).</evidence>
-  <notes>All acceptance criteria for story 001.0 (running npm outdated, parsing JSON, displaying results, error handling, and no-updates handling) are fully implemented and covered by tests.</notes>
+  <evidence>The implementation in bin/dry-aged-deps.js uses execFileSync('npm', ['outdated','--json']) and JSON.parse to load data. The printOutdated ➔ handleTableOutput path prints “Outdated packages:” with the expected header and rows, and handleNoOutdated prints “All dependencies are up to date.” Tests covering this story all pass:
+
+• test/functional-assessment.test.js: 001.0-DEV-RUN-NPM-OUTDATED assertion passes.  
+• test/cli.outdated.test.js & test/cli.outdated.mock.test.js verify real and mocked output.  
+• test/cli.upToDate.test.js verifies the no-updates scenario.  
+• test/cli.error-cmd.test.js verifies error handling when npm outdated output is invalid JSON.  
+
+All relevant Vitest tests exit with the correct codes and output, and the CI run shows 206/206 tests passing with >97% coverage.</evidence>
+  <notes>Story 001.0-DEV-RUN-NPM-OUTDATED is fully implemented: npm outdated is invoked, JSON is parsed, results are displayed in table form, and both error and no-update cases are handled and tested.</notes>
 </traceability>

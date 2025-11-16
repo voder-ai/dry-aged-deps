@@ -2,14 +2,21 @@
 <traceability>
   <specification>prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-14T18:35:05.899Z</last_validated>
+  <last_validated>2025-11-16T13:22:32.103Z</last_validated>
   <last_modified>2025-11-11T08:04:07.339Z</last_modified>
-  <evidence>- test/cli.check-mode.test.js: verifies exit codes 0, 1, and 2 in --check mode across table, JSON, and XML formats (all 6 tests passed).
-- test/cli.upToDate.test.js: exit code 0 when no updates available in default mode.
-- test/cli.outdated.test.js: exit code 1 when safe updates are available in default mode.
-- test/cli.error-cmd.test.js: exit code 2 when npm outdated output is invalid JSON.
-- Functional assessment (test/functional-assessment.test.js): includes entry for 012.0-DEV-EXIT-CODE-REFINEMENT and passed.
-- bin/dry-aged-deps.js: implements process.exit(0/1) for no updates/updates and process.exit(2) on errors consistently across formats.
-- README.md and docs/api.md: contain documented exit codes with correct semantics.</evidence>
-  <notes>The specification for standardized exit codes (0=no updates, 1=updates available, 2=error) is fully implemented. Dedicated tests cover all scenarios (no updates, updates, errors), consistency across formats, and invalid inputs. Documentation and CLI help text also reflect the exit code definitions as required.</notes>
+  <evidence>1) In bin/dry-aged-deps.js (lines 93–102):
+   • On normal and --check modes: `process.exit(summary.safeUpdates > 0 ? 1 : 0)`
+   • Errors go through `handleError(...); process.exit(2)`
+2) Tests covering all scenarios:
+   • test/cli.upToDate.test.js → exitCode === 0 when no updates found
+   • test/cli.outdated.test.js    → exitCode === 1 when safe updates present
+   • test/cli.check-mode.test.js:
+       – exitCode 0 in JSON mode when no updates
+       – exitCode 1 in table/JSON/XML modes when updates exist
+       – exitCode 2 on invalid format or out‐of‐range --min-age
+   • test/cli.error-cmd.test.js   → exitCode 2 when npm outdated output is invalid JSON
+3) Documentation:
+   • README.md “## Exit Codes” section lists 0, 1, 2 with their meanings
+   • --help text in bin/dry-aged-deps.js documents exit codes for --check mode</evidence>
+  <notes>All acceptance criteria for exit code refinement are implemented and verified by unit and integration tests. Exit codes 0, 1, and 2 behave correctly across table, JSON, and XML modes; errors produce code 2; documentation in README and --help is up to date.</notes>
 </traceability>

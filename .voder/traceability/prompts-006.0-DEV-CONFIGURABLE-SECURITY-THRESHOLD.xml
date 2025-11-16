@@ -2,14 +2,14 @@
 <traceability>
   <specification>prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-14T18:35:38.016Z</last_validated>
+  <last_validated>2025-11-16T13:25:33.643Z</last_validated>
   <last_modified>2025-11-09T23:03:30.864Z</last_modified>
-  <evidence>- CLI argument parsing in src/cli-options.js and helpers in src/cli-options-helpers.js support --severity flag with valid values [none, low, moderate, high, critical], defaulting to 'none'.
-- src/config-loader.js reads and validates "severity" from .dry-aged-deps.json (config.severity) with proper precedence (CLI flag > config file > default).
-- filterBySecurity in src/filter-by-security.js applies minSeverity per package type and blocks versions at or above the threshold using computeVulnerabilityStats and countAboveThreshold.
-- Unit tests in test/filter-by-security-severity.test.js verify that vulnerabilities below the threshold are allowed and those at or above are blocked.
-- CLI-level tests in test/cli.flags.test.js verify rejecting invalid severity values (exit code 2), accepting valid values, and defaulting to 'none'.
-- Config-file tests in test/cli.config-file.test.js cover reading severity from config and CLI override behavior.
-- Functional end-to-end test in test/functional-assessment.test.js (story 006.0) confirms that invalid --severity flags error correctly and that a config file with severity: 'none' still runs and outputs outdated packages.</evidence>
-  <notes>All acceptance criteria for Configurable Security Threshold (006.0) are satisfied: the CLI flag is supported and validated, config file support is implemented, the full range of severity levels is handled, filtering logic blocks appropriately, precedence is correct, default behavior blocks all vulnerabilities by default, help text documents the flag, and tests cover both unit, integration, and end-to-end scenarios.</notes>
+  <evidence>• test/filter-by-security-severity.test.js: verifies filterBySecurity blocks or allows versions correctly for thresholds 'low', 'moderate', 'high', 'critical', 'none'.
+• test/cli.flags.test.js: CLI rejects invalid --severity values (exit code 2), rejects missing value, defaults to 'none', and correctly parses each valid level, reflecting it in JSON output summary.thresholds.
+• src/config-loader.js: loadConfigFile validates config.severity against ['none','low','moderate','high','critical'] and config support is exercised by test/cli.config-file.test.js.
+• src/cli-options.js & cli-options-helpers: parseSeverityFlag integrates CLI flag, config value, and precedence (CLI > config > default).
+• bin/dry-aged-deps.js printHelp(): includes --severity option with valid levels.
+• JSON/XML output (json-formatter.js, xml-formatter.js) include thresholds.summary.thresholds.minSeverity, showing applied threshold.
+All severity‐threshold acceptance criteria are implemented and covered by tests.</evidence>
+  <notes>The implementation fully satisfies the configurable security threshold story (006.0) with CLI flag, config file support, correct default, validation, override behavior, filtering logic, and documentation. The existing tests provide end‐to‐end coverage of all acceptance criteria.</notes>
 </traceability>

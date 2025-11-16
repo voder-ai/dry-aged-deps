@@ -2,8 +2,8 @@
 <traceability>
   <specification>prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-14T18:34:26.455Z</last_validated>
+  <last_validated>2025-11-16T13:23:28.279Z</last_validated>
   <last_modified>2025-11-09T23:01:54.797Z</last_modified>
-  <evidence>The implementation in src/fetch-version-times.js always runs `npm view <pkg> time --json` (fetching all version times) regardless of the current version, and buildRows only ever calculates age for the single `latest` version. There is no logic to limit fetching or checking to versions newer than the current version as specified by the SMART FETCHING acceptance criterion. No tests exist to verify that only newer versions are fetched.</evidence>
-  <notes>While core functionality (fetching times, calculating age, displaying age) is correctly implemented and tested, the SMART FETCHING optimization—fetching only versions newer than the currently installed version—is not implemented, failing the story’s acceptance criteria.</notes>
+  <evidence>The implementation in src/fetch-version-times.js always invokes `npm view <pkg> time --json` to retrieve publish dates for all versions, and src/build-rows.js blindly uses only the latest version’s timestamp rather than fetching or considering only versions newer than the current one. There is no logic filtering out versions older than the current version before fetching or processing, despite the acceptance criterion “Smart Fetching: Only fetch versions newer than current (optimization)”. No tests verify this optimization is in place.</evidence>
+  <notes>All other acceptance criteria—fetching version times, calculating age, and displaying ages—are covered by code and tests, but the optimization to limit fetching to newer versions is not implemented.</notes>
 </traceability>

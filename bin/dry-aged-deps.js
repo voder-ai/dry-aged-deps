@@ -35,6 +35,18 @@ function printHelp() {
   console.log(
     '  --config-file=<file>    Path to JSON config file (default: .dry-aged-deps.json). CLI flags override config file values'
   );
+  // @story prompts/014.0-DEV-INVALID-OPTION-ERROR.md
+  // @req REQ-HELP-SUGGESTION - Suggest using --help in error messages
+  console.log('');
+  console.log('Examples of invalid option error messages:');
+  console.log('  $ dry-aged-deps --json');
+  console.log("    Error: Unknown option '--json'");
+  console.log("    Did you mean '--format=json'? ");
+  console.log("    Use 'dry-aged-deps --help' to see all available options.");
+  console.log('');
+  console.log('  $ dry-aged-deps --format=yaml');
+  console.log('    Error: Invalid format: yaml. Valid values are: table, json, xml');
+  console.log("    Use 'dry-aged-deps --help' for more information.");
 }
 
 /**

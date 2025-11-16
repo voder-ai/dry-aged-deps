@@ -2,8 +2,8 @@
 <traceability>
   <specification>prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-14T18:34:44.951Z</last_validated>
+  <last_validated>2025-11-16T13:23:30.608Z</last_validated>
   <last_modified>2025-11-09T23:02:37.596Z</last_modified>
-  <evidence>Multiple unit tests reference prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md (e.g., test/filter-by-security.test.js, test/vulnerability-evaluator.test.js, test/filter-by-security.smart-search.test.js) and all pass. Functional E2E test for 004.0 (in test/functional-assessment.test.js) verifies XML output, exit code, and filtered results. No failing tests and code implements audit-based vulnerability checking (transitive via npm audit), smart-search fallback, and exclusion of vulnerable versions.</evidence>
-  <notes>All acceptance criteria for 004.0 are satisfied: core vulnerability checks via npm audit include transitive dependencies; smart-search fallback selects newest safe version; vulnerable versions are filtered out; final CLI output in table/JSON/XML modes reflects only safe, mature updates; clear handling when no safe version exists.</notes>
+  <evidence>The implementation in src/filter-by-security.js (with @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md and full smart-search, processOneVersion, and trySmartSearchFallback logic) together with src/check-vulnerabilities.js (npm audit on temp package, covering transitive deps) satisfies REQ-AUDIT-CHECK and REQ-TRANSITIVE-DEPS. The apply-filters pipeline integrates filterBySecurity and is exercised by unit tests in test/filter-by-security.test.js, test/filter-by-security-severity.test.js, test/filter-by-security.fetchError-fallback.test.js, and end-to-end CLI tests in test/printOutdated.test.js (‘filters out packages with vulnerabilities’, ‘shows packages without vulnerabilities’). All tests related to vulnerability filtering pass in the CI suite (206 tests, 100% pass).</evidence>
+  <notes>All acceptance criteria for story 004.0 (core functionality, transitive dependency checks, smart checking, elimination of vulnerable versions, final output formatting, and handling no safe versions) are fully implemented and covered by tests.</notes>
 </traceability>

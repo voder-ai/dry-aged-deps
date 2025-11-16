@@ -123,6 +123,19 @@ EOF
 dry-aged-deps
 ```
 
+### Invalid option error examples
+
+```sh
+$ dry-aged-deps --json
+Error: Unknown option '--json'
+Did you mean '--format=json'?
+Use 'dry-aged-deps --help' to see all available options.
+
+$ dry-aged-deps --format=yaml
+Error: Invalid format: yaml. Valid values are: table, json, xml
+Use 'dry-aged-deps --help' for more information.
+```
+
 ### Output Formats
 
 Use the `--format` option to specify the output format:

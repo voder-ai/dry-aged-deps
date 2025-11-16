@@ -47,6 +47,49 @@ import {
  */
 export function parseOptions(argv) {
   const args = argv;
+
+  // @story prompts/014.0-DEV-INVALID-OPTION-ERROR.md
+  // @req REQ-OPTION-VALIDATION - Validate known options only
+  // @req REQ-UNKNOWN-OPTION-ERROR - Error on unknown options
+  // @req REQ-ERROR-EXIT-CODE - Exit with code 2 for usage errors
+  // @req REQ-HELP-SUGGESTION - Suggest using --help
+  // @req REQ-DID-YOU-MEAN - Provide suggestions for mistyped flags
+  // Detect unknown CLI options
+  const allowedOptions = [
+    '--check',
+    '--update',
+    '--yes',
+    '-y',
+    '--config-file',
+    '--format',
+    '--min-age',
+    '--prod-min-age',
+    '--dev-min-age',
+    '--severity',
+    '--prod-severity',
+    '--dev-severity',
+    '--help',
+    '-h',
+    '--version',
+    '-v',
+  ];
+  const unknownArgs = args.filter(
+    (a) => a.startsWith('-') && !allowedOptions.some((opt) => a === opt || a.startsWith(`${opt}=`))
+  );
+  if (unknownArgs.length > 0) {
+    unknownArgs.forEach((arg) => {
+      console.error(`Error: Unknown option '${arg}'`);
+      let suggestion;
+      if (arg === '--json') suggestion = '--format=json';
+      else if (arg.startsWith('--format')) suggestion = '--format';
+      if (suggestion) {
+        console.error(`Did you mean '${suggestion}'?`);
+      }
+    });
+    console.error(`Use 'dry-aged-deps --help' to see all available options.`);
+    process.exit(2);
+  }
+
   const checkMode = args.includes('--check');
   const updateMode = args.includes('--update');
   const skipConfirmation = args.includes('--yes') || args.includes('-y');

@@ -2,13 +2,13 @@
 <traceability>
   <specification>prompts/011.0-DEV-AUTO-UPDATE.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-14T18:35:33.248Z</last_validated>
+  <last_validated>2025-11-16T13:22:48.843Z</last_validated>
   <last_modified>2025-11-11T08:04:07.327Z</last_modified>
-  <evidence>• Tests referencing the story present: test/update-packages.test.js and test/printOutdated.update*.test.js include `// Story: prompts/011.0-DEV-AUTO-UPDATE.md` comments and cover update behavior.
-• parseOptions recognizes `--update` and `--yes` flags (src/cli-options.js).
-• CLI help lists `--update` and `-y, --yes` options (bin/dry-aged-deps.js).
-• printOutdated invokes updatePackages when updateMode is true (src/print-outdated.js).
-• updatePackages handles preview, confirmation prompt, backup creation, JSON read/write with 2-space indent, summary logging, install reminder, and error handling (src/update-packages.js).
-• Unit tests pass for all scenarios: no safe updates, skipConfirmation, abort flow, backup error, and summary correctness (186 tests, 98.2% coverage).</evidence>
-  <notes>All acceptance criteria for auto-update mode are implemented and thoroughly tested. The CLI accepts `--update` and `--yes`, only safe updates are applied, formatting and backups are handled correctly, user confirmation and error paths are covered. Implementation aligns with the specification.</notes>
+  <evidence>Multiple dedicated tests for auto-update are present and passing, including:
+- test/printOutdated.update.test.js – verifies --update --yes applies safe updates, creates backup, writes package.json preserving values, and logs summary and install prompt.
+- test/printOutdated.updatePromptAbort.test.js – verifies abort on user ‘no’, no backup or changes.
+- test/printOutdated.updateBackupError.test.js – simulates backup failure and checks graceful error handling without modifying package.json.
+
+Implementation in src/print-outdated.js and src/update-packages.js supports all acceptance criteria: `--update` flag, safe-only updates, preview and confirmation prompt, `--yes` skip, backup creation, formatting-preserving write, summary report, install reminder, and error handling.</evidence>
+  <notes>All acceptance criteria for story 011.0-DEV-AUTO-UPDATE are fully implemented and covered by tests. The CLI help and option parsing include --update and --yes, and the code paths flow correctly through preview, confirmation, backup, update, and summary steps.</notes>
 </traceability>

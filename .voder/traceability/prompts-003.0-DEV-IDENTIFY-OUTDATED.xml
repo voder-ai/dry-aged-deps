@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <traceability>
   <specification>prompts/003.0-DEV-IDENTIFY-OUTDATED.md</specification>
-  <status>PASSED</status>
-  <last_validated>2025-11-14T18:35:08.506Z</last_validated>
+  <status>FAILED</status>
+  <last_validated>2025-11-16T13:21:53.236Z</last_validated>
   <last_modified>2025-11-09T23:02:10.889Z</last_modified>
-  <evidence>- src/filter-by-age.js implements the age threshold filter with prodMinAge and devMinAge
-- src/print-outdated-handlers.js prints “No outdated packages with mature versions found” when no matureRows (filterByAge result) exist
-- test/filter-by-age.test.js covers filterByAge behavior per prompts/003.0-DEV-FILTER-MATURE-VERSIONS.md
-- Functional end-to-end test in test/functional-assessment.test.js validates story 003: running CLI with --min-age=1 and DRY_AGED_DEPS_MOCK forces no mature versions and outputs the expected message
-- All related Vitest tests pass, and CLI outputs only mature versions when applicable</evidence>
-  <notes>The implementation filters out packages whose latest version age is below the 7-day threshold (or custom threshold), prints a clear message when none are mature, and only shows mature updates. The existing tests and functional assessment confirm all acceptance criteria for story 003.0 are satisfied.</notes>
+  <evidence>The implementation in src/filter-by-age.js simply filters rows where the age of the ‘latest’ version meets the threshold. It never fetches or considers earlier versions if the latest is too fresh. buildRows only retrieves the publish date for info.latest, not for all newer versions, so there is no ‘‘smart filtering’’ (looking backwards through prior versions) as required. There are no tests in test/* that validate selecting an older mature version when the latest is <7 days old.</evidence>
+  <notes>Acceptance Criterion “Smart Filtering: Checks latest first, works backwards until finding mature version” is not implemented. The code only applies a simple threshold filter on the latest version’s age, so the story’s core requirement to fall back to the newest mature version is unmet.</notes>
 </traceability>
