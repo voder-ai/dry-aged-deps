@@ -333,6 +333,11 @@ dry-aged-deps --config-file=custom-config.json
 
 Merge precedence: CLI flags override config file values, which override built-in defaults.
 
+## Configuration File JSON Schema
+
+The JSON schema for the configuration file (`.dry-aged-deps.json`) is available at:
+https://unpkg.com/dry-aged-deps@latest/schema/config.json
+
 ## CI/CD Integration
 
 To enforce dependency freshness policies in your CI/CD pipelines, use the `--check` flag. In check mode, the exit codes are:

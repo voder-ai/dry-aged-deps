@@ -111,7 +111,7 @@ export function buildPackagesSection(rows) {
       xml += `      <current>${escapeXml(item.current)}</current>\n`;
       xml += `      <wanted>${escapeXml(item.wanted)}</wanted>\n`;
       xml += `      <latest>${escapeXml(item.latest)}</latest>\n`;
-      xml += `      <age>${escapeXml(String(item.age))}</age>\n`;
+      xml += `      <age>${escapeXml(item.age !== null ? String(item.age) : 'N/A')}</age>\n`;
       xml += `      <recommended>${escapeXml(item.recommended)}</recommended>\n`;
       xml += '      <vulnerabilities>\n';
       const vuln = item.vulnerabilities || {};

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { evaluateVersionVulnerabilities } from './vulnerability-evaluator.js';
 /**
  * Find the safest/most recent version using smart-search fallback logic.

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import fs from 'fs';
 import path from 'path';
 
@@ -97,7 +96,7 @@ export function loadConfigFile(configFileName, configFileArg, validSeverities, v
   // @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
   // @req REQ-CONFIG-LOAD
   const configFilePath = path.resolve(process.cwd(), configFileName);
-  let config = {};
+  let config = /** @type {Record<string, any>} */ ({});
 
   if (fs.existsSync(configFilePath)) {
     let raw;
@@ -105,9 +104,10 @@ export function loadConfigFile(configFileName, configFileArg, validSeverities, v
       raw = fs.readFileSync(configFilePath, 'utf8');
       config = JSON.parse(raw);
     } catch (err) {
+      const e = /** @type {any} */ (err);
       // @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
       // @req REQ-ERROR-FORMAT
-      console.error(`Invalid JSON in config file ${configFileName}: ${err.message}`);
+      console.error(`Invalid JSON in config file ${configFileName}: ${e.message}`);
       process.exit(2);
     }
 

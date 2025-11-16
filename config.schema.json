@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "dry-aged-deps Configuration Schema",
+  "description": "JSON schema for .dry-aged-deps.json configuration file",
+  "type": "object",
+  "properties": {
+    "minAge": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 365,
+      "description": "Minimum age in days for considering package versions"
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["none", "low", "moderate", "high", "critical"],
+      "description": "Vulnerability severity threshold"
+    },
+    "format": {
+      "type": "string",
+      "enum": ["table", "json", "xml"],
+      "description": "Output format"
+    },
+    "prod": {
+      "type": "object",
+      "description": "Production-specific thresholds",
+      "properties": {
+        "minAge": { "type": "integer", "minimum": 1, "maximum": 365 },
+        "minSeverity": { "type": "string", "enum": ["none", "low", "moderate", "high", "critical"] }
+      },
+      "additionalProperties": false
+    },
+    "dev": {
+      "type": "object",
+      "description": "Development-specific thresholds",
+      "properties": {
+        "minAge": { "type": "integer", "minimum": 1, "maximum": 365 },
+        "minSeverity": { "type": "string", "enum": ["none", "low", "moderate", "high", "critical"] }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
