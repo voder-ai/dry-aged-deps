@@ -38,6 +38,10 @@ function processObjectResult(result, minSeverity, severityWeights) {
 
 /**
  * Process a single package version for vulnerability checking (original one-version logic).
+ * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
+ * @req REQ-AUDIT-CHECK - check vulnerabilities using audit API
+ * @req REQ-TRANSITIVE-DEPS - check transitive dependencies for vulnerabilities
+ * @req REQ-SAFE-ONLY - only include safe versions
  * @param {string} name - Package name.
  * @param {string} latest - Latest version.
  * @param {object} options - Processing options.
@@ -85,6 +89,8 @@ async function processOneVersion(name, latest, options) {
 
 /**
  * Attempt smart-search fallback to find a safe version.
+ * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
+ * @req REQ-SMART-SEARCH - search newest mature versions first
  * @param {string} name - Package name.
  * @param {string} current - Current version.
  * @param {string} wanted - Wanted version.
