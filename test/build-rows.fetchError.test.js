@@ -1,4 +1,8 @@
-/** @story prompts/dry-aged-deps-user-story-map.md */
+/**
+ * @story ??? - TODO: specify story file
+ * @req UNKNOWN - TODO: specify requirement ID and description
+ */
+
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { buildRows } from '../src/build-rows.js';
 

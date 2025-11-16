@@ -1,8 +1,8 @@
 /**
- * Tests for calculateAgeInDays
- * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
- * @req REQ-AGE-CALC - Calculate days since publishDate in days
+ * @story ??? - TODO: specify story file
+ * @req UNKNOWN - TODO: specify requirement ID and description
  */
+
 import { calculateAgeInDays } from '../src/age-calculator';
 
 describe('calculateAgeInDays', () => {

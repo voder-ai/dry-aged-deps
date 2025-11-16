@@ -1,4 +1,8 @@
-/** @story prompts/dry-aged-deps-user-story-map.md */
+/**
+ * @story ??? - TODO: specify story file
+ * @req UNKNOWN - TODO: specify requirement ID and description
+ */
+
 import { printOutdated } from '../src/print-outdated.js';
 import * as xmlFormatterModule from '../src/xml-formatter.js';
 

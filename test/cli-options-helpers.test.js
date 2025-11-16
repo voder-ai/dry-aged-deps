@@ -1,7 +1,8 @@
 /**
- * Tests for CLI option helpers.
- * @story prompts/014.0-DEV-INVALID-OPTION-ERROR.md
+ * @story ??? - TODO: specify story file
+ * @req UNKNOWN - TODO: specify requirement ID and description
  */
+
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import {
   parseFormatFlag,

@@ -1,4 +1,8 @@
-/** @story prompts/008.0-DEV-JSON-OUTPUT.md */
+/**
+ * @story ??? - TODO: specify story file
+ * @req UNKNOWN - TODO: specify requirement ID and description
+ */
+
 import { jsonFormatter } from '../src/json-formatter.js';
 
 describe('jsonFormatter', () => {

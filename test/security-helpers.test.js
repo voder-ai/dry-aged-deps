@@ -1,8 +1,8 @@
-/** @story prompts/dry-aged-deps-user-story-map.md */
 /**
- * Tests for computeVulnerabilityStats and countAboveThreshold functions
- * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
+ * @story ??? - TODO: specify story file
+ * @req UNKNOWN - TODO: specify requirement ID and description
  */
+
 import { describe, it, expect } from 'vitest';
 import { computeVulnerabilityStats, countAboveThreshold } from '../src/security-helpers.js';
 

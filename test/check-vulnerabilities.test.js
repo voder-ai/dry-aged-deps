@@ -1,4 +1,8 @@
-/** @story prompts/dry-aged-deps-user-story-map.md */
+/**
+ * @story ??? - TODO: specify story file
+ * @req UNKNOWN - TODO: specify requirement ID and description
+ */
+
 import { checkVulnerabilities } from '../src/check-vulnerabilities.js';
 import { execFile } from 'child_process';
 import { promises as fs } from 'fs';

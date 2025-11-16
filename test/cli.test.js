@@ -1,4 +1,8 @@
-/** @story prompts/dry-aged-deps-user-story-map.md */
+/**
+ * @story ??? - TODO: specify story file
+ * @req UNKNOWN - TODO: specify requirement ID and description
+ */
+
 import { runCli } from './helpers/cli-helper';
 
 describe('dry-aged-deps CLI', () => {

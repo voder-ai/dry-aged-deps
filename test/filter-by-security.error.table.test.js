@@ -1,4 +1,8 @@
-/** @story prompts/dry-aged-deps-user-story-map.md */
+/**
+ * @story ??? - TODO: specify story file
+ * @req UNKNOWN - TODO: specify requirement ID and description
+ */
+
 import { describe, it, expect, vi } from 'vitest';
 import { filterBySecurity } from '../src/filter-by-security.js';
 

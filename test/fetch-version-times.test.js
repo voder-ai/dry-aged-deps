@@ -1,4 +1,8 @@
-/** @story prompts/dry-aged-deps-user-story-map.md */
+/**
+ * @story ??? - TODO: specify story file
+ * @req UNKNOWN - TODO: specify requirement ID and description
+ */
+
 import { fetchVersionTimes, execFile } from '../src/fetch-version-times.js';
 
 describe('fetchVersionTimes', () => {
