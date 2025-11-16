@@ -41,26 +41,7 @@ export function handleJsonOutput({ rows, summary, thresholds, vulnMap, filterRea
  */
 export function handleXmlOutput({ rows, summary, thresholds, vulnMap, filterReasonMap }) {
   const timestamp = getTimestamp();
-  const items = rows.map(([name, current, wanted, latest, age, depType]) => {
-    const minAge = depType === 'prod' ? thresholds.prod.minAge : thresholds.dev.minAge;
-    const filteredByAge = typeof age === 'number' && age < minAge;
-    const vulnInfo = vulnMap.get(name) || { count: 0, maxSeverity: 'none', details: [] };
-    const filteredBySecurity = vulnInfo.count > 0;
-    const filtered = filteredByAge || filteredBySecurity;
-    const filterReason = filterReasonMap.get(name) || (filteredByAge ? 'age' : '');
-    return {
-      name,
-      current,
-      wanted,
-      latest,
-      recommended: wanted,
-      age: typeof age === 'number' ? age : null,
-      vulnerabilities: vulnInfo,
-      filtered,
-      filterReason,
-      dependencyType: depType,
-    };
-  });
+  const items = prepareJsonItems(rows, thresholds, vulnMap, filterReasonMap);
   console.log(xmlFormatter({ rows: items, summary, thresholds, timestamp }));
   return summary;
 }
