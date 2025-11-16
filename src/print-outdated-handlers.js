@@ -13,16 +13,6 @@ import { getTimestamp } from './print-utils.js';
  * @param {{ rows: Array<[string, string, string, string, number|string, string]>, summary: Object, thresholds: Object, vulnMap: Map<string, object>, filterReasonMap: Map<string,string> }} options - Options for JSON output handler.
  * @returns {Object} summary object returned from filtering.
  */
-/**
- * Handle JSON output for printOutdated function.
- * @param {Object} options
- * @param {Array<[string, string, string, string, number|string, string]>} options.rows - Array of [name, current, wanted, latest, age, depType].
- * @param {Object} options.summary - Summary object returned from applyFilters
- * @param {{ prod: { minAge: number, minSeverity: string }, dev: { minAge: number, minSeverity: string } }} options.thresholds
- * @param {Map<string, {count: number, maxSeverity: string, details: Array<any>}>} options.vulnMap
- * @param {Map<string, string>} options.filterReasonMap
- * @returns {Object} summary
- */
 export function handleJsonOutput({ rows, summary, thresholds, vulnMap, filterReasonMap }) {
   const timestamp = getTimestamp();
   const items = prepareJsonItems(rows, thresholds, vulnMap, filterReasonMap);
@@ -36,16 +26,6 @@ export function handleJsonOutput({ rows, summary, thresholds, vulnMap, filterRea
  * @req REQ-HANDLER-XML - Delegate XML output handling
  * @param {{ rows: Array<any>, summary: Object, thresholds: Object, vulnMap: Map<string, object>, filterReasonMap: Map<string,string> }} options - Options for XML output handler.
  * @returns {Object} summary object returned from filtering.
- */
-/**
- * Handle XML output for printOutdated function.
- * @param {Object} options
- * @param {Array<any>} options.rows - Rows array from buildRows on original data
- * @param {Object} options.summary - Summary object returned from applyFilters
- * @param {{prod:{minAge:number,minSeverity:string}, dev:{minAge:number,minSeverity:string}}} options.thresholds
- * @param {Map<string, any>} options.vulnMap
- * @param {Map<string, string>} options.filterReasonMap
- * @returns {Object} summary
  */
 export function handleXmlOutput({ rows, summary, thresholds, vulnMap, filterReasonMap }) {
   const timestamp = getTimestamp();
@@ -83,17 +63,6 @@ export function handleXmlOutput({ rows, summary, thresholds, vulnMap, filterReas
  * @req REQ-HANDLER-TABLE - Delegate table output handling
  * @param {{ safeRows: Array<Array>, matureRows: Array<Array>, summary: Object, prodMinAge: number, devMinAge: number, returnSummary: boolean }} options - Options for table output handler.
  * @returns {Object|undefined} summary when returnSummary is true or undefined otherwise.
- */
-/**
- * Handle table output for printOutdated function.
- * @param {Object} options
- * @param {Array<Array>} options.safeRows
- * @param {Array<Array>} options.matureRows
- * @param {Object} options.summary
- * @param {number} options.prodMinAge
- * @param {number} options.devMinAge
- * @param {boolean} options.returnSummary
- * @returns {Object|undefined}
  */
 export function handleTableOutput({ safeRows, matureRows, summary, prodMinAge, devMinAge, returnSummary }) {
   console.log('Outdated packages:');
