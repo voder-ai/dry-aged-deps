@@ -1,18 +1,13 @@
 ## NOW
-Refactor `src/cli-parser-utils.js` to replace its dynamic property lookups with safe key checks (e.g. `Object.prototype.hasOwnProperty.call(obj, key)` or optional chaining) and remove the `// eslint-disable-next-line security/detect-object-injection` comment.
+Run `npm run validate-traceability` to identify all source and test files missing or mis‐annotated with `@story` and `@req` tags.
 
 ## NEXT
-- Run  
-  ```
-  grep -R "eslint-disable-next-line security/detect-object-injection" -n src/
-  ```  
-  to locate any remaining suppressions.  
-- In each flagged file, refactor to use safe property access or type guards, then delete the corresponding `eslint-disable-next-line security/detect-object-injection` comment.  
-- Run `npm run lint` and verify there are no `security/detect-object-injection` warnings.  
-- Run `npm run validate-traceability` and update any test files that still lack correct `@story prompts/XXX.0-DEV-*.md` and `@req` annotations. Repeat until `validate-traceability` reports zero errors, then commit those changes.
+- For each file and code branch flagged by the validate‐traceability report, add a proper JSDoc block with `@story prompts/XXX.0-DEV-*.md` and matching `@req REQ-ID – description` tags.
+- Update all test files that reference the user-story-map or use `@req UNKNOWN` so they point to the correct specific story markdown under `prompts/` with real requirement IDs.
+- In `.eslintrc`, lower `max-lines-per-function` from 100→90 and `max-lines` from 500→400, then fix any new lint violations under those rules.
+- Commit your annotation and lint-threshold changes and re-run `npm run validate-traceability` and `npm run lint` until both report zero errors.
 
 ## LATER
-- Add a CI and Husky pre-push check that fails the build if any `security/detect-object-injection` disables remain.  
-- Audit for other ESLint or JSDoc suppressions (`@ts-ignore`, rule disables) and refactor to remove them.  
-- Once code-quality and testing metrics are both ≥ 90%, tighten additional complexity rules (e.g. lower max-lines-per-function, max-depth).  
-- Document the security-rule compliance and test-traceability processes in `CONTRIBUTING.md`.
+- Add the `validate-traceability` check to the Husky pre-push and CI pipeline to prevent regressions.
+- Gradually ratchet the lint thresholds down to target levels (e.g. functions ≤50 lines, files ≤300 lines), addressing violations incrementally.
+- Document the annotation and linting standards in `CONTRIBUTING.md` to guide future contributors.
