@@ -5,6 +5,7 @@ import { filterBySecurity } from './filter-by-security.js';
  * Apply age and security filters to rows.
  * @story prompts/003.0-DEV-FILTER-MATURE-VERSIONS.md
  * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
+ * @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
  * @req REQ-AGE-THRESHOLD - enforce minimum age threshold
  * @req REQ-AUDIT-CHECK - check vulnerabilities using audit API
  * @param {Array<[string, string, string, string, number|string, string]>} rows - Array of [name, current, wanted, latest, age, depType].

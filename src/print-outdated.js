@@ -41,9 +41,17 @@ export function handleNoOutdated(format, returnSummary, thresholds) {
 /**
  * Print outdated dependencies information with age
  * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+ * @story prompts/003.0-DEV-IDENTIFY-OUTDATED.md
+ * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
+ * @story prompts/008.0-DEV-JSON-OUTPUT.md
+ * @story prompts/009.0-DEV-XML-OUTPUT.md
  * @req REQ-NPM-COMMAND - Execute `npm outdated --json` using child_process
  * @req REQ-OUTPUT-DISPLAY - Display results in npm outdated style output with filters
  * @req REQ-FORMAT-SUPPORT - Support table, json, xml formats
+ * @req REQ-FORMAT-JSON - Delegate JSON output branch
+ * @req REQ-UPDATE-MODE - Delegate update mode branch
+ * @req REQ-FORMAT-XML - Delegate XML output branch
+ * @req REQ-NO-OUTDATED-BRANCH - Handle no outdated dependencies scenario
  * @param {Record<string, { current: string; wanted: string; latest: string }>} data
  * @param {{ fetchVersionTimes?: function, calculateAgeInDays?: function, checkVulnerabilities?: function, format?: string, prodMinAge?: number, devMinAge?: number, prodMinSeverity?: string, devMinSeverity?: string, returnSummary?: boolean, updateMode?: boolean, skipConfirmation?: boolean }} [options]
  * @param {object} [options] - Options object containing CLI and function overrides.

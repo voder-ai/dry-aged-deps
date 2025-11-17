@@ -41,6 +41,7 @@ function processObjectResult(result, minSeverity, severityWeights) {
  * @req REQ-AUDIT-CHECK - check vulnerabilities using audit API
  * @req REQ-TRANSITIVE-DEPS - check transitive dependencies for vulnerabilities
  * @req REQ-SAFE-ONLY - only include safe versions
+ * @req REQ-SAFE-ONLY - only include safe versions
  * @param {string} name - Package name.
  * @param {string} latest - Latest version.
  * @param {object} options - Processing options.
@@ -147,10 +148,12 @@ async function trySmartSearchFallback(name, current, wanted, depType, context) {
 /**
  * Filter rows by security vulnerabilities.
  * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
+ * @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
  * @req REQ-AUDIT-CHECK - check vulnerabilities using audit API
  * @req REQ-TRANSITIVE-DEPS - check transitive dependencies for vulnerabilities
  * @req REQ-SMART-SEARCH - search newest mature versions first
  * @req REQ-SAFE-ONLY - only include safe versions
+ * @req REQ-FILTERING-LOGIC - block packages with vulnerabilities at or above configured severity threshold
  * @param {Array<[string,string,string,string,number|string,string]>} rows - Array of [name, current, wanted, latest, age, depType].
  * @param {Function} checkVulnerabilities - Function to check vulnerabilities for a package version.
  * @param {{ prodMinSeverity: string, devMinSeverity: string }} thresholds - Minimum severity thresholds for prod and dev.
