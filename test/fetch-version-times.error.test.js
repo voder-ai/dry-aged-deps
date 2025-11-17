@@ -1,6 +1,8 @@
-/**
- * @story prompts/dry-aged-deps-user-story-map.md
- * @req UNKNOWN - Placeholder traceability annotation
+/****
+ * Tests for error handling in fetchVersionTimes
+ * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
+ * @req REQ-NPM-VIEW - Use `npm view <package> time --json` to get publish dates
+ * @req REQ-AGE-CALC - Calculate days since publication
  */
 
 import { fetchVersionTimes, execFile } from '../src/fetch-version-times.js';

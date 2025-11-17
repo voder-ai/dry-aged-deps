@@ -1,11 +1,11 @@
 ## NOW
-Update the two affected test files (`test/update-packages.abort-and-backup.test.js` and `test/xml-formatter.error-branch.test.js`) by replacing their placeholder `@story` and `@req UNKNOWN` annotations with the exact `prompts/…md` story paths and corresponding requirement IDs.
+Remove the tag‐based trigger from the CI workflow by editing `.github/workflows/ci-publish.yml` and deleting the `tags: ['v*']` entry so it only runs on pushes to `main`.
 
 ## NEXT
-1. Regenerate and commit an up-to-date `package-lock.json` by running `npm install` and then verify with `npm run check:lockfile`.  
-2. Modify the Husky pre-push hook to invoke the test-traceability validation script (e.g. `npm run validate-traceability`) before running the test suite.
+- Scan all remaining `test/**/*.test.js` files for placeholder traceability annotations (e.g. `@story` referencing `*-user-story-map.md` or `@req UNKNOWN`) and update each header to point at the correct `prompts/…md` story path and requirement IDs.  
+- Run `npm run validate-traceability` to verify no placeholders remain, then commit the fixed test files.
 
 ## LATER
-- Add fixture-directory installs (e.g. `npm install` in `test/fixtures`) into the pre-push hook so CLI tests always have their mocks ready.  
-- Formalize a CI check that scans all `*.test.js` files for missing or malformed `@story/@req` tags and fails the build on violations.  
-- Periodically audit and update all tests to ensure new stories and requirements are fully traceable.
+- Add a CI check step that fails the build if any `*.test.js` files lack valid `@story/@req` tags.  
+- Enhance the Husky pre-push hook to install fixture dependencies in `test/fixtures` before running tests.  
+- Establish a periodic audit task (e.g. a quarterly job) to review and update test traceability as new stories are added.
