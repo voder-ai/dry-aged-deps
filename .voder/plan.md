@@ -1,13 +1,18 @@
 ## NOW
-Run `npm run validate-traceability` to identify every test file with missing or incorrect `@story`/`@req` annotations.
+Refactor `src/cli-parser-utils.js` to replace its dynamic property lookups with safe key checks (e.g. `Object.prototype.hasOwnProperty.call(obj, key)` or optional chaining) and remove the `// eslint-disable-next-line security/detect-object-injection` comment.
 
 ## NEXT
-- For each file flagged by the validation script, update its JSDoc header to reference the exact `prompts/XXX.0-DEV-*.md` story(s) and corresponding `@req` ID(s).  
-- Re-run `npm run validate-traceability` and correct any remaining violations until the script reports zero errors.  
-- Commit the updates with a message like  
-  `test: update traceability annotations in tests`
+- Run  
+  ```
+  grep -R "eslint-disable-next-line security/detect-object-injection" -n src/
+  ```  
+  to locate any remaining suppressions.  
+- In each flagged file, refactor to use safe property access or type guards, then delete the corresponding `eslint-disable-next-line security/detect-object-injection` comment.  
+- Run `npm run lint` and verify there are no `security/detect-object-injection` warnings.  
+- Run `npm run validate-traceability` and update any test files that still lack correct `@story prompts/XXX.0-DEV-*.md` and `@req` annotations. Repeat until `validate-traceability` reports zero errors, then commit those changes.
 
 ## LATER
-- Add a CI step that runs `npm run validate-traceability` and fails the build on any traceability errors.  
-- Integrate this validation into the Husky pre-push hook for local enforcement.  
-- Document the test traceability requirements in CONTRIBUTING.md to guide future contributors.
+- Add a CI and Husky pre-push check that fails the build if any `security/detect-object-injection` disables remain.  
+- Audit for other ESLint or JSDoc suppressions (`@ts-ignore`, rule disables) and refactor to remove them.  
+- Once code-quality and testing metrics are both ≥ 90%, tighten additional complexity rules (e.g. lower max-lines-per-function, max-depth).  
+- Document the security-rule compliance and test-traceability processes in `CONTRIBUTING.md`.

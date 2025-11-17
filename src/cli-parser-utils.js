@@ -30,14 +30,13 @@ function deriveParserName(flagName) {
  * @returns {Object.<string, Function>} Mapping from parser export name to parser functions.
  */
 export function generateStringFlagParsers(flags) {
-  /** @type {Object.<string, Function>} */
-  const parsers = {};
+  const parsers = new Map();
   for (const flagName of flags) {
     const exportName = deriveParserName(flagName);
-    // eslint-disable-next-line security/detect-object-injection -- computed parser name derived from trusted flags
-    parsers[exportName] = createStringFlagParser(flagName);
+    const parserFn = createStringFlagParser(flagName);
+    parsers.set(exportName, parserFn);
   }
-  return parsers;
+  return Object.fromEntries(parsers);
 }
 
 /**
@@ -49,18 +48,14 @@ export function generateStringFlagParsers(flags) {
  * @returns {{ [parserName: string]: (args: string[], defaultValue: number) => number }} Mapping from parser export name to parser functions.
  */
 export function generateIntegerFlagParsers(configs) {
-  /** @type {{ [parserName: string]: (args: string[], defaultValue: number) => number }} */
-  const parsers = {};
-  for (const config of configs) {
-    const [flagName, min, max] = config;
+  const parsers = new Map();
+  for (const [flagName, min, max] of configs) {
     const exportName = deriveParserName(flagName);
-    if (max !== undefined) {
-      // eslint-disable-next-line security/detect-object-injection -- computed parser name derived from trusted flags
-      parsers[exportName] = createIntegerFlagParser(flagName, min, max);
-    } else {
-      // eslint-disable-next-line security/detect-object-injection -- computed parser name derived from trusted flags
-      parsers[exportName] = createIntegerFlagParser(flagName, min);
-    }
+    const parserFn =
+      max !== undefined
+        ? createIntegerFlagParser(flagName, min, max)
+        : createIntegerFlagParser(flagName, min);
+    parsers.set(exportName, parserFn);
   }
-  return parsers;
+  return Object.fromEntries(parsers);
 }
