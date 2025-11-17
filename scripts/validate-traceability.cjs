@@ -5,7 +5,10 @@ const path = require('path');
 
 function runGrep(pattern) {
   try {
-    execSync(`grep -R '${pattern}' test`, { stdio: 'ignore' });
+    execSync(
+      `grep -R --include="*.test.js" --exclude-dir=fixtures --exclude-dir=fixtures-up-to-date '${pattern}' test`,
+      { stdio: 'ignore' }
+    );
     return true;
   } catch {
     return false;

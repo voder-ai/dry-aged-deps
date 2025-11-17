@@ -1,6 +1,7 @@
 /**
- * @story prompts/dry-aged-deps-user-story-map.md
- * @req UNKNOWN - Placeholder traceability annotation
+ * Tests for XML formatter thresholds dev-only minAge in XML output
+ * @story prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md
+ * @req REQ-DEV-MIN-AGE - Dev minAge threshold only in XML formatter
  */
 
 import { describe, it, expect } from 'vitest';

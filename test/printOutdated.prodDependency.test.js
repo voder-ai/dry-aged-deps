@@ -1,6 +1,7 @@
 /**
- * @story prompts/dry-aged-deps-user-story-map.md
- * @req UNKNOWN - Placeholder traceability annotation
+ * Tests for printOutdated handling prod dependencies in table output
+ * @story prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md
+ * @req REQ-OUTPUT-TYPE - Show correct dependency type column for prod dependencies
  */
 
 import fs from 'fs';

@@ -1,6 +1,7 @@
 /**
- * @story prompts/dry-aged-deps-user-story-map.md
- * @req UNKNOWN - Placeholder traceability annotation
+ * Tests for security linting
+ * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
+ * @req REQ-SECURITY-LINT - Detect security lint warnings on code snippets
  */
 
 import path from 'path';
