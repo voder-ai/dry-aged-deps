@@ -1,35 +1,14 @@
 import { execFile as cpExecFile } from 'child_process';
 
 /**
- * A mockable wrapper for child_process.execFile.
- */
-export function execFile(cmd, args, options, callback) {
-  execFile.mock.calls.push([cmd, args, options, callback]);
-  if (execFile._mockImplementation) {
-    return execFile._mockImplementation(cmd, args, options, callback);
-  }
-  return cpExecFile(cmd, args, options, callback);
-}
-
-execFile.mockImplementation = (fn) => {
-  execFile._mockImplementation = fn;
-};
-
-execFile.mockReset = () => {
-  execFile.mock.calls = [];
-  delete execFile._mockImplementation;
-};
-
-execFile.mock = { calls: [] };
-
-/**
  * Fetch version publish times for an npm package.
  * @param {string} packageName - The name of the npm package.
+ * @param {(cmd: string, args: string[], options: {encoding: string}, callback: (error: Error|null, stdout: string) => void) => void} [execFileImpl] - Optional execFile implementation.
  * @returns {Promise<Record<string, string>>} A promise resolving to a mapping of version to publish date string.
  * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
  * @req REQ-NPM-VIEW - Use `npm view <package> time --json` to get publish dates
  */
-export async function fetchVersionTimes(packageName) {
+export async function fetchVersionTimes(packageName, execFileImpl = cpExecFile) {
   const pkgNameRegex = /^[a-z0-9@\-_/.]+$/i;
   if (!pkgNameRegex.test(packageName)) {
     throw new Error(`Invalid package name: ${packageName}`);
@@ -41,7 +20,7 @@ export async function fetchVersionTimes(packageName) {
 
   const doExec = () =>
     new Promise((resolve, reject) => {
-      execFile('npm', ['view', packageName, 'time', '--json'], { encoding: 'utf8' }, (error, stdout) => {
+      execFileImpl('npm', ['view', packageName, 'time', '--json'], { encoding: 'utf8' }, (error, stdout) => {
         if (error) {
           return reject(error);
         }

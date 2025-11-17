@@ -1,34 +1,38 @@
 /**
- * @story prompts/dry-aged-deps-user-story-map.md
- * @req UNKNOWN - Placeholder traceability annotation
+ * Tests for fetchVersionTimes core functionality.
+ * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
+ * @req REQ-NPM-VIEW - Use `npm view <package> time --json` to get publish dates
  */
 
-/**
- */
+import { fetchVersionTimes } from '../src/fetch-version-times.js';
+import { createExecFileMock } from './helpers/execFileMock.js';
 
-import { fetchVersionTimes, execFile } from '../src/fetch-version-times.js';
+describe('fetchVersionTimes (Story 002.0)', () => {
+  let execFileMock;
 
-describe('fetchVersionTimes', () => {
-  afterEach(() => {
-    vi.clearAllMocks();
-    execFile.mockReset();
+  beforeEach(() => {
+    execFileMock = createExecFileMock();
   });
 
-  it('parses npm view output and excludes created and modified entries', async () => {
+  afterEach(() => {
+    execFileMock.mockReset();
+  });
+
+  it('(REQ-NPM-VIEW) should parse npm view output and exclude created and modified entries', async () => {
     const mockOutput = JSON.stringify({
       created: '2020-01-01T00:00:00Z',
       modified: '2021-01-01T00:00:00Z',
       '1.0.0': '2022-01-01T00:00:00Z',
       '2.0.0': '2023-01-01T00:00:00Z',
     });
-    // Mock the execFile function
-    execFile.mockImplementation((cmd, args, options, callback) => {
-      callback(null, mockOutput, '');
+    // Mock the execFile implementation
+    execFileMock.mockImplementation((cmd, args, options, callback) => {
+      callback(null, mockOutput);
     });
 
-    const result = await fetchVersionTimes('mypackage');
-    expect(execFile.mock.calls).toHaveLength(1);
-    const [cmd, args, options, callback] = execFile.mock.calls[0];
+    const result = await fetchVersionTimes('mypackage', execFileMock);
+    expect(execFileMock.calls).toHaveLength(1);
+    const [cmd, args, options, callback] = execFileMock.calls[0];
     expect(cmd).toBe('npm');
     expect(args).toEqual(['view', 'mypackage', 'time', '--json']);
     expect(options).toEqual({ encoding: 'utf8' });

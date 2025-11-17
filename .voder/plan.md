@@ -1,13 +1,12 @@
 ## NOW
-Run `npm run validate-traceability` to identify all source and test files missing or mis‐annotated with `@story` and `@req` tags.
+Remove the inline test/mock implementation (the `execFile.mock` wrapper) from `src/fetch-version-times.js` so that production code no longer contains test logic.
 
 ## NEXT
-- For each file and code branch flagged by the validate‐traceability report, add a proper JSDoc block with `@story prompts/XXX.0-DEV-*.md` and matching `@req REQ-ID – description` tags.
-- Update all test files that reference the user-story-map or use `@req UNKNOWN` so they point to the correct specific story markdown under `prompts/` with real requirement IDs.
-- In `.eslintrc`, lower `max-lines-per-function` from 100→90 and `max-lines` from 500→400, then fix any new lint violations under those rules.
-- Commit your annotation and lint-threshold changes and re-run `npm run validate-traceability` and `npm run lint` until both report zero errors.
+- Extract that mock logic into a new helper module at `test/helpers/execFileMock.js` and update all tests to import and use it.  
+- Replace any `@story prompts/*-user-story-map.md` and `@req UNKNOWN` annotations in test files with the correct `prompts/XXX.0-DEV-*.md` paths and real requirement IDs.  
+- Run `npm run lint`, `npm test`, and `npm run validate-traceability` to confirm code_quality and testing metrics are back above 90%.
 
 ## LATER
-- Add the `validate-traceability` check to the Husky pre-push and CI pipeline to prevent regressions.
-- Gradually ratchet the lint thresholds down to target levels (e.g. functions ≤50 lines, files ≤300 lines), addressing violations incrementally.
-- Document the annotation and linting standards in `CONTRIBUTING.md` to guide future contributors.
+- Re-enable the `validate-traceability` step in the Husky pre-push hook and CI pipeline to lock in annotation compliance.  
+- Refactor `xml-formatter-utils.js` into smaller focused modules to improve maintainability and meet future lint thresholds.  
+- Document the traceability and linting standards in `CONTRIBUTING.md` and plan a gradual tightening of line-count rules.
