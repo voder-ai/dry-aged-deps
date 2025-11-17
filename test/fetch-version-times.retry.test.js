@@ -1,4 +1,9 @@
 /**
+ * @story prompts/dry-aged-deps-user-story-map.md
+ * @req UNKNOWN - Placeholder traceability annotation
+ */
+
+/**
  */
 
 import { fetchVersionTimes, execFile } from '../src/fetch-version-times.js';
