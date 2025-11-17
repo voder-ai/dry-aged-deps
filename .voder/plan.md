@@ -1,12 +1,12 @@
 ## NOW
-Remove the inline test/mock implementation (the `execFile.mock` wrapper) from `src/fetch-version-times.js` so that production code no longer contains test logic.
+Lower the `max-lines-per-function` threshold from 90 to 80 in your ESLint configuration (`.eslintrc.js`).
 
 ## NEXT
-- Extract that mock logic into a new helper module at `test/helpers/execFileMock.js` and update all tests to import and use it.  
-- Replace any `@story prompts/*-user-story-map.md` and `@req UNKNOWN` annotations in test files with the correct `prompts/XXX.0-DEV-*.md` paths and real requirement IDs.  
-- Run `npm run lint`, `npm test`, and `npm run validate-traceability` to confirm code_quality and testing metrics are back above 90%.
+- Run `npm run lint` to list any functions now exceeding 80 lines, then refactor each flagged function into smaller, focused helpers (with appropriate JSDoc and traceability annotations).
+- Update the ESLint `max-lines` rule from 400 → 350 in `.eslintrc.js`, rerun `npm run lint` to find oversized files, and split/refactor those files into modules that comply with the new limit.
+- Execute `npm run validate-traceability` to surface any remaining test files with invalid or missing `@story`/`@req` tags, then correct those annotations to point to the proper `prompts/XXX.0-DEV-*.md` and real requirement IDs.
 
 ## LATER
-- Re-enable the `validate-traceability` step in the Husky pre-push hook and CI pipeline to lock in annotation compliance.  
-- Refactor `xml-formatter-utils.js` into smaller focused modules to improve maintainability and meet future lint thresholds.  
-- Document the traceability and linting standards in `CONTRIBUTING.md` and plan a gradual tightening of line-count rules.
+- Continue ratcheting down in 10-line increments (e.g. function limit → 70, file limit → 300), refactoring between each change and capturing the plan in an ADR.
+- Re-enable the `validate-traceability` step in your Husky pre-push hook and CI workflow, and document the new linting/traceability standards in `CONTRIBUTING.md`.
+- Periodically introduce stricter ESLint rules (cyclomatic complexity, no exceptions) once the codebase is stable under the current thresholds.
