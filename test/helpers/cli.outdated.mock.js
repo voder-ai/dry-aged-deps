@@ -1,6 +1,8 @@
 /**
  * @story prompts/dry-aged-deps-user-story-map.md
- */ /* eslint-disable security/detect-object-injection */
+ */
+/* eslint-disable security/detect-object-injection */
+/* eslint-disable traceability/require-story-annotation, traceability/require-req-annotation -- TODO: Add proper annotations to helper functions */
 // test/helpers/cli.outdated.mock.js
 // Stub module for dry-aged-deps CLI outdated testing
 

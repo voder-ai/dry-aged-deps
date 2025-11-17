@@ -1,6 +1,8 @@
 /**
  * @story prompts/dry-aged-deps-user-story-map.md
- */ import { execa } from 'execa';
+ */
+/* eslint-disable traceability/require-story-annotation, traceability/require-req-annotation -- TODO: Add proper annotations to helper functions */
+import { execa } from 'execa';
 
 /**
  * Helper to run the CLI with given arguments and return the result

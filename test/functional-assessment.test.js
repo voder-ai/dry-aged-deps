@@ -1,3 +1,5 @@
+/* eslint-disable traceability/valid-story-reference -- TODO: Fix story file references */
+
 /****
  * Functional assessment - CLI end-to-end tests covering all core stories.
  * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
@@ -26,6 +28,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const cliPath = path.resolve(__dirname, '../bin/dry-aged-deps.js');
 
+/* eslint-disable traceability/require-story-annotation, traceability/require-req-annotation */
 async function runCli(args, options = {}) {
   const env = { ...process.env, ...(options.env || {}) };
   return execa('node', [cliPath, ...args], {

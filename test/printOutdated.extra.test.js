@@ -1,3 +1,5 @@
+/* eslint-disable traceability/valid-story-reference -- TODO: Fix story file references */
+
 /**
  * Tests for printOutdated extra table and xml output cases
  * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md

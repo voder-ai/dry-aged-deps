@@ -1,6 +1,7 @@
 import js from '@eslint/js';
 import globals from 'globals';
 import security from 'eslint-plugin-security';
+import traceability from 'eslint-plugin-traceability';
 
 export default [
   // Global ignores - must be first and separate
@@ -120,6 +121,9 @@ export default [
         vitest: 'readonly',
       },
     },
+    plugins: {
+      traceability,
+    },
     rules: {
       'no-console': 'off', // Allow console in tests
       'security/detect-non-literal-fs-filename': 'off',
@@ -130,6 +134,19 @@ export default [
       'max-params': 'off',
       'max-depth': 'off',
       'max-lines': 'off',
+      // Traceability rules for test files
+      'traceability/require-story-annotation': 'error',
+      'traceability/require-req-annotation': 'error',
+      'traceability/valid-story-reference': [
+        'error',
+        {
+          storyDirectories: ['prompts'],
+          allowAbsolutePaths: false,
+          requireStoryExtension: false, // Our story files are .md not .story.md
+        },
+      ],
+      // Disable format validation - our format is prompts/NNN.0-DEV-NAME.md not docs/stories/NN.N-DEV-NAME.story.md
+      'traceability/valid-annotation-format': 'off',
     },
   },
 ];

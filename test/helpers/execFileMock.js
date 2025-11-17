@@ -3,6 +3,7 @@
  * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
  * @req REQ-NPM-VIEW - Use `npm view <package> time --json` to get publish dates
  */
+/* eslint-disable traceability/require-story-annotation, traceability/require-req-annotation -- TODO: Add proper annotations to helper functions */
 export function createExecFileMock() {
   const calls = [];
   let _mockImplementation;

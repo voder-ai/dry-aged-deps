@@ -6,6 +6,8 @@
 /**
  */
 
+/* eslint-disable traceability/valid-story-reference -- TODO: Fix inline story annotations */
+
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import path from 'path';
 import os from 'os';
