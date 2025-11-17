@@ -5,15 +5,10 @@ const path = require('path');
 
 function runGrep(pattern) {
   try {
-    execSync(`grep -R '${pattern}' test/update-packages.abort-and-backup.test.js`, { stdio: 'ignore' });
+    execSync(`grep -R '${pattern}' test`, { stdio: 'ignore' });
     return true;
   } catch {
-    try {
-      execSync(`grep -R '${pattern}' test/xml-formatter.error-branch.test.js`, { stdio: 'ignore' });
-      return true;
-    } catch {
-      return false;
-    }
+    return false;
   }
 }
 
