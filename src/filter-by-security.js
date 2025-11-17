@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { findSafeVersionSmartSearch } from './security-smart-search.js';
 import { computeVulnerabilityStats, countAboveThreshold } from './security-helpers.js';
 
@@ -10,7 +9,7 @@ import { computeVulnerabilityStats, countAboveThreshold } from './security-helpe
  * @param {object} result - Vulnerability result object.
  * @param {string} minSeverity - Minimum severity threshold.
  * @param {{ [key: string]: number }} severityWeights - Severity weight mapping.
- * @returns {{ include: boolean, totalCount: number, detailsList: Array, maxSeverity: string }} Processing result.
+ * @returns {{ include: boolean, totalCount: number, detailsList: any[], maxSeverity: string }} Processing result.
  */
 function processObjectResult(result, minSeverity, severityWeights) {
   const { totalCount, detailsList, maxSeverity } = computeVulnerabilityStats(result, severityWeights);
@@ -49,7 +48,7 @@ function processObjectResult(result, minSeverity, severityWeights) {
  * @param {Function} options.checkVulnerabilities - Vulnerability check function.
  * @param {{ [key: string]: number }} options.severityWeights - Severity weight mapping.
  * @param {string} options.format - Output format.
- * @returns {Promise<{ include: boolean, vulnInfo: object }>} Processing result.
+ * @returns {Promise<{ include: boolean, vulnInfo: { count: number, maxSeverity: string, details: any[] } }>} Processing result.
  */
 async function processOneVersion(name, latest, options) {
   const { minSeverity, checkVulnerabilities, severityWeights, format } = options;
@@ -95,8 +94,8 @@ async function processOneVersion(name, latest, options) {
  * @param {string} current - Current version.
  * @param {string} wanted - Wanted version.
  * @param {string} depType - Dependency type.
- * @param {object} context - Context with functions and data.
- * @returns {Promise<{ handled: boolean, safeRow?: Array, vulnInfo?: object }>} Result indicating if handled.
+ * @param {{ [key: string]: any }} context - Context with functions and data.
+ * @returns {Promise<{handled: boolean, safeRow?: [string,string,string,string,number|string,string], vulnInfo?: {count: number, maxSeverity: string, details: any[]}}>} Result indicating if handled.
  */
 async function trySmartSearchFallback(name, current, wanted, depType, context) {
   const { fetchVersionTimes, calculateAgeInDays, checkVulnerabilities, minSeverity, severityWeights, format } = context;
@@ -153,16 +152,11 @@ async function trySmartSearchFallback(name, current, wanted, depType, context) {
  * @param {Function} checkVulnerabilities - Function to check vulnerabilities for a package version.
  * @param {{ prodMinSeverity: string, devMinSeverity: string }} thresholds - Minimum severity thresholds for prod and dev.
  * @param {string} format - Output format (table, json, xml).
- * @param {Object} [options] - Additional options like fetchVersionTimes, calculateAgeInDays.
+ * @param {{ fetchVersionTimes?: (name: string) => Promise<Record<string, string>>, calculateAgeInDays?: (date: string) => number }} [options] - Additional options for fetching version publish times and calculating age.
  * @returns {Promise<{ safeRows: Array<[string,string,string,string,number|string,string]>, vulnMap: Map<string,{count:number,maxSeverity:string,details:any[]}>, filterReasonMap: Map<string,string> }>} Filtered results and vulnerability info.
  */
-export async function filterBySecurity(
-  rows,
-  checkVulnerabilities,
-  { prodMinSeverity, devMinSeverity },
-  format,
-  options = {}
-) {
+export async function filterBySecurity(rows, checkVulnerabilities, thresholds, format, options = {}) {
+  const { prodMinSeverity, devMinSeverity } = thresholds;
   const severityWeights = {
     none: 0,
     low: 1,
@@ -192,13 +186,14 @@ export async function filterBySecurity(
       format,
     });
 
-    if (smartSearchResult.handled) {
-      if (smartSearchResult.safeRow) {
-        vulnMap.set(name, smartSearchResult.vulnInfo);
-        safeRows.push(smartSearchResult.safeRow);
+    const { handled, safeRow, vulnInfo } = smartSearchResult;
+    if (handled) {
+      if (safeRow) {
+        vulnMap.set(name, vulnInfo);
+        safeRows.push(safeRow);
       } else {
         filterReasonMap.set(name, 'security');
-        vulnMap.set(name, smartSearchResult.vulnInfo);
+        vulnMap.set(name, vulnInfo);
       }
       continue;
     }
