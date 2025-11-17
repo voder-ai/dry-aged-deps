@@ -1,6 +1,7 @@
 /**
- * @story prompts/dry-aged-deps-user-story-map.md
- * @req UNKNOWN - Placeholder traceability annotation
+ * Tests for CI/CD integration documentation (Story 013.0-DEV-CHECK-MODE).
+ * @story prompts/013.0-DEV-CHECK-MODE.md
+ * @req REQ-CI-CD-INTEGRATION - CI/CD integration examples present in README
  */
 
 import fs from 'fs/promises';

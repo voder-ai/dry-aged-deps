@@ -1,6 +1,8 @@
 /**
- * @story prompts/dry-aged-deps-user-story-map.md
- * @req UNKNOWN - Placeholder traceability annotation
+ * Tests for CLI outdated mock output (Story 001.0-DEV-RUN-NPM-OUTDATED).
+ * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+ * @req REQ-NPM-COMMAND - Execute npm outdated --json using child_process
+ * @req REQ-OUTPUT-DISPLAY - Display results of npm outdated
  */
 
 import { execa } from 'execa';
