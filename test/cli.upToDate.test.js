@@ -1,9 +1,8 @@
 /**
- * @story prompts/dry-aged-deps-user-story-map.md
- * @req UNKNOWN - Placeholder traceability annotation
- */
-
-/**
+ * Tests for dry-aged-deps CLI up-to-date output
+ * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+ * @req REQ-OUTPUT-DISPLAY - Display message when no dependencies are outdated
+ * @req REQ-NO-OUTDATED-BRANCH - Handle no outdated dependencies scenario
  */
 
 import { execa } from 'execa';
@@ -19,7 +18,7 @@ const fixturesSourceDir = path.join(__dirname, 'fixtures-up-to-date');
 let tempDir;
 let fixturesDir;
 
-describe('dry-aged-deps CLI up-to-date output', () => {
+describe('dry-aged-deps CLI up-to-date output (Story 001.0)', () => {
   beforeAll(async () => {
     // Create a unique temporary directory for this test suite
     tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'dry-aged-deps-test-uptodate-'));

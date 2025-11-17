@@ -1,16 +1,22 @@
 /**
- * @story prompts/dry-aged-deps-user-story-map.md
- * @req UNKNOWN - Placeholder traceability annotation
- */
-
-/**
+ * Tests for printOutdated function output edge cases (table, JSON, XML)
+ * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+ * @story prompts/003.0-DEV-IDENTIFY-OUTDATED.md
+ * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
+ * @story prompts/008.0-DEV-JSON-OUTPUT.md
+ * @story prompts/009.0-DEV-XML-OUTPUT.md
+ * @req REQ-NO-OUTDATED-BRANCH - Handle no outdated dependencies scenario
+ * @req REQ-AGE-THRESHOLD - Filter versions younger than minimum age
+ * @req REQ-AUDIT-CHECK - Check vulnerabilities using audit API
+ * @req REQ-FORMAT-JSON - Delegate JSON output branch
+ * @req REQ-FORMAT-XML - Delegate XML output branch
  */
 
 import { vi, describe, test, expect, beforeEach, afterEach } from 'vitest';
 import { printOutdated } from '../src/print-outdated.js';
 
 // Table output edge cases
-describe('printOutdated unit tests - table output edge cases', () => {
+describe('printOutdated unit tests - table output edge cases (Stories 001.0, 003.0, 004.0)', () => {
   let logSpy;
   let errorSpy;
 
@@ -95,7 +101,7 @@ describe('printOutdated unit tests - table output edge cases', () => {
 });
 
 // JSON empty output
-describe('printOutdated unit tests - json output empty', () => {
+describe('printOutdated unit tests - json output empty (Story 008.0)', () => {
   let logSpy;
 
   beforeEach(() => {
@@ -135,7 +141,7 @@ describe('printOutdated unit tests - json output empty', () => {
 });
 
 // XML output tests
-describe('printOutdated unit tests - xml output', () => {
+describe('printOutdated unit tests - xml output (Story 009.0)', () => {
   let logSpy;
   beforeEach(() => {
     logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
@@ -193,7 +199,7 @@ describe('printOutdated unit tests - xml output', () => {
 });
 
 // JSON non-empty data tests
-describe('printOutdated unit tests - json output with data', () => {
+describe('printOutdated unit tests - json output with data (Story 008.0)', () => {
   let logSpy;
   beforeEach(() => {
     logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});

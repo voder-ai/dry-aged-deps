@@ -1,15 +1,15 @@
 /**
- * @story prompts/dry-aged-deps-user-story-map.md
- * @req UNKNOWN - Placeholder traceability annotation
- */
-
-/**
+ * Tests for filterBySecurity function behavior
+ * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
+ * @req REQ-AUDIT-CHECK - Check vulnerabilities using audit API
+ * @req REQ-TRANSITIVE-DEPS - Check transitive dependencies for vulnerabilities
+ * @req REQ-SAFE-ONLY - Only include safe versions
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { filterBySecurity } from '../src/filter-by-security.js';
 
-describe('filterBySecurity', () => {
+describe('filterBySecurity (Story 004.0)', () => {
   beforeEach(() => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
   });

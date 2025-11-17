@@ -1,15 +1,13 @@
 /**
- * @story prompts/dry-aged-deps-user-story-map.md
- * @req UNKNOWN - Placeholder traceability annotation
- */
-
-/**
+ * Tests for prepareJsonItems mapping logic
+ * @story prompts/008.0-DEV-JSON-OUTPUT.md
+ * @req REQ-JSON-MAPPING - Extract mapping logic for JSON output
  */
 
 import { describe, it, expect } from 'vitest';
 import { prepareJsonItems } from '../src/output-utils.js';
 
-describe('prepareJsonItems mapping logic', () => {
+describe('prepareJsonItems mapping logic (Story 008.0)', () => {
   const thresholds = { prod: { minAge: 5, minSeverity: 'none' }, dev: { minAge: 3, minSeverity: 'none' } };
   const severityWeights = { none: 0, low: 1, moderate: 2, high: 3, critical: 4 };
 
