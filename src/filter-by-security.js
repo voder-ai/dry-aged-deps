@@ -54,6 +54,7 @@ async function processOneVersion(name, latest, options) {
   const { minSeverity, checkVulnerabilities, severityWeights, format } = options;
   let include = true;
   let totalCount = 0;
+  /** @type {any[]} */
   let detailsList = [];
   let maxSeverity = 'none';
 
@@ -74,7 +75,7 @@ async function processOneVersion(name, latest, options) {
         vulnInfo: { count: objResult.totalCount, maxSeverity: objResult.maxSeverity, details: objResult.detailsList },
       };
     }
-  } catch (err) {
+  } catch (/** @type {any} */ err) {
     if (format !== 'xml' && format !== 'json') {
       console.error(`Warning: failed to check vulnerabilities for ${name}@${latest}: ${err.message}`);
     }
@@ -117,15 +118,17 @@ async function trySmartSearchFallback(name, current, wanted, depType, context) {
       severityWeights,
     });
 
-    if (safeResult.version) {
+    const version = safeResult.version;
+    const recAge = safeResult.recAge ?? 0;
+    const count = safeResult.totalCount ?? 0;
+    const maxSeverity = safeResult.maxSeverity ?? 'none';
+    const details = safeResult.detailsList ?? [];
+
+    if (version) {
       return {
         handled: true,
-        safeRow: [name, current, wanted, safeResult.version, safeResult.recAge, depType],
-        vulnInfo: {
-          count: safeResult.totalCount,
-          maxSeverity: safeResult.maxSeverity,
-          details: safeResult.detailsList,
-        },
+        safeRow: [name, current, wanted, version, recAge, depType],
+        vulnInfo: { count, maxSeverity, details },
       };
     }
 
@@ -133,7 +136,7 @@ async function trySmartSearchFallback(name, current, wanted, depType, context) {
       handled: true,
       vulnInfo: { count: 0, maxSeverity: 'none', details: [] },
     };
-  } catch (err) {
+  } catch (/** @type {any} */ err) {
     if (format !== 'xml' && format !== 'json') {
       console.error(`Warning: failed to fetch version times for ${name}: ${err.message}`);
     }
@@ -187,7 +190,7 @@ export async function filterBySecurity(rows, checkVulnerabilities, thresholds, f
     });
 
     const { handled, safeRow, vulnInfo } = smartSearchResult;
-    if (handled) {
+    if (handled && vulnInfo) {
       if (safeRow) {
         vulnMap.set(name, vulnInfo);
         safeRows.push(safeRow);
