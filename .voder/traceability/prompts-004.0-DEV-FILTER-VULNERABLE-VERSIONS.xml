@@ -2,8 +2,15 @@
 <traceability>
   <specification>prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-16T13:23:30.608Z</last_validated>
+  <last_validated>2025-11-16T14:48:02.216Z</last_validated>
   <last_modified>2025-11-09T23:02:37.596Z</last_modified>
-  <evidence>The implementation in src/filter-by-security.js (with @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md and full smart-search, processOneVersion, and trySmartSearchFallback logic) together with src/check-vulnerabilities.js (npm audit on temp package, covering transitive deps) satisfies REQ-AUDIT-CHECK and REQ-TRANSITIVE-DEPS. The apply-filters pipeline integrates filterBySecurity and is exercised by unit tests in test/filter-by-security.test.js, test/filter-by-security-severity.test.js, test/filter-by-security.fetchError-fallback.test.js, and end-to-end CLI tests in test/printOutdated.test.js (‘filters out packages with vulnerabilities’, ‘shows packages without vulnerabilities’). All tests related to vulnerability filtering pass in the CI suite (206 tests, 100% pass).</evidence>
-  <notes>All acceptance criteria for story 004.0 (core functionality, transitive dependency checks, smart checking, elimination of vulnerable versions, final output formatting, and handling no safe versions) are fully implemented and covered by tests.</notes>
+  <evidence>The security‐filtering functionality is fully covered by the existing Vitest tests, all of which pass:
+
+• test/filter-by-security.test.js – verifies core filtering, vulnMap, and filterReasonMap for packages with and without vulnerabilities
+• test/filter-by-security.smart-search.test.js – verifies smart fallback (newest mature vulnerable → next safe) and “no safe version” behavior in both table and JSON modes
+• test/filter-by-security.error.table.test.js – verifies error handling in table mode (logs warning, treats package as safe)
+• test/filter-by-security.fetchError-fallback.test.js – verifies fetchVersionTimes errors are handled correctly (warning only in table mode, silent in JSON/XML)
+
+Additionally, CLI integration and end‐to‐end tests (see test/cli.outdated.*, test/printOutdated.*) confirm that vulnerable versions are excluded from the final npm-outdated style output. All related tests passed in the latest test run (211 tests, 97.6% statements, 90.4% branches).</evidence>
+  <notes>Implementation of story 004.0 correctly checks mature versions for vulnerabilities (including transitive dependencies via npm audit), employs smart search, removes vulnerable recommendations, and clearly indicates when no safe version exists. The code meets all acceptance criteria and is exercised by comprehensive unit and integration tests.</notes>
 </traceability>

@@ -2,15 +2,15 @@
 <traceability>
   <specification>prompts/008.0-DEV-JSON-OUTPUT.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-16T13:23:48.732Z</last_validated>
+  <last_validated>2025-11-16T14:50:52.048Z</last_validated>
   <last_modified>2025-11-09T23:04:54.331Z</last_modified>
-  <evidence>• bin/dry-aged-deps.js: Recognizes --format=json and routes to JSON handler (printOutdated branch and handleError).  
-• src/cli-options.js & cli-options-helpers: parseOptions and parseFormatFlag validate format against ['table','json','xml'], exiting code 2 on invalid format.  
-• src/json-formatter.js & src/print-outdated-utils.js: jsonFormatter and handleJsonOutput produce valid JSON with timestamp, packages array, and summary (including thresholds).  
-• Tests covering JSON output (test/cli.format-json.test.js, test/printOutdated.json.test.js) pass: JSON.parse succeeds, correct structure and fields (packages, summary), exit codes 0/1 as appropriate, no stderr in JSON mode.  
-• JSON error handling tests (test/cli.format-json.error.test.js) pass: exit code 2, stdout contains JSON error block, stderr empty.  
-• CLI help (printHelp) lists --format option.  
-• Default table behavior unchanged when --format not given.  
-All automated tests for JSON output format pass in this cycle.</evidence>
-  <notes>The JSON output feature fully satisfies all acceptance criteria: a --format=json flag produces valid, comprehensive JSON with correct exit codes and silent mode; errors are JSON-formatted; default behavior remains table output; help text includes the format option. Automated tests confirm functionality and validation.</notes>
+  <evidence>- CLI supports --format=json flag (bin/dry-aged-deps.js parseOptions and printHelp include --format description).
+- Manual run: `node bin/dry-aged-deps.js --format=json` outputs valid JSON with timestamp, packages array, and summary including thresholds.
+- Unit tests covering JSON output: test/cli.format-json.test.js confirms valid JSON, correct exit codes (0 or 1), no stderr noise, filtering behavior by age and security.
+- Unit tests for printOutdated JSON formatter: test/printOutdated.json.test.js verifies full package entries (name, current, wanted, latest, recommended, age, vulnerabilities, filtered, filterReason, type) and summary thresholds.
+- Error handling tests: test/cli.format-json.error.test.js confirms JSON error output format with error object (message, code, details) and exit code 2, no stderr output.
+- parseFormatFlag validates allowed formats and rejects invalid ones; invalid--format value tests pass in test/cli.invalid-options.test.js.
+- Default behavior remains table format when no --format flag provided, as shown in other CLI tests.
+- Help documentation includes --format option.</evidence>
+  <notes>All acceptance criteria for story 008.0-DEV-JSON-OUTPUT are fully implemented and verified by automated tests and manual inspection. JSON output is valid, complete, silent on stdout for errors, and integrates with exit codes as specified.</notes>
 </traceability>

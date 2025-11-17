@@ -10,6 +10,9 @@ npm run type-check
 # Check formatting
 npm run format:check
 
+# Validate test traceability
+npm run validate-traceability
+
 # Run tests with coverage
 npm test
 

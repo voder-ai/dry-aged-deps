@@ -2,8 +2,17 @@
 <traceability>
   <specification>prompts/009.0-DEV-XML-OUTPUT.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-16T13:23:16.466Z</last_validated>
+  <last_validated>2025-11-16T14:53:19.046Z</last_validated>
   <last_modified>2025-11-09T23:05:40.405Z</last_modified>
-  <evidence>The xmlFormatter implementation in src/xml-formatter.js is annotated with @story prompts/009.0-DEV-XML-OUTPUT.md and covers declaration, root, packages, summary, thresholds, and error sections. The CLI (bin/dry-aged-deps.js) accepts `--format=xml`, suppresses non-XML output, and routes to xmlFormatter. All 206 Vitest tests pass (including test/xml-formatter.test.js, test/xml-formatter.*.test.js, test/cli.format-xml.test.js, and test/cli.format-xml.error.test.js). Coverage for xml-formatter.js and xml-formatter-utils.js is 100%, and XML output tests verify well-formedness, complete data, summary section, exit codes (1 for updates, 2 for errors), and no stderr noise.</evidence>
-  <notes>Every acceptance criterion from prompts/009.0-DEV-XML-OUTPUT.md has been implemented and is verified by unit and end-to-end tests. The CLI help lists XML as a valid format, errors are rendered in XML, and exit codes behave correctly. XML output schema matches the specification.</notes>
+  <evidence>• src/xml-formatter.js exports xmlFormatter with @story prompts/009.0-DEV-XML-OUTPUT.md annotations and implements XML declaration, root start/end, error, packages, summary, and thresholds sections.
+• src/xml-formatter-utils.js provides buildXmlDeclaration, buildRootStart, buildErrorSection, buildPackagesSection, buildSummarySection, buildThresholdsSection with proper escaping and schema tags.
+• CLI (bin/dry-aged-deps.js) recognizes --format=xml (help text: “--format=<format>      Output format: table (default), json, xml”), parseOptions accepts xml, and handleError outputs XML error blocks.
+• printOutdated delegates XML rendering to handleXmlOutput which invokes xmlFormatter; process.exit codes: 0/1/2 per spec.
+• Comprehensive tests pass:
+  - test/xml-formatter.test.js, xml-formatter.*.test.js cover valid XML structure, declaration, package entries, summary, thresholds, escaping, error branch.
+  - test/cli.format-xml.test.js verifies CLI --format=xml outputs valid XML, exit code 1, no stderr noise.
+  - test/cli.format-xml.error.test.js verifies invalid JSON case yields XML error output and exit code 2.
+  - test/printOutdated.xmlEmpty.test.js and printOutdated.xmlFetchError.test.js verify printOutdated’s XML mode behavior (empty rows, fetch errors) and summary return.
+• README.md documents xml as valid format option and shows examples.</evidence>
+  <notes>All acceptance criteria for XML output format are met: the CLI supports --format=xml, xmlFormatter produces well-formed XML matching the schema, errors are output as XML, summary and data sections are included, console noise is suppressed, exit codes conform to spec, and help documentation and tests confirm correct behavior.</notes>
 </traceability>

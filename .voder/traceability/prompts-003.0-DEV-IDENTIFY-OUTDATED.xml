@@ -2,8 +2,8 @@
 <traceability>
   <specification>prompts/003.0-DEV-IDENTIFY-OUTDATED.md</specification>
   <status>FAILED</status>
-  <last_validated>2025-11-16T13:21:53.236Z</last_validated>
+  <last_validated>2025-11-16T14:50:58.814Z</last_validated>
   <last_modified>2025-11-09T23:02:10.889Z</last_modified>
-  <evidence>The implementation in src/filter-by-age.js simply filters rows where the age of the ‘latest’ version meets the threshold. It never fetches or considers earlier versions if the latest is too fresh. buildRows only retrieves the publish date for info.latest, not for all newer versions, so there is no ‘‘smart filtering’’ (looking backwards through prior versions) as required. There are no tests in test/* that validate selecting an older mature version when the latest is <7 days old.</evidence>
-  <notes>Acceptance Criterion “Smart Filtering: Checks latest first, works backwards until finding mature version” is not implemented. The code only applies a simple threshold filter on the latest version’s age, so the story’s core requirement to fall back to the newest mature version is unmet.</notes>
+  <evidence>Review of src/filter-by-age.js and build-rows.js shows that age filtering only tests the single ‘latest’ version’s age against the threshold. There is no code walking backwards through older versions to find the newest mature version, and no tests cover that behavior. The “smart filtering” requirement (start from latest and work backwards until finding a mature version) is not implemented.</evidence>
+  <notes>The core age filter and outputs are in place, and the CLI prints a “no mature versions” message when appropriate, but the story’s smart fallback to older versions (if the latest is too fresh) is missing.</notes>
 </traceability>

@@ -2,8 +2,10 @@
 <traceability>
   <specification>prompts/013.0-DEV-CHECK-MODE.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-16T13:20:32.398Z</last_validated>
+  <last_validated>2025-11-16T14:47:28.654Z</last_validated>
   <last_modified>2025-11-11T08:04:07.352Z</last_modified>
-  <evidence>1) parseOptions in src/cli-options.js recognizes --check and sets returnSummary. 2) bin/dry-aged-deps.js: after printOutdated, if checkMode is true, it exits with code 1 when summary.safeUpdates>0 and 0 otherwise. 3) help text in bin/dry-aged-deps.js and options table in README.md include --check. 4) test/cli.check-mode.test.js covers all check‐mode acceptance criteria (exit codes 0,1,2; JSON/XML support; invalid flags; out-of-range min-age) and all tests pass (206/206 tests green).</evidence>
-  <notes>All acceptance criteria for story 013.0-DEV-CHECK-MODE are implemented and verified by automated tests and documentation.</notes>
+  <evidence>- test/cli.check-mode.test.js present with 6 tests referencing prompts/013.0-DEV-CHECK-MODE.md and all passing as shown by `npm test` (Vitest run, exit codes 0/1/2 in various modes verified)
+- bin/dry-aged-deps.js help output includes `--check` flag description
+- README.md contains multiple entries and CI examples using `--check` flag</evidence>
+  <notes>All acceptance criteria for the check mode story are implemented: the CLI accepts `--check`, correct exit codes are returned in normal, JSON, and XML modes, error conditions produce exit code 2, clear output is shown, and documentation (README and help text) includes `--check` usage examples.</notes>
 </traceability>

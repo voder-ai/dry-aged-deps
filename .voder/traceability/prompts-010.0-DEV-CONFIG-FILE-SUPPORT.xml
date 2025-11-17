@@ -2,19 +2,8 @@
 <traceability>
   <specification>prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-16T13:22:50.723Z</last_validated>
+  <last_validated>2025-11-16T14:49:25.376Z</last_validated>
   <last_modified>2025-11-10T21:23:22.067Z</last_modified>
-  <evidence>1. src/config-loader.js implements loadConfigFile that reads .dry-aged-deps.json (or custom path via --config-file), parses JSON, validates schema (allowed keys: minAge, severity, prod, dev, format), enforces type and value constraints, and exits with code 2 on errors (invalid JSON, missing file when --config-file used, unknown keys, invalid values).
-2. src/cli-options.js merges config file values with CLI flags using precedence CLI > config > defaults, covering format, minAge, prod/dev thresholds, and severity thresholds.
-3. README.md documents the --config-file flag, example .dry-aged-deps.json schema, and usage with and without flags.
-4. Comprehensive tests in test/cli.config-file.test.js cover:
-   • Applying defaults from config file when no flags provided
-   • CLI flags override config values
-   • Invalid JSON causes exit code 2 with appropriate error message
-   • Unknown config key causes exit code 2 with error message
-   • Invalid minAge values (<1 or >365) cause exit code 2 with validation message
-   • Custom config file name support and missing-file error handling
-5. Additional tests in test/cli.flags.test.js verify defaulting behavior when no config file is present.
-All acceptance criteria are met and tests pass with exit codes and output as specified.</evidence>
-  <notes>The implementation fully satisfies the 010.0-DEV-CONFIG-FILE-SUPPORT story: configuration file loading, schema validation, error handling, CLI override precedence, optional use, documentation, and comprehensive test coverage are in place.</notes>
+  <evidence>The implementation in src/config-loader.js and src/cli-options.js fully covers the acceptance criteria: it reads .dry-aged-deps.json (or custom file via --config-file), validates keys and value ranges, merges config with CLI flags (CLI > config > defaults), and exits with code 2 on invalid config or missing file. test/cli.config-file.test.js contains comprehensive integration tests (defaults from config, flag overrides, invalid JSON, unknown keys, out-of-range values, custom file path, missing file) that all pass as part of the existing 211-test Vitest suite.</evidence>
+  <notes>All specified acceptance criteria for Configuration File Support are met. Docs (README.md) describe the feature correctly, code has proper @story/@req traceability, and tests verify correct behavior and error handling.</notes>
 </traceability>

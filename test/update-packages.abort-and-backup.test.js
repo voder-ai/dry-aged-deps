@@ -1,6 +1,10 @@
 /**
- * @story prompts/dry-aged-deps-user-story-map.md
- * @req UNKNOWN - Placeholder traceability annotation
+ * Tests for updatePackages auto-update flow: preview, confirmation, backup, and error handling
+ * @story prompts/011.0-DEV-AUTO-UPDATE.md
+ * @req REQ-PREVIEW - Show preview of changes before confirmation
+ * @req REQ-CONFIRMATION - Interactive confirmation prompt unless --yes provided
+ * @req REQ-BACKUP - Create backup of package.json before updating
+ * @req REQ-ERROR-HANDLING - Gracefully handles file write errors
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';

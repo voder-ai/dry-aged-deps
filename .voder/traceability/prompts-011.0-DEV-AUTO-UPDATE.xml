@@ -2,13 +2,19 @@
 <traceability>
   <specification>prompts/011.0-DEV-AUTO-UPDATE.md</specification>
   <status>PASSED</status>
-  <last_validated>2025-11-16T13:22:48.843Z</last_validated>
+  <last_validated>2025-11-16T14:50:52.296Z</last_validated>
   <last_modified>2025-11-11T08:04:07.327Z</last_modified>
-  <evidence>Multiple dedicated tests for auto-update are present and passing, including:
-- test/printOutdated.update.test.js – verifies --update --yes applies safe updates, creates backup, writes package.json preserving values, and logs summary and install prompt.
-- test/printOutdated.updatePromptAbort.test.js – verifies abort on user ‘no’, no backup or changes.
-- test/printOutdated.updateBackupError.test.js – simulates backup failure and checks graceful error handling without modifying package.json.
+  <evidence>The auto-update feature is fully implemented and covered by multiple tests:
 
-Implementation in src/print-outdated.js and src/update-packages.js supports all acceptance criteria: `--update` flag, safe-only updates, preview and confirmation prompt, `--yes` skip, backup creation, formatting-preserving write, summary report, install reminder, and error handling.</evidence>
-  <notes>All acceptance criteria for story 011.0-DEV-AUTO-UPDATE are fully implemented and covered by tests. The CLI help and option parsing include --update and --yes, and the code paths flow correctly through preview, confirmation, backup, update, and summary steps.</notes>
+• src/print-outdated.js delegates to updatePackages when --update is set
+• src/update-packages.js supports preview (logging ‘The following packages will be updated’), confirmation prompt, --yes skip flag, backup creation (package.json.backup), package.json modification (JSON.stringify with 2-space indent), summary logging, install reminder, and error handling for backup/write failures
+
+Tests exercising this functionality all pass:
+– test/printOutdated.update.test.js verifies safe updates, backup, package.json changes, and summary logs
+– test/printOutdated.updatePromptAbort.test.js verifies interactive abort behavior
+– test/update-packages.test.js tests direct updatePackages behavior, including skipConfirmation, backup, applyUpdates, and error logs
+– test/printOutdated.updateBackupError.test.js verifies backup error handling
+– test/functional-assessment.test.js includes an E2E test for prompts/011.0-DEV-AUTO-UPDATE, confirming --update -y updates package.json and creates backup
+</evidence>
+  <notes>All acceptance criteria for prompts/011.0-DEV-AUTO-UPDATE.md are satisfied: --update flag, safe-only updates, preview & confirm, --yes flag, backup, formatting preserved (2-space JSON), summary report, install prompt, and graceful error handling are all implemented and validated by tests.</notes>
 </traceability>

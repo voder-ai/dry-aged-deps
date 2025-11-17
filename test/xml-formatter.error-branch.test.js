@@ -1,15 +1,12 @@
 /**
- * @story prompts/dry-aged-deps-user-story-map.md
- * @req UNKNOWN - Placeholder traceability annotation
+ * Tests for xmlFormatter error branch: omission of <details> element when error.details is absent
+ * @story prompts/009.0-DEV-XML-OUTPUT.md
+ * @req REQ-ERROR-FORMAT - Format errors as XML when in XML mode, omitting <details> if absent
  */
 
 import { describe, it, expect } from 'vitest';
 import { xmlFormatter } from '../src/xml-formatter.js';
 
-/**
- * Story: docs/decisions/0002-json-xml-output-support.md
- * @req REQ-XML-ERROR-BRANCH - Should not include <details> element when error.details is absent
- */
 describe('xmlFormatter error branch without details', () => {
   it('does not include <details> when error.details is undefined', () => {
     const error = new Error('Another failure');

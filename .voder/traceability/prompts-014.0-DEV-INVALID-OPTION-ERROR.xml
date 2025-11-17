@@ -1,19 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <traceability>
   <specification>prompts/014.0-DEV-INVALID-OPTION-ERROR.md</specification>
-  <status>FAILED</status>
-  <last_validated>2025-11-16T13:22:09.489Z</last_validated>
+  <status>PASSED</status>
+  <last_validated>2025-11-16T14:49:41.031Z</last_validated>
   <last_modified>2025-11-14T20:20:33.442Z</last_modified>
-  <evidence>$ node bin/dry-aged-deps.js --foo
-Outdated packages:
-Name	Current	Wanted	Latest	Age (days)	Type
-No outdated packages with safe, mature versions (>= 7/7 days old, no vulnerabilities) found.
-CODE:0
-
-$ node bin/dry-aged-deps.js --formatx
-Outdated packages:
-Name	Current	Wanted	Latest	Age (days)	Type
-No outdated packages with safe, mature versions (>= 7/7 days old, no vulnerabilities) found.
-CODE:0</evidence>
-  <notes>Unknown CLI options are silently ignored (no error or exit code 2), violating 'Unknown Option Detection' and 'No Silent Failures'. No help suggestions or 'did you mean' guidance implemented for invalid flags. The option-validation story requirements are not met.</notes>
+  <evidence>- test/cli.invalid-options.test.js: 5 tests covering unknown options, suggestions, invalid values, multiple errors all pass (exit code 2, correct stderr messages).
+- src/cli-options.js: unknownArgs logic detects invalid flags, prints `Error: Unknown option '...'`, suggestions, and help hint, then `process.exit(2)`.
+- src/cli-options-helpers/parse-string-flag.js & parse-integer-flag.js: validate option values and exit with code 2 on invalid values, printing `Invalid format: yaml. Valid values are: table, json, xml`.
+- console.error used throughout for error output (stderr).</evidence>
+  <notes>All acceptance criteria for invalid option error handling are implemented and verified by concrete tests. Unknown options are detected, clear error messages with suggestions are shown, exit code 2 is used, help is suggested, and invalid values are validated. No silent failures and error output goes to stderr.</notes>
 </traceability>
