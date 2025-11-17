@@ -52,9 +52,7 @@ export function generateIntegerFlagParsers(configs) {
   for (const [flagName, min, max] of configs) {
     const exportName = deriveParserName(flagName);
     const parserFn =
-      max !== undefined
-        ? createIntegerFlagParser(flagName, min, max)
-        : createIntegerFlagParser(flagName, min);
+      max !== undefined ? createIntegerFlagParser(flagName, min, max) : createIntegerFlagParser(flagName, min);
     parsers.set(exportName, parserFn);
   }
   return Object.fromEntries(parsers);
