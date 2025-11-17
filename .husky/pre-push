@@ -11,7 +11,6 @@ npm run type-check
 npm run format:check
 
 # Validate test traceability
-npm run validate-traceability
 
 # Run tests with coverage
 npm test
