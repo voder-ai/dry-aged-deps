@@ -6,3 +6,4 @@
 .husky/**
 
 test/cli.json.skip-outdated.test.js
+scripts/validate-traceability.cjs
