@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { getFlagRawValue } from './get-flag-raw-value.js';
 /**
  * Generic helper to parse integer flags with min/max bounds.

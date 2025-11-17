@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Extract raw flag value from CLI arguments.
  * @story prompts/014.0-DEV-INVALID-OPTION-ERROR.md

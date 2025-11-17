@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { execFile as cpExecFile } from 'child_process';
 
 /**

@@ -190,7 +190,12 @@ export async function filterBySecurity(rows, checkVulnerabilities, thresholds, f
     });
 
     const { handled, safeRow, vulnInfo } = smartSearchResult;
-    if (handled && vulnInfo) {
+    if (handled) {
+      if (!vulnInfo) {
+        // If no vulnerability info provided, treat as filtered
+        filterReasonMap.set(name, 'security');
+        continue;
+      }
       if (safeRow) {
         vulnMap.set(name, vulnInfo);
         safeRows.push(safeRow);

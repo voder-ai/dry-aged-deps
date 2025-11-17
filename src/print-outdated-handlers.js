@@ -1,5 +1,3 @@
-// @ts-nocheck - delegate handlers for printOutdated function
-
 import {
   handleJsonOutput as delegateJsonOutput,
   handleXmlOutput as delegateXmlOutput,

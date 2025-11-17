@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Utility functions for print-outdated and output handlers.
  * @module print-utils

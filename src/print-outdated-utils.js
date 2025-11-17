@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { jsonFormatter } from './json-formatter.js';
 import { xmlFormatter } from './xml-formatter.js';
 import { prepareJsonItems } from './output-utils.js';
