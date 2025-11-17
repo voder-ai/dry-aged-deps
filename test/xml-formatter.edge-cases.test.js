@@ -1,8 +1,9 @@
 /**
- * @story prompts/dry-aged-deps-user-story-map.md
- * @req UNKNOWN - Placeholder traceability annotation
+ * Tests for XML Output Format
+ * @story prompts/009.0-DEV-XML-OUTPUT.md
+ * @req REQ-CLI-FLAG - Support --format=xml flag
+ * @req REQ-XML-SCHEMA - Output must follow XML schema
  */
-
 import { xmlFormatter } from '../src/xml-formatter.js';
 
 /**
