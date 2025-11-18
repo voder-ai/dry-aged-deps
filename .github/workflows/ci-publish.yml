@@ -102,7 +102,7 @@ jobs:
           fi
 
       - name: Vulnerability scan (all dependencies)
-        run: npm audit --audit-level=moderate
+        run: npm run audit:ci
 
   publish:
     if: ${{ github.event_name == 'push' }}
