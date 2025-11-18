@@ -34,7 +34,7 @@
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
     "@eslint/js": "^9.39.1",
-    "@semantic-release/npm": "^10.0.6",
+    "@semantic-release/npm": "^13.1.2",
     "@types/node": "^24.10.1",
     "@vitest/coverage-v8": "^4.0.8",
     "eslint": "9.39.1",
@@ -63,7 +63,7 @@
     "http-cache-semantics": "^4.1.1",
     "ip": "^2.0.2",
     "js-yaml": "^4.1.1",
-    "npm": "^10.5.1",
+    "npm": "^11.6.2",
     "semver": "^7.5.2",
     "socks": "^2.7.2"
   },
