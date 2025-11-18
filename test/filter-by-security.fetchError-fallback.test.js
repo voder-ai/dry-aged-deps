@@ -3,6 +3,7 @@
  * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
  * @req REQ-SMART-SEARCH - Fallback to original logic when fetchVersionTimes fails
  * @story prompts/008.0-DEV-JSON-OUTPUT.md
+ * @story prompts/009.0-DEV-XML-OUTPUT.md
  * @req REQ-ERROR-FORMAT - JSON/XML fallback should follow error format suppression rules
  */
 import { describe, it, expect, vi } from 'vitest';
