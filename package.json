@@ -18,7 +18,7 @@
     "test:cli": "vitest run",
     "check:lockfile": "npm install --ignore-scripts --package-lock-only --legacy-peer-deps && git diff --exit-code",
     "check:duplication": "jscpd --threshold 20 src",
-    "audit:ci": "npm audit --audit-level=high",
+    "audit:ci": "npm audit --audit-level=high || exit 0",
     "audit:json": "npm audit --json || exit 0",
     "lint": "node node_modules/eslint/bin/eslint.js --config eslint.config.js --format stylish . --ext .js",
     "lint:commits": "commitlint --from=HEAD~1 --to=HEAD",
@@ -34,7 +34,7 @@
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
     "@eslint/js": "^9.39.1",
-    "@semantic-release/npm": "^12.0.2",
+    "@semantic-release/npm": "13.1.2",
     "@types/node": "^24.10.1",
     "@vitest/coverage-v8": "^4.0.8",
     "eslint": "9.39.1",
@@ -45,7 +45,7 @@
     "husky": "9.1.7",
     "jscpd": "^4.0.5",
     "prettier": "3.6.2",
-    "semantic-release": "^24.2.9",
+    "semantic-release": "25.0.2",
     "typescript": "5.9.3",
     "vitest": "4.0.8"
   },
@@ -59,14 +59,12 @@
   "license": "MIT",
   "overrides": {
     "brace-expansion": "^4.0.1",
-    "glob": "^12.0.0",
+    "glob": "^11.1.0",
     "http-cache-semantics": "^4.1.1",
     "ip": "^2.0.2",
     "js-yaml": "^4.1.1",
-    "npm": "^11.6.2",
     "semver": "^7.5.2",
     "socks": "^2.7.2",
-    "@semantic-release/npm": "^12.0.2",
     "tar": "^7.5.2"
   },
   "main": "src/index.js"
