@@ -1,7 +1,7 @@
 /**
- */
-
-/**
+ * Tests for fallback error handling in filterBySecurity when fetchVersionTimes fails
+ * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
+ * @req REQ-AUDIT-CHECK - Fallback to original logic when vulnerability check fails
  */
 
 import { describe, it, expect, vi } from 'vitest';

@@ -1,7 +1,7 @@
 /**
- */
-
-/**
+ * Tests for object-based vulnerability filtering in filterBySecurity
+ * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
+ * @req REQ-SAFE-ONLY - Only recommend versions with no known vulnerabilities
  */
 
 import { describe, it, expect, vi } from 'vitest';
