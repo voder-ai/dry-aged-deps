@@ -2,8 +2,9 @@
  * Tests for fallback error handling in filterBySecurity when fetchVersionTimes fails
  * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
  * @req REQ-SMART-SEARCH - Fallback to original logic when fetchVersionTimes fails
+ * @story prompts/008.0-DEV-JSON-OUTPUT.md
+ * @req REQ-ERROR-FORMAT - JSON/XML fallback should follow error format suppression rules
  */
-
 import { describe, it, expect, vi } from 'vitest';
 import { filterBySecurity } from '../src/filter-by-security.js';
 

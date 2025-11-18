@@ -5,6 +5,8 @@
  * @req REQ-SAFE-ONLY - Only recommend versions with no known vulnerabilities
  * @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
  * @req REQ-FILTERING-LOGIC
+ * @story prompts/008.0-DEV-JSON-OUTPUT.md
+ * @req REQ-SILENT-MODE - Suppress console messages in JSON mode
  */
 
 import { describe, it, expect, vi } from 'vitest';
