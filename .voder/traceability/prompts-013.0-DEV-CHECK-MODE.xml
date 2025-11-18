@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <traceability>
   <specification>prompts/013.0-DEV-CHECK-MODE.md</specification>
-  <status>PASSED</status>
-  <last_validated>2025-11-16T14:47:28.654Z</last_validated>
+  <status>FAILED</status>
+  <last_validated>2025-11-17T14:44:20.347Z</last_validated>
   <last_modified>2025-11-11T08:04:07.352Z</last_modified>
-  <evidence>- test/cli.check-mode.test.js present with 6 tests referencing prompts/013.0-DEV-CHECK-MODE.md and all passing as shown by `npm test` (Vitest run, exit codes 0/1/2 in various modes verified)
-- bin/dry-aged-deps.js help output includes `--check` flag description
-- README.md contains multiple entries and CI examples using `--check` flag</evidence>
-  <notes>All acceptance criteria for the check mode story are implemented: the CLI accepts `--check`, correct exit codes are returned in normal, JSON, and XML modes, error conditions produce exit code 2, clear output is shown, and documentation (README and help text) includes `--check` usage examples.</notes>
+  <evidence>Assessment error: Request timed out.</evidence>
+  <notes>Technical error during assessment</notes>
 </traceability>

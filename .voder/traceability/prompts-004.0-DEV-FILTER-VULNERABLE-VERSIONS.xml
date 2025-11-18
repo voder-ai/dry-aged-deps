@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <traceability>
   <specification>prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md</specification>
-  <status>PASSED</status>
-  <last_validated>2025-11-16T14:48:02.216Z</last_validated>
+  <status>FAILED</status>
+  <last_validated>2025-11-17T14:44:22.346Z</last_validated>
   <last_modified>2025-11-09T23:02:37.596Z</last_modified>
-  <evidence>The security‐filtering functionality is fully covered by the existing Vitest tests, all of which pass:
-
-• test/filter-by-security.test.js – verifies core filtering, vulnMap, and filterReasonMap for packages with and without vulnerabilities
-• test/filter-by-security.smart-search.test.js – verifies smart fallback (newest mature vulnerable → next safe) and “no safe version” behavior in both table and JSON modes
-• test/filter-by-security.error.table.test.js – verifies error handling in table mode (logs warning, treats package as safe)
-• test/filter-by-security.fetchError-fallback.test.js – verifies fetchVersionTimes errors are handled correctly (warning only in table mode, silent in JSON/XML)
-
-Additionally, CLI integration and end‐to‐end tests (see test/cli.outdated.*, test/printOutdated.*) confirm that vulnerable versions are excluded from the final npm-outdated style output. All related tests passed in the latest test run (211 tests, 97.6% statements, 90.4% branches).</evidence>
-  <notes>Implementation of story 004.0 correctly checks mature versions for vulnerabilities (including transitive dependencies via npm audit), employs smart search, removes vulnerable recommendations, and clearly indicates when no safe version exists. The code meets all acceptance criteria and is exercised by comprehensive unit and integration tests.</notes>
+  <evidence>Assessment error: Request timed out.</evidence>
+  <notes>Technical error during assessment</notes>
 </traceability>

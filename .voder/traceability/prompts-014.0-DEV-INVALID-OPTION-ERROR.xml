@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <traceability>
   <specification>prompts/014.0-DEV-INVALID-OPTION-ERROR.md</specification>
-  <status>PASSED</status>
-  <last_validated>2025-11-16T14:49:41.031Z</last_validated>
+  <status>FAILED</status>
+  <last_validated>2025-11-17T14:44:21.347Z</last_validated>
   <last_modified>2025-11-14T20:20:33.442Z</last_modified>
-  <evidence>- test/cli.invalid-options.test.js: 5 tests covering unknown options, suggestions, invalid values, multiple errors all pass (exit code 2, correct stderr messages).
-- src/cli-options.js: unknownArgs logic detects invalid flags, prints `Error: Unknown option '...'`, suggestions, and help hint, then `process.exit(2)`.
-- src/cli-options-helpers/parse-string-flag.js & parse-integer-flag.js: validate option values and exit with code 2 on invalid values, printing `Invalid format: yaml. Valid values are: table, json, xml`.
-- console.error used throughout for error output (stderr).</evidence>
-  <notes>All acceptance criteria for invalid option error handling are implemented and verified by concrete tests. Unknown options are detected, clear error messages with suggestions are shown, exit code 2 is used, help is suggested, and invalid values are validated. No silent failures and error output goes to stderr.</notes>
+  <evidence>Assessment error: Request timed out.</evidence>
+  <notes>Technical error during assessment</notes>
 </traceability>

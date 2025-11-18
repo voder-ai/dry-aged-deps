@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <traceability>
   <specification>prompts/001.0-DEV-RUN-NPM-OUTDATED.md</specification>
-  <status>PASSED</status>
-  <last_validated>2025-11-16T14:50:48.036Z</last_validated>
+  <status>FAILED</status>
+  <last_validated>2025-11-17T14:44:18.349Z</last_validated>
   <last_modified>2025-11-09T23:01:40.301Z</last_modified>
-  <evidence>The CLI entrypoint (bin/dry-aged-deps.js) invokes execFileSync('npm', ['outdated','--json'],…) to run npm outdated per REQ-NPM-COMMAND, parses the output with JSON.parse (REQ-JSON-PARSE), and delegates to printOutdated which prints a table via handleTableOutput (REQ-OUTPUT-DISPLAY). Error cases are covered: invalid JSON or failing npm command exit with code 2 and appropriate messages (tested in test/cli.error-cmd.test.js and test/cli.format-json.error.test.js). The E2E test with DRY_AGED_DEPS_MOCK=1 (test/cli.e2e.real-fixture.test.js) verifies default table output shows header and data rows. Type-checking, linting, and tests pass with 97.6% coverage as documented in the current cycle assessment.</evidence>
-  <notes>All acceptance criteria for story 001.0 are satisfied: npm outdated is executed and JSON output parsed, outdated packages are displayed in table format, errors are handled, and a no-updates scenario is implemented. The extensive test suite confirms core functionality, parsing, display, and error behavior.</notes>
+  <evidence>Assessment error: Request timed out.</evidence>
+  <notes>Technical error during assessment</notes>
 </traceability>

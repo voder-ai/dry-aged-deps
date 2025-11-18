@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <traceability>
   <specification>prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md</specification>
-  <status>PASSED</status>
-  <last_validated>2025-11-16T14:50:04.158Z</last_validated>
+  <status>FAILED</status>
+  <last_validated>2025-11-17T14:44:14.348Z</last_validated>
   <last_modified>2025-11-11T08:04:07.339Z</last_modified>
-  <evidence>Multiple CLI tests verify the standardized exit codes:
-- test/cli.upToDate.test.js asserts exitCode 0 when all dependencies are up to date
-- test/cli.outdated.mock.test.js and test/cli.outdated.test.js assert exitCode 1 when safe updates exist
-- test/cli.check-mode.test.js covers exitCode 0 and 1 in --check mode across table, JSON, and XML formats, and exitCode 2 on errors
-- test/cli.error-cmd.test.js and test/cli.invalid-options.test.js assert exitCode 2 for invalid JSON output, npm errors, and unknown/invalid flags
-
-In the CLI implementation (bin/dry-aged-deps.js), errors invoke handleError → process.exit(2), and successful runs use process.exit(summary.safeUpdates>0?1:0) consistently. The README documents exit codes in the “Exit Codes” section, and the help text includes the --check flag behavior.</evidence>
-  <notes>All acceptance criteria and requirements for story 012.0 (exit codes 0, 1, 2; consistency across formats; error handling; test coverage; documentation) are fully implemented and verified by tests. Backward compatibility is preserved.</notes>
+  <evidence>Assessment error: Request timed out.</evidence>
+  <notes>Technical error during assessment</notes>
 </traceability>

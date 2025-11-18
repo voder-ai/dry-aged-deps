@@ -1,24 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <traceability>
   <specification>prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md</specification>
-  <status>PASSED</status>
-  <last_validated>2025-11-16T14:49:49.669Z</last_validated>
+  <status>FAILED</status>
+  <last_validated>2025-11-17T14:44:19.347Z</last_validated>
   <last_modified>2025-11-09T23:01:54.797Z</last_modified>
-  <evidence>Source files and tests implementing 002.0 are present:
-
-1. src/fetch-version-times.js: Implements fetchVersionTimes(packageName) using `npm view <pkg> time --json`, filters out `created`/`modified`, with retry logic. Contains JSDoc traceability @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md and @req REQ-NPM-VIEW.
-
-2. src/age-calculator.js: Implements calculateAgeInDays(publishDate) returning full days since publication. Includes @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md and @req REQ-AGE-CALC.
-
-3. src/build-rows.js: Calls fetchVersionTimes and calculateAgeInDays for each package’s latest version, and returns rows including age. Annotated with @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md and @req REQ-FETCH-TIMES, REQ-AGE-CALC, REQ-OPTIMIZATION.
-
-4. Tests covering this functionality:
-   - test/fetch-version-times.test.js: Verifies parsing of `npm view` output and exclusion of non-version keys.
-   - test/fetch-version-times.retry.test.js: Verifies retry behavior on transient errors.
-   - test/age-calculator.test.js: Verifies correct day calculation via mocked Date.now.
-   - test/build-rows.success.test.js: Verifies buildRows calls and row structure include age value.
-   - Additional build-rows.* tests cover error logging and missing latestTime handling.
-
-All acceptance criteria for story 002.0 are met: version times are fetched, ages calculated, age included in rows, and only the needed version is processed (smart fetching).</evidence>
-  <notes>The fetchVersionTimes, calculateAgeInDays, and buildRows modules are fully implemented and traced to prompts/002.0, and comprehensive tests validate core and edge behaviors. All acceptance criteria have concrete implementations and passing tests.</notes>
+  <evidence>Assessment error: Request timed out.</evidence>
+  <notes>Technical error during assessment</notes>
 </traceability>

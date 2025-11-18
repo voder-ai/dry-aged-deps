@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <traceability>
   <specification>prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md</specification>
-  <status>PASSED</status>
-  <last_validated>2025-11-16T14:49:06.102Z</last_validated>
+  <status>FAILED</status>
+  <last_validated>2025-11-17T14:44:18.847Z</last_validated>
   <last_modified>2025-11-09T23:03:02.030Z</last_modified>
-  <evidence>The feature is covered by comprehensive tests:
-- test/cli.flags.test.js verifies that --min-age is accepted, rejects invalid/non-numeric/out-of-range values, defaults to 7, and overrides default when provided.
-- test/cli.config-file.test.js verifies reading minAge from .dry-aged-deps.json, rejecting invalid JSON or out-of-range values, handling missing custom config file, and CLI flags overriding config values.
-- bin/dry-aged-deps.js --help output includes the --min-age option with correct description.
-- JSON output (via --format=json) summary.thresholds.prod.minAge and .dev.minAge reflect the applied threshold.
-- Source code in src/cli-options.js, cli-options-helpers.js, and config-loader.js implements parsing, validation, defaulting, and precedence as specified.
-</evidence>
-  <notes>All acceptance criteria for the configurable age threshold story are satisfied: CLI flag support, config file support with precedence, validation, default behavior, help documentation, and output indication of applied threshold.</notes>
+  <evidence>Assessment error: Request timed out.</evidence>
+  <notes>Technical error during assessment</notes>
 </traceability>
