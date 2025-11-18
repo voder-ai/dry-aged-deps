@@ -128,3 +128,5 @@ docs/generated/
 *.patch
 *.tmp
 *.diff
+
+.voder/
