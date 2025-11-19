@@ -1,15 +1,13 @@
 /**
- * Tests for printOutdated function output and filtering.
- *
- * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md Run npm outdated
- * @story prompts/003.0-DEV-IDENTIFY-OUTDATED.md Filter to mature versions
- * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md Filter out vulnerable versions
- *
- * @req REQ-PRINT-UPTODATE Prints up-to-date message when no packages are outdated
- * @req REQ-PRINT-DATA Prints header and data rows with calculated age and type
- * @req REQ-HANDLE-FETCHFAIL Handles fetchVersionTimes errors with warning and N/A age
- * @req REQ-FILTER-AGE Filters out packages younger than minAge (default 7)
- * @req REQ-FILTER-VULN Filters out packages with vulnerabilities
+ * Unit tests for printOutdated output and filtering.
+ * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+ * @story prompts/003.0-DEV-IDENTIFY-OUTDATED.md
+ * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
+ * @req REQ-PRINT-UPTODATE - Prints up-to-date message when no packages are outdated
+ * @req REQ-PRINT-DATA - Prints header and data rows with calculated age and type
+ * @req REQ-HANDLE-FETCHFAIL - Handles fetchVersionTimes errors with warning and N/A age
+ * @req REQ-FILTER-AGE - Filters out packages younger than minAge (default 7)
+ * @req REQ-FILTER-VULN - Filters out packages with vulnerabilities
  */
 
 import { printOutdated } from '../src/print-outdated.js';
