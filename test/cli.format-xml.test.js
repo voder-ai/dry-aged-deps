@@ -1,10 +1,9 @@
 /**
  * Integration tests for dry-aged-deps CLI XML output format.
- *
- * @story prompts/009.0-DEV-XML-OUTPUT.md XML output format
- * @req REQ-CLI-XML-FLAG Accepts --format=xml command-line flag
- * @req REQ-XML-VALID Outputs valid XML with proper root and package elements
- * @req REQ-SILENT-MODE Excludes log warnings (stderr is empty) for XML format
+ * @story prompts/009.0-DEV-XML-OUTPUT.md
+ * @req REQ-CLI-FLAG - Accepts --format=xml command-line flag
+ * @req REQ-XML-VALID - Outputs valid XML with proper root and package elements
+ * @req REQ-SILENT-MODE - Suppresses log warnings for XML format
  */
 
 import { execa } from 'execa';
