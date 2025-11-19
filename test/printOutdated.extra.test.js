@@ -1,10 +1,8 @@
-/* eslint-disable traceability/valid-story-reference -- TODO: Fix story file references */
-
 /**
  * Tests for printOutdated extra table and xml output cases
  * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
- * @story prompts/002.0-DEV-FETCH-VERSION-AGES.md
- * @story prompts/003.0-DEV-FILTER-MATURE-VERSIONS.md
+ * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
+ * @story prompts/003.0-DEV-IDENTIFY-OUTDATED.md
  * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
  * @story prompts/009.0-DEV-XML-OUTPUT.md
  * @req REQ-OUTPUT-DISPLAY - Display table output correctly for outdated packages
