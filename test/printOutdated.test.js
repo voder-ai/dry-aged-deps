@@ -1,7 +1,15 @@
 /**
- */
-
-/**
+ * Tests for printOutdated function output and filtering.
+ *
+ * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md Run npm outdated
+ * @story prompts/003.0-DEV-IDENTIFY-OUTDATED.md Filter to mature versions
+ * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md Filter out vulnerable versions
+ *
+ * @req REQ-PRINT-UPTODATE Prints up-to-date message when no packages are outdated
+ * @req REQ-PRINT-DATA Prints header and data rows with calculated age and type
+ * @req REQ-HANDLE-FETCHFAIL Handles fetchVersionTimes errors with warning and N/A age
+ * @req REQ-FILTER-AGE Filters out packages younger than minAge (default 7)
+ * @req REQ-FILTER-VULN Filters out packages with vulnerabilities
  */
 
 import { printOutdated } from '../src/print-outdated.js';
@@ -50,8 +58,8 @@ describe('printOutdated', () => {
     });
 
     expect(logSpy.mock.calls[0][0]).toBe('Outdated packages:');
-    expect(logSpy.mock.calls[1][0]).toBe(['Name', 'Current', 'Wanted', 'Latest', 'Age (days)', 'Type'].join('\t'));
-    expect(logSpy.mock.calls[2][0]).toBe(['mypkg', '1.0.0', '1.5.0', '2.0.0', 10, 'dev'].join('\t'));
+    expect(logSpy.mock.calls[1][0]).toBe(['Name', 'Current', 'Wanted', 'Latest', 'Age (days)', 'Type'].join('	'));
+    expect(logSpy.mock.calls[2][0]).toBe(['mypkg', '1.0.0', '1.5.0', '2.0.0', 10, 'dev'].join('	'));
     expect(errorSpy).not.toHaveBeenCalled();
   });
 
@@ -76,7 +84,7 @@ describe('printOutdated', () => {
 
     // Package with N/A age should be filtered out (not mature)
     expect(logSpy.mock.calls[0][0]).toBe('Outdated packages:');
-    expect(logSpy.mock.calls[1][0]).toBe(['Name', 'Current', 'Wanted', 'Latest', 'Age (days)', 'Type'].join('\t'));
+    expect(logSpy.mock.calls[1][0]).toBe(['Name', 'Current', 'Wanted', 'Latest', 'Age (days)', 'Type'].join('	'));
     expect(logSpy.mock.calls[2][0]).toContain('No outdated packages with mature versions found');
     expect(ageModule.calculateAgeInDays).not.toHaveBeenCalled();
     expect(errorSpy).toHaveBeenCalledWith(`Warning: failed to fetch version times for otherpkg: failed`);
@@ -99,7 +107,7 @@ describe('printOutdated', () => {
     });
 
     expect(logSpy.mock.calls[0][0]).toBe('Outdated packages:');
-    expect(logSpy.mock.calls[1][0]).toBe(['Name', 'Current', 'Wanted', 'Latest', 'Age (days)', 'Type'].join('\t'));
+    expect(logSpy.mock.calls[1][0]).toBe(['Name', 'Current', 'Wanted', 'Latest', 'Age (days)', 'Type'].join('	'));
     expect(logSpy.mock.calls[2][0]).toContain('No outdated packages with mature versions found');
   });
 
@@ -128,9 +136,9 @@ describe('printOutdated', () => {
     });
 
     expect(logSpy.mock.calls[0][0]).toBe('Outdated packages:');
-    expect(logSpy.mock.calls[1][0]).toBe(['Name', 'Current', 'Wanted', 'Latest', 'Age (days)', 'Type'].join('\t'));
+    expect(logSpy.mock.calls[1][0]).toBe(['Name', 'Current', 'Wanted', 'Latest', 'Age (days)', 'Type'].join('	'));
     // Only the mature package should be shown
-    expect(logSpy.mock.calls[2][0]).toBe(['mature-pkg', '1.0.0', '1.5.0', '2.0.0', 10, 'dev'].join('\t'));
+    expect(logSpy.mock.calls[2][0]).toBe(['mature-pkg', '1.0.0', '1.5.0', '2.0.0', 10, 'dev'].join('	'));
     expect(logSpy.mock.calls[3]).toBeUndefined(); // fresh-pkg should be filtered out
   });
 
@@ -151,7 +159,7 @@ describe('printOutdated', () => {
     });
 
     expect(logSpy.mock.calls[0][0]).toBe('Outdated packages:');
-    expect(logSpy.mock.calls[1][0]).toBe(['Name', 'Current', 'Wanted', 'Latest', 'Age (days)', 'Type'].join('\t'));
+    expect(logSpy.mock.calls[1][0]).toBe(['Name', 'Current', 'Wanted', 'Latest', 'Age (days)', 'Type'].join('	'));
     expect(logSpy.mock.calls[2][0]).toContain('No outdated packages with safe, mature versions');
   });
 
@@ -172,7 +180,7 @@ describe('printOutdated', () => {
     });
 
     expect(logSpy.mock.calls[0][0]).toBe('Outdated packages:');
-    expect(logSpy.mock.calls[1][0]).toBe(['Name', 'Current', 'Wanted', 'Latest', 'Age (days)', 'Type'].join('\t'));
-    expect(logSpy.mock.calls[2][0]).toBe(['safe-pkg', '1.0.0', '1.5.0', '2.0.0', 10, 'dev'].join('\t'));
+    expect(logSpy.mock.calls[1][0]).toBe(['Name', 'Current', 'Wanted', 'Latest', 'Age (days)', 'Type'].join('	'));
+    expect(logSpy.mock.calls[2][0]).toBe(['safe-pkg', '1.0.0', '1.5.0', '2.0.0', 10, 'dev'].join('	'));
   });
 });

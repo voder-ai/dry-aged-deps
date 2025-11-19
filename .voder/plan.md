@@ -1,17 +1,18 @@
 ## NOW
-In `.github/workflows/ci-publish.yml`, re-enable test traceability validation by inserting the following step immediately after the lint job:
-```yaml
-- name: Validate traceability
-  run: npm run validate-traceability
-```
+Update `test/cli.format-json.test.js` by adding a JSDoc header with the appropriate `@story` and `@req` annotations (e.g., reference `prompts/008.0-DEV-JSON-OUTPUT.md` and the JSON-output requirements) so that traceability validation passes.
 
 ## NEXT
-- Add the missing JSDoc `@story` and `@req` annotations to test/printOutdated.json.test.js and test/printOutdated.update.test.js.  
-- Remove any `eslint-disable` for traceability in test/printOutdated.extra.test.js.  
-- Correct the malformed JSDoc header in test/build-rows.additional.test.js.  
-- Run `npm run lint`, `npm run validate-traceability`, and `npm test`, then fix any remaining traceability errors before committing.
+- Add similar JSDoc `@story`/`@req` headers to the other test files missing annotations:
+  - `test/cli.format-xml.test.js`
+  - `test/cli.test.js`
+  - `test/printOutdated.test.js`
+  - `test/printOutdated.xmlEmpty.test.js`
+- Run `npm run validate-traceability` and fix any remaining annotation errors.
+- Re-run `npm test` and `npm run coverage` to confirm the testing score rises above 90%.
 
 ## LATER
-- Update the Husky pre-push hook to include `npm run validate-traceability` so missing annotations are caught locally.  
-- Monitor traceability coverage in CI and configure alerts if it falls below 90%.  
-- Once traceability is stable, review other test files for additional edge-case coverage.
+- Audit and remediate all remaining high-severity vulnerabilities:
+  - Upgrade or document exceptions for affected dependencies.
+  - Create or update an `audit-resolve.json` (or equivalent) to track accepted advisories with expiration dates.
+  - Update the `audit:ci` npm script to match the finalized list of excluded advisories.
+- Verify the CI pipeline’s security gate no longer reports unresolved high-severity issues.
