@@ -5,6 +5,7 @@
  * @req REQ-AGE-THRESHOLD - Ensure mature versions (age > threshold) appear in output
  * @req REQ-EXIT-1 - Exit code 1 when safe updates available
  */
+/* eslint-disable security/detect-object-injection */
 import { execa } from 'execa';
 import fs from 'fs/promises';
 import path from 'path';
@@ -70,7 +71,6 @@ describe('prompts/003.0-DEV-IDENTIFY-OUTDATED.md, prompts/012.0-DEV-EXIT-CODE-RE
   it('every data row has a positive integer age', () => {
     const ages = dataLines.map((line) => {
       const cols = line.split('	');
-      // eslint-disable-next-line security/detect-object-injection
       return parseInt(cols[4], 10);
     });
     expect(ages.every((age) => Number.isInteger(age) && age > 0)).toBe(true);
