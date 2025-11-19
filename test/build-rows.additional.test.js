@@ -1,4 +1,4 @@
-/****
+/**
  * Tests for buildRows error logging and missing latestTime handling.
  * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
  * @req REQ-OUTPUT-DISPLAY - Display outdated package results including warnings and missing data handling
