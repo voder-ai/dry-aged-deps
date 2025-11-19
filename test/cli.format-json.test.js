@@ -1,11 +1,11 @@
 /**
- * Test suite for dry-aged-deps CLI JSON output format.
- *
- * @story prompts/008.0-DEV-JSON-OUTPUT.md JSON output format
- * @req DEV-JSON-01 Outputs valid JSON with timestamp, packages array, and summary object
- * @req DEV-JSON-02 Excludes log warnings (stderr is empty) for JSON format
- * @req DEV-JSON-03 Filters out packages younger than the specified min-age
- * @req DEV-JSON-04 Filters out packages with known vulnerabilities
+ * Integration tests for dry-aged-deps CLI JSON output format.
+ * @story prompts/008.0-DEV-JSON-OUTPUT.md
+ * @req REQ-CLI-FLAG - Accepts --format=json flag to enable JSON output
+ * @req REQ-VALID-JSON - Output valid, parseable JSON with timestamp, packages array, and summary object
+ * @req REQ-COMPLETE-DATA - Include all relevant package information in output
+ * @req REQ-SUMMARY-STATS - Include filtering statistics (filteredByAge, filteredBySecurity)
+ * @req REQ-SILENT-MODE - Suppress log warnings for JSON format
  */
 
 import { execa } from 'execa';

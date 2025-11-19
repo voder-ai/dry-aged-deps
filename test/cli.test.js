@@ -1,8 +1,7 @@
 /**
- * @fileoverview CLI tests for dry-aged-deps
- * @see {@link ../prompts/014.0-DEV-INVALID-OPTION-ERROR.md} invalid option error handling
- * @see {@link ../prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md} config file support
- * @requires --help flag must exit with code 0
+ * Tests for dry-aged-deps CLI --help option.
+ * @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
+ * @req REQ-HELP-EXITCODE - Exits with code 0 when --help flag is used
  */
 
 import { runCli } from './helpers/cli-helper';
