@@ -1,11 +1,13 @@
 /**
+ * Tests for updatePackages additional branches.
+ * @story prompts/011.0-DEV-AUTO-UPDATE.md
+ * @req REQ-UPDATE-FLAG - Support --update flag to enable update mode
+ * @req REQ-YES-FLAG - Support --yes flag to skip confirmation
+ * @req REQ-BACKUP - Create package.json backup before updates
+ * @req REQ-CONFIRMATION - Interactive confirmation prompt before applying updates
+ * @req REQ-ERROR-HANDLING - Graceful handling of backup/update failures
+ * @req REQ-POST-UPDATE - Prompt user to run npm install after updates
  */
-
-/**
- */
-
-/* eslint-disable traceability/valid-story-reference -- TODO: Fix inline story annotations */
-
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import path from 'path';
 import os from 'os';
@@ -134,10 +136,6 @@ describe('updatePackages additional branches', () => {
     expect(result).toBe(summary);
   });
 
-  /**
-   * @story Handle missing devDependencies in package.json
-   * @req Create devDependencies field when absent and apply update
-   */
   it('handles missing devDependencies and skipConfirmation=true', async () => {
     vi.resetModules();
     const pkgNoDev = { name: 'test', version: '1.0.0' };
@@ -154,10 +152,6 @@ describe('updatePackages additional branches', () => {
     expect(result).toBe(summary);
   });
 
-  /**
-   * @story Handle missing dependencies in package.json
-   * @req Create dependencies field when absent and apply update
-   */
   it('handles missing dependencies and skipConfirmation=true', async () => {
     vi.resetModules();
     const pkgNoDeps = { name: 'test', version: '1.0.0' };

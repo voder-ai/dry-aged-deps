@@ -1,11 +1,12 @@
 ## NOW  
-Create a `CLIOptions` interface in `src/cli-options.ts`, update `parseCliOptions` to return that type, and remove all `// @ts-expect-error` comments from that file.  
+Add a proper JSDoc header to test/update-packages.additional.test.js with its corresponding `@story` reference (e.g. prompts/011.0-DEV-AUTO-UPDATE.md) and a matching `@req` tag so that traceability validation passes.
 
 ## NEXT  
-- Run `npm run type-check` to verify there are no TypeScript errors in `src/cli-options.ts`.  
-- Update any callers of `parseCliOptions` to use the new `CLIOptions` type, then run `npm run lint` and `npm test` to confirm everything passes.  
+- Add similar `@story` and `@req` JSDoc headers to test/filter-by-age.test.js.  
+- Remove any `eslint-disable` comments that bypass traceability in those two files.  
+- Run `npm run validate-traceability` and verify there are no missing annotations.
 
 ## LATER  
-- Refactor large utility modules (e.g. `filter-by-security`, `xml-formatter-utils`) into smaller, single-responsibility files.  
-- Gradually enforce stricter ESLint rules (e.g. lower `max-params`, `max-depth`).  
-- Periodically scan for and remove any remaining TypeScript suppressions across the project.
+- Audit all other test files for hidden loops or inline logic; refactor into explicit, parameterized Vitest assertions.  
+- Re-run coverage and validate-traceability to ensure the TESTING score rises above 90%.  
+- Continually monitor for any new tests added without annotations and enforce through CI.

@@ -1,11 +1,10 @@
-/* eslint-disable traceability/valid-story-reference -- TODO: Fix story file reference */
-
 /**
  * Tests for filterByAge function behavior.
- * @story prompts/003.0-DEV-FILTER-MATURE-VERSIONS.md
+ * @story prompts/003.0-DEV-IDENTIFY-OUTDATED.md
  * @req REQ-AGE-THRESHOLD - enforce minimum age threshold for filtering
+ * @req REQ-SMART-SEARCH - search newest first
+ * @req REQ-COMPARISON - only versions > current
  */
-
 import { describe, it, expect } from 'vitest';
 import { filterByAge } from '../src/filter-by-age.js';
 
