@@ -1,7 +1,7 @@
 /**
- */
-
-/**
+ * Tests for auto-update prompt abort
+ * @story prompts/011.0-DEV-AUTO-UPDATE.md
+ * @req REQ-CONFIRMATION - Abort when user denies confirmation
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';

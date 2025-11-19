@@ -1,7 +1,7 @@
 /**
- */
-
-/**
+ * Tests for auto-update backup error handling
+ * @story prompts/011.0-DEV-AUTO-UPDATE.md
+ * @req REQ-ERROR-HANDLING - Handle backup creation failure gracefully
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
