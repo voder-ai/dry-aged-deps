@@ -1,3 +1,4 @@
+#!/usr/bin/env sh
 # Lint commit messages
 npm run lint:commits
 
