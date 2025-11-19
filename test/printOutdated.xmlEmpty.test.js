@@ -1,13 +1,10 @@
 /**
- * @see prompts/009.0-DEV-XML-OUTPUT.md
- * @see prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
- * @see prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
- * @req xmlFormatter is called once with empty rows and default thresholds
- * @req args.rows equals []
- * @req args.summary.totalOutdated, safeUpdates, filteredByAge, filteredBySecurity all zero
- * @req thresholds.prod and thresholds.dev use minAge=7 and minSeverity='none'
- * @req args.timestamp is a string
- * @req printOutdated returns summary with zeros
+ * Unit tests for printOutdated in XML mode when no packages are outdated (empty rows).
+ * @story prompts/009.0-DEV-XML-OUTPUT.md
+ * @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
+ * @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
+ * @req REQ-XML-EMPTY-ROWS - xmlFormatter is called once with empty rows and default thresholds
+ * @req REQ-SUMMARY-STATS - Summary counts (totalOutdated, safeUpdates, filteredByAge, filteredBySecurity) are zero
  */
 
 import { printOutdated } from '../src/print-outdated.js';
