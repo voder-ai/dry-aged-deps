@@ -1,7 +1,8 @@
 /**
- */
-
-/**
+ * Tests for CLI outdated output behavior
+ * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+ * @req REQ-NPM-COMMAND - Execute `npm outdated --json` using child_process
+ * @req REQ-OUTPUT-DISPLAY - Display table with correct headers
  */
 
 import { execa } from 'execa';

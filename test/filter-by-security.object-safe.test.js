@@ -1,7 +1,8 @@
 /**
- */
-
-/**
+ * Tests for object-based vulnerability safe-case in filterBySecurity
+ * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
+ * @req REQ-AUDIT-CHECK - Use npm audit or registry API to check for vulnerabilities
+ * @req REQ-FILTERING-LOGIC - Filter packages based on configured severity thresholds
  */
 
 import { describe, it, expect } from 'vitest';

@@ -1,7 +1,9 @@
 /**
- */
-
-/**
+ * Tests for smart-search fallback in filterBySecurity
+ * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
+ * @story prompts/008.0-DEV-JSON-OUTPUT.md
+ * @req REQ-SMART-SEARCH - Search newest mature versions first
+ * @req REQ-FILTERING-LOGIC - Fallback to safe version logic
  */
 
 import { describe, it, expect } from 'vitest';

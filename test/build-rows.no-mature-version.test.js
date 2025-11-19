@@ -1,7 +1,9 @@
 /**
- */
-
-/**
+ * Tests for no mature version age in buildRows
+ * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
+ * @req REQ-NPM-VIEW - Use npm view to fetch publish times
+ * @req REQ-AGE-CALC - Calculate days since publication
+ * @req REQ-OPTIMIZATION - Only fetch versions newer than current
  */
 
 import { describe, it, expect, vi } from 'vitest';

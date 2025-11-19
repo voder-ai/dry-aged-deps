@@ -1,7 +1,8 @@
 /**
- */
-
-/**
+ * Tests for legacy advisory parsing in checkVulnerabilities
+ * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
+ * @req REQ-AUDIT-CHECK - Use npm audit or registry API to check for vulnerabilities
+ * @req REQ-TRANSITIVE-DEPS - Check the entire dependency tree for vulnerabilities
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';

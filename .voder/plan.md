@@ -1,12 +1,11 @@
-## NOW  
-Add a proper JSDoc header to test/update-packages.additional.test.js with its corresponding `@story` reference (e.g. prompts/011.0-DEV-AUTO-UPDATE.md) and a matching `@req` tag so that traceability validation passes.
+## NOW
+Add missing `@story` and `@req` JSDoc headers to any test files under `test/` that currently lack them, referencing their appropriate `prompts/` specification files so that traceability validation will pass.
 
-## NEXT  
-- Add similar `@story` and `@req` JSDoc headers to test/filter-by-age.test.js.  
-- Remove any `eslint-disable` comments that bypass traceability in those two files.  
-- Run `npm run validate-traceability` and verify there are no missing annotations.
+## NEXT
+- Remove any `// eslint-disable` comments in those test files that bypass traceability checks.  
+- Run `npm run validate-traceability` and verify that no missing‐annotation errors remain.
 
-## LATER  
-- Audit all other test files for hidden loops or inline logic; refactor into explicit, parameterized Vitest assertions.  
-- Re-run coverage and validate-traceability to ensure the TESTING score rises above 90%.  
-- Continually monitor for any new tests added without annotations and enforce through CI.
+## LATER
+- Modify the Husky pre-push hook (`.husky/pre-push`) to insert `npm run validate-traceability` immediately after the lint step.  
+- Add a CI gate to block PRs if any test file is missing `@story`/`@req` annotations.  
+- Once testing score ≥90%, tighten Vitest and ESLint traceability thresholds for stricter enforcement.

@@ -1,7 +1,9 @@
 /**
- */
-
-/**
+ * Tests for error handling in table format of filterBySecurity
+ * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
+ * @req REQ-AUDIT-CHECK - Use npm audit or registry API to check for vulnerabilities
+ * @req REQ-SMART-SEARCH - Search newest mature versions first when fallback is needed
+ * @req REQ-SAFE-ONLY - Treat as safe when error occurs in table format
  */
 
 import { describe, it, expect, vi } from 'vitest';

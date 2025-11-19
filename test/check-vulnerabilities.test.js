@@ -1,7 +1,8 @@
 /**
- */
-
-/**
+ * Tests for checkVulnerabilities function
+ * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
+ * @req REQ-AUDIT-CHECK - Use npm audit or registry API to check for vulnerabilities
+ * @req REQ-TRANSITIVE-DEPS - Check the entire dependency tree (direct and transitive dependencies) for vulnerabilities
  */
 
 import { checkVulnerabilities } from '../src/check-vulnerabilities.js';

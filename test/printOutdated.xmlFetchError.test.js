@@ -1,7 +1,7 @@
 /**
- */
-
-/**
+ * Tests for XML fetch error handling in printOutdated
+ * @story prompts/009.0-DEV-XML-OUTPUT.md
+ * @req REQ-FORMAT-XML - Suppress console.error in XML output
  */
 
 import { printOutdated } from '../src/print-outdated.js';
