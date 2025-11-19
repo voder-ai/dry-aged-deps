@@ -4,6 +4,7 @@
  * @req REQ-CLI-FLAG - Accepts --format=xml command-line flag
  * @req REQ-XML-VALID - Outputs valid XML with proper root and package elements
  * @req REQ-SILENT-MODE - Suppresses log warnings for XML format
+ * @req REQ-EXIT-1 - Exit code 1 when safe updates available
  */
 
 import { execa } from 'execa';
