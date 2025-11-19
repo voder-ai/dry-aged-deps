@@ -1,7 +1,11 @@
 /**
- */
-
-/**
+ * Tests for JSON output format
+ * @story prompts/008.0-DEV-JSON-OUTPUT.md
+ * @req REQ-CLI-FLAG - Accept --format=json flag to enable JSON output
+ * @req REQ-VALID-JSON - Output valid, parseable JSON
+ * @req REQ-COMPLETE-DATA - Include all package information in output
+ * @req REQ-SUMMARY-STATS - Include filtering statistics and thresholds
+ * @req REQ-SILENT-MODE - Suppress console messages when outputting JSON
  */
 
 import { printOutdated } from '../src/print-outdated.js';
