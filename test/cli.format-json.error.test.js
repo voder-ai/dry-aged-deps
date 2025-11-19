@@ -11,7 +11,7 @@ import path from 'path';
 import os from 'os';
 
 // Story: prompts/008.0-DEV-JSON-OUTPUT.md - JSON error format tests
-describe('dry-aged-deps CLI JSON error output', () => {
+describe('prompts/008.0-DEV-JSON-OUTPUT.md: dry-aged-deps CLI JSON error output', () => {
   it('emits JSON error block and exits with code 2 when npm outdated command fails', async () => {
     // Create a temporary directory
     const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'dry-aged-deps-'));

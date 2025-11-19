@@ -11,7 +11,7 @@ import { filterBySecurity } from '../src/filter-by-security.js';
 // Helper for legacy numeric stub
 const numericStub = async () => 2;
 
-describe('filterBySecurity severity threshold logic', () => {
+describe('prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md: filterBySecurity severity threshold logic', () => {
   it('allows vulnerabilities when all severities are below threshold', async () => {
     const rows = [['pkg1', '1.0.0', '1.1.0', '1.1.0', 5, 'prod']];
     const details = [

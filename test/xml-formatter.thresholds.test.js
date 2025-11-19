@@ -7,7 +7,7 @@
 import { describe, it, expect } from 'vitest';
 import { xmlFormatter } from '../src/xml-formatter.js';
 
-describe('xmlFormatter thresholds output', () => {
+describe('prompts/009.0-DEV-XML-OUTPUT.md: xmlFormatter thresholds output', () => {
   it('should include thresholds for prod and dev with min-age and min-severity', () => {
     const rows = [];
     const summary = {

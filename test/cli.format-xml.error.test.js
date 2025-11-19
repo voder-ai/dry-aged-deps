@@ -10,7 +10,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
 
-describe('dry-aged-deps CLI XML error output', () => {
+describe('prompts/009.0-DEV-XML-OUTPUT.md: dry-aged-deps CLI XML error output', () => {
   it('emits XML error block and exits with code 2 when npm outdated output is invalid JSON', async () => {
     // Create a temporary directory
     const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'dry-aged-deps-'));

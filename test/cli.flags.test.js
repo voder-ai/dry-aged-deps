@@ -13,7 +13,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const cliPath = path.join(__dirname, '..', 'bin', 'dry-aged-deps.js');
 
-describe('CLI --min-age flag', () => {
+describe('prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md: CLI --min-age flag', () => {
   it('rejects non-integer values', async () => {
     await expect(execa('node', [cliPath, '--min-age=abc'])).rejects.toMatchObject({ exitCode: 2 });
   });

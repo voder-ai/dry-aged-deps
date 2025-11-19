@@ -20,7 +20,7 @@ const vulnStub = vi.fn().mockResolvedValue(0);
 let tempDir;
 let originalCwd;
 
-describe('printOutdated unit tests - prod dependency type in table output', () => {
+describe('prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md: printOutdated unit tests - prod dependency type in table output', () => {
   beforeAll(() => {
     originalCwd = process.cwd();
     // Create a temporary directory and write package.json with prod dependency

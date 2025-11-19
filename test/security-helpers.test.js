@@ -7,7 +7,7 @@
 import { describe, it, expect } from 'vitest';
 import { computeVulnerabilityStats, countAboveThreshold } from '../src/security-helpers.js';
 
-describe('computeVulnerabilityStats', () => {
+describe('prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md: computeVulnerabilityStats', () => {
   const severityWeights = { none: 0, low: 1, moderate: 2, high: 3, critical: 4 };
 
   it('returns correct metrics when details array present', () => {

@@ -9,7 +9,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { buildRows } from '../src/build-rows.js';
 
-describe('buildRows table format success path', () => {
+describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md: buildRows table format success path', () => {
   it('calculates age when fetchVersionTimes returns latest timestamp and default format is table', async () => {
     const data = {
       pkgA: { current: '1.0.0', wanted: '1.1.0', latest: '1.1.0' },

@@ -38,7 +38,7 @@ afterEach(async () => {
   }
 });
 
-describe('CLI config-file support', () => {
+describe('prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md & prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md: CLI config-file support', () => {
   it('applies defaults from .dry-aged-deps.json when no flags provided', async () => {
     // Arrange: write config file
     const config = {

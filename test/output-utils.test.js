@@ -7,7 +7,7 @@
 import { describe, it, expect } from 'vitest';
 import { prepareJsonItems } from '../src/output-utils.js';
 
-describe('prepareJsonItems mapping logic (Story 008.0)', () => {
+describe('prompts/008.0-DEV-JSON-OUTPUT.md: prepareJsonItems mapping logic (Story 008.0)', () => {
   const thresholds = { prod: { minAge: 5, minSeverity: 'none' }, dev: { minAge: 3, minSeverity: 'none' } };
   const severityWeights = { none: 0, low: 1, moderate: 2, high: 3, critical: 4 };
 

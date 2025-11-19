@@ -11,7 +11,7 @@ import { xmlFormatter } from '../src/xml-formatter.js';
  * Story: prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md (REQ-CLI-FLAGS)
  */
 
-describe('xmlFormatter error details omission', () => {
+describe('prompts/009.0-DEV-XML-OUTPUT.md: xmlFormatter error details omission', () => {
   it('omits <details> element when error.details is undefined', () => {
     const error = new Error('Missing details');
     const timestamp = '2025-12-12T12:00:00Z';

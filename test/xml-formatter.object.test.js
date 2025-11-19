@@ -7,7 +7,7 @@
 import { describe, it, expect } from 'vitest';
 import { xmlFormatter } from '../src/xml-formatter.js';
 
-describe('xmlFormatter object-style package entries', () => {
+describe('prompts/009.0-DEV-XML-OUTPUT.md: xmlFormatter object-style package entries', () => {
   it('should format object-style rows with vulnerabilities and escape special characters', () => {
     const rows = [
       {

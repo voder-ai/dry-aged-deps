@@ -19,7 +19,7 @@ vi.mock('fs', () => ({
   },
 }));
 
-describe('checkVulnerabilities', () => {
+describe('prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md: checkVulnerabilities', () => {
   const mockTempDir = '/tmp/dry-aged-deps-test123';
 
   beforeEach(() => {

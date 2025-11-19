@@ -14,7 +14,7 @@ import path from 'path';
 import os from 'os';
 import { printOutdated } from '../src/print-outdated.js';
 
-describe('printOutdated auto-update mode', () => {
+describe('prompts/011.0-DEV-AUTO-UPDATE.md: printOutdated auto-update mode', () => {
   let tmpDir;
   let originalCwd;
   let consoleLogSpy;

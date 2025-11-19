@@ -6,7 +6,7 @@
 
 import { calculateAgeInDays } from '../src/age-calculator';
 
-describe('calculateAgeInDays', () => {
+describe('prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md: calculateAgeInDays', () => {
   it('calculates correct days difference', () => {
     // Mock Date.now to control current time
     const now = new Date('2023-01-10T00:00:00Z');

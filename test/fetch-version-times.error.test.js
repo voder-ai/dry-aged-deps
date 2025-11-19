@@ -8,7 +8,7 @@
 import { fetchVersionTimes } from '../src/fetch-version-times.js';
 import { createExecFileMock } from './helpers/execFileMock.js';
 
-describe('fetchVersionTimes error paths (Story 002.0)', () => {
+describe('prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md: fetchVersionTimes error paths (Story 002.0)', () => {
   let execFileMock;
 
   beforeEach(() => {

@@ -10,7 +10,7 @@
 import { printOutdated } from '../src/print-outdated.js';
 import * as xmlFormatterModule from '../src/xml-formatter.js';
 
-describe('printOutdated XML empty rows', () => {
+describe('prompts/009.0-DEV-XML-OUTPUT.md & prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md & prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md: printOutdated XML empty rows', () => {
   it('should call xmlFormatter with empty rows and default thresholds when no packages are outdated', async () => {
     const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
     const formatSpy = vi.spyOn(xmlFormatterModule, 'xmlFormatter');

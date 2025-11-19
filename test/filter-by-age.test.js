@@ -8,7 +8,7 @@
 import { describe, it, expect } from 'vitest';
 import { filterByAge } from '../src/filter-by-age.js';
 
-describe('filterByAge', () => {
+describe('prompts/003.0-DEV-IDENTIFY-OUTDATED.md: filterByAge', () => {
   it('includes only rows where age >= prodMinAge for prod dependencies and devMinAge for dev dependencies', () => {
     const rows = [
       ['a', '1.0.0', '1.1.0', '1.1.0', 10, 'prod'],

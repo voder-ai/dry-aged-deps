@@ -7,7 +7,7 @@
 import { describe, it, expect } from 'vitest';
 import { xmlFormatter } from '../src/xml-formatter.js';
 
-describe('xmlFormatter without thresholds', () => {
+describe('prompts/009.0-DEV-XML-OUTPUT.md: xmlFormatter without thresholds', () => {
   it('should not include <thresholds> element when thresholds param is omitted', () => {
     const rows = [];
     const summary = {

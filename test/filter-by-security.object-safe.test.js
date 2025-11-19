@@ -13,7 +13,7 @@ const rows = [['pkgSafe', '1.0.0', '1.2.0', '1.2.0', 5, 'prod']];
 // Set high production severity threshold so moderate and low are safe
 const thresholds = { prodMinSeverity: 'high', devMinSeverity: 'none' };
 
-describe('filterBySecurity object result safe case', () => {
+describe('prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md: filterBySecurity object result safe case', () => {
   it('includes package when object result has no vulnerabilities above threshold', async () => {
     const details = [
       { id: 'VULN-1', title: 'Moderate vulnerability', severity: 'moderate', cvssScore: 5, url: 'http://example.com' },

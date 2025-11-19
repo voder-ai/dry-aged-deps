@@ -52,7 +52,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const cliPath = path.resolve(__dirname, '../bin/dry-aged-deps.js');
 
-describe('Functional assessment - CLI end-to-end', () => {
+describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md & prompts/003.0-DEV-IDENTIFY-OUTDATED.md & prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md & prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md & prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md & prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md & prompts/008.0-DEV-JSON-OUTPUT.md & prompts/009.0-DEV-XML-OUTPUT.md & prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md & prompts/011.0-DEV-AUTO-UPDATE.md & prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md & prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md & prompts/003.0-DEV-IDENTIFY-OUTDATED.md & prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md & prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md & prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md & prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md & prompts/008.0-DEV-JSON-OUTPUT.md & prompts/009.0-DEV-XML-OUTPUT.md & prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md & prompts/011.0-DEV-AUTO-UPDATE.md & prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md & prompts/013.0-DEV-CHECK-MODE.md: Functional assessment - CLI end-to-end', () => {
   // Story: prompts/001.0-DEV-RUN-NPM-OUTDATED.md
   test('001.0-DEV-RUN-NPM-OUTDATED: Runs npm outdated and displays results', async () => {
     const result = await runCli([], { env: { DRY_AGED_DEPS_MOCK: '1' } });

@@ -16,7 +16,7 @@ import { vi, describe, test, expect, beforeEach, afterEach } from 'vitest';
 import { printOutdated } from '../src/print-outdated.js';
 
 // Table output edge cases
-describe('printOutdated unit tests - table output edge cases (Stories 001.0, 003.0, 004.0)', () => {
+describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/003.0-DEV-IDENTIFY-OUTDATED.md & prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md & prompts/008.0-DEV-JSON-OUTPUT.md & prompts/009.0-DEV-XML-OUTPUT.md: printOutdated unit tests - table output edge cases (Stories 001.0, 003.0, 004.0)', () => {
   let logSpy;
   let errorSpy;
 

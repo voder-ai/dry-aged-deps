@@ -14,7 +14,7 @@ import os from 'os';
 import { promises as fsp } from 'fs';
 import fs from 'fs';
 
-describe('updatePackages additional branches', () => {
+describe('prompts/011.0-DEV-AUTO-UPDATE.md: updatePackages additional branches', () => {
   let tmpDir;
   let originalCwd;
   let consoleLogSpy;

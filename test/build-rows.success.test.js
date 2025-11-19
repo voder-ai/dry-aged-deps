@@ -13,7 +13,7 @@ import { buildRows } from '../src/build-rows.js';
  * Story: prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
  * REQ-FETCH-TIMES - Verify that buildRows calls fetchVersionTimes and calculateAgeInDays correctly on successful fetch
  */
-describe('buildRows success path', () => {
+describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md: buildRows success path', () => {
   it('calculates age when fetchVersionTimes returns latest timestamp', async () => {
     const data = {
       pkg1: { current: '1.0.0', wanted: '1.2.0', latest: '1.2.0' },

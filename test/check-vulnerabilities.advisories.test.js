@@ -19,7 +19,7 @@ vi.mock('fs', () => ({
   },
 }));
 
-describe('checkVulnerabilities legacy advisories', () => {
+describe('prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md: checkVulnerabilities legacy advisories', () => {
   const mockTempDir = '/tmp/dry-aged-deps-test-advisories';
 
   beforeEach(() => {

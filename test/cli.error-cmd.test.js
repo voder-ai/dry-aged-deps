@@ -15,7 +15,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-describe('dry-aged-deps CLI error exit code', () => {
+describe('prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md: dry-aged-deps CLI error exit code', () => {
   let fakeNpmDir;
 
   beforeAll(() => {

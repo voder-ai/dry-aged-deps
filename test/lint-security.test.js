@@ -10,7 +10,7 @@ import { ESLint } from 'eslint';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-describe('ESLint security plugin', () => {
+describe('prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md: ESLint security plugin', () => {
   it('should report detect-object-injection warning', async () => {
     const eslint = new ESLint({
       overrideConfigFile: path.resolve(__dirname, '../eslint.config.js'),

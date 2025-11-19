@@ -17,7 +17,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const cliPath = path.join(__dirname, '..', 'bin', 'dry-aged-deps.js');
 
-describe('dry-aged-deps CLI check mode', () => {
+describe('prompts/013.0-DEV-CHECK-MODE.md: dry-aged-deps CLI check mode', () => {
   it('exit code 0 when no updates available in JSON mode', async () => {
     // Story: REQ-EXIT-0-NO-UPDATES
     const result = await execa('node', [cliPath, '--check', '--format=json'], {

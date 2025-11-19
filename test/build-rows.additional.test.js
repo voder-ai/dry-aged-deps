@@ -11,7 +11,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { buildRows } from '../src/build-rows.js';
 
 // Tests for error logging behavior in different formats
-describe('buildRows error logging', () => {
+describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md: buildRows error logging', () => {
   it('logs warning when fetchVersionTimes throws and format is table', async () => {
     const data = { pkg1: { current: '1.0.0', wanted: '1.1.0', latest: '1.1.0' } };
     const stubFetch = async () => {

@@ -14,7 +14,7 @@ import { promises as fsp } from 'fs';
 import fs from 'fs';
 import { updatePackages } from '../src/update-packages.js';
 
-describe('updatePackages direct tests', () => {
+describe('prompts/011.0-DEV-AUTO-UPDATE.md: updatePackages direct tests', () => {
   let tmpDir;
   let originalCwd;
   let consoleLogSpy;

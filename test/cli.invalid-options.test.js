@@ -15,7 +15,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const cliPath = path.join(__dirname, '..', 'bin', 'dry-aged-deps.js');
 
-describe('Invalid CLI options error handling (Story 014.0)', () => {
+describe('prompts/014.0-DEV-INVALID-OPTION-ERROR.md: Invalid CLI options error handling (Story 014.0)', () => {
   it("should error on unknown option '--foo'", async () => {
     const result = await execa('node', [cliPath, '--foo'], { reject: false });
     expect(result.exitCode).toBe(2);

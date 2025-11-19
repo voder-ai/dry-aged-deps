@@ -18,7 +18,7 @@ const thresholds = { prodMinSeverity: 'moderate', devMinSeverity: 'low' };
 // Story: prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
 // Acceptance Criteria: Filter out versions with vulnerabilities based on severity thresholds
 
-describe('filterBySecurity object-based vulnerability results', () => {
+describe('prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md & prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md & prompts/008.0-DEV-JSON-OUTPUT.md: filterBySecurity object-based vulnerability results', () => {
   it('filters out package when object result has vulnerabilities above threshold and records correct info', async () => {
     const vulnDetails = [
       { id: 'VULN-1', title: 'High vulnerability', severity: 'high', cvssScore: 9, url: 'http://example.com' },

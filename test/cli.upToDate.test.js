@@ -18,7 +18,7 @@ const fixturesSourceDir = path.join(__dirname, 'fixtures-up-to-date');
 let tempDir;
 let fixturesDir;
 
-describe('dry-aged-deps CLI up-to-date output (Story 001.0)', () => {
+describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md: dry-aged-deps CLI up-to-date output (Story 001.0)', () => {
   beforeAll(async () => {
     // Create a unique temporary directory for this test suite
     tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'dry-aged-deps-test-uptodate-'));

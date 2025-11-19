@@ -9,7 +9,7 @@
 
 import { xmlFormatter } from '../src/xml-formatter.js';
 
-describe('xmlFormatter', () => {
+describe('prompts/009.0-DEV-XML-OUTPUT.md: xmlFormatter', () => {
   it('should produce valid XML with header, root, packages, and summary', () => {
     const rows = [
       ['pkg1', '1.0.0', '1.1.0', '1.1.0', 10],

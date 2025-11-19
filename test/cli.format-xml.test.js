@@ -16,7 +16,7 @@ const __dirname = path.dirname(__filename);
 // Use project root as fixtures directory since mock mode bypasses npm operations
 const fixturesDir = process.cwd();
 
-describe('dry-aged-deps CLI XML output format', () => {
+describe('prompts/009.0-DEV-XML-OUTPUT.md: dry-aged-deps CLI XML output format', () => {
   it('outputs valid XML with proper root and package elements', async () => {
     const cliPath = path.join(__dirname, '..', 'bin', 'dry-aged-deps.js');
     const result = await execa('node', [cliPath, '--format=xml'], {

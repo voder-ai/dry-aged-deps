@@ -12,7 +12,7 @@ import { filterBySecurity } from '../src/filter-by-security.js';
 // Story: prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
 // Acceptance Criteria: On error in table format, logs warning and treats package as safe
 
-describe('filterBySecurity error handling in table format', () => {
+describe('prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md: filterBySecurity error handling in table format', () => {
   it('logs warning to console.error when checkVulnerabilities throws in table format', async () => {
     const rows = [['pkgError', '1.0.0', '1.1.0', '1.1.0', 5, 'prod']];
     // stub that throws an error

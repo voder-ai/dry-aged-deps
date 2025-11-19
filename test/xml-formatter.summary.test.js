@@ -7,7 +7,7 @@
 import { describe, it, expect } from 'vitest';
 import { xmlFormatter } from '../src/xml-formatter.js';
 
-describe('xmlFormatter summary section', () => {
+describe('prompts/009.0-DEV-XML-OUTPUT.md: xmlFormatter summary section', () => {
   it('should include <min-age> element when summary.minAge is provided', () => {
     const summary = {
       totalOutdated: 2,

@@ -11,7 +11,7 @@ import { fileURLToPath } from 'url';
 import { readFileSync } from 'fs';
 import { execa } from 'execa';
 
-describe('CLI entrypoint', () => {
+describe('prompts/014.0-DEV-INVALID-OPTION-ERROR.md: CLI entrypoint', () => {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
   const cliPath = path.resolve(__dirname, '../bin/dry-aged-deps.js');

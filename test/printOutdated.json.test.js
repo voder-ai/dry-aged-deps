@@ -11,7 +11,7 @@
 import { printOutdated } from '../src/print-outdated.js';
 import { vi, describe, test, expect, beforeEach, afterEach } from 'vitest';
 
-describe('printOutdated unit tests - json output', () => {
+describe('prompts/008.0-DEV-JSON-OUTPUT.md: printOutdated unit tests - json output', () => {
   let logSpy;
 
   beforeEach(() => {

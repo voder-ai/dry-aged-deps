@@ -17,7 +17,7 @@ const stubCalc = vi.fn(() => 7);
 /**
  * Test fallback error handling when fetchVersionTimes throws and format is table
  */
-describe('filterBySecurity fallback fetchVersionTimes error handling', () => {
+describe('prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md & prompts/008.0-DEV-JSON-OUTPUT.md & prompts/009.0-DEV-XML-OUTPUT.md: filterBySecurity fallback fetchVersionTimes error handling', () => {
   it('logs warning and uses original logic for table format', async () => {
     const rows = [['pkgX', '1.0.0', '1.2.0', '1.2.0', 5, 'prod']];
     // fetchVersionTimes throws error

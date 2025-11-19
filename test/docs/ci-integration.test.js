@@ -8,7 +8,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { describe, it, expect } from 'vitest';
 
-describe('CI/CD Integration documentation', () => {
+describe('prompts/013.0-DEV-CHECK-MODE.md: CI/CD Integration documentation', () => {
   it('README.md contains CI/CD Integration example with --check flag and failure step', async () => {
     const readmePath = path.resolve(__dirname, '../../README.md');
     const content = await fs.readFile(readmePath, 'utf8');

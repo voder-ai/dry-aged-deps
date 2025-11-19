@@ -11,7 +11,7 @@ import fs from 'fs';
 import { promises as fsp } from 'fs';
 import { printOutdated } from '../src/print-outdated.js';
 
-describe('printOutdated auto-update backup error handling', () => {
+describe('prompts/011.0-DEV-AUTO-UPDATE.md: printOutdated auto-update backup error handling', () => {
   let tmpDir;
   let originalCwd;
   let consoleErrorSpy;

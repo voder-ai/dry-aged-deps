@@ -13,7 +13,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const cliPath = path.join(__dirname, '..', 'bin', 'dry-aged-deps.js');
 
-describe('dry-aged-deps CLI mocked outdated output', () => {
+describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md: dry-aged-deps CLI mocked outdated output', () => {
   it('prints mocked outdated package information', async () => {
     const result = await execa('node', [cliPath], {
       env: { ...process.env, DRY_AGED_DEPS_MOCK: '1' },

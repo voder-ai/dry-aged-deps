@@ -7,7 +7,7 @@
 import { describe, it, expect } from 'vitest';
 import { xmlFormatter } from '../src/xml-formatter.js';
 
-describe('xmlFormatter error branch without details', () => {
+describe('prompts/009.0-DEV-XML-OUTPUT.md: xmlFormatter error branch without details', () => {
   it('does not include <details> when error.details is undefined', () => {
     const error = new Error('Another failure');
     error.code = 'E_OTHER';

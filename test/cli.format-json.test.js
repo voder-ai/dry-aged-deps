@@ -19,7 +19,7 @@ const __dirname = path.dirname(__filename);
 const fixturesDir = process.cwd();
 const cliPath = path.join(__dirname, '..', 'bin', 'dry-aged-deps.js');
 
-describe('dry-aged-deps CLI JSON output format', () => {
+describe('prompts/008.0-DEV-JSON-OUTPUT.md: dry-aged-deps CLI JSON output format', () => {
   it('outputs valid JSON with timestamp, packages array, and summary object', async () => {
     const result = await execa('node', [cliPath, '--format=json'], {
       cwd: fixturesDir,

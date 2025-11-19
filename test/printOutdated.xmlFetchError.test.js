@@ -9,7 +9,7 @@ import { vi, describe, expect } from 'vitest';
 
 // Suppress xmlFormatter import to check raw XML output
 
-describe('printOutdated XML fetch error handling', () => {
+describe('prompts/009.0-DEV-XML-OUTPUT.md: printOutdated XML fetch error handling', () => {
   it('suppresses fetchVersionTimes errors and prints <age>N/A</age>', async () => {
     const data = {
       pkgErr: { current: '1.0.0', wanted: '1.1.0', latest: '1.1.0' },

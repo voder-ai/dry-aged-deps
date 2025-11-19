@@ -9,7 +9,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { buildRows } from '../src/build-rows.js';
 
-describe('buildRows no mature versions', () => {
+describe('prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md: buildRows no mature versions', () => {
   it('sets age to "N/A" when fetchVersionTimes returns empty object', async () => {
     const data = {
       pkg1: { current: '1.0.0', wanted: '1.5.0', latest: '1.5.0' },

@@ -18,7 +18,7 @@ import os from 'os';
 import { promises as fsp } from 'fs';
 import { printOutdated } from '../src/print-outdated.js';
 
-describe('printOutdated auto-update prompt abort', () => {
+describe('prompts/011.0-DEV-AUTO-UPDATE.md: printOutdated auto-update prompt abort', () => {
   let tmpDir;
   let originalCwd;
   let consoleLogSpy;

@@ -7,7 +7,7 @@
 import { describe, it, expect } from 'vitest';
 import { xmlFormatter } from '../src/xml-formatter.js';
 
-describe('xmlFormatter thresholds dev minAge only', () => {
+describe('prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md: xmlFormatter thresholds dev minAge only', () => {
   it('renders dev <min-age> only when only dev.minAge is provided', () => {
     const summary = {
       totalOutdated: 0,

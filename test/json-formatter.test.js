@@ -8,7 +8,7 @@
 
 import { jsonFormatter } from '../src/json-formatter.js';
 
-describe('jsonFormatter', () => {
+describe('prompts/008.0-DEV-JSON-OUTPUT.md: jsonFormatter', () => {
   it('should produce valid JSON with timestamp, packages, and summary', () => {
     const rows = [
       ['pkg1', '1.0.0', '1.1.0', '1.1.0', 10],

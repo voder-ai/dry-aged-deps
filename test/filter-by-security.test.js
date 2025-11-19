@@ -9,7 +9,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { filterBySecurity } from '../src/filter-by-security.js';
 
-describe('filterBySecurity (Story 004.0)', () => {
+describe('prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md: filterBySecurity (Story 004.0)', () => {
   beforeEach(() => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
   });

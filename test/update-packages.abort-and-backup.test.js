@@ -13,7 +13,7 @@ import os from 'os';
 import { promises as fsp } from 'fs';
 import fs from 'fs';
 
-describe('updatePackages abort, confirm, and backup-error flows', () => {
+describe('prompts/011.0-DEV-AUTO-UPDATE.md: updatePackages abort, confirm, and backup-error flows', () => {
   let tmpDir;
   let originalCwd;
   let safeRows;

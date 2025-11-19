@@ -6,7 +6,7 @@
 
 import { xmlFormatter } from '../src/xml-formatter.js';
 
-describe('xmlFormatter error output', () => {
+describe('prompts/009.0-DEV-XML-OUTPUT.md: xmlFormatter error output', () => {
   it('should output error block with message, code, details and closing tag', () => {
     const error = new Error('Test failure');
     error.code = 'E_TEST';

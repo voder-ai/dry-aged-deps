@@ -19,7 +19,7 @@ const stubFetchVersionTimes = async (pkg) => ({
 // Stub calculateAgeInDays always returns fixed age
 const stubCalculateAgeInDays = () => 42;
 
-describe('filterBySecurity smart-search fallback', () => {
+describe('prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md & prompts/008.0-DEV-JSON-OUTPUT.md: filterBySecurity smart-search fallback', () => {
   it('falls back to next-newest safe version when latest mature version is vulnerable', async () => {
     const rows = [['pkg1', '1.0.0', '1.3.0', '1.3.0', 30, 'prod']];
     // Simulate vulnerability for 1.3.0, safe for 1.2.0

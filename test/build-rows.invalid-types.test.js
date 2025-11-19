@@ -10,7 +10,7 @@ import { buildRows } from '../src/build-rows.js';
 /**
  * Ensure that if fetchVersionTimes returns a non-object (e.g., string), buildRows treats age as "N/A" and does not log errors or call calculateAgeInDays.
  */
-describe('buildRows non-object versionTimes', () => {
+describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md: buildRows non-object versionTimes', () => {
   it('handles non-object versionTimes gracefully without errors', async () => {
     const data = {
       pkg1: { current: '1.0.0', wanted: '1.1.0', latest: '1.1.0' },

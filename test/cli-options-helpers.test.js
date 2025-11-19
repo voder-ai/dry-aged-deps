@@ -31,7 +31,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe('parseFormatFlag', () => {
+describe('prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md & prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md & prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md & prompts/008.0-DEV-JSON-OUTPUT.md & prompts/009.0-DEV-XML-OUTPUT.md: parseFormatFlag', () => {
   const validFormats = ['table', 'json', 'xml'];
 
   it('returns default format when no flag provided', () => {

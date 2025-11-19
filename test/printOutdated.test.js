@@ -15,7 +15,7 @@ import * as fetchModule from '../src/fetch-version-times.js';
 import * as ageModule from '../src/age-calculator.js';
 import * as vulnModule from '../src/check-vulnerabilities.js';
 
-describe('printOutdated', () => {
+describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/003.0-DEV-IDENTIFY-OUTDATED.md & prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md: printOutdated', () => {
   let logSpy, errorSpy;
 
   beforeEach(() => {
