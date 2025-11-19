@@ -5,6 +5,7 @@
  * @req REQ-AGE-THRESHOLD - Ensure mature versions (age > threshold) appear in output
  * @req REQ-EXIT-1 - Exit code 1 when safe updates available
  */
+/* eslint-disable security/detect-object-injection */
 import { execa } from 'execa';
 import fs from 'fs/promises';
 import path from 'path';
@@ -30,38 +31,32 @@ const result = await execa('node', [cliPath], {
 
 // Parse output into lines
 const lines = result.stdout.split(/\r?\n/);
-const headerIndex = lines.findIndex(
-  (line) => line.includes('Name') && line.includes('Age (days)')
-);
+const headerIndex = lines.findIndex((line) => line.includes('Name') && line.includes('Age (days)'));
 const dataLines = lines.slice(headerIndex + 1).filter((line) => line.trim().length > 0);
 
 // Prefix for describe titles based on stories
-const storyPrefix =
-  'prompts/003.0-DEV-IDENTIFY-OUTDATED.md & prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md';
+const storyPrefix = 'prompts/003.0-DEV-IDENTIFY-OUTDATED.md & prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md';
 
-describe(
-  `prompts/003.0-DEV-IDENTIFY-OUTDATED.md & prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md: ${storyPrefix}: dry-aged-deps CLI E2E with real fixture (mocked)`,
-  () => {
-    test('exit code is 1', () => {
-      expect(result.exitCode).toBe(1);
-    });
+describe(`${storyPrefix}: dry-aged-deps CLI E2E with real fixture (mocked)`, () => {
+  test('exit code is 1', () => {
+    expect(result.exitCode).toBe(1);
+  });
 
-    test('outputs header row with Age (days)', () => {
-      expect(lines[headerIndex]).toContain('Age (days)');
-    });
+  test('outputs header row with Age (days)', () => {
+    expect(lines[headerIndex]).toContain('Age (days)');
+  });
 
-    test('has at least one data row', () => {
-      expect(dataLines.length).toBeGreaterThan(0);
-    });
+  test('has at least one data row', () => {
+    expect(dataLines.length).toBeGreaterThan(0);
+  });
 
-    // Parameterized test for each data row's age
-    const ages = dataLines.map((line) => {
-      const cols = line.split('	');
-      return parseInt(cols[4], 10);
-    });
-    test.each(ages)('age %i is a positive integer', (age) => {
-      expect(Number.isInteger(age)).toBe(true);
-      expect(age).toBeGreaterThan(0);
-    });
-  }
-);
+  // Parameterized test for each data row's age
+  const ages = dataLines.map((line) => {
+    const cols = line.split('	');
+    return parseInt(cols[4], 10);
+  });
+  test.each(ages)('age %i is a positive integer', (age) => {
+    expect(Number.isInteger(age)).toBe(true);
+    expect(age).toBeGreaterThan(0);
+  });
+});
