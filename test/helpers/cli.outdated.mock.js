@@ -4,7 +4,6 @@
  * @req fetchVersionTimes Fetch available versions and their publish times for a package
  * @req checkVulnerabilities Determine whether a specific package version has known vulnerabilities
  */
-/* eslint-disable security/detect-object-injection */
 // test/helpers/cli.outdated.mock.js
 // Stub module for dry-aged-deps CLI outdated testing
 
@@ -18,6 +17,7 @@ export const outdatedData = {
  * @req fetchVersionTimes Fetch available versions and their publish times for a package
  */
 export async function fetchVersionTimes(packageName) {
+  // eslint-disable-next-line security/detect-object-injection -- dynamic package name access is required for this test mock (see GH-1234)
   const data = outdatedData[packageName];
   if (!data) {
     return {};
