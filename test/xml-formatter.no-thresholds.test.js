@@ -1,7 +1,7 @@
 /**
- */
-
-/**
+ * Tests for XML Output Format - no thresholds case
+ * @story prompts/009.0-DEV-XML-OUTPUT.md
+ * @req REQ-THRESHOLDS-CONDITION - Include thresholds only when provided
  */
 
 import { describe, it, expect } from 'vitest';

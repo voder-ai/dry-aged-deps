@@ -1,7 +1,7 @@
 /**
- */
-
-/**
+ * Tests for XML Output Format - partial thresholds values
+ * @story prompts/009.0-DEV-XML-OUTPUT.md
+ * @req REQ-XML-THRESHOLDS-PARTIAL - Support partial thresholds in XML output
  */
 
 import { describe, it, expect } from 'vitest';
@@ -17,10 +17,9 @@ describe('xmlFormatter thresholds partial values', () => {
   const timestamp = '2025-01-01T00:00:00.000Z';
 
   it('renders only min-age when prod.minSeverity is undefined', () => {
-    const thresholds = { prod: { minAge: 5 } }; // no minSeverity
+    const thresholds = { prod: { minAge: 5 } };
     const xml = xmlFormatter({ rows: [], summary, thresholds, timestamp });
 
-    // thresholds section is present
     expect(xml).toContain('<thresholds>');
     expect(xml).toContain('<prod>');
     expect(xml).toContain('<min-age>5</min-age>');
@@ -29,7 +28,7 @@ describe('xmlFormatter thresholds partial values', () => {
   });
 
   it('renders only min-severity when dev.minAge is undefined', () => {
-    const thresholds = { dev: { minSeverity: 'critical' } }; // no minAge
+    const thresholds = { dev: { minSeverity: 'critical' } };
     const xml = xmlFormatter({ rows: [], summary, thresholds, timestamp });
 
     expect(xml).toContain('<thresholds>');

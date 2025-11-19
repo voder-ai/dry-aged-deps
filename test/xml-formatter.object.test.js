@@ -1,9 +1,10 @@
 /**
+ * Tests for XML Output Format - object-style package entries
+ * @story prompts/009.0-DEV-XML-OUTPUT.md
+ * @req REQ-XML-ESCAPE - Proper XML escaping for special characters
  */
 
-/**
- */
-
+import { describe, it, expect } from 'vitest';
 import { xmlFormatter } from '../src/xml-formatter.js';
 
 describe('xmlFormatter object-style package entries', () => {

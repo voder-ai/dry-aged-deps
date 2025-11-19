@@ -1,9 +1,10 @@
 /**
+ * Tests for XML Output Format - thresholds output
+ * @story prompts/009.0-DEV-XML-OUTPUT.md
+ * @req REQ-XML-THRESHOLDS - Include threshold info in XML output
  */
 
-/**
- */
-
+import { describe, it, expect } from 'vitest';
 import { xmlFormatter } from '../src/xml-formatter.js';
 
 describe('xmlFormatter thresholds output', () => {

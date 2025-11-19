@@ -2,7 +2,7 @@
  * Functional assessment - CLI end-to-end tests covering all core stories.
  * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
  * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
- * @story prompts/003.0-DEV-FILTER-MATURE-VERSIONS.md
+ * @story prompts/003.0-DEV-IDENTIFY-OUTDATED.md
  * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
  * @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
  * @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
@@ -22,10 +22,23 @@ import path from 'path';
 import os from 'os';
 import { fileURLToPath } from 'url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const cliPath = path.resolve(__dirname, '../bin/dry-aged-deps.js');
-
+/**
+ * Helper to run CLI with given args and options.
+ * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+ * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
+ * @story prompts/003.0-DEV-IDENTIFY-OUTDATED.md
+ * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
+ * @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
+ * @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
+ * @story prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md
+ * @story prompts/008.0-DEV-JSON-OUTPUT.md
+ * @story prompts/009.0-DEV-XML-OUTPUT.md
+ * @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
+ * @story prompts/011.0-DEV-AUTO-UPDATE.md
+ * @story prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md
+ * @story prompts/013.0-DEV-CHECK-MODE.md
+ * @req REQ-CLI-END-TO-END - Validate end-to-end CLI behavior across stories
+ */
 async function runCli(args, options = {}) {
   const env = { ...process.env, ...(options.env || {}) };
   return execa('node', [cliPath, ...args], {
@@ -34,6 +47,10 @@ async function runCli(args, options = {}) {
     reject: false,
   });
 }
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const cliPath = path.resolve(__dirname, '../bin/dry-aged-deps.js');
 
 describe('Functional assessment - CLI end-to-end', () => {
   // Story: prompts/001.0-DEV-RUN-NPM-OUTDATED.md

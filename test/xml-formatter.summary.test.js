@@ -1,7 +1,7 @@
 /**
- */
-
-/**
+ * Tests for XML Output Format - summary section
+ * @story prompts/009.0-DEV-XML-OUTPUT.md
+ * @req REQ-XML-SUMMARY - Include summary metadata in XML output
  */
 
 import { describe, it, expect } from 'vitest';

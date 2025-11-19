@@ -4,7 +4,7 @@
  * @req REQ-SEVERITY-LEVELS - Support severity levels including none, low, moderate, high, critical
  * @req REQ-FILTERING-LOGIC - Block packages when max severity >= threshold
  */
- 
+
 import { describe, it, expect } from 'vitest';
 import { filterBySecurity } from '../src/filter-by-security.js';
 

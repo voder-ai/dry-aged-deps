@@ -12,8 +12,11 @@ import { execa } from 'execa';
 
 const cliPath = path.join(__dirname, '..', 'bin', 'dry-aged-deps.js');
 let tempDir;
-
-/* eslint-disable traceability/require-story-annotation, traceability/require-req-annotation */
+/**
+ * Helper to write CLI config files for tests
+ * @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
+ * @req REQ-CONFIG-LOAD - Helper for writing config file in tests
+ */
 async function writeConfig(dir, name, content) {
   const filePath = path.join(dir, name);
   await fs.writeFile(filePath, content, 'utf8');
