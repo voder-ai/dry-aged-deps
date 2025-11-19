@@ -70,6 +70,7 @@ describe('prompts/003.0-DEV-IDENTIFY-OUTDATED.md, prompts/012.0-DEV-EXIT-CODE-RE
   it('every data row has a positive integer age', () => {
     const ages = dataLines.map((line) => {
       const cols = line.split('	');
+      // eslint-disable-next-line security/detect-object-injection
       return parseInt(cols[4], 10);
     });
     expect(ages.every((age) => Number.isInteger(age) && age > 0)).toBe(true);
