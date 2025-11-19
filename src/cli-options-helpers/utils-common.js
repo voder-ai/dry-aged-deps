@@ -6,6 +6,8 @@ import { parseIntegerFlag } from './parse-integer-flag.js';
 
 /**
  * Factory for string flag parsers.
+ * @story CLI-FLAGS-1
+ * @req REQ-CLI-PARSE-STR
  * @param {string} flag - Flag name without leading hyphens.
  * @returns {(args: string[], defaultValue: string, validValues?: string[]) => string}
  */
@@ -15,6 +17,8 @@ export function createStringFlagParser(flag) {
 
 /**
  * Factory for integer flag parsers.
+ * @story CLI-FLAGS-2
+ * @req REQ-CLI-PARSE-INT
  * @param {string} flag - Flag name without leading hyphens.
  * @param {number} [min=1] - Minimum allowed value.
  * @param {number} [max=Infinity] - Maximum allowed value.
