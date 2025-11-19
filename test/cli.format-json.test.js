@@ -6,6 +6,7 @@
  * @req REQ-COMPLETE-DATA - Include all relevant package information in output
  * @req REQ-SUMMARY-STATS - Include filtering statistics (filteredByAge, filteredBySecurity)
  * @req REQ-SILENT-MODE - Suppress log warnings for JSON format
+ * @req REQ-EXIT-1 - Exit code 1 when safe updates available
  */
 
 import { execa } from 'execa';
