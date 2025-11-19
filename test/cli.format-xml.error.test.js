@@ -1,7 +1,8 @@
 /**
- */
-
-/**
+ * Integration tests for dry-aged-deps CLI XML error output.
+ * @story prompts/009.0-DEV-XML-OUTPUT.md
+ * @req REQ-ERROR-FORMAT - Format errors as XML when in XML mode
+ * @req REQ-EXIT-2 - Exit code 2 on errors
  */
 
 import { execa } from 'execa';
