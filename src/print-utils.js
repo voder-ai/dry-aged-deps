@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Utility functions for print-outdated and output handlers.
  * @module print-utils

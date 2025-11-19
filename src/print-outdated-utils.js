@@ -1,3 +1,4 @@
+// @ts-check
 import { jsonFormatter } from './json-formatter.js';
 import { xmlFormatter } from './xml-formatter.js';
 import { prepareJsonItems } from './output-utils.js';
@@ -60,21 +61,21 @@ export function handleTableOutput({ safeRows, matureRows, summary, prodMinAge, d
     console.log(
       `No outdated packages with mature versions found (prod >= ${prodMinAge} days, dev >= ${devMinAge} days).`
     );
-    if (returnSummary) return summary;
-    return;
+    if (returnSummary) return summary; // returns {FilterSummary} when returnSummary is true
+    return undefined; // returns undefined when returnSummary is false
   }
 
   if (safeRows.length === 0) {
     console.log(
       `No outdated packages with safe, mature versions (>= ${prodMinAge}/${devMinAge} days old, no vulnerabilities) found.`
     );
-    if (returnSummary) return summary;
-    return;
+    if (returnSummary) return summary; // returns {FilterSummary} when returnSummary is true
+    return undefined; // returns undefined when returnSummary is false
   }
 
   for (const row of safeRows) {
     console.log(row.join('	'));
   }
-  if (returnSummary) return summary;
-  return;
+  if (returnSummary) return summary; // returns {FilterSummary} when returnSummary is true
+  return undefined; // returns undefined when returnSummary is false
 }

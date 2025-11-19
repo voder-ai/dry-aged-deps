@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Prepare JSON items for JSON output.
  * @story prompts/008.0-DEV-JSON-OUTPUT.md

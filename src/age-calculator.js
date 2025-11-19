@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Calculate the age in days since the publish date.
  * @param {string} publishDate - The publish date string (ISO format).

@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+// @ts-check
 
 import { fetchVersionTimes as defaultFetchVersionTimes } from './fetch-version-times.js';
 import { calculateAgeInDays as defaultCalculateAgeInDays } from './age-calculator.js';

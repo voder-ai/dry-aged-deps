@@ -1,3 +1,4 @@
+// @ts-check
 import { generateStringFlagParsers, generateIntegerFlagParsers } from './cli-parser-utils.js';
 
 const stringParsers = generateStringFlagParsers(['format', 'severity', 'prod-severity', 'dev-severity']);

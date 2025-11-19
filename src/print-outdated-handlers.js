@@ -1,3 +1,4 @@
+// @ts-check
 import {
   handleJsonOutput as delegateJsonOutput,
   handleXmlOutput as delegateXmlOutput,

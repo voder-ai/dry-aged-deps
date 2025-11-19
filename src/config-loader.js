@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Configuration loader for CLI options, supports JSON config file.
  * @module config-loader

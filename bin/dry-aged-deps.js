@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// @ts-check
 
 import fs from 'fs';
 import path from 'path';
@@ -67,7 +68,7 @@ function printVersion() {
 
 /**
  * Handle errors by formatting output according to the selected format.
- * @param {Error & {code?: string, details?: string}} error - The error to handle.
+ * @param {any} error - The error to handle.
  * @param {string} format - The output format.
  * @story prompts/008.0-DEV-JSON-OUTPUT.md
  * @story prompts/009.0-DEV-XML-OUTPUT.md
@@ -154,6 +155,7 @@ async function loadOutdatedData(format) {
 
 /**
  * Main CLI entrypoint.
+ * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
  * @returns {Promise<void>}
  */
 async function main() {

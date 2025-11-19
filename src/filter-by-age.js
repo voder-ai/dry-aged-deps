@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Filter rows by age threshold.
  * @story prompts/003.0-DEV-FILTER-MATURE-VERSIONS.md

@@ -34,3 +34,9 @@ export interface CliOptions {
   /** If true, return summary object instead of printing results */
   returnSummary: boolean;
 }
+
+/**
+ * Parse CLI arguments into a CliOptions object.
+ * @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
+ */
+export declare function parseOptions(argv: string[]): CliOptions;

@@ -1,9 +1,10 @@
+// @ts-check
 import { execFile as cpExecFile } from 'child_process';
 
 /**
  * Fetch version publish times for an npm package.
  * @param {string} packageName - The name of the npm package.
- * @param {(cmd: string, args: string[], options: {encoding: string}, callback: (error: Error|null, stdout: string) => void) => void} [execFileImpl] - Optional execFile implementation.
+ * @param {any} [execFileImpl] - Optional execFile implementation (matches Node's execFile signature).
  * @returns {Promise<Record<string, string>>} A promise resolving to a mapping of version to publish date string.
  * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
  * @req REQ-NPM-VIEW - Use `npm view <package> time --json` to get publish dates

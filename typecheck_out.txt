@@ -1,0 +1,45 @@
+
+> dry-aged-deps@0.1.2 type-check
+> node node_modules/typescript/bin/tsc --noEmit -p tsconfig.json
+
+src/fetch-version-times.js(12,54): error TS2322: Type 'typeof execFile' is not assignable to type '(cmd: string, args: string[], options: { encoding: string; }, callback: (error: Error | null, stdout: string) => void) => void'.
+  Types of parameters 'callback' and 'args' are incompatible.
+    Type 'string[]' is not assignable to type '(error: ExecFileException | null, stdout: string, stderr: string) => void'.
+      Type 'string[]' provides no match for the signature '(error: ExecFileException | null, stdout: string, stderr: string): void'.
+src/json-formatter.js(28,9): error TS2339: Property 'name' does not exist on type 'Object'.
+src/json-formatter.js(29,9): error TS2339: Property 'dependencyType' does not exist on type 'Object'.
+src/json-formatter.js(30,9): error TS2339: Property 'current' does not exist on type 'Object'.
+src/json-formatter.js(31,9): error TS2339: Property 'wanted' does not exist on type 'Object'.
+src/json-formatter.js(32,9): error TS2339: Property 'latest' does not exist on type 'Object'.
+src/json-formatter.js(33,9): error TS2339: Property 'recommended' does not exist on type 'Object'.
+src/json-formatter.js(34,9): error TS2339: Property 'age' does not exist on type 'Object'.
+src/json-formatter.js(35,9): error TS2339: Property 'vulnerabilities' does not exist on type 'Object'.
+src/json-formatter.js(36,9): error TS2339: Property 'filtered' does not exist on type 'Object'.
+src/json-formatter.js(37,9): error TS2339: Property 'filterReason' does not exist on type 'Object'.
+src/json-formatter.js(66,20): error TS2339: Property 'thresholds' does not exist on type '{ totalOutdated: number; safeUpdates: number; filteredByAge: number; filteredBySecurity: number; }'.
+src/print-outdated-handlers.js(16,29): error TS2345: Argument of type '{ rows: [string, string, string, string, string | number, string][]; summary: Object; thresholds: Object; vulnMap: Map<string, object>; filterReasonMap: Map<string, string>; }' is not assignable to parameter of type '{ rows: [string, string, string, string, string | number, string][]; summary: FilterSummary; thresholds: Thresholds; vulnMap: Map<string, object>; filterReasonMap: Map<...>; }'.
+  Types of property 'summary' are incompatible.
+    The 'Object' type is assignable to very few other types. Did you mean to use the 'any' type instead?
+      Type 'Object' is missing the following properties from type 'FilterSummary': totalOutdated, safeUpdates, filteredByAge, filteredBySecurity
+src/print-outdated-handlers.js(27,28): error TS2345: Argument of type '{ rows: any[]; summary: Object; thresholds: Object; vulnMap: Map<string, object>; filterReasonMap: Map<string, string>; }' is not assignable to parameter of type '{ rows: [string, string, string, string, string | number, string][]; summary: FilterSummary; thresholds: Thresholds; vulnMap: Map<string, object>; filterReasonMap: Map<...>; }'.
+  Types of property 'summary' are incompatible.
+    The 'Object' type is assignable to very few other types. Did you mean to use the 'any' type instead?
+      Type 'Object' is missing the following properties from type 'FilterSummary': totalOutdated, safeUpdates, filteredByAge, filteredBySecurity
+src/print-outdated-handlers.js(34,30): error TS2314: Generic type 'Array<T>' requires 1 type argument(s).
+src/print-outdated-handlers.js(34,56): error TS2314: Generic type 'Array<T>' requires 1 type argument(s).
+src/print-outdated-handlers.js(38,30): error TS2345: Argument of type '{ safeRows: any[][]; matureRows: any[][]; summary: Object; prodMinAge: number; devMinAge: number; returnSummary: boolean; }' is not assignable to parameter of type '{ safeRows: any[][]; matureRows: any[][]; summary: FilterSummary; prodMinAge: number; devMinAge: number; returnSummary: boolean; }'.
+  Types of property 'summary' are incompatible.
+    The 'Object' type is assignable to very few other types. Did you mean to use the 'any' type instead?
+      Type 'Object' is missing the following properties from type 'FilterSummary': totalOutdated, safeUpdates, filteredByAge, filteredBySecurity
+src/print-outdated-utils.js(30,52): error TS2345: Argument of type 'Map<string, object>' is not assignable to parameter of type 'Map<string, { count: number; maxSeverity: string; details: any[]; }>'.
+  Type '{}' is missing the following properties from type '{ count: number; maxSeverity: string; details: any[]; }': count, maxSeverity, details
+src/print-outdated-utils.js(44,52): error TS2345: Argument of type 'Map<string, object>' is not assignable to parameter of type 'Map<string, { count: number; maxSeverity: string; details: any[]; }>'.
+  Type '{}' is missing the following properties from type '{ count: number; maxSeverity: string; details: any[]; }': count, maxSeverity, details
+src/print-outdated-utils.js(53,30): error TS2314: Generic type 'Array<T>' requires 1 type argument(s).
+src/print-outdated-utils.js(53,56): error TS2314: Generic type 'Array<T>' requires 1 type argument(s).
+src/security-smart-search.js(24,7): error TS2345: Argument of type 'Function' is not assignable to parameter of type '(arg0: string, arg1: string) => Promise<number | object>'.
+  Type 'Function' provides no match for the signature '(arg0: string, arg1: string): Promise<number | object>'.
+src/xml-formatter.js(27,90): error TS2322: Type 'null' is not assignable to type 'Error'.
+src/xml-formatter.js(40,33): error TS2339: Property 'prod' does not exist on type 'Object'.
+src/xml-formatter.js(40,52): error TS2339: Property 'dev' does not exist on type 'Object'.
+tsconfig.json(23,5): error TS5023: Unknown compiler option 'allowShebang'.

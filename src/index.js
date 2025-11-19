@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * @file Main entry point for dry-aged-deps programmatic API.
  * @module dry-aged-deps

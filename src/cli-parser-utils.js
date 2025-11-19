@@ -1,3 +1,4 @@
+// @ts-check
 import { createStringFlagParser, createIntegerFlagParser } from './cli-options-helpers/utils-common.js';
 
 /**

@@ -1,3 +1,4 @@
+// @ts-check
 import { evaluateVersionVulnerabilities } from './vulnerability-evaluator.js';
 /**
  * Find the safest/most recent version using smart-search fallback logic.
@@ -6,7 +7,7 @@ import { evaluateVersionVulnerabilities } from './vulnerability-evaluator.js';
  * @param {string} name - Package name.
  * @param {{ [version: string]: string }} versionTimes - Mapping of version to publish time.
  * @param {object} options - Search options.
- * @param {function} options.checkVulnerabilities - Async vulnerability checker function.
+ * @param {any} options.checkVulnerabilities - Async vulnerability checker function.
  * @param {string} options.minSeverity - Minimum allowed severity.
  * @param {function} options.calculateAgeInDays - Function to calculate age from date.
  * @param {{ [key: string]: number }} options.severityWeights - Mapping of severity labels to weight.
@@ -20,7 +21,7 @@ export async function findSafeVersionSmartSearch(name, versionTimes, options) {
     const { safe, totalCount, maxSeverity, detailsList } = await evaluateVersionVulnerabilities(
       name,
       ver,
-      checkVulnerabilities,
+      /** @type {any} */ (checkVulnerabilities),
       minSeverity,
       severityWeights
     );

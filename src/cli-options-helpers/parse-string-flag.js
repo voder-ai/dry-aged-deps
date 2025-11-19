@@ -1,3 +1,4 @@
+// @ts-check
 import { getFlagRawValue } from './get-flag-raw-value.js';
 /**
  * Generic helper to parse string flags with optional validation.
