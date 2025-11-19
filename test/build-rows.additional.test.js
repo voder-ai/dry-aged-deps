@@ -1,7 +1,10 @@
 /**
  * Tests for buildRows error logging and missing latestTime handling.
  * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+ * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
  * @req REQ-OUTPUT-DISPLAY - Display outdated package results including warnings and missing data handling
+ * @req REQ-NPM-VIEW - Use npm view to fetch publish dates for newer versions
+ * @req REQ-AGE-CALC - Calculate days since publication
  */
 
 import { describe, it, expect, vi } from 'vitest';
