@@ -54,6 +54,9 @@ jobs:
       - name: Lint code
         run: npm run lint
 
+      - name: Validate traceability
+        run: npm run validate-traceability
+
       - name: Check types
         run: npm run type-check
 
@@ -62,15 +65,6 @@ jobs:
 
       - name: Run tests
         run: npm test
-
-      - name: Validate test traceability
-        if: false
-        run: |
-          set -e
-          for f in $(find test -type f -name "*.test.js" ! -path "test/fixtures/*" ! -path "test/helpers/*"); do
-            grep -q "@story .*\.md" "$f" || { echo "Missing @story in $f"; exit 1; }
-            grep -q "@req " "$f" || { echo "Missing @req in $f"; exit 1; }
-          done
 
       - name: Detect duplicate code
         run: npx jscpd --threshold 20 src
