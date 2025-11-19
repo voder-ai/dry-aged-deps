@@ -34,7 +34,6 @@ import {
  * @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
  * @req REQ-PARSE-OPTIONS - Parse and validate CLI flags and config file options
  * @param {string[]} argv - CLI arguments (excluding node and script path).
- * @returns {{ format: string, prodMinAge: number, devMinAge: number, prodMinSeverity: string, devMinSeverity: string, updateMode: boolean, skipConfirmation: boolean, returnSummary: boolean }} Parsed CLI options.
  */
 
 /**
@@ -42,7 +41,7 @@ import {
  * Exits the process with code 2 on invalid input or configuration.
  *
  * @param {string[]} argv - CLI arguments (excluding node and script path).
- * @returns {CliOptions} Parsed CLI options.
+ * @returns {import('./cli-options').CliOptions} Parsed CLI options.
  */
 export function parseOptions(argv) {
   const args = argv;
@@ -100,30 +99,24 @@ export function parseOptions(argv) {
   // Config file support
   const configFileArg = args.find((a) => a.startsWith('--config-file='));
   const configFileName = configFileArg ? configFileArg.split('=')[1] : '.dry-aged-deps.json';
+  /** @type {any} */
   const config = loadConfigFile(configFileName, configFileArg, validSeverities, validFormats);
 
-  // @ts-expect-error -- config properties may not be recognized by TS
   const defaultFormat = config.format ?? 'table';
   const format = parseFormatFlag(args, defaultFormat, validFormats);
 
-  // @ts-expect-error -- config properties may not be recognized by TS
   const defaultMinAge = config.minAge ?? 7;
   const minAge = parseMinAgeFlag(args, defaultMinAge);
 
-  // @ts-expect-error -- config properties may not be recognized by TS
   const defaultProdMinAge = config.prod?.minAge ?? minAge;
-  // @ts-expect-error -- config properties may not be recognized by TS
   const defaultDevMinAge = config.dev?.minAge ?? minAge;
   const prodMinAge = parseProdMinAgeFlag(args, defaultProdMinAge);
   const devMinAge = parseDevMinAgeFlag(args, defaultDevMinAge);
 
-  // @ts-expect-error -- config properties may not be recognized by TS
   const defaultSeverity = config.severity ?? 'none';
   const severity = parseSeverityFlag(args, defaultSeverity, validSeverities);
 
-  // @ts-expect-error -- config properties may not be recognized by TS
   const defaultProdMinSeverity = config.prod?.minSeverity ?? severity;
-  // @ts-expect-error -- config properties may not be recognized by TS
   const defaultDevMinSeverity = config.dev?.minSeverity ?? severity;
   const prodMinSeverity = parseProdSeverityFlag(args, defaultProdMinSeverity, validSeverities);
   const devMinSeverity = parseDevSeverityFlag(args, defaultDevMinSeverity, validSeverities);
