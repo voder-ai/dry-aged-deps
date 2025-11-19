@@ -15,7 +15,7 @@ try {
   console.error(`Error reading ${filePath}:`, e);
   process.exit(1);
 }
-const ids = data.exclusions.map(e => e.id).join(',');
+const ids = data.exclusions.map((e) => e.id).join(',');
 // Run better-npm-audit with the specified exclusions
 const cmd = `npx better-npm-audit audit --level high --exclude ${ids}`;
 console.log(`Running: ${cmd}`);

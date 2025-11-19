@@ -3,15 +3,16 @@ title: 'semantic-release vulnerability via npm'
 date: '2025-11-19'
 severity: high
 description: |
-  A security vulnerability affects the semantic-release package in versions >=24.2.6.
-  The issue stems from its dependency on @semantic-release/npm, which contains a high-severity code execution flaw.
+A security vulnerability affects the semantic-release package in versions >=24.2.6.
+The issue stems from its dependency on @semantic-release/npm, which contains a high-severity code execution flaw.
 affected_packages:
-  - name: 'semantic-release'
-    vulnerable_versions: '>=24.2.6'
-    patched_versions: '24.2.5'
-remediation: |
+
+- name: 'semantic-release'
+  vulnerable_versions: '>=24.2.6'
+  patched_versions: '24.2.5'
+  remediation: |
   No non-breaking patch release is available. Remediation requires downgrading to version 24.2.5,
   which is a major version change. Alternatively, await a future patched release of semantic-release.
-references:
-  - description: 'Underlying advisory for @semantic-release/npm vulnerability'
-    url: 'docs/security-incidents/005-security-incident-semantic-release-npm.yml'
+  references:
+- description: 'Underlying advisory for @semantic-release/npm vulnerability'
+  url: 'docs/security-incidents/SECURITY-INCIDENT-2024-06-07-semantic-release-npm.disputed.md'
