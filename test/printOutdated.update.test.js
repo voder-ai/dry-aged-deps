@@ -1,7 +1,11 @@
 /**
- */
-
-/**
+ * Tests for auto-update mode
+ * @story prompts/011.0-DEV-AUTO-UPDATE.md
+ * @req REQ-UPDATE-FLAG - Accept --update flag to enable update mode
+ * @req REQ-YES-FLAG - Support --yes flag to skip confirmation
+ * @req REQ-BACKUP - Create backup of package.json before updating
+ * @req REQ-SAFE-ONLY - Only update packages that meet safety criteria
+ * @req REQ-SUMMARY - Display summary report after updating
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
