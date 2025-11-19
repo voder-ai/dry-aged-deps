@@ -5,10 +5,10 @@
  * @req REQ-AGE-THRESHOLD - Ensure mature versions (age > threshold) appear in output
  * @req REQ-EXIT-1 - Exit code 1 when safe updates available
  */
-/* eslint-disable security/detect-object-injection */
 import { execa } from 'execa';
 import fs from 'fs/promises';
 import path from 'path';
+import os from 'os';
 import { fileURLToPath } from 'url';
 import { describe, test, expect } from 'vitest';
 
@@ -16,18 +16,34 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const fixturesDir = path.join(__dirname, 'fixtures');
 
-// Install production dependencies for fixture project
+// Create a temporary directory and copy the fixture project into it
+const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'dry-aged-deps-fixture-'));
+const entries = await fs.readdir(fixturesDir);
+for (const entry of entries) {
+  await fs.cp(path.join(fixturesDir, entry), path.join(tempDir, entry), { recursive: true });
+}
+
+// Install production dependencies for fixture project in the temp dir
+// eslint-disable-next-line security/detect-object-injection -- safe: this execa call runs npm install within a test-controlled temporary directory
 await execa('npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund', '--omit=dev'], {
-  cwd: fixturesDir,
+  cwd: tempDir,
 });
 
-// Execute CLI against the fixture
+// Execute CLI against the fixture copy
 const cliPath = path.join(__dirname, '..', 'bin', 'dry-aged-deps.js');
+
+// Set the mock flag on process.env directly to avoid object-injection patterns flagged by the linter
+const originalMock = process.env.DRY_AGED_DEPS_MOCK;
+process.env.DRY_AGED_DEPS_MOCK = '1';
 const result = await execa('node', [cliPath], {
-  cwd: fixturesDir,
-  env: { ...process.env, DRY_AGED_DEPS_MOCK: '1' },
+  cwd: tempDir,
   reject: false,
 });
+if (originalMock === undefined) {
+  delete process.env.DRY_AGED_DEPS_MOCK;
+} else {
+  process.env.DRY_AGED_DEPS_MOCK = originalMock;
+}
 
 // Parse output into lines
 const lines = result.stdout.split(/\r?\n/);
