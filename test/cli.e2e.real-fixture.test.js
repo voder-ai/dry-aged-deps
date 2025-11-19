@@ -24,7 +24,6 @@ for (const entry of entries) {
 }
 
 // Install production dependencies for fixture project in the temp dir
-// eslint-disable-next-line security/detect-object-injection -- safe: this execa call runs npm install within a test-controlled temporary directory
 await execa('npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund', '--omit=dev'], {
   cwd: tempDir,
 });
@@ -59,7 +58,7 @@ describe(`${storyPrefix}: dry-aged-deps CLI E2E with real fixture (mocked)`, () 
   });
 
   test('outputs header row with Age (days)', () => {
-    expect(lines[headerIndex]).toContain('Age (days)');
+    expect(lines.at(headerIndex) ?? '').toContain('Age (days)');
   });
 
   test('has at least one data row', () => {
