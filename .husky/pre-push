@@ -15,8 +15,8 @@ npm run format:check
 npm run validate-traceability
 
 # Prepare CLI fixtures
-npm ci --prefix test/fixtures --ignore-scripts --no-audit --no-fund
-npm ci --prefix test/fixtures-up-to-date --ignore-scripts --no-audit --no-fund
+npm install --ignore-scripts --no-audit --no-fund --prefix test/fixtures
+npm install --ignore-scripts --no-audit --no-fund --prefix test/fixtures-up-to-date
 
 # Run tests with coverage
 npm test
