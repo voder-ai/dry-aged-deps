@@ -1,11 +1,14 @@
 ## NOW
-Add missing `@story` and `@req` JSDoc headers to any test files under `test/` that currently lack them, referencing their appropriate `prompts/` specification files so that traceability validation will pass.
+Add the tar advisory ID (1109463) and any other missing disputed advisory IDs from your security-incident docs into `audit-resolve.json` so that all documented advisories are excluded.
 
 ## NEXT
-- Remove any `// eslint-disable` comments in those test files that bypass traceability checks.  
-- Run `npm run validate-traceability` and verify that no missing‐annotation errors remain.
+- Integrate `npx dry-aged-deps` as a CI step (immediately before running the audit) and add it to your Husky pre-push hook.
+- Update the Husky pre-push hook to run `npm run validate-traceability` and execute the fixture setup commands (`npm install --ignore-scripts --no-audit --no-fund` in `test/fixtures*`) before running tests.
+- Refactor your CLI E2E tests to eliminate loops and conditional logic in favor of Vitest’s parameterized tests.
+- Update all `describe(…)` titles in test files to include their `@story` identifiers for clearer traceability.
 
 ## LATER
-- Modify the Husky pre-push hook (`.husky/pre-push`) to insert `npm run validate-traceability` immediately after the lint step.  
-- Add a CI gate to block PRs if any test file is missing `@story`/`@req` annotations.  
-- Once testing score ≥90%, tighten Vitest and ESLint traceability thresholds for stricter enforcement.
+- Once Security and Version Control scores ≥ 90%, tighten Vitest and ESLint traceability thresholds for stricter enforcement.
+- Migrate to a unified audit-filter tool (e.g. audit-ci) with a central config for disputed advisories.
+- Add caching for `npm view` calls in `build-rows.js` and introduce lightweight performance benchmarks.
+- After Testing, Security, and Version Control are all ≥ 90%, resume the full functionality assessment.

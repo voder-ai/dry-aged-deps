@@ -9,6 +9,11 @@
       "id": 1109843,
       "expires": "2025-12-19",
       "reason": "False positive due to tar race condition false positive; see docs/security-incidents/SECURITY-INCIDENT-2025-11-19-glob-tar-vulnerabilities.disputed.md"
+    },
+    {
+      "id": 1109463,
+      "expires": "2025-12-19",
+      "reason": "False positive due to tar race condition false positive; see docs/security-incidents/SECURITY-INCIDENT-2025-11-19-glob-tar-vulnerabilities.disputed.md"
     }
   ]
 }
