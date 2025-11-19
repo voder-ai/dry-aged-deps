@@ -1,7 +1,8 @@
 /**
- */
-
-/**
+ * Integration tests for dry-aged-deps CLI JSON error output.
+ * @story prompts/008.0-DEV-JSON-OUTPUT.md
+ * @req REQ-ERROR-FORMAT - Format errors as JSON objects when in JSON mode
+ * @req REQ-EXIT-2 - Exit code 2 on errors
  */
 
 import { execa } from 'execa';
