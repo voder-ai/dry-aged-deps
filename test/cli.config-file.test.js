@@ -22,7 +22,11 @@ async function writeConfig(dir, name, content) {
 
 beforeEach(async () => {
   tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'dry-aged-config-'));
-  await fs.writeFile(path.join(tempDir, 'package.json'), JSON.stringify({ name: 'test-config', version: '1.0.0' }, null, 2), 'utf8');
+  await fs.writeFile(
+    path.join(tempDir, 'package.json'),
+    JSON.stringify({ name: 'test-config', version: '1.0.0' }, null, 2),
+    'utf8'
+  );
 });
 
 afterEach(async () => {
