@@ -1,7 +1,7 @@
 /**
- */
-
-/**
+ * Tests for CLI config-file support
+ * @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
+ * @req REQ-CONFIG-LOAD - Read and apply CLI configuration file
  */
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
@@ -22,6 +22,7 @@ async function writeConfig(dir, name, content) {
 
 beforeEach(async () => {
   tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'dry-aged-config-'));
+  await fs.writeFile(path.join(tempDir, 'package.json'), JSON.stringify({ name: 'test-config', version: '1.0.0' }, null, 2), 'utf8');
 });
 
 afterEach(async () => {
