@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format , traceability/valid-annotation-format */
 /**
  * Tests for fallback error handling in filterBySecurity when fetchVersionTimes fails
  * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md

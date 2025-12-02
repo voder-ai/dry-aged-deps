@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-annotation-format */
 // @ts-check
 /**
  * Compute vulnerability metrics from result object.

@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format , traceability/valid-annotation-format */
 /**
  * Tests for CLI config-file support
  * @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md

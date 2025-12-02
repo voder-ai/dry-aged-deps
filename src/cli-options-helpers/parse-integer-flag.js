@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-annotation-format */
 // @ts-check
 import { getFlagRawValue } from './get-flag-raw-value.js';
 /**

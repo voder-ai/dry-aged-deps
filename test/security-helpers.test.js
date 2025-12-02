@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-annotation-format */
 /**
  * Tests for vulnerability statistics functions (computeVulnerabilityStats and countAboveThreshold).
  * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md

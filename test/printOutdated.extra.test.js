@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for printOutdated extra table and xml output cases
  * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md

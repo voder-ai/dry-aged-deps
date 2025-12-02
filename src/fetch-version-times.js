@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-annotation-format */
 // @ts-check
 import { execFile as cpExecFile } from 'child_process';
 

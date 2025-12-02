@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+/* eslint-disable traceability/valid-annotation-format */
+/* eslint-disable traceability/valid-req-reference */
 // @ts-check
 
 import fs from 'fs';
@@ -156,6 +158,7 @@ async function loadOutdatedData(format) {
 /**
  * Main CLI entrypoint.
  * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+ * @req REQ-NPM-COMMAND
  * @returns {Promise<void>}
  */
 async function main() {

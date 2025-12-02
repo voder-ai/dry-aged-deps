@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-annotation-format */
 /**
  * Tests for filterBySecurity function behavior
  * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md

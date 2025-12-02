@@ -38,7 +38,10 @@ export default [
 
   // Enable ESLint Security plugin recommended rules
   {
-    plugins: { security },
+    plugins: {
+      security,
+      traceability,
+    },
     rules: {
       ...security.configs.recommended.rules,
       // Allow unused vars if they start with underscore
@@ -49,6 +52,33 @@ export default [
           varsIgnorePattern: '^_',
         },
       ],
+    },
+  },
+
+  // Traceability plugin - enabled for all files
+  {
+    rules: {
+      'traceability/require-story-annotation': 'error',
+      'traceability/require-req-annotation': 'error',
+      'traceability/require-branch-annotation': 'off',
+      'traceability/valid-annotation-format': [
+        'warn',
+        {
+          storyPathPattern: '^prompts/[0-9]+\\.[0-9]+-DEV-[\\w-]+\\.md$',
+          storyPathExample: 'prompts/005.0-DEV-EXAMPLE.md',
+          requirementIdPattern: '^REQ-[A-Z0-9-]+$',
+          requirementIdExample: 'REQ-EXAMPLE',
+        },
+      ],
+      'traceability/valid-story-reference': [
+        'error',
+        {
+          storyDirectories: ['prompts'],
+          allowAbsolutePaths: false,
+          requireStoryExtension: false,
+        },
+      ],
+      'traceability/valid-req-reference': 'error',
     },
   },
 
@@ -121,9 +151,6 @@ export default [
         vitest: 'readonly',
       },
     },
-    plugins: {
-      traceability,
-    },
     rules: {
       'no-console': 'off', // Allow console in tests
       'security/detect-non-literal-fs-filename': 'off',
@@ -134,19 +161,7 @@ export default [
       'max-params': 'off',
       'max-depth': 'off',
       'max-lines': 'off',
-      // Traceability rules for test files
-      'traceability/require-story-annotation': 'error',
-      'traceability/require-req-annotation': 'error',
-      'traceability/valid-story-reference': [
-        'error',
-        {
-          storyDirectories: ['prompts'],
-          allowAbsolutePaths: false,
-          requireStoryExtension: false, // Our story files are .md not .story.md
-        },
-      ],
-      // Disable format validation - our format is prompts/NNN.0-DEV-NAME.md not docs/stories/NN.N-DEV-NAME.story.md
-      'traceability/valid-annotation-format': 'off',
+      // Traceability rules inherited from global config
     },
   },
 ];

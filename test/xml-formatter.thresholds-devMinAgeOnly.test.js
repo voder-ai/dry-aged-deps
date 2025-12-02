@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for XML formatter thresholds dev-only minAge in XML output
  * @story prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md

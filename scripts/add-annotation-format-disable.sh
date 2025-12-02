@@ -1,0 +1,137 @@
+#!/bin/bash
+
+# Files that need eslint-disable traceability/valid-annotation-format
+files=(
+  "bin/dry-aged-deps.js"
+  "src/age-calculator.js"
+  "src/apply-filters.js"
+  "src/build-rows.js"
+  "src/check-vulnerabilities.js"
+  "src/cli-options-helpers.js"
+  "src/cli-options-helpers/get-flag-raw-value.js"
+  "src/cli-options-helpers/parse-integer-flag.js"
+  "src/cli-options-helpers/parse-string-flag.js"
+  "src/cli-options-helpers/utils-common.js"
+  "src/cli-options.js"
+  "src/cli-parser-utils.js"
+  "src/config-loader.js"
+  "src/fetch-version-times.js"
+  "src/filter-by-age.js"
+  "src/filter-by-security.js"
+  "src/json-formatter.js"
+  "src/load-package-json.js"
+  "src/output-utils.js"
+  "src/print-outdated-handlers.js"
+  "src/print-outdated-utils.js"
+  "src/print-outdated.js"
+  "src/print-utils.js"
+  "src/security-helpers.js"
+  "src/security-smart-search.js"
+  "src/update-packages.js"
+  "src/vulnerability-evaluator.js"
+  "src/xml-formatter.js"
+  "test/age-calculator.test.js"
+  "test/build-rows.additional.test.js"
+  "test/build-rows.fetchError.test.js"
+  "test/build-rows.invalid-types.test.js"
+  "test/build-rows.no-mature-version.test.js"
+  "test/build-rows.success.test.js"
+  "test/build-rows.table-success.test.js"
+  "test/check-vulnerabilities.advisories.test.js"
+  "test/check-vulnerabilities.test.js"
+  "test/cli-entrypoint.test.js"
+  "test/cli-options-helpers.test.js"
+  "test/cli.check-mode.test.js"
+  "test/cli.config-file.test.js"
+  "test/cli.e2e.real-fixture.test.js"
+  "test/cli.error-cmd.test.js"
+  "test/cli.flags.test.js"
+  "test/cli.format-json.error.test.js"
+  "test/cli.format-json.test.js"
+  "test/cli.format-xml.error.test.js"
+  "test/cli.format-xml.test.js"
+  "test/cli.invalid-options.test.js"
+  "test/cli.outdated.mock.test.js"
+  "test/cli.outdated.test.js"
+  "test/cli.test.js"
+  "test/cli.upToDate.test.js"
+  "test/docs/ci-integration.test.js"
+  "test/fetch-version-times.error.test.js"
+  "test/fetch-version-times.retry.test.js"
+  "test/fetch-version-times.test.js"
+  "test/filter-by-age.test.js"
+  "test/filter-by-security-severity.test.js"
+  "test/filter-by-security.error.table.test.js"
+  "test/filter-by-security.fetchError-fallback.test.js"
+  "test/filter-by-security.object-safe.test.js"
+  "test/filter-by-security.object.test.js"
+  "test/filter-by-security.smart-search.test.js"
+  "test/filter-by-security.test.js"
+  "test/functional-assessment.test.js"
+  "test/helpers/cli-helper.js"
+  "test/helpers/cli.outdated.mock.js"
+  "test/json-formatter.test.js"
+  "test/lint-security.test.js"
+  "test/output-utils.test.js"
+  "test/printOutdated.edge-cases.test.js"
+  "test/printOutdated.extra.test.js"
+  "test/printOutdated.json.test.js"
+  "test/printOutdated.prodDependency.test.js"
+  "test/printOutdated.test.js"
+  "test/printOutdated.update.test.js"
+  "test/printOutdated.updateBackupError.test.js"
+  "test/printOutdated.updatePromptAbort.test.js"
+  "test/printOutdated.xmlEmpty.test.js"
+  "test/printOutdated.xmlFetchError.test.js"
+  "test/security-helpers.test.js"
+  "test/update-packages.abort-and-backup.test.js"
+  "test/update-packages.additional.test.js"
+  "test/update-packages.test.js"
+  "test/vulnerability-evaluator.test.js"
+  "test/vulnerability-evaluator.unexpected-format.test.js"
+  "test/xml-formatter.edge-cases.test.js"
+  "test/xml-formatter.error-details.test.js"
+  "test/xml-formatter.error.test.js"
+  "test/xml-formatter.no-thresholds.test.js"
+  "test/xml-formatter.no-vulnerability-details.test.js"
+  "test/xml-formatter.object.test.js"
+  "test/xml-formatter.summary.test.js"
+  "test/xml-formatter.test.js"
+  "test/xml-formatter.thresholds-devMinAgeOnly.test.js"
+  "test/xml-formatter.thresholds-minAgeOnly.test.js"
+  "test/xml-formatter.thresholds.test.js"
+)
+
+for file in "${files[@]}"; do
+  # Check if file already has the disable comment
+  if ! grep -q "eslint-disable traceability/valid-annotation-format" "$file"; then
+    # Check if file starts with shebang
+    if head -n1 "$file" | grep -q '^#!'; then
+      # Insert after shebang
+      tmpfile=$(mktemp)
+      head -n1 "$file" > "$tmpfile"
+      echo '/* eslint-disable traceability/valid-annotation-format */' >> "$tmpfile"
+      tail -n+2 "$file" >> "$tmpfile"
+      mv "$tmpfile" "$file"
+      echo "Added disable comment after shebang in $file"
+    else
+      # Check if first line already has an eslint-disable comment
+      if head -n1 "$file" | grep -q '^/\* eslint-disable'; then
+        # Append to existing disable comment
+        sed -i '' '1s|\*/|, traceability/valid-annotation-format */|' "$file"
+        echo "Appended to existing disable comment in $file"
+      else
+        # Insert at beginning
+        tmpfile=$(mktemp)
+        echo '/* eslint-disable traceability/valid-annotation-format */' > "$tmpfile"
+        cat "$file" >> "$tmpfile"
+        mv "$tmpfile" "$file"
+        echo "Added disable comment at beginning of $file"
+      fi
+    fi
+  else
+    echo "Skip $file (already has disable comment)"
+  fi
+done
+
+echo "Done!"

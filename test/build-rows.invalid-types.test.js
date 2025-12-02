@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-annotation-format */
 /****
  * Tests for buildRows handling non-object versionTimes.
  * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md

@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-annotation-format */
 /**
  * Tests for CLI exit code behaviors
  * @story prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md

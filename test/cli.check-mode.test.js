@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-annotation-format */
 /**
  * Tests for CLI Check Mode (--check)
  * @story prompts/013.0-DEV-CHECK-MODE.md

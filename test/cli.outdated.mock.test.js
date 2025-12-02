@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-annotation-format */
 /**
  * Tests for CLI outdated mock output (Story 001.0-DEV-RUN-NPM-OUTDATED).
  * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md

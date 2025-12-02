@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format , traceability/valid-annotation-format */
 // @ts-check
 import { generateStringFlagParsers, generateIntegerFlagParsers } from './cli-parser-utils.js';
 

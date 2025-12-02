@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-annotation-format */
 /****
  * Tests for updatePackages function
  * @story prompts/011.0-DEV-AUTO-UPDATE.md

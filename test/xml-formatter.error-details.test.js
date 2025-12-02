@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-annotation-format */
 /**
  * Tests for xmlFormatter error branch: omission of <details> element when error.details is absent
  * @story prompts/009.0-DEV-XML-OUTPUT.md

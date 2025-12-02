@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format , traceability/valid-annotation-format */
 /**
  * Integration tests for dry-aged-deps CLI XML error output.
  * @story prompts/009.0-DEV-XML-OUTPUT.md

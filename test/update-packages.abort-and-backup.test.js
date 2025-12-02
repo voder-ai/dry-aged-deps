@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for updatePackages auto-update flow: preview, confirmation, backup, and error handling
  * @story prompts/011.0-DEV-AUTO-UPDATE.md

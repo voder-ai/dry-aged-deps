@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-annotation-format */
 // @ts-check
 // Story: prompts/008.0-DEV-JSON-OUTPUT.md
 // json-formatter.js

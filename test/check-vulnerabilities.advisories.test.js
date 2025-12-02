@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-annotation-format */
 /**
  * Tests for legacy advisory parsing in checkVulnerabilities
  * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md

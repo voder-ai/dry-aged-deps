@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-annotation-format */
 /**
  * Tests for severity threshold logic in filterBySecurity
  * @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md

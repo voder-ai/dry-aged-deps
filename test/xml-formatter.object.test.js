@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for XML Output Format - object-style package entries
  * @story prompts/009.0-DEV-XML-OUTPUT.md

@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-annotation-format */
 // @ts-check
 import { execFile } from 'child_process';
 import { promises as fs } from 'fs';

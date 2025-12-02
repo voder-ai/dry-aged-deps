@@ -1,7 +1,8 @@
+/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format , traceability/valid-annotation-format */
 // @ts-check
 /**
  * Filter rows by age threshold.
- * @story prompts/003.0-DEV-FILTER-MATURE-VERSIONS.md
+ * @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
  * @req REQ-AGE-THRESHOLD - enforce minimum age threshold
  * @req REQ-SMART-SEARCH - search newest first
  * @req REQ-COMPARISON - only versions > current

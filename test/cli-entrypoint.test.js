@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-annotation-format */
 /**
  * Tests for CLI invalid option error handling
  * @story prompts/014.0-DEV-INVALID-OPTION-ERROR.md

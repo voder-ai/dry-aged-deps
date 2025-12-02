@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for security linting
  * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md

@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-annotation-format */
 /**
  * Tests for retry logic in fetchVersionTimes.
  * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md

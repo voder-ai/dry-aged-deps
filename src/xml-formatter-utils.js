@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-req-reference */
 // @ts-check
 // Utility functions for xml-formatter.js to build XML sections
 

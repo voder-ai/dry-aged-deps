@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for updatePackages additional branches.
  * @story prompts/011.0-DEV-AUTO-UPDATE.md

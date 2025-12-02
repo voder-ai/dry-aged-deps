@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for XML Output Format - partial thresholds values
  * @story prompts/009.0-DEV-XML-OUTPUT.md

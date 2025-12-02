@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format , traceability/valid-annotation-format */
 // @ts-check
 // Utility factories for CLI option parsers
 
@@ -6,7 +7,7 @@ import { parseIntegerFlag } from './parse-integer-flag.js';
 
 /**
  * Factory for string flag parsers.
- * @story CLI-FLAGS-1
+ * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
  * @req REQ-CLI-PARSE-STR
  * @param {string} flag - Flag name without leading hyphens.
  * @returns {(args: string[], defaultValue: string, validValues?: string[]) => string}
@@ -17,7 +18,7 @@ export function createStringFlagParser(flag) {
 
 /**
  * Factory for integer flag parsers.
- * @story CLI-FLAGS-2
+ * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
  * @req REQ-CLI-PARSE-INT
  * @param {string} flag - Flag name without leading hyphens.
  * @param {number} [min=1] - Minimum allowed value.

@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for printOutdated handling prod dependencies in table output
  * @story prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md

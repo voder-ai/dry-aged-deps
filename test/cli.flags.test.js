@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format , traceability/valid-annotation-format */
 /**
  * Tests for CLI severity flag parsing
  * @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md

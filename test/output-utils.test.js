@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for prepareJsonItems mapping logic
  * @story prompts/008.0-DEV-JSON-OUTPUT.md

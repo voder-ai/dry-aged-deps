@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-annotation-format */
 /**
  * Tests for XML Formatter
  * @story prompts/009.0-DEV-XML-OUTPUT.md

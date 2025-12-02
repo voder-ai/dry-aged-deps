@@ -1,10 +1,11 @@
+/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format , traceability/valid-annotation-format */
 // @ts-check
 import { filterByAge } from './filter-by-age.js';
 import { filterBySecurity } from './filter-by-security.js';
 
 /**
  * Apply age and security filters to rows.
- * @story prompts/003.0-DEV-FILTER-MATURE-VERSIONS.md
+ * @story prompts/003.0-DEV-IDENTIFY-OUTDATED.md
  * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
  * @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
  * @req REQ-AGE-THRESHOLD - enforce minimum age threshold

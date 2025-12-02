@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for XML fetch error handling in printOutdated
  * @story prompts/009.0-DEV-XML-OUTPUT.md

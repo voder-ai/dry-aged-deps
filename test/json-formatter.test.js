@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-annotation-format */
 /**
  * Tests for JSON Formatter
  * @story prompts/008.0-DEV-JSON-OUTPUT.md

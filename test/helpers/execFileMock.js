@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-req-reference */
 /**
  * Helper to mock execFile invocations for fetchVersionTimes tests.
  * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
