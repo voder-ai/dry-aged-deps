@@ -72,14 +72,6 @@ jobs:
       - name: Detect duplicate code
         run: npx jscpd --threshold 20 src
 
-      - name: Prepare CLI fixture dependencies
-        run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
-        working-directory: test/fixtures
-
-      - name: Prepare up-to-date CLI fixture dependencies
-        run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
-        working-directory: test/fixtures-up-to-date
-
       - name: Run CLI tests
         run: npm run test:cli
 
