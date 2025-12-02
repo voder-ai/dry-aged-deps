@@ -16,7 +16,7 @@
     "test": "vitest run --coverage",
     "test:watch": "vitest --coverage",
     "test:cli": "vitest run",
-    "check:lockfile": "npm install --ignore-scripts --package-lock-only --legacy-peer-deps && git diff --exit-code",
+    "check:lockfile": "npm install --ignore-scripts --package-lock-only && git diff --exit-code",
     "check:duplication": "jscpd --threshold 20 src",
     "audit:ci": "node scripts/audit-resolve.cjs",
     "audit:json": "npm audit --json || exit 0",
