@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<traceability>
-  <specification>prompts/dry-aged-deps-user-story-map.md</specification>
-  <status>NOT_SPEC</status>
-  <last_validated>2025-11-14T09:00:26.972Z</last_validated>
-  <last_modified>2025-11-09T22:58:56.925Z</last_modified>
-  <evidence>The file prompts/dry-aged-deps-user-story-map.md is a user story map and iteration plan covering multiple stories (001.0 through 009.0), not a single user story or specific acceptance criteria to implement.</evidence>
-  <notes>This file is a planning document (user story map), not a single specification. Marking as NOT_SPEC.</notes>
-</traceability>

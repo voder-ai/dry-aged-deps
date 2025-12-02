@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<traceability>
-  <specification>prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md</specification>
-  <status>FAILED</status>
-  <last_validated>2025-11-17T14:44:22.346Z</last_validated>
-  <last_modified>2025-11-09T23:02:37.596Z</last_modified>
-  <evidence>Assessment error: Request timed out.</evidence>
-  <notes>Technical error during assessment</notes>
-</traceability>

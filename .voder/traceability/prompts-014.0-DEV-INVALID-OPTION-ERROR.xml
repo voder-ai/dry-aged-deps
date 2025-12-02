@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<traceability>
-  <specification>prompts/014.0-DEV-INVALID-OPTION-ERROR.md</specification>
-  <status>FAILED</status>
-  <last_validated>2025-11-17T14:44:21.347Z</last_validated>
-  <last_modified>2025-11-14T20:20:33.442Z</last_modified>
-  <evidence>Assessment error: Request timed out.</evidence>
-  <notes>Technical error during assessment</notes>
-</traceability>

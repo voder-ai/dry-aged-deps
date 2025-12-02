@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<traceability>
-  <specification>prompts/013.0-DEV-CHECK-MODE.md</specification>
-  <status>FAILED</status>
-  <last_validated>2025-11-17T14:44:20.347Z</last_validated>
-  <last_modified>2025-11-11T08:04:07.352Z</last_modified>
-  <evidence>Assessment error: Request timed out.</evidence>
-  <notes>Technical error during assessment</notes>
-</traceability>

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<traceability>
-  <specification>prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md</specification>
-  <status>FAILED</status>
-  <last_validated>2025-11-17T14:44:14.348Z</last_validated>
-  <last_modified>2025-11-11T08:04:07.339Z</last_modified>
-  <evidence>Assessment error: Request timed out.</evidence>
-  <notes>Technical error during assessment</notes>
-</traceability>
