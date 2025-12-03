@@ -1,8 +1,7 @@
-/* eslint-disable traceability/valid-annotation-format */
 /**
  * Tests for calculateAgeInDays function
  * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
- * @req REQ-AGE-CALC - Calculate days since publication
+ * @req REQ-AGE-CALC
  */
 
 import { calculateAgeInDays } from '../src/age-calculator';

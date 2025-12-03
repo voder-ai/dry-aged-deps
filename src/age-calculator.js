@@ -1,11 +1,10 @@
-/* eslint-disable traceability/valid-annotation-format */
 // @ts-check
 /**
  * Calculate the age in days since the publish date.
  * @param {string} publishDate - The publish date string (ISO format).
  * @returns {number} Number of days since publishDate.
  * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
- * @req REQ-AGE-CALC - Calculate `currentDate - publishDate` in days
+ * @req REQ-AGE-CALC
  */
 export function calculateAgeInDays(publishDate) {
   const publishTime = new Date(publishDate).getTime();
