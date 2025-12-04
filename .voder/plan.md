@@ -1,68 +1,44 @@
 ## NOW
 
-Fix systematic linting suppression by correcting @req annotation format and removing eslint-disable directives.
+Analyze ONE file with traceability linting errors to determine the correct fix approach.
 
-**Root Cause**: The traceability ESLint plugin expects `@req REQ-ID` format (ID only), but code has `@req REQ-ID - Description` format (ID + description). This causes validation warnings, which were suppressed with eslint-disable directives in 25 out of 31 source files (80% suppression rate).
+**File to analyze**: `src/age-calculator.js`
 
-**Solution**: 
-1. Remove descriptions from all `@req` annotations (keep only the requirement ID)
-2. Remove all `/* eslint-disable traceability/valid-annotation-format */` directives
-3. Remove all `/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format , traceability/valid-annotation-format */` directives
-4. Verify linting passes without suppressions
+**Analysis steps**:
+1. Read the current file and identify all `@req` annotations
+2. Read the referenced story file (`prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md`)
+3. Check which requirement IDs are documented in the story file
+4. For each `@req` annotation in the code, determine:
+   - Does the requirement ID exist in the story file? (code matches story)
+   - Does the requirement ID need updating to match what's in the story?
+   - Is the code untraceable (no matching requirement in story)? Should it be removed?
+   - Does the requirement need to be added to the story file? (less common)
 
-**Implementation**:
-- Use multi-file search and replace to fix all @req annotations
-- Remove eslint-disable directives from all source files
-- Run npm run lint to verify no errors
-- Confirm suppression rate is < 10%
-
-**Files to Fix** (25 files total):
-- src/security-smart-search.js
-- src/vulnerability-evaluator.js
-- src/security-helpers.js
-- src/cli-parser-utils.js
-- src/load-package-json.js
-- src/cli-options-helpers.js
-- src/xml-formatter.js
-- src/config-loader.js
-- src/check-vulnerabilities.js
-- src/print-outdated-handlers.js
-- src/age-calculator.js
-- src/print-utils.js
-- src/json-formatter.js
-- src/output-utils.js
-- src/xml-formatter-utils.js
-- src/apply-filters.js
-- src/print-outdated-utils.js
-- src/filter-by-age.js
-- src/cli-options.js
-- src/fetch-version-times.js
-- src/update-packages.js
-- src/print-outdated.js
-- src/filter-by-security.js
-- src/build-rows.js
-- src/index.js
-- bin/dry-aged-deps.js (if it has suppressions)
-
-Plus all corresponding test files that may have the same pattern.
+**Then**: Document the findings and create a plan to fix this ONE file correctly, verify the fix passes linting, commit it, and proceed to the next file.
 
 ## NEXT
 
-Run quality checks to ensure the fixes are complete:
+After successfully fixing and committing the first file:
 
-1. Run `npm run lint` - should pass with no warnings/errors
-2. Run `npm run format:check` - should pass
-3. Run `npm run typecheck` - should pass
-4. Run `npm test` - should pass (all 211 tests)
-5. Verify suppression count: `grep -r "eslint-disable" src/ bin/ test/ | wc -l` should be significantly reduced
-6. Calculate new suppression rate - should be < 10%
+1. Analyze the next file with traceability errors using the same approach
+2. Apply the fix pattern learned from the first file
+3. Verify linting passes for that file
+4. Commit the fix
+5. Repeat for remaining files with errors
+
+Track progress:
+- Total files with errors: ~40+ files
+- Approach: Fix one at a time, commit each, verify incrementally
 
 ## LATER
 
-After quality checks pass:
+After all traceability errors are resolved:
 
-1. Update .voder/history.md with summary of changes
-2. Commit changes with descriptive message
-3. Push to remote repository
+1. Verify final quality checks:
+   - `npm run lint` - should pass completely
+   - `npm run format:check` - should pass
+   - `npm run typecheck` - should pass  
+   - `npm test` - all tests pass
+2. Update `.voder/history.md` with summary of the traceability fixes
+3. Push all commits to remote repository
 4. Monitor CI/CD pipeline for success
-5. Re-run assessment to confirm blocking issue is resolved

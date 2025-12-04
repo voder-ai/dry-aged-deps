@@ -70,7 +70,7 @@ beforeAll(async () => {
     const cols = line.split('	');
     return parseInt(cols[4], 10);
   });
-});
+}, 30000); // Increase timeout to 30 seconds for npm install
 
 afterAll(async () => {
   // Restore environment variable
