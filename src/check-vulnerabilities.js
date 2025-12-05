@@ -1,4 +1,3 @@
-/* eslint-disable traceability/valid-annotation-format */
 // @ts-check
 import { execFile } from 'child_process';
 import { promises as fs } from 'fs';
@@ -14,12 +13,8 @@ import { join } from 'path';
  * @param {string} version - The version to check
  * @returns {Promise<{ count: number, vulnerabilities: { info: number, low: number, moderate: number, high: number, critical: number }, details: Array<Object> }>}
  * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
- * @req REQ-AUDIT-CHECK - Use `npm audit` or registry API to check for vulnerabilities
- * @req REQ-TRANSITIVE-DEPS - Check the entire dependency tree (direct and transitive dependencies) for vulnerabilities
- *   Detailed vulnerability report including:
- *     - count: total number of vulnerabilities
- *     - vulnerabilities: breakdown by severity levels
- *     - details: array of individual vulnerability objects
+ * @req REQ-AUDIT-CHECK
+ * @req REQ-TRANSITIVE-DEPS
  */
 export async function checkVulnerabilities(packageName, version) {
   const pkgNameRegex = /^[a-z0-9@\-*/.]+$/i;
