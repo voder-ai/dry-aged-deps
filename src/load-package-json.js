@@ -1,4 +1,3 @@
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format , traceability/valid-annotation-format */
 // @ts-check
 import fs from 'fs';
 import path from 'path';
@@ -6,7 +5,7 @@ import path from 'path';
 /**
  * Load and parse package.json from the current working directory.
  * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
- * @req REQ-LOAD-PACKAGE_JSON - Load and parse package.json for dependencies
+ * @req REQ-JSON-PARSE
  * @returns {{ dependencies: Record<string, string>, devDependencies: Record<string, string> }}
  */
 export function loadPackageJson() {
