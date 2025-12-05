@@ -1,15 +1,12 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-annotation-format */
 /**
  * Tests for fetchVersionTimes core functionality.
- * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
- * @req REQ-NPM-VIEW - Use `npm view <package> time --json` to get publish dates
+ * @supports prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md REQ-NPM-VIEW
  */
 
 import { fetchVersionTimes } from '../src/fetch-version-times.js';
 import { createExecFileMock } from './helpers/execFileMock.js';
 
-describe('prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md: fetchVersionTimes (Story 002.0)', () => {
+describe('Story 002.0-DEV-FETCH-AVAILABLE-VERSIONS: fetchVersionTimes', () => {
   let execFileMock;
 
   beforeEach(() => {
@@ -20,7 +17,7 @@ describe('prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md: fetchVersionTimes (Stor
     execFileMock.mockReset();
   });
 
-  it('(REQ-NPM-VIEW) should parse npm view output and exclude created and modified entries', async () => {
+  it('[REQ-NPM-VIEW] should parse npm view output and exclude created and modified entries', async () => {
     const mockOutput = JSON.stringify({
       created: '2020-01-01T00:00:00Z',
       modified: '2021-01-01T00:00:00Z',
