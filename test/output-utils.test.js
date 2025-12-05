@@ -1,19 +1,16 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for prepareJsonItems mapping logic
- * @story prompts/008.0-DEV-JSON-OUTPUT.md
- * @req REQ-JSON-MAPPING - Extract mapping logic for JSON output
+ * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-COMPLETE-DATA
  */
 
 import { describe, it, expect } from 'vitest';
 import { prepareJsonItems } from '../src/output-utils.js';
 
-describe('prompts/008.0-DEV-JSON-OUTPUT.md: prepareJsonItems mapping logic (Story 008.0)', () => {
+describe('Story 008.0-DEV-JSON-OUTPUT: prepareJsonItems mapping logic', () => {
   const thresholds = { prod: { minAge: 5, minSeverity: 'none' }, dev: { minAge: 3, minSeverity: 'none' } };
   const severityWeights = { none: 0, low: 1, moderate: 2, high: 3, critical: 4 };
 
-  it('returns filtered by age when age < minAge for prod and no vulnerabilities', () => {
+  it('[REQ-COMPLETE-DATA] returns filtered by age when age < minAge for prod and no vulnerabilities', () => {
     const rows = [['pkg1', '1.0.0', '1.1.0', '1.1.0', 2, 'prod']];
     const vulnMap = new Map();
     const filterReasonMap = new Map();
@@ -28,7 +25,7 @@ describe('prompts/008.0-DEV-JSON-OUTPUT.md: prepareJsonItems mapping logic (Stor
     expect(item.vulnerabilities.count).toBe(0);
   });
 
-  it('returns filtered by security when vulnerabilities exist and age >= minAge', () => {
+  it('[REQ-COMPLETE-DATA] returns filtered by security when vulnerabilities exist and age >= minAge', () => {
     const rows = [['pkg2', '1.0.0', '1.2.0', '1.2.0', 10, 'dev']];
     const mockDetails = [
       { severity: 'high', info: {} },
@@ -46,7 +43,7 @@ describe('prompts/008.0-DEV-JSON-OUTPUT.md: prepareJsonItems mapping logic (Stor
     expect(item.filterReason).toBe('');
   });
 
-  it('uses filterReasonMap when provided over default age-based reason', () => {
+  it('[REQ-COMPLETE-DATA] uses filterReasonMap when provided over default age-based reason', () => {
     const rows = [['pkg3', '1.0.0', '2.0.0', '2.0.0', 1, 'dev']];
     const vulnMap = new Map();
     const filterReasonMap = new Map([['pkg3', 'custom']]);
@@ -57,7 +54,7 @@ describe('prompts/008.0-DEV-JSON-OUTPUT.md: prepareJsonItems mapping logic (Stor
     expect(item.filterReason).toBe('custom');
   });
 
-  it('does not filter when age >= minAge and no vulnerabilities', () => {
+  it('[REQ-COMPLETE-DATA] does not filter when age >= minAge and no vulnerabilities', () => {
     const rows = [['pkg4', '1.0.0', '2.0.0', '2.0.0', 6, 'prod']];
     const vulnMap = new Map();
     const filterReasonMap = new Map();
@@ -68,7 +65,7 @@ describe('prompts/008.0-DEV-JSON-OUTPUT.md: prepareJsonItems mapping logic (Stor
     expect(item.filterReason).toBe('');
   });
 
-  it('sets age to null when age is not a number', () => {
+  it('[REQ-COMPLETE-DATA] sets age to null when age is not a number', () => {
     const rows = [['pkg5', '1.0.0', '2.0.0', '2.0.0', 'N/A', 'prod']];
     const vulnMap = new Map();
     const filterReasonMap = new Map();
