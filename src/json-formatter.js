@@ -1,4 +1,3 @@
-/* eslint-disable traceability/valid-annotation-format */
 // @ts-check
 // Story: prompts/008.0-DEV-JSON-OUTPUT.md
 // json-formatter.js
@@ -8,9 +7,9 @@
 /**
  * Format outdated dependencies data into JSON string.
  * @story prompts/008.0-DEV-JSON-OUTPUT.md
- * @req REQ-JSON-SCHEMA - Define consistent JSON output schema
- * @req REQ-COMPLETE-DATA - Include all package information in output
- * @req REQ-SUMMARY-STATS - Include filtering statistics (packages checked, filtered by age, filtered by security)
+ * @req REQ-JSON-SCHEMA
+ * @req REQ-COMPLETE-DATA
+ * @req REQ-SUMMARY-STATS
  */
 
 /**

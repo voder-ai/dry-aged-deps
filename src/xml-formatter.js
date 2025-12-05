@@ -1,4 +1,3 @@
-/* eslint-disable traceability/valid-annotation-format */
 // @ts-check
 import {
   buildXmlDeclaration,
@@ -13,10 +12,10 @@ import {
 /**
  * Format data into XML string
  * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-XML-SCHEMA - Define consistent XML output schema
- * @req REQ-COMPLETE-DATA - Include all package information in output
- * @req REQ-SUMMARY-STATS - Include summary statistics
- * @req REQ-XML-DECLARATION - Include proper XML declaration and encoding
+ * @req REQ-XML-SCHEMA
+ * @req REQ-COMPLETE-DATA
+ * @req REQ-SUMMARY-STATS
+ * @req REQ-XML-DECLARATION
  * @param {Object} params
  * @param {Array<any>} [params.rows]
  * @param {Object} [params.summary]
