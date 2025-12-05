@@ -1,4 +1,3 @@
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format , traceability/valid-annotation-format */
 // @ts-check
 import { loadConfigFile } from './config-loader.js';
 import {
@@ -27,33 +26,26 @@ import {
 
 /**
  * Parse CLI arguments and optional config file to derive options for dry-aged-deps.
- * @story prompts/013.0-DEV-CHECK-MODE.md
- * @story prompts/011.0-DEV-AUTO-UPDATE.md
- * @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
- * @story prompts/008.0-DEV-JSON-OUTPUT.md
- * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
- * @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
- * @req REQ-PARSE-OPTIONS - Parse and validate CLI flags and config file options
- * @param {string[]} argv - CLI arguments (excluding node and script path).
- */
-
-/**
- * Parse CLI arguments and optional config file to derive options for dry-aged-deps.
  * Exits the process with code 2 on invalid input or configuration.
  *
+ * @supports prompts/013.0-DEV-CHECK-MODE.md REQ-CHECK-FLAG
+ * @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-UPDATE-FLAG
+ * @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-CONFIG-LOCATION
+ * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-CLI-FLAG
+ * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-CLI-FLAG
+ * @supports prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md REQ-CLI-FLAG
+ * @supports prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md REQ-CLI-FLAG
+ * @supports prompts/014.0-DEV-INVALID-OPTION-ERROR.md REQ-OPTION-VALIDATION
+ * @supports prompts/014.0-DEV-INVALID-OPTION-ERROR.md REQ-UNKNOWN-OPTION-ERROR
+ * @supports prompts/014.0-DEV-INVALID-OPTION-ERROR.md REQ-ERROR-EXIT-CODE
+ * @supports prompts/014.0-DEV-INVALID-OPTION-ERROR.md REQ-HELP-SUGGESTION
+ * @supports prompts/014.0-DEV-INVALID-OPTION-ERROR.md REQ-DID-YOU-MEAN
  * @param {string[]} argv - CLI arguments (excluding node and script path).
  * @returns {import('./cli-options').CliOptions} Parsed CLI options.
  */
 export function parseOptions(argv) {
   const args = argv;
 
-  // @story prompts/014.0-DEV-INVALID-OPTION-ERROR.md
-  // @req REQ-OPTION-VALIDATION - Validate known options only
-  // @req REQ-UNKNOWN-OPTION-ERROR - Error on unknown options
-  // @req REQ-ERROR-EXIT-CODE - Exit with code 2 for usage errors
-  // @req REQ-HELP-SUGGESTION - Suggest using --help
-  // @req REQ-DID-YOU-MEAN - Provide suggestions for mistyped flags
   // Detect unknown CLI options
   const allowedOptions = [
     '--check',

@@ -1,4 +1,3 @@
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format , traceability/valid-annotation-format */
 // @ts-check
 /**
  * Utility functions for print-outdated and output handlers.
@@ -7,8 +6,9 @@
 
 /**
  * Create thresholds object for JSON/XML formatting.
- * @story docs/decisions/0002-json-xml-output-support.md
- * @req REQ-THRESHOLD-ABSTRACTION - Consolidate threshold object creation
+ * @story prompts/008.0-DEV-JSON-OUTPUT.md
+ * @story prompts/009.0-DEV-XML-OUTPUT.md
+ * @req REQ-COMPLETE-DATA
  * @param {number} prodMinAge
  * @param {string} prodMinSeverity
  * @param {number} devMinAge
@@ -24,8 +24,9 @@ export function getThresholds(prodMinAge, prodMinSeverity, devMinAge, devMinSeve
 
 /**
  * Get current ISO timestamp string.
- * @story docs/decisions/0002-json-xml-output-support.md
- * @req REQ-TIMESTAMP-ADDED - Include timestamp in output
+ * @story prompts/008.0-DEV-JSON-OUTPUT.md
+ * @story prompts/009.0-DEV-XML-OUTPUT.md
+ * @req REQ-COMPLETE-DATA
  * @returns {string} ISO formatted timestamp
  */
 export function getTimestamp() {
