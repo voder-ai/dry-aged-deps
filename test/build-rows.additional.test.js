@@ -1,20 +1,14 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for buildRows error logging and missing latestTime handling.
- * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
- * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
- * @req REQ-OUTPUT-DISPLAY - Display outdated package results including warnings and missing data handling
- * @req REQ-NPM-VIEW - Use npm view to fetch publish dates for newer versions
- * @req REQ-AGE-CALC - Calculate days since publication
+ * @supports prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md REQ-NPM-VIEW REQ-AGE-CALC
  */
 
 import { describe, it, expect, vi } from 'vitest';
 import { buildRows } from '../src/build-rows.js';
 
 // Tests for error logging behavior in different formats
-describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md: buildRows error logging', () => {
-  it('logs warning when fetchVersionTimes throws and format is table', async () => {
+describe('Story 002.0-DEV-FETCH-AVAILABLE-VERSIONS: buildRows error logging', () => {
+  it('[REQ-NPM-VIEW] logs warning when fetchVersionTimes throws and format is table', async () => {
     const data = { pkg1: { current: '1.0.0', wanted: '1.1.0', latest: '1.1.0' } };
     const stubFetch = async () => {
       throw new Error('fetch fail');
@@ -38,7 +32,7 @@ describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/002.0-DEV-FETCH-AVAILA
     errorSpy.mockRestore();
   });
 
-  it('does not log warning when format is json or xml', async () => {
+  it('[REQ-NPM-VIEW] does not log warning when format is json or xml', async () => {
     const data = { pkg1: { current: '1.0.0', wanted: '1.1.0', latest: '1.1.0' } };
     const stubFetch = async () => {
       throw new Error('fetch error');
@@ -72,8 +66,8 @@ describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/002.0-DEV-FETCH-AVAILA
 });
 
 // Tests for missing latestTime entry
-describe('buildRows missing latestTime handling', () => {
-  it('leaves age as "N/A" when versionTimes has no matching latest version', async () => {
+describe('Story 002.0-DEV-FETCH-AVAILABLE-VERSIONS: buildRows missing latestTime handling', () => {
+  it('[REQ-AGE-CALC] leaves age as "N/A" when versionTimes has no matching latest version', async () => {
     const data = { pkg2: { current: '2.0.0', wanted: '2.1.0', latest: '2.1.0' } };
     const stubFetch = async () => ({ '2.0.5': '2024-01-01T00:00:00.000Z' });
     const stubCalc = vi.fn(() => {
