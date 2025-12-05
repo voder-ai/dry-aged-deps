@@ -161,7 +161,8 @@ export default [
       'max-params': 'off',
       'max-depth': 'off',
       'max-lines': 'off',
-      // Traceability rules inherited from global config
+      // Test traceability rules (Release 1.9)
+      'traceability/require-test-traceability': 'error',
     },
   },
 ];
