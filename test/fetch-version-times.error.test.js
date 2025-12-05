@@ -1,16 +1,12 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /****
  * Tests for error handling in fetchVersionTimes
- * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
- * @req REQ-NPM-VIEW - Use `npm view <package> time --json` to get publish dates
- * @req REQ-INVALID-PACKAGE - Reject invalid package names
+ * @supports prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md REQ-NPM-VIEW
  */
 
 import { fetchVersionTimes } from '../src/fetch-version-times.js';
 import { createExecFileMock } from './helpers/execFileMock.js';
 
-describe('prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md: fetchVersionTimes error paths (Story 002.0)', () => {
+describe('Story 002.0-DEV-FETCH-AVAILABLE-VERSIONS: fetchVersionTimes error paths', () => {
   let execFileMock;
 
   beforeEach(() => {
@@ -21,11 +17,11 @@ describe('prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md: fetchVersionTimes error
     execFileMock.mockReset();
   });
 
-  it('(REQ-INVALID-PACKAGE) rejects for invalid package names', async () => {
+  it('[REQ-NPM-VIEW] rejects for invalid package names', async () => {
     await expect(fetchVersionTimes('invalid$pkg', execFileMock)).rejects.toThrowError(/Invalid package name/);
   });
 
-  it('(REQ-NPM-VIEW) rejects with SyntaxError when npm view output is malformed JSON', async () => {
+  it('[REQ-NPM-VIEW] rejects with SyntaxError when npm view output is malformed JSON', async () => {
     execFileMock.mockImplementation((cmd, args, options, callback) => {
       callback(null, 'not valid json');
     });
