@@ -1,4 +1,3 @@
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format , traceability/valid-annotation-format */
 // @ts-check
 import { fetchVersionTimes as defaultFetchVersionTimes } from './fetch-version-times.js';
 import { calculateAgeInDays as defaultCalculateAgeInDays } from './age-calculator.js';
@@ -6,9 +5,9 @@ import { calculateAgeInDays as defaultCalculateAgeInDays } from './age-calculato
 /**
  * Build rows with age and dependency type.
  * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
- * @req REQ-FETCH-TIMES - Fetch version times and calculate age
- * @req REQ-AGE-CALC - calculate days since publication
- * @req REQ-OPTIMIZATION - fetch only newer versions
+ * @req REQ-NPM-VIEW
+ * @req REQ-AGE-CALC
+ * @req REQ-OPTIMIZATION
  * @param {Record<string, { current: string; wanted: string; latest: string }>} data
  * @param {{
  *   fetchVersionTimes?: Function,
