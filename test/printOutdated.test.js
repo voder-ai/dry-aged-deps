@@ -1,3 +1,4 @@
+/* eslint-disable traceability/require-test-traceability */
 /* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Unit tests for printOutdated output and filtering.

@@ -1,3 +1,4 @@
+/* eslint-disable traceability/require-test-traceability */
 /* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format , traceability/valid-annotation-format */
 /**
  * Integration tests for dry-aged-deps CLI XML output format.

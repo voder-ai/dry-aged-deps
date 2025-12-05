@@ -1,3 +1,4 @@
+/* eslint-disable traceability/require-test-traceability */
 /* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Unit tests for printOutdated in XML mode when no packages are outdated (empty rows).

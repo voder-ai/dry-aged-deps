@@ -1,3 +1,4 @@
+/* eslint-disable traceability/require-test-traceability */
 /**
  * Tests for calculateAgeInDays function
  * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md

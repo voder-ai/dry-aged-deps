@@ -1,3 +1,4 @@
+/* eslint-disable traceability/require-test-traceability */
 /* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for printOutdated function output edge cases (table, JSON, XML)

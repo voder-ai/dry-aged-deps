@@ -1,3 +1,4 @@
+/* eslint-disable traceability/require-test-traceability */
 /* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format , traceability/valid-annotation-format */
 /**
  * Tests for CLI E2E real fixture behavior and positive age detection

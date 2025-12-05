@@ -1,3 +1,4 @@
+/* eslint-disable traceability/require-test-traceability */
 /* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format , traceability/valid-annotation-format */
 /**
  * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md

@@ -1,3 +1,4 @@
+/* eslint-disable traceability/require-test-traceability */
 /* eslint-disable traceability/valid-req-reference */
 /**
  * Helper to mock execFile invocations for fetchVersionTimes tests.

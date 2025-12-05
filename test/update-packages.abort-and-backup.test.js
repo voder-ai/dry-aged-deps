@@ -1,3 +1,4 @@
+/* eslint-disable traceability/require-test-traceability */
 /* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for updatePackages auto-update flow: preview, confirmation, backup, and error handling

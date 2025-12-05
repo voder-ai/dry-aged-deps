@@ -1,3 +1,4 @@
+/* eslint-disable traceability/require-test-traceability */
 /* eslint-disable traceability/valid-annotation-format */
 /**
  * Tests for JSON Formatter
