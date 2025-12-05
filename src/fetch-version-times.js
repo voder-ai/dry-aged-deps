@@ -1,4 +1,3 @@
-/* eslint-disable traceability/valid-annotation-format */
 // @ts-check
 import { execFile as cpExecFile } from 'child_process';
 
@@ -8,7 +7,7 @@ import { execFile as cpExecFile } from 'child_process';
  * @param {any} [execFileImpl] - Optional execFile implementation (matches Node's execFile signature).
  * @returns {Promise<Record<string, string>>} A promise resolving to a mapping of version to publish date string.
  * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
- * @req REQ-NPM-VIEW - Use `npm view <package> time --json` to get publish dates
+ * @req REQ-NPM-VIEW
  */
 export async function fetchVersionTimes(packageName, execFileImpl = cpExecFile) {
   const pkgNameRegex = /^[a-z0-9@\-_/.]+$/i;
