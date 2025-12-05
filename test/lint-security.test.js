@@ -1,9 +1,6 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for security linting
- * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
- * @req REQ-SECURITY-LINT - Detect security lint warnings on code snippets
+ * @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK
  */
 
 import path from 'path';
@@ -12,8 +9,8 @@ import { ESLint } from 'eslint';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-describe('prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md: ESLint security plugin', () => {
-  it('should report detect-object-injection warning', async () => {
+describe('Story 004.0-DEV-FILTER-VULNERABLE-VERSIONS: ESLint security plugin', () => {
+  it('[REQ-AUDIT-CHECK] should report detect-object-injection warning', async () => {
     const eslint = new ESLint({
       overrideConfigFile: path.resolve(__dirname, '../eslint.config.js'),
     });
