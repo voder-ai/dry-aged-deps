@@ -103,6 +103,10 @@ Desktop.ini
 .cursor/
 .github/instructions
 .github/prompts
+.voder/
+
+# Development symlinks
+eslint-plugin-traceability
 
 # Temporary folders
 tmp/
