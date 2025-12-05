@@ -1,5 +1,5 @@
 /* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format , traceability/valid-annotation-format */
+/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /****
  * Functional assessment - CLI end-to-end tests covering all core stories.
  * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md

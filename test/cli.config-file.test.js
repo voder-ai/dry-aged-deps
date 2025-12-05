@@ -1,7 +1,7 @@
 /* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format , traceability/valid-annotation-format */
+/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
- * Tests for CLI config-file support
+ * Tests for CLI config file support
  * @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
  * @req REQ-CONFIG-LOAD - Read and apply CLI configuration file
  */

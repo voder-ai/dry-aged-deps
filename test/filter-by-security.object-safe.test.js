@@ -1,5 +1,5 @@
 /* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format , traceability/valid-annotation-format */
+/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for object-based vulnerability safe-case in filterBySecurity
  * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md

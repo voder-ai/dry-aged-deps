@@ -1,5 +1,5 @@
 /* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format , traceability/valid-annotation-format */
+/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for CLI E2E real fixture behavior and positive age detection
  * @story prompts/003.0-DEV-IDENTIFY-OUTDATED.md

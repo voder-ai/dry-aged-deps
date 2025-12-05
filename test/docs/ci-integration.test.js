@@ -1,5 +1,5 @@
 /* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format , traceability/valid-annotation-format */
+/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for CI/CD integration documentation (Story 013.0-DEV-CHECK-MODE).
  * @story prompts/013.0-DEV-CHECK-MODE.md

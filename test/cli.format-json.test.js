@@ -1,5 +1,5 @@
 /* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format , traceability/valid-annotation-format */
+/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Integration tests for dry-aged-deps CLI JSON output format.
  * @story prompts/008.0-DEV-JSON-OUTPUT.md

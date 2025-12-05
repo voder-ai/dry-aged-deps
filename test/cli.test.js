@@ -1,5 +1,5 @@
 /* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format , traceability/valid-annotation-format */
+/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for dry-aged-deps CLI --help option.
  * @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md

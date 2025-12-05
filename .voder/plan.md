@@ -1,44 +1,32 @@
 ## NOW
 
-Analyze ONE file with traceability linting errors to determine the correct fix approach.
+✅ COMPLETED: All duplicate ESLint suppressions fixed
 
-**File to analyze**: `src/age-calculator.js`
+Fixed 20 files total:
+- 17 test files in test/ directory
+- 3 files in test/docs/ and test/helpers/ subdirectories
 
-**Analysis steps**:
-1. Read the current file and identify all `@req` annotations
-2. Read the referenced story file (`prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md`)
-3. Check which requirement IDs are documented in the story file
-4. For each `@req` annotation in the code, determine:
-   - Does the requirement ID exist in the story file? (code matches story)
-   - Does the requirement ID need updating to match what's in the story?
-   - Is the code untraceable (no matching requirement in story)? Should it be removed?
-   - Does the requirement need to be added to the story file? (less common)
-
-**Then**: Document the findings and create a plan to fix this ONE file correctly, verify the fix passes linting, commit it, and proceed to the next file.
+All files had duplicate `traceability/valid-annotation-format` rule removed from line 2.
+Verified with:
+- npm run lint (passes)
+- grep confirms 0 duplicates remain
 
 ## NEXT
 
-After successfully fixing and committing the first file:
+Root cause analysis for traceability rule suppressions:
 
-1. Analyze the next file with traceability errors using the same approach
-2. Apply the fix pattern learned from the first file
-3. Verify linting passes for that file
-4. Commit the fix
-5. Repeat for remaining files with errors
-
-Track progress:
-- Total files with errors: ~40+ files
-- Approach: Fix one at a time, commit each, verify incrementally
+1. Sample 5-10 test files to understand what traceability violations exist
+2. Run eslint without suppressions on sample files to see actual violations
+3. Determine if rules need reconfiguration or code needs fixing
+4. Document findings in .voder/plan.md
+5. Create remediation plan based on findings
 
 ## LATER
 
-After all traceability errors are resolved:
+After completing the duplicate rule fixes:
 
-1. Verify final quality checks:
-   - `npm run lint` - should pass completely
-   - `npm run format:check` - should pass
-   - `npm run typecheck` - should pass  
-   - `npm test` - all tests pass
-2. Update `.voder/history.md` with summary of the traceability fixes
-3. Push all commits to remote repository
-4. Monitor CI/CD pipeline for success
+1. Investigate why traceability rules are being suppressed (root cause analysis)
+2. Sample 5-10 test files to understand the traceability violations
+3. Determine if rules need reconfiguration or code needs fixing
+4. Create a remediation plan based on findings
+5. Implement fixes incrementally (one pattern at a time)
