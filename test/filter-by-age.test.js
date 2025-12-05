@@ -1,17 +1,12 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-annotation-format */
 /**
  * Tests for filterByAge function behavior.
- * @story prompts/003.0-DEV-IDENTIFY-OUTDATED.md
- * @req REQ-AGE-THRESHOLD - enforce minimum age threshold for filtering
- * @req REQ-SMART-SEARCH - search newest first
- * @req REQ-COMPARISON - only versions > current
+ * @supports prompts/003.0-DEV-IDENTIFY-OUTDATED.md REQ-AGE-THRESHOLD REQ-SMART-SEARCH REQ-COMPARISON
  */
 import { describe, it, expect } from 'vitest';
 import { filterByAge } from '../src/filter-by-age.js';
 
-describe('prompts/003.0-DEV-IDENTIFY-OUTDATED.md: filterByAge', () => {
-  it('includes only rows where age >= prodMinAge for prod dependencies and devMinAge for dev dependencies', () => {
+describe('Story 003.0-DEV-IDENTIFY-OUTDATED: filterByAge', () => {
+  it('[REQ-AGE-THRESHOLD] includes only rows where age >= prodMinAge for prod dependencies and devMinAge for dev dependencies', () => {
     const rows = [
       ['a', '1.0.0', '1.1.0', '1.1.0', 10, 'prod'],
       ['b', '1.0.0', '1.1.0', '1.1.0', 5, 'prod'],
@@ -28,7 +23,7 @@ describe('prompts/003.0-DEV-IDENTIFY-OUTDATED.md: filterByAge', () => {
     ]);
   });
 
-  it('respects configurable thresholds for both prod and dev', () => {
+  it('[REQ-AGE-THRESHOLD] respects configurable thresholds for both prod and dev', () => {
     const rows = [
       ['a', '1.0.0', '1.2.0', '1.2.0', 6, 'prod'],
       ['b', '1.0.0', '1.2.0', '1.2.0', 4, 'dev'],
