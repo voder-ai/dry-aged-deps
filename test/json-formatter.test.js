@@ -1,17 +1,12 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-annotation-format */
 /**
  * Tests for JSON Formatter
- * @story prompts/008.0-DEV-JSON-OUTPUT.md
- * @req REQ-JSON-SCHEMA - Define consistent JSON output schema
- * @req REQ-COMPLETE-DATA - Include all relevant package data in JSON output
- * @req REQ-SUMMARY-STATS - Include summary statistics in JSON output
+ * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-JSON-SCHEMA REQ-COMPLETE-DATA REQ-SUMMARY-STATS
  */
 
 import { jsonFormatter } from '../src/json-formatter.js';
 
-describe('prompts/008.0-DEV-JSON-OUTPUT.md: jsonFormatter', () => {
-  it('should produce valid JSON with timestamp, packages, and summary', () => {
+describe('Story 008.0-DEV-JSON-OUTPUT: jsonFormatter', () => {
+  it('[REQ-JSON-SCHEMA] [REQ-COMPLETE-DATA] [REQ-SUMMARY-STATS] should produce valid JSON with timestamp, packages, and summary', () => {
     const rows = [
       ['pkg1', '1.0.0', '1.1.0', '1.1.0', 10],
       ['pkg2', '2.0.0', '2.2.0', '2.2.0', 8],
