@@ -1,16 +1,13 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for XML Output Format - summary section
- * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-XML-SUMMARY - Include summary metadata in XML output
+ * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-SUMMARY-STATS
  */
 
 import { describe, it, expect } from 'vitest';
 import { xmlFormatter } from '../src/xml-formatter.js';
 
-describe('prompts/009.0-DEV-XML-OUTPUT.md: xmlFormatter summary section', () => {
-  it('should include <min-age> element when summary.minAge is provided', () => {
+describe('Story 009.0-DEV-XML-OUTPUT: xmlFormatter summary section', () => {
+  it('[REQ-SUMMARY-STATS] should include <min-age> element when summary.minAge is provided', () => {
     const summary = {
       totalOutdated: 2,
       safeUpdates: 1,
