@@ -1,9 +1,8 @@
-/* eslint-disable traceability/valid-annotation-format */
 // @ts-check
 /**
  * Compute vulnerability metrics from result object.
  * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
- * @req REQ-SAFE-ONLY - Compute total count, details list, and maximum severity.
+ * @req REQ-SAFE-ONLY
  * @param {{ count?: number, details?: Array<any> }} result - Vulnerability result object.
  * @param {{ [key: string]: number }} severityWeights - Mapping of severity labels to weight.
  * @returns {{ totalCount: number, detailsList: Array<any>, maxSeverity: string }} Computed metrics.
@@ -38,7 +37,7 @@ export function computeVulnerabilityStats(result, severityWeights) {
 /**
  * Count vulnerabilities above a given severity threshold.
  * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
- * @req REQ-SAFE-ONLY - Count vulnerabilities whose severity weight meets or exceeds the threshold.
+ * @req REQ-SAFE-ONLY
  * @param {Array<any>} detailsList - Array of vulnerability details objects with severity properties.
  * @param {number} minWeight - Minimum weight threshold.
  * @param {{ [key: string]: number }} severityWeights - Mapping of severity labels to weight.

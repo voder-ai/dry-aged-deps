@@ -1,10 +1,9 @@
-/* eslint-disable traceability/valid-annotation-format */
 // @ts-check
 import { evaluateVersionVulnerabilities } from './vulnerability-evaluator.js';
 /**
  * Find the safest/most recent version using smart-search fallback logic.
  * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
- * @req REQ-SMART-SEARCH - Search for safe version by newest to oldest.
+ * @req REQ-SMART-SEARCH
  * @param {string} name - Package name.
  * @param {{ [version: string]: string }} versionTimes - Mapping of version to publish time.
  * @param {object} options - Search options.
