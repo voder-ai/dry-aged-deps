@@ -1,9 +1,8 @@
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format , traceability/valid-annotation-format */
 // @ts-check
 /**
  * Extract raw flag value from CLI arguments.
  * @story prompts/014.0-DEV-INVALID-OPTION-ERROR.md
- * @req REQ-MISSING-VALUE-ERROR - Display error message when option is provided without a value
+ * @req REQ-ERROR-EXIT-CODE
  * @param {string[]} args - CLI arguments.
  * @param {string} flag - Flag name without leading hyphens.
  * @returns {string|undefined} The raw flag value, or undefined if not present.

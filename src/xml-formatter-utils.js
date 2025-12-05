@@ -1,4 +1,3 @@
-/* eslint-disable traceability/valid-req-reference */
 // @ts-check
 // Utility functions for xml-formatter.js to build XML sections
 
@@ -29,7 +28,7 @@
  * @param {*} unsafe
  * @returns {string}
  * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-XML-ESCAPE
+ * @req REQ-XML-SCHEMA
  */
 export function escapeXml(unsafe) {
   return String(unsafe)
@@ -55,7 +54,7 @@ export function buildXmlDeclaration() {
  * @param {string} timestamp
  * @returns {string}
  * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-XML-ROOT-START
+ * @req REQ-XML-SCHEMA
  */
 export function buildRootStart(timestamp) {
   return `<outdated-packages timestamp="${escapeXml(timestamp)}">\n`;
@@ -65,7 +64,7 @@ export function buildRootStart(timestamp) {
  * Build the closing root element
  * @returns {string}
  * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-XML-ROOT-END
+ * @req REQ-XML-SCHEMA
  */
 export function buildRootEnd() {
   return '</outdated-packages>';
@@ -76,7 +75,7 @@ export function buildRootEnd() {
  * @param {XmlError} error
  * @returns {string}
  * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-XML-ERROR-SECTION
+ * @req REQ-ERROR-FORMAT
  */
 export function buildErrorSection(error) {
   let xml = '  <error>\n';
@@ -94,7 +93,7 @@ export function buildErrorSection(error) {
  * @param {Array<any>} rows
  * @returns {string}
  * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-XML-PACKAGES-SECTION
+ * @req REQ-XML-SCHEMA
  */
 export function buildPackagesSection(rows) {
   let xml = '  <packages>\n';
@@ -148,7 +147,7 @@ export function buildPackagesSection(rows) {
  * @param {SummaryOptions} [summary]
  * @returns {string}
  * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-XML-SUMMARY-SECTION
+ * @req REQ-SUMMARY-STATS
  */
 export function buildSummarySection({
   totalOutdated = 0,
@@ -174,7 +173,7 @@ export function buildSummarySection({
  * @param {ThresholdsOptions} [thresholds]
  * @returns {string}
  * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-XML-THRESHOLDS-SECTION
+ * @req REQ-XML-SCHEMA
  */
 export function buildThresholdsSection({ prod, dev } = {}) {
   let xml = '  <thresholds>\n';
