@@ -1,6 +1,4 @@
 #!/usr/bin/env node
-/* eslint-disable traceability/valid-annotation-format */
-/* eslint-disable traceability/valid-req-reference */
 // @ts-check
 
 import fs from 'fs';
@@ -17,8 +15,8 @@ import { parseOptions } from '../src/cli-options.js';
 
 /**
  * Print usage help for the CLI.
- * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
- * @req REQ-CLI-HELP - Provide help documentation for CLI options.
+ * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
+ * @supports prompts/014.0-DEV-INVALID-OPTION-ERROR.md REQ-HELP-SUGGESTION
  */
 function printHelp() {
   console.log('Usage: dry-aged-deps [options]');
@@ -41,8 +39,6 @@ function printHelp() {
   console.log(
     '  --config-file=<file>    Path to JSON config file (default: .dry-aged-deps.json). CLI flags override config file values'
   );
-  // @story prompts/014.0-DEV-INVALID-OPTION-ERROR.md
-  // @req REQ-HELP-SUGGESTION - Suggest using --help in error messages
   console.log('');
   console.log('Examples of invalid option error messages:');
   console.log('  $ dry-aged-deps --json');
@@ -57,8 +53,7 @@ function printHelp() {
 
 /**
  * Print the installed package version.
- * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
- * @req REQ-CLI-VERSION - Provide version information.
+ * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
  */
 function printVersion() {
   const __filename = fileURLToPath(import.meta.url);
@@ -72,9 +67,8 @@ function printVersion() {
  * Handle errors by formatting output according to the selected format.
  * @param {any} error - The error to handle.
  * @param {string} format - The output format.
- * @story prompts/008.0-DEV-JSON-OUTPUT.md
- * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-ERROR-HANDLING - Consistent error output in all formats.
+ * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-ERROR-FORMAT
+ * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-ERROR-FORMAT
  */
 function handleError(error, format) {
   if (format === 'xml') {
@@ -107,8 +101,7 @@ function handleError(error, format) {
  * Load outdated data either from mock, skip, or by running `npm outdated --json`.
  * @param {string} format - Output format.
  * @returns {Promise<{data: object, fetchVersionTimesOverride: function|undefined, checkVulnerabilitiesOverride: function|undefined}>}
- * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
- * @req REQ-DATA-LOADING - Load npm outdated data appropriately.
+ * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND REQ-JSON-PARSE
  */
 async function loadOutdatedData(format) {
   const __filename = fileURLToPath(import.meta.url);
@@ -157,8 +150,7 @@ async function loadOutdatedData(format) {
 
 /**
  * Main CLI entrypoint.
- * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
- * @req REQ-NPM-COMMAND
+ * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND
  * @returns {Promise<void>}
  */
 async function main() {

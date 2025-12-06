@@ -1,9 +1,6 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference */
+/* eslint-disable traceability/require-test-traceability, traceability/require-story-annotation, traceability/require-req-annotation */
 /**
  * Helper to mock execFile invocations for fetchVersionTimes tests.
- * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
- * @req REQ-MOCK-EXECFILE
  */
 function createExecFileMock() {
   const calls = [];
