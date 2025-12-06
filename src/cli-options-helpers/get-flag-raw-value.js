@@ -1,5 +1,4 @@
 // @ts-check
-/* eslint-disable traceability/require-branch-annotation */
 /**
  * Extract raw flag value from CLI arguments.
  * @story prompts/014.0-DEV-INVALID-OPTION-ERROR.md
@@ -12,11 +11,17 @@
 export function getFlagRawValue(args, flag) {
   const prefix = `--${flag}=`;
   const eqArg = args.find((a) => a.startsWith(prefix));
+  // @story prompts/014.0-DEV-INVALID-OPTION-ERROR.md
+  // @req REQ-ERROR-EXIT-CODE
   if (eqArg) {
     return eqArg.slice(prefix.length);
   }
   const idx = args.indexOf(`--${flag}`);
+  // @story prompts/014.0-DEV-INVALID-OPTION-ERROR.md
+  // @req REQ-ERROR-EXIT-CODE
   if (idx !== -1) {
+    // @story prompts/014.0-DEV-INVALID-OPTION-ERROR.md
+    // @req REQ-ERROR-EXIT-CODE
     if (args.length > idx + 1) {
       return args[idx + 1];
     }

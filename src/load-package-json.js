@@ -10,6 +10,8 @@ import path from 'path';
  * @returns {{ dependencies: Record<string, string>, devDependencies: Record<string, string> }}
  */
 export function loadPackageJson() {
+  // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+  // @req REQ-JSON-PARSE
   try {
     const pkgPath = path.join(process.cwd(), 'package.json');
     const pkgContent = fs.readFileSync(pkgPath, 'utf8');

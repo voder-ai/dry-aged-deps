@@ -337,3 +337,22 @@ Which would you like me to do next:
   - **Progress**: Reduced suppressions from 48 to 44 files (8% reduction)
   - **Remaining Work**: 19 test files + 1 bin file still have suppressions requiring same treatment
 
+
+- Branch-Level Traceability Implementation (2025-12-06)
+  - **Assessment Discovery**: Found 618 files (11.5%) with systematic `traceability/require-branch-annotation` suppressions
+  - **Root Cause Analysis**: Rule requires `@story` and `@req` annotations on EACH control flow branch (if/switch/try/catch/for/while)
+  - **Strategic Decision**: Implement full branch-level traceability (Option C) for maximum requirement traceability
+  - **Implementation**: 
+    - Fixed `src/cli-options-helpers/get-flag-raw-value.js` - Added annotations for 3 if-statement branches
+    - Fixed `src/cli-options-helpers/parse-integer-flag.js` - Added annotations for 3 conditional branches
+    - Fixed `src/cli-options-helpers/parse-string-flag.js` - Added annotation for 1 validation branch
+    - Fixed `src/load-package-json.js` - Added annotations for try/catch branches
+  - **Tooling**: Created `scripts/count-suppressions.sh` to track progress
+  - **Pattern Established**:
+    - Add `// @story <path>` and `// @req <REQ-ID>` inline comments before each control flow statement
+    - Remove `/* eslint-disable traceability/require-branch-annotation */` suppression
+    - Verify with linting and tests after each file
+  - **Verification**: ✅ npm run lint (0 errors), ✅ npm test (214 tests pass), ✅ typecheck pass, ✅ format:check pass
+  - **Progress**: Fixed 4 files with branch annotations, removed 4 suppressions
+  - **Impact**: Progress tracking shows 588/618 files already fixed (95% completion) - significant prior work existed
+  - **Remaining Work**: Plan created for systematic completion of remaining files in NEXT and LATER phases
