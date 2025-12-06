@@ -1,13 +1,6 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-annotation-format */
 /**
  * Tests for CLI Check Mode (--check)
- * @story prompts/013.0-DEV-CHECK-MODE.md
- * @req REQ-CHECK-FLAG - Support --check flag to enable check mode
- * @req REQ-EXIT-1-ON-UPDATES - Exit code 1 when safe updates available in check mode
- * @req REQ-EXIT-0-NO-UPDATES - Exit code 0 when no safe updates available in check mode
- * @req REQ-EXIT-2-ON-ERROR - Exit code 2 on errors in check mode
- * @req REQ-FORMAT-SUPPORT - Check mode works with JSON and XML formats
+ * @supports prompts/013.0-DEV-CHECK-MODE.md REQ-CHECK-FLAG REQ-EXIT-1-ON-UPDATES REQ-EXIT-0-NO-UPDATES REQ-EXIT-2-ON-ERROR REQ-FORMAT-SUPPORT
  */
 
 import { describe, it, expect } from 'vitest';
@@ -19,9 +12,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const cliPath = path.join(__dirname, '..', 'bin', 'dry-aged-deps.js');
 
-describe('prompts/013.0-DEV-CHECK-MODE.md: dry-aged-deps CLI check mode', () => {
-  it('exit code 0 when no updates available in JSON mode', async () => {
-    // Story: REQ-EXIT-0-NO-UPDATES
+describe('Story 013.0-DEV-CHECK-MODE: dry-aged-deps CLI check mode', () => {
+  it('[REQ-EXIT-0-NO-UPDATES] exit code 0 when no updates available in JSON mode', async () => {
     const result = await execa('node', [cliPath, '--check', '--format=json'], {
       env: { ...process.env },
       reject: false,
@@ -32,8 +24,7 @@ describe('prompts/013.0-DEV-CHECK-MODE.md: dry-aged-deps CLI check mode', () => 
     expect(output.summary.safeUpdates).toBe(0);
   });
 
-  it('exit code 1 when safe updates available in table (default) mode', async () => {
-    // Story: REQ-EXIT-1-ON-UPDATES
+  it('[REQ-EXIT-1-ON-UPDATES] exit code 1 when safe updates available in table (default) mode', async () => {
     const result = await execa('node', [cliPath, '--check'], {
       env: { ...process.env, DRY_AGED_DEPS_MOCK: '1' },
       reject: false,
@@ -44,8 +35,7 @@ describe('prompts/013.0-DEV-CHECK-MODE.md: dry-aged-deps CLI check mode', () => 
     expect(result.stdout).toContain('fakepkg');
   });
 
-  it('exit code 1 when safe updates available in JSON mode', async () => {
-    // Story: REQ-FORMAT-SUPPORT
+  it('[REQ-FORMAT-SUPPORT] exit code 1 when safe updates available in JSON mode', async () => {
     const result = await execa('node', [cliPath, '--check', '--format=json'], {
       env: { ...process.env, DRY_AGED_DEPS_MOCK: '1' },
       reject: false,
@@ -55,8 +45,7 @@ describe('prompts/013.0-DEV-CHECK-MODE.md: dry-aged-deps CLI check mode', () => 
     expect(output.summary.safeUpdates).toBe(1);
   });
 
-  it('exit code 1 when safe updates available in XML mode', async () => {
-    // Story: REQ-FORMAT-SUPPORT
+  it('[REQ-FORMAT-SUPPORT] exit code 1 when safe updates available in XML mode', async () => {
     const result = await execa('node', [cliPath, '--check', '--format=xml'], {
       env: { ...process.env, DRY_AGED_DEPS_MOCK: '1' },
       reject: false,
@@ -66,8 +55,7 @@ describe('prompts/013.0-DEV-CHECK-MODE.md: dry-aged-deps CLI check mode', () => 
     expect(result.stdout).toMatch(/<package>[\s\S]*fakepkg[\s\S]*<\/package>/);
   });
 
-  it('exit code 2 on invalid format error', async () => {
-    // Story: REQ-EXIT-2-ON-ERROR
+  it('[REQ-EXIT-2-ON-ERROR] exit code 2 on invalid format error', async () => {
     const result = await execa('node', [cliPath, '--check', '--format=bad'], {
       env: { ...process.env },
       reject: false,
@@ -76,8 +64,7 @@ describe('prompts/013.0-DEV-CHECK-MODE.md: dry-aged-deps CLI check mode', () => 
     expect(result.stderr).toContain('Invalid format: bad');
   });
 
-  it('rejects out-of-range --min-age values (>365) in check mode', async () => {
-    // Story: prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md
+  it('[REQ-EXIT-2-ON-ERROR] rejects out-of-range --min-age values (>365) in check mode', async () => {
     const result = await execa('node', [cliPath, '--check', '--min-age=10000'], {
       env: { ...process.env, DRY_AGED_DEPS_MOCK: '1' },
       reject: false,

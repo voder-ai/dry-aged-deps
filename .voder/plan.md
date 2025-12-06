@@ -1,137 +1,120 @@
 # Implementation Plan
 
+## ROOT CAUSE ANALYSIS: Systematic Linting Suppressions
+
+**Problem**: 48 out of 94 source files (51%) contain `eslint-disable` directives for traceability rules.
+
+**Root Cause Identified**: Annotation format mismatch
+- **Current (incorrect) format in suppressed files**:
+  ```javascript
+  /**
+   * @story prompts/013.0-DEV-CHECK-MODE.md
+   * @req REQ-CHECK-FLAG - Description
+   * @req REQ-EXIT-1-ON-UPDATES - Description
+   */
+  ```
+
+- **Expected format (working files)**:
+  ```javascript
+  /**
+   * @supports prompts/013.0-DEV-CHECK-MODE.md REQ-CHECK-FLAG REQ-EXIT-1-ON-UPDATES
+   */
+  ```
+
+**Why This Happened**: Legacy annotation format from earlier implementation phase not aligned with current traceability plugin requirements.
+
+**Solution Approach**: Convert annotations from multi-line `@story`/`@req` format to single-line `@supports` format, then remove suppressions.
+
+**Verification Strategy**: 
+1. Fix ONE representative file
+2. Run `npm run lint` to verify fix works
+3. Commit that single fix
+4. Repeat for next file
+
+---
+
 ## NOW
 
-**Fix One Pilot Test File - Validate Traceability Approach**
+**COMPLETED**: Fixed the first two test files with traceability suppressions
 
-Fix `test/build-rows.additional.test.js` to establish the correct pattern for traceability annotations. This single file will serve as the reference implementation for fixing the remaining 66 test files.
+**Files Fixed**:
+1. ✅ `test/cli.check-mode.test.js` - Converted annotations, updated describe/test names, removed suppressions
+2. ✅ `test/cli-entrypoint.test.js` - Converted annotations, updated describe/test names, removed suppressions
 
-**Specific Changes**:
+**Verification**:
+- ✅ `npm run lint` passes
+- ✅ `npm test` passes (all 211 tests passing)
+- ✅ Suppressions reduced from 48 to 46
 
-1. **Remove eslint-disable suppressions** (lines 1-2)
-   - Delete both eslint-disable comment lines
+**Discovery**: Each file requires:
+1. Converting `@story`/`@req` annotations to `@supports` format
+2. Updating `describe()` block to start with `Story XXX.X-DEV-...:`
+3. Updating each `it()` or `test()` to start with `[REQ-XXX]`
+4. Removing old inline `// Story: REQ-XXX` comments
+5. Ensuring REQ IDs match what's actually in the story files
 
-2. **Add @supports annotation** (replace current JSDoc block)
-   - Format: `@supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND REQ-JSON-PARSE REQ-OUTPUT-DISPLAY`
-   - Use actual requirement IDs from the story file (REQ-NPM-COMMAND, REQ-JSON-PARSE, REQ-OUTPUT-DISPLAY)
-   - Remove invalid requirement IDs (REQ-NPM-VIEW, REQ-AGE-CALC - these don't exist in 001.0)
+**Learned**: Some files reference requirements that don't exist or have multiple stories, requiring careful analysis of each file individually.
 
-3. **Fix describe() block naming** (line 15)
-   - Change from: `'prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md: buildRows error logging'`
-   - Change to: `'Story 001.0-DEV-RUN-NPM-OUTDATED: buildRows error logging'`
-   - Use single story reference in "Story XXX.X-..." format
-
-4. **Fix test naming** (lines 16, 39, 74+)
-   - Add requirement ID prefix to each it() block
-   - Change from: `'logs warning when fetchVersionTimes throws and format is table'`
-   - Change to: `'[REQ-OUTPUT-DISPLAY] logs warning when fetchVersionTimes throws and format is table'`
-   - Apply same pattern to all it() blocks in the file
-
-5. **Verify the fix**:
-   - Run: `npx eslint --config eslint.config.js test/build-rows.additional.test.js`
-   - Confirm zero errors/warnings
-   - Run: `npm test test/build-rows.additional.test.js`
-   - Confirm tests still pass
-
-**Success Criteria**:
-- File lints with zero errors/warnings
-- All tests pass
-- No eslint-disable directives remain
-- File serves as reference pattern for remaining fixes
-
-**Why This First**:
-- Following Gall's Law: Start with one simple fix that works
-- Validates our understanding of traceability requirements
-- Creates a reference pattern to replicate
-- Allows immediate verification with existing tooling
-- Can be reverted easily if approach is wrong
-- Minimal blast radius (1 file, ~94 lines)
+---
 
 ## NEXT
 
-**Fix Second Test File - Build Confidence**
+**Fix remaining test files systematically (one at a time)**
 
-After the pilot file works, fix ONE more test file to confirm the pattern is repeatable and we haven't missed anything.
+After verifying the approach works with `test/cli.check-mode.test.js`, apply the same fix to other test files with traceability suppressions:
 
-**File**: `test/age-calculator.test.js` (choose a simple, small file)
+1. `test/cli.invalid-options.test.js` - Convert annotations, remove suppressions
+2. `test/cli.format-json.test.js` - Convert annotations, remove suppressions  
+3. `test/printOutdated.edge-cases.test.js` - Convert annotations, remove suppressions
+4. `test/cli.outdated.test.js` - Convert annotations, remove suppressions
+5. `test/cli.config-file.test.js` - Convert annotations, remove suppressions
+6. `test/cli.format-xml.test.js` - Convert annotations, remove suppressions
+7. `test/cli.flags.test.js` - Convert annotations, remove suppressions
+8. `test/printOutdated.extra.test.js` - Convert annotations, remove suppressions
 
-**Process**:
-1. Read the file to identify which story it relates to
-2. Read that story file to get valid requirement IDs
-3. Apply the same pattern as the pilot:
-   - Remove eslint-disable suppressions
-   - Add @supports annotation with valid requirement IDs
-   - Fix describe() to "Story XXX.X-..." format
-   - Add [REQ-ID] prefixes to it() blocks
-4. Verify: `npx eslint --config eslint.config.js test/age-calculator.test.js`
-5. Verify: `npm test test/age-calculator.test.js`
-6. Commit: `chore(test): fix traceability annotations in age-calculator.test.js`
+Continue with remaining ~15 test files identified in assessment.
 
-**Success Criteria**:
-- File lints with zero errors
-- Tests pass
-- Pattern validated on second file
-- Ready to continue with third file
-
----
-
-**Fix Third Test File - Establish Rhythm**
-
-After two successful fixes, fix ONE more file to establish the working rhythm.
-
-**File**: Choose the next simplest file (TBD based on what we learn)
-
-**Process**: Same as second file
-
-**Success Criteria**: Same as second file
-
----
-
-**Continue One File at a Time**
-
-After establishing the pattern works on 3 files, continue fixing one file at a time:
-- Fix one file
-- Verify linting passes
-- Verify tests pass
-- Commit that single file
+**Process for each file**:
+- Apply annotation format conversion
+- Remove `eslint-disable` directives
+- Run `npm run lint` to verify
+- Commit individually with clear message
 - Move to next file
 
-**Stop and reassess** if any file fails or reveals new issues with the pattern.
+---
 
 ## LATER
 
-**Continue Fixing Test Files One at a Time**
+**Fix bin/ and src/ files with traceability suppressions**
 
-After successfully fixing 3+ files with the established pattern:
+After all test files are fixed:
 
-- Continue fixing one file at a time
-- Each file is a separate commit
-- Stop immediately if pattern doesn't work for any file
-- Reassess approach if more than 2 files in a row have issues
+1. **Fix `bin/dry-aged-deps.js`**:
+   - Convert function-level `@story`/`@req` annotations to `@supports` format
+   - Remove the two top-level `eslint-disable` directives
+   - Verify with linting
+   - Commit
 
-**Target**: Eventually fix all 67 test files, but one at a time, not as a batch
+2. **Review any src/ files** with traceability suppressions (if any beyond bin/):
+   - Apply same conversion process
+   - Remove suppressions
+   - Verify and commit
 
----
+3. **Final verification**:
+   - Run `npm run lint` across entire codebase
+   - Confirm zero traceability-related suppressions remain
+   - Run `npm test` to ensure all tests still pass
+   - Run `npm run format:check` to verify formatting
 
-**Code Quality Improvements** (After ALL Files Fixed)
+4. **Update assessment report**:
+   - Document that code quality issue is resolved
+   - Update suppression count to 0%
+   - Mark Phase 3 as fully passed
 
-Only after all 67 test files are fixed and linting passes cleanly:
-
-1. **Enhance Pre-commit Hooks**
-   - Prevent new eslint-disable directives without justification
-
-2. **Establish Suppression Policy**
-   - Document when suppressions are acceptable
-   - Require approval for new suppressions
-
-3. **Documentation Updates**
-   - Add traceability annotation examples to developer guidelines
-   - Create quick reference guide
-
-4. **Team Training**
-   - Share reference implementations
-   - Update code review checklist
-
----
-
-**Note**: This plan is STRICTLY incremental - one file at a time, verify, commit, repeat. NO batches, NO automation across multiple files, NO mass changes. If you're not good at making changes across many files, you fix ONE file, verify it works, commit it, then ask what to do next.
+**Expected Final State**:
+- ✅ All 48 suppressions removed
+- ✅ All files use correct `@supports` annotation format
+- ✅ Linting passes without suppressions
+- ✅ Tests pass
+- ✅ Code quality phase unblocked
+- ✅ Ready to proceed with new feature development

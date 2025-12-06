@@ -1,15 +1,12 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-annotation-format */
 /**
  * Tests for retry logic in fetchVersionTimes.
- * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
- * @req REQ-NPM-VIEW - Use `npm view <package> time --json` to get publish dates
+ * @supports prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md REQ-NPM-VIEW
  */
 
 import { fetchVersionTimes } from '../src/fetch-version-times.js';
 import { createExecFileMock } from './helpers/execFileMock.js';
 
-describe('prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md: fetchVersionTimes retry logic (Story 002.0)', () => {
+describe('Story 002.0-DEV-FETCH-AVAILABLE-VERSIONS: fetchVersionTimes retry logic', () => {
   let execFileMock;
 
   beforeEach(() => {
@@ -20,7 +17,7 @@ describe('prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md: fetchVersionTimes retry
     execFileMock.mockReset();
   });
 
-  it('(REQ-NPM-VIEW) retries on transient errors and resolves on retry', async () => {
+  it('[REQ-NPM-VIEW] retries on transient errors and resolves on retry', async () => {
     let callCount = 0;
     execFileMock.mockImplementation((cmd, args, options, callback) => {
       callCount++;
@@ -43,7 +40,7 @@ describe('prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md: fetchVersionTimes retry
     expect(result).toEqual({ '1.0.0': '2023-01-01T00:00:00Z' });
   });
 
-  it('(REQ-NPM-VIEW) rejects after exceeding max retries', async () => {
+  it('[REQ-NPM-VIEW] rejects after exceeding max retries', async () => {
     // Always fail
     execFileMock.mockImplementation((cmd, args, options, callback) => {
       callback(new Error('Persistent error'));

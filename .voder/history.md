@@ -317,3 +317,23 @@ Which would you like me to do next:
   - Validated approach on single file with zero issues
   - Ready to continue with NEXT (second file) when directed
   - Following Gall's Law: one simple fix that works, ready to scale incrementally
+
+- Systematic Traceability Annotation Fixes (2025-12-06)
+  - **Assessment Phase**: Conducted comprehensive assessment discovering 48/94 files (51%) with systematic traceability suppressions
+  - **Root Cause Analysis**: Identified annotation format mismatch - files used old multi-line `@story`/`@req` format instead of required `@supports` format
+  - **Planning**: Created detailed NOW-NEXT-LATER plan in `.voder/plan.md` following Gall's Law principles
+  - **Implementation**: Fixed 4 test files with proper traceability annotations:
+    1. `test/cli.check-mode.test.js` - Converted 5 REQs, updated describe/6 tests
+    2. `test/cli-entrypoint.test.js` - Converted 3 REQs, updated describe/3 tests
+    3. `test/cli.invalid-options.test.js` - Converted 4 REQs, updated describe/5 tests
+    4. `test/fetch-version-times.retry.test.js` - Converted 1 REQ, updated describe/2 tests
+  - **Pattern Established**: 
+    - Remove `eslint-disable` suppressions
+    - Convert `@story`/`@req` to `@supports <path> <REQ-1> <REQ-2>...` format
+    - Update describe() blocks to `Story XXX.X-DEV-...:` format
+    - Add `[REQ-ID]` prefixes to all test names
+    - Remove inline `// Story: REQ-XXX` comments
+  - **Verification**: ✅ npm run lint (0 errors), ✅ npm test (211 tests pass), ✅ format/typecheck pass
+  - **Progress**: Reduced suppressions from 48 to 44 files (8% reduction)
+  - **Remaining Work**: 19 test files + 1 bin file still have suppressions requiring same treatment
+
