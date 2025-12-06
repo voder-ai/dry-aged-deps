@@ -1,10 +1,6 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-annotation-format */
 /**
  * Tests for severity threshold logic in filterBySecurity
- * @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
- * @req REQ-SEVERITY-LEVELS - Support severity levels including none, low, moderate, high, critical
- * @req REQ-FILTERING-LOGIC - Block packages when max severity >= threshold
+ * @supports prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md REQ-SEVERITY-LEVELS REQ-FILTERING-LOGIC
  */
 
 import { describe, it, expect } from 'vitest';
@@ -13,8 +9,8 @@ import { filterBySecurity } from '../src/filter-by-security.js';
 // Helper for legacy numeric stub
 const numericStub = async () => 2;
 
-describe('prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md: filterBySecurity severity threshold logic', () => {
-  it('allows vulnerabilities when all severities are below threshold', async () => {
+describe('Story 006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD: filterBySecurity severity threshold logic', () => {
+  it('[REQ-FILTERING-LOGIC] [REQ-SEVERITY-LEVELS] allows vulnerabilities when all severities are below threshold', async () => {
     const rows = [['pkg1', '1.0.0', '1.1.0', '1.1.0', 5, 'prod']];
     const details = [
       { severity: 'low', title: 'low-severity', name: 'v1' },
@@ -36,7 +32,7 @@ describe('prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md: filterBySecurity
     expect(filterReasonMap.has('pkg1')).toBe(false);
   });
 
-  it('blocks vulnerabilities at or above the threshold level', async () => {
+  it('[REQ-FILTERING-LOGIC] [REQ-SEVERITY-LEVELS] blocks vulnerabilities at or above the threshold level', async () => {
     const rows = [['pkg2', '1.0.0', '1.1.0', '1.1.0', 5, 'dev']];
     const details = [
       { severity: 'low', title: 'low-severity', name: 'v1' },
@@ -57,7 +53,7 @@ describe('prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md: filterBySecurity
     expect(filterReasonMap.get('pkg2')).toBe('security');
   });
 
-  it('uses legacy numeric stub ignoring threshold (blocks any nonzero count)', async () => {
+  it('[REQ-FILTERING-LOGIC] uses legacy numeric stub ignoring threshold (blocks any nonzero count)', async () => {
     const rows = [['pkg3', '1.0.0', '1.1.0', '1.1.0', 5, 'prod']];
     const { safeRows, vulnMap, filterReasonMap } = await filterBySecurity(
       rows,

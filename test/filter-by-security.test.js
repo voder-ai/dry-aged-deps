@@ -1,17 +1,12 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-annotation-format */
 /**
  * Tests for filterBySecurity function behavior
- * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
- * @req REQ-AUDIT-CHECK - Check vulnerabilities using audit API
- * @req REQ-TRANSITIVE-DEPS - Check transitive dependencies for vulnerabilities
- * @req REQ-SAFE-ONLY - Only include safe versions
+ * @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK REQ-TRANSITIVE-DEPS REQ-SAFE-ONLY
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { filterBySecurity } from '../src/filter-by-security.js';
 
-describe('prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md: filterBySecurity (Story 004.0)', () => {
+describe('Story 004.0-DEV-FILTER-VULNERABLE-VERSIONS: filterBySecurity', () => {
   beforeEach(() => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
   });
@@ -20,7 +15,7 @@ describe('prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md: filterBySecurity (Sto
     vi.restoreAllMocks();
   });
 
-  it('filters out rows with vulnerabilities and produces correct vulnMap and filterReasonMap', async () => {
+  it('[REQ-SAFE-ONLY] [REQ-AUDIT-CHECK] [REQ-TRANSITIVE-DEPS] filters out rows with vulnerabilities and produces correct vulnMap and filterReasonMap', async () => {
     const rows = [
       ['pkg1', '1.0.0', '1.1.0', '1.1.0', 10, 'prod'],
       ['pkg2', '1.0.0', '1.2.0', '1.2.0', 12, 'dev'],

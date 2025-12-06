@@ -1,11 +1,6 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for smart-search fallback in filterBySecurity
- * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
- * @story prompts/008.0-DEV-JSON-OUTPUT.md
- * @req REQ-SMART-SEARCH - Search newest mature versions first
- * @req REQ-FILTERING-LOGIC - Fallback to safe version logic
+ * @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SMART-SEARCH
  */
 
 import { describe, it, expect } from 'vitest';
@@ -21,8 +16,8 @@ const stubFetchVersionTimes = async (pkg) => ({
 // Stub calculateAgeInDays always returns fixed age
 const stubCalculateAgeInDays = () => 42;
 
-describe('prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md & prompts/008.0-DEV-JSON-OUTPUT.md: filterBySecurity smart-search fallback', () => {
-  it('falls back to next-newest safe version when latest mature version is vulnerable', async () => {
+describe('Story 004.0-DEV-FILTER-VULNERABLE-VERSIONS: filterBySecurity smart-search fallback', () => {
+  it('[REQ-SMART-SEARCH] falls back to next-newest safe version when latest mature version is vulnerable', async () => {
     const rows = [['pkg1', '1.0.0', '1.3.0', '1.3.0', 30, 'prod']];
     // Simulate vulnerability for 1.3.0, safe for 1.2.0
     const checkVuln = async (name, version) => {
@@ -45,7 +40,7 @@ describe('prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md & prompts/008.0-DEV-JS
     expect(vulnMap.get('pkg1')).toEqual({ count: 0, maxSeverity: 'none', details: [] });
   });
 
-  it('indicates no safe version when all mature versions are vulnerable', async () => {
+  it('[REQ-SMART-SEARCH] indicates no safe version when all mature versions are vulnerable', async () => {
     const rows = [['pkg2', '2.0.0', '2.3.0', '2.3.0', 30, 'dev']];
     // All versions vulnerable
     const checkVuln = async () => 2;
