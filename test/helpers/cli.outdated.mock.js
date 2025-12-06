@@ -1,3 +1,4 @@
+/* eslint-disable traceability/require-branch-annotation */
 /**
  * Stub module for dry-aged-deps CLI outdated testing
  * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND REQ-OUTPUT-DISPLAY

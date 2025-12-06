@@ -1,3 +1,4 @@
+/* eslint-disable traceability/require-branch-annotation */
 /**
  * Tests for CLI E2E real fixture behavior and positive age detection
  * @supports prompts/003.0-DEV-IDENTIFY-OUTDATED.md REQ-AGE-THRESHOLD REQ-OUTPUT

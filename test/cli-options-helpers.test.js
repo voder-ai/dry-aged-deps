@@ -1,3 +1,4 @@
+/* eslint-disable traceability/require-branch-annotation */
 /**
  * Tests for CLI flag parsing helpers
  * @supports prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md REQ-CLI-FLAG

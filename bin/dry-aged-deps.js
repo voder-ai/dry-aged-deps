@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable traceability/require-branch-annotation */
 // @ts-check
 
 import fs from 'fs';

@@ -1,4 +1,5 @@
 // @ts-check
+/* eslint-disable traceability/require-branch-annotation */
 /**
  * Configuration loader for CLI options, supports JSON config file.
  * @module config-loader

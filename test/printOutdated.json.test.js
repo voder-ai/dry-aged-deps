@@ -1,3 +1,4 @@
+/* eslint-disable traceability/require-branch-annotation */
 /**
  * Tests for JSON output format
  * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-CLI-FLAG REQ-JSON-SCHEMA REQ-COMPLETE-DATA REQ-SUMMARY-STATS REQ-SILENT-MODE

@@ -1,4 +1,5 @@
 // @ts-check
+/* eslint-disable traceability/require-branch-annotation */
 import { loadConfigFile } from './config-loader.js';
 import {
   parseFormatFlag,

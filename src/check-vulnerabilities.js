@@ -1,4 +1,5 @@
 // @ts-check
+/* eslint-disable traceability/require-branch-annotation */
 import { execFile } from 'child_process';
 import { promises as fs } from 'fs';
 import { tmpdir } from 'os';

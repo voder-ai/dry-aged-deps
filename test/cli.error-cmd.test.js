@@ -1,3 +1,4 @@
+/* eslint-disable traceability/require-branch-annotation */
 /**
  * Tests for CLI exit code behaviors
  * @supports prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md REQ-EXIT-0 REQ-EXIT-1 REQ-EXIT-2

@@ -60,7 +60,7 @@ export default [
     rules: {
       'traceability/require-story-annotation': 'error',
       'traceability/require-req-annotation': 'error',
-      'traceability/require-branch-annotation': 'off',
+      'traceability/require-branch-annotation': 'error',
       'traceability/valid-annotation-format': [
         'warn',
         {

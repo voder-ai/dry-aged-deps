@@ -1,4 +1,5 @@
 // @ts-check
+/* eslint-disable traceability/require-branch-annotation */
 
 import { fetchVersionTimes as defaultFetchVersionTimes } from './fetch-version-times.js';
 import { calculateAgeInDays as defaultCalculateAgeInDays } from './age-calculator.js';

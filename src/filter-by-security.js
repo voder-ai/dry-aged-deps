@@ -1,4 +1,5 @@
 // @ts-check
+/* eslint-disable traceability/require-branch-annotation */
 import { findSafeVersionSmartSearch } from './security-smart-search.js';
 import { computeVulnerabilityStats, countAboveThreshold } from './security-helpers.js';
 

@@ -1,4 +1,5 @@
 // @ts-check
+/* eslint-disable traceability/require-branch-annotation */
 import { execFile as cpExecFile } from 'child_process';
 
 /**

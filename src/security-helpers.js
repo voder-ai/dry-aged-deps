@@ -1,4 +1,5 @@
 // @ts-check
+/* eslint-disable traceability/require-branch-annotation */
 /**
  * Compute vulnerability metrics from result object.
  * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md

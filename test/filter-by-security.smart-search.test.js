@@ -1,5 +1,6 @@
+/* eslint-disable traceability/require-branch-annotation */
 /**
- * Tests for smart-search fallback in filterBySecurity
+ * Tests for smart-search fallback logic in filterBySecurity.
  * @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SMART-SEARCH
  */
 

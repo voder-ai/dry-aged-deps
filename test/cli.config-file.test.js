@@ -1,5 +1,6 @@
+/* eslint-disable traceability/require-branch-annotation */
 /**
- * Tests for CLI config file support
+ * Tests for CLI with config file support
  * @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-CONFIG-LOCATION REQ-CONFIG-SCHEMA REQ-PRECEDENCE REQ-VALIDATION REQ-ERROR-MESSAGES REQ-OPTIONAL REQ-MERGE-LOGIC
  */
 

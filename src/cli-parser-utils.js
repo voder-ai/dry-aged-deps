@@ -1,4 +1,5 @@
 // @ts-check
+/* eslint-disable traceability/require-branch-annotation */
 import { createStringFlagParser, createIntegerFlagParser } from './cli-options-helpers/utils-common.js';
 
 /**

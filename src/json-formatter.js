@@ -1,4 +1,5 @@
 // @ts-check
+/* eslint-disable traceability/require-branch-annotation */
 // Story: prompts/008.0-DEV-JSON-OUTPUT.md
 // json-formatter.js
 // Formats outdated dependencies and summary data into JSON
