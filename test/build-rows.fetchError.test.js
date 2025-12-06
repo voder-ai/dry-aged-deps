@@ -1,10 +1,6 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-annotation-format */
 /**
  * Tests for buildRows handling version-fetch errors.
- * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
- * @req REQ-NPM-VIEW - Use npm view to fetch publish dates for newer versions
- * @req REQ-AGE-CALC - Calculate days since publication
+ * @supports prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md REQ-NPM-VIEW REQ-AGE-CALC
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
@@ -14,7 +10,7 @@ import { buildRows } from '../src/build-rows.js';
  * Story: 002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
  * Ensure buildRows handles fetchVersionTimes errors by setting age to "N/A".
  */
-describe('prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md: buildRows error handling', () => {
+describe('Story 002.0-DEV-FETCH-AVAILABLE-VERSIONS: buildRows error handling', () => {
   beforeEach(() => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
   });
@@ -23,7 +19,7 @@ describe('prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md: buildRows error handlin
     vi.restoreAllMocks();
   });
 
-  it('sets age to "N/A" when fetchVersionTimes throws error', async () => {
+  it('[REQ-NPM-VIEW] [REQ-AGE-CALC] sets age to "N/A" when fetchVersionTimes throws error', async () => {
     const data = {
       pkg1: { current: '1.0.0', wanted: '1.1.0', latest: '1.1.0' },
     };

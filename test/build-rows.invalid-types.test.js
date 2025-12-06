@@ -1,9 +1,6 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-annotation-format */
 /****
  * Tests for buildRows handling non-object versionTimes.
- * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
- * @req REQ-OUTPUT-DISPLAY - Display outdated package results including handling of missing or invalid data
+ * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
  */
 
 import { describe, it, expect, vi } from 'vitest';
@@ -12,8 +9,8 @@ import { buildRows } from '../src/build-rows.js';
 /**
  * Ensure that if fetchVersionTimes returns a non-object (e.g., string), buildRows treats age as "N/A" and does not log errors or call calculateAgeInDays.
  */
-describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md: buildRows non-object versionTimes', () => {
-  it('handles non-object versionTimes gracefully without errors', async () => {
+describe('Story 001.0-DEV-RUN-NPM-OUTDATED: buildRows non-object versionTimes', () => {
+  it('[REQ-OUTPUT-DISPLAY] handles non-object versionTimes gracefully without errors', async () => {
     const data = {
       pkg1: { current: '1.0.0', wanted: '1.1.0', latest: '1.1.0' },
     };
