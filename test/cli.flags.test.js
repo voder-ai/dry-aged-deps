@@ -1,10 +1,7 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for CLI severity flag parsing
- * @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
- * @req REQ-CLI-FLAG-PARSER - Generic CLI flag parsing logic for --severity
- * @req REQ-INVALID-VALUE-ERROR - Error on invalid severity values
+ * @supports prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md REQ-CLI-FLAG
+ * @supports prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md REQ-CLI-FLAG REQ-VALIDATION
  */
 
 import { execa } from 'execa';
@@ -15,26 +12,26 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const cliPath = path.join(__dirname, '..', 'bin', 'dry-aged-deps.js');
 
-describe('prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md: CLI --min-age flag', () => {
-  it('rejects non-integer values', async () => {
+describe('Story 005.0-DEV-CONFIGURABLE-AGE-THRESHOLD: CLI --min-age flag', () => {
+  it('[REQ-VALIDATION] rejects non-integer values', async () => {
     await expect(execa('node', [cliPath, '--min-age=abc'])).rejects.toMatchObject({ exitCode: 2 });
   });
 
-  it('rejects out-of-range values (0)', async () => {
+  it('[REQ-VALIDATION] rejects out-of-range values (0)', async () => {
     await expect(execa('node', [cliPath, '--min-age=0'])).rejects.toMatchObject({ exitCode: 2 });
   });
 
-  it('rejects out-of-range values (>365)', async () => {
+  it('[REQ-VALIDATION] rejects out-of-range values (>365)', async () => {
     await expect(execa('node', [cliPath, '--min-age=366'])).rejects.toMatchObject({ exitCode: 2 });
   });
 
-  it('rejects missing value for --min-age', async () => {
+  it('[REQ-VALIDATION] rejects missing value for --min-age', async () => {
     await expect(execa('node', [cliPath, '--min-age'])).rejects.toMatchObject({
       exitCode: 2,
     });
   });
 
-  it('defaults to 7 when not provided', async () => {
+  it('[REQ-CLI-FLAG] defaults to 7 when not provided', async () => {
     const result = await execa('node', [cliPath, '--format=json'], {
       cwd: process.cwd(),
     });
@@ -44,7 +41,7 @@ describe('prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md: CLI --min-age fl
     expect(obj.summary.thresholds.dev.minAge).toBe(7);
   });
 
-  it('overrides default value when provided', async () => {
+  it('[REQ-CLI-FLAG] overrides default value when provided', async () => {
     const result = await execa('node', [cliPath, '--format=json', '--min-age=10'], { cwd: process.cwd() });
     expect(result.exitCode).toBe(0);
     const obj = JSON.parse(result.stdout);
@@ -53,18 +50,18 @@ describe('prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md: CLI --min-age fl
   });
 });
 
-describe('CLI --severity flag', () => {
-  it('rejects invalid severity values', async () => {
+describe('Story 006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD: CLI --severity flag', () => {
+  it('[REQ-VALIDATION] rejects invalid severity values', async () => {
     await expect(execa('node', [cliPath, '--severity=foo'])).rejects.toMatchObject({ exitCode: 2 });
   });
 
-  it('rejects missing value for --severity', async () => {
+  it('[REQ-VALIDATION] rejects missing value for --severity', async () => {
     await expect(execa('node', [cliPath, '--severity'])).rejects.toMatchObject({
       exitCode: 2,
     });
   });
 
-  it('defaults to "none" when not provided', async () => {
+  it('[REQ-CLI-FLAG] defaults to "none" when not provided', async () => {
     const result = await execa('node', [cliPath, '--format=json']);
     expect(result.exitCode).toBe(0);
     // No direct output for severity, but CLI should not error
@@ -75,7 +72,7 @@ describe('CLI --severity flag', () => {
 
   const valid = ['none', 'low', 'moderate', 'high', 'critical'];
 
-  it.each(valid)('parses valid severity %s', { timeout: 30000 }, async (level) => {
+  it.each(valid)('[REQ-VALIDATION] parses valid severity %s', { timeout: 30000 }, async (level) => {
     const result = await execa('node', [cliPath, '--format=json', `--severity=${level}`]);
     expect(result.exitCode).toBe(0);
     const obj = JSON.parse(result.stdout);

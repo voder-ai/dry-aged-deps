@@ -1,13 +1,10 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for CLI flag parsing helpers
- * @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
- * @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
- * @story prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md
- * @story prompts/008.0-DEV-JSON-OUTPUT.md
- * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-CLI-FLAG-PARSER - Generic CLI flag parsing logic for CLI flags
+ * @supports prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md REQ-CLI-FLAG
+ * @supports prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md REQ-CLI-FLAG REQ-VALIDATION
+ * @supports prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md REQ-CLI-FLAGS
+ * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-CLI-FLAG REQ-VALIDATION
+ * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-CLI-FLAG REQ-VALIDATION
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
@@ -33,23 +30,23 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe('prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md & prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md & prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md & prompts/008.0-DEV-JSON-OUTPUT.md & prompts/009.0-DEV-XML-OUTPUT.md: parseFormatFlag', () => {
+describe('Story 008.0-DEV-JSON-OUTPUT: parseFormatFlag', () => {
   const validFormats = ['table', 'json', 'xml'];
 
-  it('returns default format when no flag provided', () => {
+  it('[REQ-VALIDATION] returns default format when no flag provided', () => {
     expect(parseFormatFlag([], 'table', validFormats)).toBe('table');
     expect(parseFormatFlag([], 'json', validFormats)).toBe('json');
   });
 
-  it('parses --format=<value> syntax', () => {
+  it('[REQ-VALIDATION] parses --format=<value> syntax', () => {
     expect(parseFormatFlag(['--format=json'], 'table', validFormats)).toBe('json');
   });
 
-  it('parses --format <value> syntax', () => {
+  it('[REQ-VALIDATION] parses --format <value> syntax', () => {
     expect(parseFormatFlag(['--format', 'xml'], 'table', validFormats)).toBe('xml');
   });
 
-  it('errors and exits on invalid format', () => {
+  it('[REQ-VALIDATION] errors and exits on invalid format', () => {
     const args = ['--format=invalid'];
     try {
       parseFormatFlag(args, 'table', validFormats);
@@ -60,21 +57,21 @@ describe('prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md & prompts/006.0-DEV-CO
   });
 });
 
-describe('parseMinAgeFlag', () => {
-  it('returns default minAge when no flag provided', () => {
+describe('Story 005.0-DEV-CONFIGURABLE-AGE-THRESHOLD: parseMinAgeFlag', () => {
+  it('[REQ-CLI-FLAG] returns default minAge when no flag provided', () => {
     expect(parseMinAgeFlag([], 7)).toBe(7);
     expect(parseMinAgeFlag([], 15)).toBe(15);
   });
 
-  it('parses --min-age=<number>', () => {
+  it('[REQ-CLI-FLAG] parses --min-age=<number>', () => {
     expect(parseMinAgeFlag(['--min-age=10'], 7)).toBe(10);
   });
 
-  it('parses --min-age <number>', () => {
+  it('[REQ-CLI-FLAG] parses --min-age <number>', () => {
     expect(parseMinAgeFlag(['--min-age', '20'], 7)).toBe(20);
   });
 
-  it('errors on non-integer value', () => {
+  it('[REQ-VALIDATION] errors on non-integer value', () => {
     try {
       parseMinAgeFlag(['--min-age=abc'], 7);
     } catch (err) {
@@ -83,7 +80,7 @@ describe('parseMinAgeFlag', () => {
     }
   });
 
-  it('errors on out-of-range number (0)', () => {
+  it('[REQ-VALIDATION] errors on out-of-range number (0)', () => {
     try {
       parseMinAgeFlag(['--min-age=0'], 7);
     } catch (err) {
@@ -91,7 +88,7 @@ describe('parseMinAgeFlag', () => {
     }
   });
 
-  it('errors on out-of-range number (>365)', () => {
+  it('[REQ-VALIDATION] errors on out-of-range number (>365)', () => {
     try {
       parseMinAgeFlag(['--min-age=366'], 7);
     } catch (err) {
@@ -99,7 +96,7 @@ describe('parseMinAgeFlag', () => {
     }
   });
 
-  it('errors when missing value for --min-age flag', () => {
+  it('[REQ-VALIDATION] errors when missing value for --min-age flag', () => {
     try {
       parseMinAgeFlag(['--min-age'], 7);
     } catch (err) {
@@ -109,23 +106,23 @@ describe('parseMinAgeFlag', () => {
   });
 });
 
-describe('parseSeverityFlag', () => {
+describe('Story 006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD: parseSeverityFlag', () => {
   const validSeverities = ['none', 'low', 'moderate', 'high', 'critical'];
 
-  it('returns default severity when no flag provided', () => {
+  it('[REQ-CLI-FLAG] returns default severity when no flag provided', () => {
     expect(parseSeverityFlag([], 'none', validSeverities)).toBe('none');
     expect(parseSeverityFlag([], 'high', validSeverities)).toBe('high');
   });
 
-  it('parses --severity=<value>', () => {
+  it('[REQ-CLI-FLAG] parses --severity=<value>', () => {
     expect(parseSeverityFlag(['--severity=low'], 'none', validSeverities)).toBe('low');
   });
 
-  it('parses --severity <value>', () => {
+  it('[REQ-CLI-FLAG] parses --severity <value>', () => {
     expect(parseSeverityFlag(['--severity', 'critical'], 'none', validSeverities)).toBe('critical');
   });
 
-  it('errors on invalid severity value', () => {
+  it('[REQ-VALIDATION] errors on invalid severity value', () => {
     try {
       parseSeverityFlag(['--severity=foo'], 'none', validSeverities);
     } catch (err) {
@@ -134,7 +131,7 @@ describe('parseSeverityFlag', () => {
     }
   });
 
-  it('errors when missing value for --severity flag', () => {
+  it('[REQ-VALIDATION] errors when missing value for --severity flag', () => {
     try {
       parseSeverityFlag(['--severity'], 'none', validSeverities);
     } catch (err) {
@@ -144,20 +141,20 @@ describe('parseSeverityFlag', () => {
   });
 });
 
-describe('parseProdMinAgeFlag', () => {
-  it('returns default prodMinAge when no flag provided', () => {
+describe('Story 007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS: parseProdMinAgeFlag', () => {
+  it('[REQ-CLI-FLAGS] returns default prodMinAge when no flag provided', () => {
     expect(parseProdMinAgeFlag([], 5)).toBe(5);
   });
 
-  it('parses --prod-min-age=<number>', () => {
+  it('[REQ-CLI-FLAGS] parses --prod-min-age=<number>', () => {
     expect(parseProdMinAgeFlag(['--prod-min-age=30'], 5)).toBe(30);
   });
 
-  it('parses --prod-min-age <number>', () => {
+  it('[REQ-CLI-FLAGS] parses --prod-min-age <number>', () => {
     expect(parseProdMinAgeFlag(['--prod-min-age', '40'], 5)).toBe(40);
   });
 
-  it('errors on invalid prod-min-age value', () => {
+  it('[REQ-VALIDATION] errors on invalid prod-min-age value', () => {
     try {
       parseProdMinAgeFlag(['--prod-min-age=xyz'], 5);
     } catch (err) {
@@ -166,7 +163,7 @@ describe('parseProdMinAgeFlag', () => {
     }
   });
 
-  it('errors when missing value for --prod-min-age flag', () => {
+  it('[REQ-VALIDATION] errors when missing value for --prod-min-age flag', () => {
     try {
       parseProdMinAgeFlag(['--prod-min-age'], 5);
     } catch (err) {
@@ -176,20 +173,20 @@ describe('parseProdMinAgeFlag', () => {
   });
 });
 
-describe('parseDevMinAgeFlag', () => {
-  it('returns default devMinAge when no flag provided', () => {
+describe('Story 007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS: parseDevMinAgeFlag', () => {
+  it('[REQ-CLI-FLAGS] returns default devMinAge when no flag provided', () => {
     expect(parseDevMinAgeFlag([], 8)).toBe(8);
   });
 
-  it('parses --dev-min-age=<number>', () => {
+  it('[REQ-CLI-FLAGS] parses --dev-min-age=<number>', () => {
     expect(parseDevMinAgeFlag(['--dev-min-age=12'], 8)).toBe(12);
   });
 
-  it('parses --dev-min-age <number>', () => {
+  it('[REQ-CLI-FLAGS] parses --dev-min-age <number>', () => {
     expect(parseDevMinAgeFlag(['--dev-min-age', '22'], 8)).toBe(22);
   });
 
-  it('errors on invalid dev-min-age value', () => {
+  it('[REQ-VALIDATION] errors on invalid dev-min-age value', () => {
     try {
       parseDevMinAgeFlag(['--dev-min-age=foo'], 8);
     } catch (err) {
@@ -198,7 +195,7 @@ describe('parseDevMinAgeFlag', () => {
     }
   });
 
-  it('errors when missing value for --dev-min-age flag', () => {
+  it('[REQ-VALIDATION] errors when missing value for --dev-min-age flag', () => {
     try {
       parseDevMinAgeFlag(['--dev-min-age'], 8);
     } catch (err) {
@@ -208,22 +205,22 @@ describe('parseDevMinAgeFlag', () => {
   });
 });
 
-describe('parseProdSeverityFlag', () => {
+describe('Story 007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS: parseProdSeverityFlag', () => {
   const validSeverities = ['none', 'low', 'moderate', 'high', 'critical'];
 
-  it('returns default prodMinSeverity when no flag provided', () => {
+  it('[REQ-CLI-FLAGS] returns default prodMinSeverity when no flag provided', () => {
     expect(parseProdSeverityFlag([], 'moderate', validSeverities)).toBe('moderate');
   });
 
-  it('parses --prod-severity=<value>', () => {
+  it('[REQ-CLI-FLAGS] parses --prod-severity=<value>', () => {
     expect(parseProdSeverityFlag(['--prod-severity=high'], 'low', validSeverities)).toBe('high');
   });
 
-  it('parses --prod-severity <value>', () => {
+  it('[REQ-CLI-FLAGS] parses --prod-severity <value>', () => {
     expect(parseProdSeverityFlag(['--prod-severity', 'critical'], 'low', validSeverities)).toBe('critical');
   });
 
-  it('errors on invalid prod-severity value', () => {
+  it('[REQ-VALIDATION] errors on invalid prod-severity value', () => {
     try {
       parseProdSeverityFlag(['--prod-severity=bar'], 'low', validSeverities);
     } catch (err) {
@@ -233,22 +230,22 @@ describe('parseProdSeverityFlag', () => {
   });
 });
 
-describe('parseDevSeverityFlag', () => {
+describe('Story 007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS: parseDevSeverityFlag', () => {
   const validSeverities = ['none', 'low', 'moderate', 'high', 'critical'];
 
-  it('returns default devMinSeverity when no flag provided', () => {
+  it('[REQ-CLI-FLAGS] returns default devMinSeverity when no flag provided', () => {
     expect(parseDevSeverityFlag([], 'high', validSeverities)).toBe('high');
   });
 
-  it('parses --dev-severity=<value>', () => {
+  it('[REQ-CLI-FLAGS] parses --dev-severity=<value>', () => {
     expect(parseDevSeverityFlag(['--dev-severity=low'], 'high', validSeverities)).toBe('low');
   });
 
-  it('parses --dev-severity <value>', () => {
+  it('[REQ-CLI-FLAGS] parses --dev-severity <value>', () => {
     expect(parseDevSeverityFlag(['--dev-severity', 'moderate'], 'high', validSeverities)).toBe('moderate');
   });
 
-  it('errors on invalid dev-severity value', () => {
+  it('[REQ-VALIDATION] errors on invalid dev-severity value', () => {
     try {
       parseDevSeverityFlag(['--dev-severity=baz'], 'high', validSeverities);
     } catch (err) {

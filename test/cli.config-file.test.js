@@ -1,9 +1,6 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for CLI config file support
- * @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
- * @req REQ-CONFIG-LOAD - Read and apply CLI configuration file
+ * @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-CONFIG-LOCATION REQ-CONFIG-SCHEMA REQ-PRECEDENCE REQ-VALIDATION REQ-ERROR-MESSAGES REQ-OPTIONAL REQ-MERGE-LOGIC
  */
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
@@ -16,8 +13,7 @@ const cliPath = path.join(__dirname, '..', 'bin', 'dry-aged-deps.js');
 let tempDir;
 /**
  * Helper to write CLI config files for tests
- * @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
- * @req REQ-CONFIG-LOAD - Helper for writing config file in tests
+ * @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-CONFIG-SCHEMA
  */
 async function writeConfig(dir, name, content) {
   const filePath = path.join(dir, name);
@@ -40,8 +36,8 @@ afterEach(async () => {
   }
 });
 
-describe('prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md & prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md: CLI config-file support', () => {
-  it('applies defaults from .dry-aged-deps.json when no flags provided', async () => {
+describe('Story 010.0-DEV-CONFIG-FILE-SUPPORT: CLI config-file support', () => {
+  it('[REQ-CONFIG-SCHEMA][REQ-OPTIONAL] applies defaults from .dry-aged-deps.json when no flags provided', async () => {
     // Arrange: write config file
     const config = {
       minAge: 10,
@@ -65,7 +61,7 @@ describe('prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md & prompts/010.0-DEV-CONFIG-FI
     expect(obj.summary.thresholds.prod.minSeverity).not.toBe('low');
   });
 
-  it('CLI flags override config file values', async () => {
+  it('[REQ-PRECEDENCE] CLI flags override config file values', async () => {
     const config = { minAge: 8, severity: 'low', format: 'json' };
     await writeConfig(tempDir, '.dry-aged-deps.json', JSON.stringify(config));
 
@@ -80,7 +76,7 @@ describe('prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md & prompts/010.0-DEV-CONFIG-FI
     expect(obj.summary.thresholds.prod.minSeverity).toBe('high');
   });
 
-  it('invalid config JSON exits with code 2 and error message', async () => {
+  it('[REQ-VALIDATION][REQ-ERROR-MESSAGES] invalid config JSON exits with code 2 and error message', async () => {
     await writeConfig(tempDir, '.dry-aged-deps.json', '{ invalidJson: }');
     try {
       await execa('node', [cliPath], { cwd: tempDir });
@@ -90,7 +86,7 @@ describe('prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md & prompts/010.0-DEV-CONFIG-FI
     }
   });
 
-  it('unknown config key exits with code 2 and error message', async () => {
+  it('[REQ-VALIDATION][REQ-ERROR-MESSAGES] unknown config key exits with code 2 and error message', async () => {
     const cfg = { foo: 123 };
     await writeConfig(tempDir, '.dry-aged-deps.json', JSON.stringify(cfg));
     await expect(execa('node', [cliPath], { cwd: tempDir })).rejects.toMatchObject({ exitCode: 2 });
@@ -101,13 +97,13 @@ describe('prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md & prompts/010.0-DEV-CONFIG-FI
     }
   });
 
-  it('invalid config values for minAge exits with code 2', async () => {
+  it('[REQ-VALIDATION] invalid config values for minAge exits with code 2', async () => {
     await writeConfig(tempDir, '.dry-aged-deps.json', JSON.stringify({ minAge: 0 }));
     await expect(execa('node', [cliPath], { cwd: tempDir })).rejects.toMatchObject({ exitCode: 2 });
   });
 
   // Story: prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
-  it('rejects config minAge >365', async () => {
+  it('[REQ-VALIDATION][REQ-ERROR-MESSAGES] rejects config minAge >365', async () => {
     const config = { minAge: 366, format: 'json' };
     await writeConfig(tempDir, '.dry-aged-deps.json', JSON.stringify(config));
     try {
@@ -118,7 +114,7 @@ describe('prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md & prompts/010.0-DEV-CONFIG-FI
     }
   });
 
-  it('supports custom config file name via --config-file flag', async () => {
+  it('[REQ-CONFIG-LOCATION] supports custom config file name via --config-file flag', async () => {
     const customName = 'custom.json';
     const cfg = { minAge: 12, severity: 'moderate', format: 'json' };
     await writeConfig(tempDir, customName, JSON.stringify(cfg));
@@ -128,7 +124,7 @@ describe('prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md & prompts/010.0-DEV-CONFIG-FI
     expect(obj.summary.thresholds.prod.minSeverity).toBe('moderate');
   });
 
-  it('missing custom config file exits with code 2 and error message', async () => {
+  it('[REQ-ERROR-MESSAGES] missing custom config file exits with code 2 and error message', async () => {
     const customName = 'nope.json';
     await expect(execa('node', [cliPath, `--config-file=${customName}`], { cwd: tempDir })).rejects.toMatchObject({
       exitCode: 2,

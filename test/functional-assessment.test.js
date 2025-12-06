@@ -1,20 +1,17 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /****
  * Functional assessment - CLI end-to-end tests covering all core stories.
- * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
- * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
- * @story prompts/003.0-DEV-IDENTIFY-OUTDATED.md
- * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
- * @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
- * @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
- * @story prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md
- * @story prompts/008.0-DEV-JSON-OUTPUT.md
- * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
- * @story prompts/011.0-DEV-AUTO-UPDATE.md
- * @story prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md
- * @req REQ-CLI-END-TO-END - Validate end-to-end CLI behavior across stories
+ * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND REQ-OUTPUT-DISPLAY
+ * @supports prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md REQ-NPM-VIEW
+ * @supports prompts/003.0-DEV-IDENTIFY-OUTDATED.md REQ-AGE-THRESHOLD REQ-OUTPUT
+ * @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK REQ-SAFE-ONLY
+ * @supports prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md REQ-CLI-FLAG
+ * @supports prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md REQ-CLI-FLAG
+ * @supports prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md REQ-CLI-FLAGS REQ-DEPENDENCY-TYPE
+ * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-CLI-FLAG REQ-JSON-SCHEMA
+ * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-CLI-FLAG REQ-XML-SCHEMA
+ * @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-CONFIG-LOCATION REQ-PRECEDENCE
+ * @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-UPDATE-FLAG REQ-YES-FLAG
+ * @supports prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md REQ-EXIT-0 REQ-EXIT-1 REQ-EXIT-2
  */
 
 import { describe, test, expect } from 'vitest';
@@ -26,20 +23,7 @@ import { fileURLToPath } from 'url';
 
 /**
  * Helper to run CLI with given args and options.
- * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
- * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
- * @story prompts/003.0-DEV-IDENTIFY-OUTDATED.md
- * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
- * @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
- * @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
- * @story prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md
- * @story prompts/008.0-DEV-JSON-OUTPUT.md
- * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
- * @story prompts/011.0-DEV-AUTO-UPDATE.md
- * @story prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md
- * @story prompts/013.0-DEV-CHECK-MODE.md
- * @req REQ-CLI-END-TO-END - Validate end-to-end CLI behavior across stories
+ * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND
  */
 async function runCli(args, options = {}) {
   const env = { ...process.env, ...(options.env || {}) };
@@ -54,9 +38,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const cliPath = path.resolve(__dirname, '../bin/dry-aged-deps.js');
 
-describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md & prompts/003.0-DEV-IDENTIFY-OUTDATED.md & prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md & prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md & prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md & prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md & prompts/008.0-DEV-JSON-OUTPUT.md & prompts/009.0-DEV-XML-OUTPUT.md & prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md & prompts/011.0-DEV-AUTO-UPDATE.md & prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md & prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md & prompts/003.0-DEV-IDENTIFY-OUTDATED.md & prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md & prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md & prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md & prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md & prompts/008.0-DEV-JSON-OUTPUT.md & prompts/009.0-DEV-XML-OUTPUT.md & prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md & prompts/011.0-DEV-AUTO-UPDATE.md & prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md & prompts/013.0-DEV-CHECK-MODE.md: Functional assessment - CLI end-to-end', () => {
+describe('Story 001.0-DEV-RUN-NPM-OUTDATED: Functional assessment - CLI end-to-end', () => {
   // Story: prompts/001.0-DEV-RUN-NPM-OUTDATED.md
-  test('001.0-DEV-RUN-NPM-OUTDATED: Runs npm outdated and displays results', async () => {
+  test('[REQ-NPM-COMMAND][REQ-OUTPUT-DISPLAY] 001.0-DEV-RUN-NPM-OUTDATED: Runs npm outdated and displays results', async () => {
     const result = await runCli([], { env: { DRY_AGED_DEPS_MOCK: '1' } });
     expect(result.exitCode).toBe(1);
     expect(result.stdout).toContain('Outdated packages:');
@@ -65,7 +49,7 @@ describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/002.0-DEV-FETCH-AVAILA
   });
 
   // Story: prompts/002.0-DEV-FETCH-VERSION-AGES.md
-  test('002.0-DEV-FETCH-VERSION-AGES: Fetches version publish dates and calculates ages', async () => {
+  test('[REQ-NPM-VIEW] 002.0-DEV-FETCH-VERSION-AGES: Fetches version publish dates and calculates ages', async () => {
     const result = await runCli([], { env: { DRY_AGED_DEPS_MOCK: '1' } });
     expect(result.exitCode).toBe(1);
     const lines = result.stdout.split(/\r?\n/);
@@ -78,7 +62,7 @@ describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/002.0-DEV-FETCH-AVAILA
   });
 
   // Story: prompts/003.0-DEV-FILTER-MATURE-VERSIONS.md
-  test('003.0-DEV-FILTER-MATURE-VERSIONS: Filters out versions younger than threshold', async () => {
+  test('[REQ-AGE-THRESHOLD] 003.0-DEV-FILTER-MATURE-VERSIONS: Filters out versions younger than threshold', async () => {
     // Use a threshold higher than any stub age to force no mature
     const result = await runCli(['--min-age=1'], {
       env: { DRY_AGED_DEPS_MOCK: '1', DRY_AGED_DEPS_MOCK_AGE_NOW: '1' },
@@ -88,7 +72,7 @@ describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/002.0-DEV-FETCH-AVAILA
   });
 
   // Story: prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-  test('004.0-DEV-FILTER-VULNERABLE-VERSIONS: Filters out versions with known vulnerabilities (xml)', async () => {
+  test('[REQ-AUDIT-CHECK][REQ-SAFE-ONLY] 004.0-DEV-FILTER-VULNERABLE-VERSIONS: Filters out versions with known vulnerabilities (xml)', async () => {
     const result = await runCli(['--format=xml'], {
       env: { DRY_AGED_DEPS_MOCK: '1' },
     });
@@ -101,7 +85,7 @@ describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/002.0-DEV-FETCH-AVAILA
   });
 
   // Story: prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
-  test('005.0-DEV-CONFIGURABLE-AGE-THRESHOLD: Supports --min-age CLI flag and config file', async () => {
+  test('[REQ-CLI-FLAG] 005.0-DEV-CONFIGURABLE-AGE-THRESHOLD: Supports --min-age CLI flag and config file', async () => {
     // Invalid CLI flag value
     const errResult = await runCli(['--min-age=abc'], {
       env: { DRY_AGED_DEPS_MOCK: '1' },
@@ -118,7 +102,7 @@ describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/002.0-DEV-FETCH-AVAILA
   });
 
   // Story: prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
-  test('006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD: Supports --severity CLI flag and config file', async () => {
+  test('[REQ-CLI-FLAG] 006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD: Supports --severity CLI flag and config file', async () => {
     // Invalid severity flag
     const err = await runCli(['--severity=foo'], {
       env: { DRY_AGED_DEPS_MOCK: '1' },
@@ -139,7 +123,7 @@ describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/002.0-DEV-FETCH-AVAILA
   });
 
   // Story: prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md
-  test('007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS: Supports separate prod/dev threshold flags and config', async () => {
+  test('[REQ-CLI-FLAGS][REQ-DEPENDENCY-TYPE] 007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS: Supports separate prod/dev threshold flags and config', async () => {
     const errProd = await runCli(['--prod-min-age=foo'], {
       env: { DRY_AGED_DEPS_MOCK: '1' },
     });
@@ -161,7 +145,7 @@ describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/002.0-DEV-FETCH-AVAILA
   });
 
   // Story: prompts/008.0-DEV-JSON-OUTPUT.md
-  test('008.0-DEV-JSON-OUTPUT: Outputs data in JSON format with proper structure', async () => {
+  test('[REQ-CLI-FLAG][REQ-JSON-SCHEMA] 008.0-DEV-JSON-OUTPUT: Outputs data in JSON format with proper structure', async () => {
     const result = await runCli(['--format=json'], {
       env: { DRY_AGED_DEPS_MOCK: '1' },
     });
@@ -184,7 +168,7 @@ describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/002.0-DEV-FETCH-AVAILA
   });
 
   // Story: prompts/009.0-DEV-XML-OUTPUT.md
-  test('009.0-DEV-XML-OUTPUT: Outputs data in XML format conforming to spec', async () => {
+  test('[REQ-CLI-FLAG][REQ-XML-SCHEMA] 009.0-DEV-XML-OUTPUT: Outputs data in XML format conforming to spec', async () => {
     const result = await runCli(['--format=xml'], {
       env: { DRY_AGED_DEPS_MOCK: '1' },
     });
@@ -198,7 +182,7 @@ describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/002.0-DEV-FETCH-AVAILA
   });
 
   // Story: prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
-  test('010.0-DEV-CONFIG-FILE-SUPPORT: Reads configuration from .dry-aged-deps.json for format', async () => {
+  test('[REQ-CONFIG-LOCATION][REQ-PRECEDENCE] 010.0-DEV-CONFIG-FILE-SUPPORT: Reads configuration from .dry-aged-deps.json for format', async () => {
     const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), 'cfg-file-'));
     const fixturePkg = path.join(__dirname, 'fixtures-up-to-date', 'package.json');
     await fs.copyFile(fixturePkg, path.join(tmpDir, 'package.json'));
@@ -215,7 +199,7 @@ describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/002.0-DEV-FETCH-AVAILA
   });
 
   // Story: prompts/011.0-DEV-AUTO-UPDATE.md
-  test('011.0-DEV-AUTO-UPDATE: Updates package.json with safe versions when --update flag used', async () => {
+  test('[REQ-UPDATE-FLAG][REQ-YES-FLAG] 011.0-DEV-AUTO-UPDATE: Updates package.json with safe versions when --update flag used', async () => {
     const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), 'upd-'));
     const fixturePkg = path.join(__dirname, 'fixtures-up-to-date', 'package.json');
     await fs.copyFile(fixturePkg, path.join(tmpDir, 'package.json'));
@@ -233,7 +217,7 @@ describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/002.0-DEV-FETCH-AVAILA
   });
 
   // Story: prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md
-  test('012.0-DEV-EXIT-CODE-REFINEMENT: Uses standardized exit codes for error, no-updates, safe-updates', async () => {
+  test('[REQ-EXIT-0][REQ-EXIT-1][REQ-EXIT-2] 012.0-DEV-EXIT-CODE-REFINEMENT: Uses standardized exit codes for error, no-updates, safe-updates', async () => {
     // safe updates available in mock
     const res = await runCli(['--check'], {
       env: { DRY_AGED_DEPS_MOCK: '1' },
@@ -247,7 +231,7 @@ describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/002.0-DEV-FETCH-AVAILA
   });
 
   // Story: prompts/013.0-DEV-CHECK-MODE.md
-  test('013.0-DEV-CHECK-MODE: Implements check mode to exit with code based on available updates', async () => {
+  test('[REQ-CHECK-FLAG] 013.0-DEV-CHECK-MODE: Implements check mode to exit with code based on available updates', async () => {
     const res = await runCli(['--check'], { env: { DRY_AGED_DEPS_MOCK: '1' } });
     expect(res.exitCode).toBe(1);
   });

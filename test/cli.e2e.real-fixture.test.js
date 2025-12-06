@@ -1,11 +1,7 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for CLI E2E real fixture behavior and positive age detection
- * @story prompts/003.0-DEV-IDENTIFY-OUTDATED.md
- * @story prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md
- * @req REQ-AGE-THRESHOLD - Ensure mature versions (age > threshold) appear in output
- * @req REQ-EXIT-1 - Exit code 1 when safe updates available
+ * @supports prompts/003.0-DEV-IDENTIFY-OUTDATED.md REQ-AGE-THRESHOLD REQ-OUTPUT
+ * @supports prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md REQ-EXIT-1
  */
 import { execa } from 'execa';
 import fs from 'fs/promises';
@@ -91,20 +87,20 @@ afterAll(async () => {
   }
 });
 
-describe(`${storyPrefix}: dry-aged-deps CLI E2E with real fixture (mocked)`, () => {
-  test('exit code is 1', () => {
+describe('Story 003.0-DEV-IDENTIFY-OUTDATED: dry-aged-deps CLI E2E with real fixture (mocked)', () => {
+  test('[REQ-EXIT-1] exit code is 1', () => {
     expect(result.exitCode).toBe(1);
   });
 
-  test('outputs header row with Age (days)', () => {
+  test('[REQ-OUTPUT] outputs header row with Age (days)', () => {
     expect(lines.at(headerIndex) ?? '').toContain('Age (days)');
   });
 
-  test('has at least one data row', () => {
+  test('[REQ-OUTPUT] has at least one data row', () => {
     expect(dataLines.length).toBeGreaterThan(0);
   });
 
-  test('all ages are positive integers', () => {
+  test('[REQ-AGE-THRESHOLD] all ages are positive integers', () => {
     expect(ages.length).toBeGreaterThan(0);
     for (const age of ages) {
       expect(Number.isInteger(age)).toBe(true);
