@@ -1,12 +1,6 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for fallback error handling in filterBySecurity when fetchVersionTimes fails
- * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
- * @req REQ-SMART-SEARCH - Fallback to original logic when fetchVersionTimes fails
- * @story prompts/008.0-DEV-JSON-OUTPUT.md
- * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-ERROR-FORMAT - JSON/XML fallback should follow error format suppression rules
+ * @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SMART-SEARCH
  */
 import { describe, it, expect, vi } from 'vitest';
 import { filterBySecurity } from '../src/filter-by-security.js';
@@ -19,8 +13,8 @@ const stubCalc = vi.fn(() => 7);
 /**
  * Test fallback error handling when fetchVersionTimes throws and format is table
  */
-describe('prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md & prompts/008.0-DEV-JSON-OUTPUT.md & prompts/009.0-DEV-XML-OUTPUT.md: filterBySecurity fallback fetchVersionTimes error handling', () => {
-  it('logs warning and uses original logic for table format', async () => {
+describe('Story 004.0-DEV-FILTER-VULNERABLE-VERSIONS: filterBySecurity fallback fetchVersionTimes error handling', () => {
+  it('[REQ-SMART-SEARCH] logs warning and uses original logic for table format', async () => {
     const rows = [['pkgX', '1.0.0', '1.2.0', '1.2.0', 5, 'prod']];
     // fetchVersionTimes throws error
     const stubFetch = async () => {
@@ -49,7 +43,7 @@ describe('prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md & prompts/008.0-DEV-JS
     errorSpy.mockRestore();
   });
 
-  it('does not log warning when fetchVersionTimes throws and format is json or xml', async () => {
+  it('[REQ-SMART-SEARCH] does not log warning when fetchVersionTimes throws and format is json or xml', async () => {
     const rows = [['pkgY', '2.0.0', '2.2.0', '2.2.0', 9, 'dev']];
     const stubFetch = async () => {
       throw new Error('fail');

@@ -1,14 +1,7 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for object-based vulnerability filtering in filterBySecurity
- * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
- * @req REQ-AUDIT-CHECK - Check vulnerabilities using audit API
- * @req REQ-SAFE-ONLY - Only recommend versions with no known vulnerabilities
- * @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
- * @req REQ-FILTERING-LOGIC
- * @story prompts/008.0-DEV-JSON-OUTPUT.md
- * @req REQ-SILENT-MODE - Suppress console messages in JSON mode
+ * @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK REQ-SAFE-ONLY
+ * @supports prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md REQ-FILTERING-LOGIC
  */
 
 import { describe, it, expect, vi } from 'vitest';
@@ -20,8 +13,8 @@ const thresholds = { prodMinSeverity: 'moderate', devMinSeverity: 'low' };
 // Story: prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
 // Acceptance Criteria: Filter out versions with vulnerabilities based on severity thresholds
 
-describe('prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md & prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md & prompts/008.0-DEV-JSON-OUTPUT.md: filterBySecurity object-based vulnerability results', () => {
-  it('filters out package when object result has vulnerabilities above threshold and records correct info', async () => {
+describe('Story 004.0-DEV-FILTER-VULNERABLE-VERSIONS & Story 006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD: filterBySecurity object-based vulnerability results', () => {
+  it('[REQ-AUDIT-CHECK] [REQ-SAFE-ONLY] [REQ-FILTERING-LOGIC] filters out package when object result has vulnerabilities above threshold and records correct info', async () => {
     const vulnDetails = [
       { id: 'VULN-1', title: 'High vulnerability', severity: 'high', cvssScore: 9, url: 'http://example.com' },
       { id: 'VULN-2', title: 'Low vulnerability', severity: 'low', cvssScore: 2, url: 'http://example.com' },
@@ -46,7 +39,7 @@ describe('prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md & prompts/006.0-DEV-CO
     expect(filterReasonMap.get('pkgA')).toBe('security');
   });
 
-  it('treats errors as safe without logging in json format', async () => {
+  it('[REQ-AUDIT-CHECK] [REQ-SAFE-ONLY] treats errors as safe without logging in json format', async () => {
     const stubCheckVuln = async () => {
       throw new Error('audit failure');
     };
