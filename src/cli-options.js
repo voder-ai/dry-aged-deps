@@ -1,5 +1,4 @@
 // @ts-check
-/* eslint-disable traceability/require-branch-annotation */
 import { loadConfigFile } from './config-loader.js';
 import {
   parseFormatFlag,
@@ -69,12 +68,19 @@ export function parseOptions(argv) {
   const unknownArgs = args.filter(
     (a) => a.startsWith('-') && !allowedOptions.some((opt) => a === opt || a.startsWith(`${opt}=`))
   );
+  // @story prompts/014.0-DEV-INVALID-OPTION-ERROR.md
+  // @req REQ-UNKNOWN-OPTION-ERROR
   if (unknownArgs.length > 0) {
     unknownArgs.forEach((arg) => {
       console.error(`Error: Unknown option '${arg}'`);
       let suggestion;
+      // @story prompts/014.0-DEV-INVALID-OPTION-ERROR.md
+      // @req REQ-DID-YOU-MEAN
       if (arg === '--json') suggestion = '--format=json';
+      // eslint-disable-next-line traceability/require-branch-annotation -- Prettier/traceability conflict with else-if (see issue #4)
       else if (arg.startsWith('--format')) suggestion = '--format';
+      // @story prompts/014.0-DEV-INVALID-OPTION-ERROR.md
+      // @req REQ-HELP-SUGGESTION
       if (suggestion) {
         console.error(`Did you mean '${suggestion}'?`);
       }

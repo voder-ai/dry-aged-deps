@@ -1,5 +1,4 @@
 // @ts-check
-/* eslint-disable traceability/require-branch-annotation */
 // Story: prompts/008.0-DEV-JSON-OUTPUT.md
 // json-formatter.js
 // Formats outdated dependencies and summary data into JSON
@@ -21,6 +20,8 @@
  */
 export function jsonFormatter({ rows, summary, thresholds, timestamp }) {
   const packages = rows.map((row) => {
+    // @story prompts/008.0-DEV-JSON-OUTPUT.md
+    // @req REQ-JSON-SCHEMA
     if (Array.isArray(row)) {
       const [name, current, wanted, latest, age] = row;
       return { name, current, wanted, latest, age };
@@ -63,6 +64,8 @@ export function jsonFormatter({ rows, summary, thresholds, timestamp }) {
     },
   };
 
+  // @story prompts/008.0-DEV-JSON-OUTPUT.md
+  // @req REQ-SUMMARY-STATS
   if (thresholds) {
     output.summary.thresholds = thresholds;
   }

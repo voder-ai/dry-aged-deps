@@ -1,5 +1,4 @@
 // @ts-check
-/* eslint-disable traceability/require-branch-annotation */
 import { jsonFormatter } from './json-formatter.js';
 import { xmlFormatter } from './xml-formatter.js';
 import { prepareJsonItems } from './output-utils.js';
@@ -58,25 +57,37 @@ export function handleTableOutput({ safeRows, matureRows, summary, prodMinAge, d
   console.log('Outdated packages:');
   console.log(['Name', 'Current', 'Wanted', 'Latest', 'Age (days)', 'Type'].join('	'));
 
+  // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+  // @req REQ-OUTPUT-DISPLAY
   if (matureRows.length === 0) {
     console.log(
       `No outdated packages with mature versions found (prod >= ${prodMinAge} days, dev >= ${devMinAge} days).`
     );
+    // @story prompts/013.0-DEV-CHECK-MODE.md
+    // @req REQ-CHECK-FLAG
     if (returnSummary) return summary; // returns {FilterSummary} when returnSummary is true
     return undefined; // returns undefined when returnSummary is false
   }
 
+  // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+  // @req REQ-OUTPUT-DISPLAY
   if (safeRows.length === 0) {
     console.log(
       `No outdated packages with safe, mature versions (>= ${prodMinAge}/${devMinAge} days old, no vulnerabilities) found.`
     );
+    // @story prompts/013.0-DEV-CHECK-MODE.md
+    // @req REQ-CHECK-FLAG
     if (returnSummary) return summary; // returns {FilterSummary} when returnSummary is true
     return undefined; // returns undefined when returnSummary is false
   }
 
+  // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+  // @req REQ-OUTPUT-DISPLAY
   for (const row of safeRows) {
-    console.log(row.join('	'));
+    console.log(row.join('\t'));
   }
+  // @story prompts/013.0-DEV-CHECK-MODE.md
+  // @req REQ-CHECK-FLAG
   if (returnSummary) return summary; // returns {FilterSummary} when returnSummary is true
   return undefined; // returns undefined when returnSummary is false
 }
