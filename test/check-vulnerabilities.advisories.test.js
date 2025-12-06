@@ -1,10 +1,6 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-annotation-format */
 /**
  * Tests for legacy advisory parsing in checkVulnerabilities
- * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
- * @req REQ-AUDIT-CHECK - Use npm audit or registry API to check for vulnerabilities
- * @req REQ-TRANSITIVE-DEPS - Check the entire dependency tree for vulnerabilities
+ * @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK REQ-TRANSITIVE-DEPS
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
@@ -21,7 +17,7 @@ vi.mock('fs', () => ({
   },
 }));
 
-describe('prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md: checkVulnerabilities legacy advisories', () => {
+describe('Story 004.0-DEV-FILTER-VULNERABLE-VERSIONS: checkVulnerabilities legacy advisories', () => {
   const mockTempDir = '/tmp/dry-aged-deps-test-advisories';
 
   beforeEach(() => {
@@ -35,7 +31,7 @@ describe('prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md: checkVulnerabilities 
     vi.restoreAllMocks();
   });
 
-  it('parses advisories object and returns correct count, vulnerabilities, and details', async () => {
+  it('[REQ-AUDIT-CHECK] [REQ-TRANSITIVE-DEPS] parses advisories object and returns correct count, vulnerabilities, and details', async () => {
     // Mock npm install --package-lock-only
     execFile.mockImplementationOnce((cmd, args, opts, callback) => {
       callback(null, '', '');

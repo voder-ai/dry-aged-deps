@@ -1,10 +1,6 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-annotation-format */
 /**
  * Tests for checkVulnerabilities function
- * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
- * @req REQ-AUDIT-CHECK - Use npm audit or registry API to check for vulnerabilities
- * @req REQ-TRANSITIVE-DEPS - Check the entire dependency tree (direct and transitive dependencies) for vulnerabilities
+ * @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK REQ-TRANSITIVE-DEPS
  */
 
 import { checkVulnerabilities } from '../src/check-vulnerabilities.js';
@@ -21,7 +17,7 @@ vi.mock('fs', () => ({
   },
 }));
 
-describe('prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md: checkVulnerabilities', () => {
+describe('Story 004.0-DEV-FILTER-VULNERABLE-VERSIONS: checkVulnerabilities', () => {
   const mockTempDir = '/tmp/dry-aged-deps-test123';
 
   beforeEach(() => {
@@ -35,7 +31,7 @@ describe('prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md: checkVulnerabilities'
     vi.restoreAllMocks();
   });
 
-  it('returns 0 when no vulnerabilities found', async () => {
+  it('[REQ-AUDIT-CHECK] [REQ-TRANSITIVE-DEPS] returns 0 when no vulnerabilities found', async () => {
     // Mock npm install --package-lock-only
     execFile.mockImplementationOnce((cmd, args, opts, callback) => {
       callback(null, '', '');
@@ -76,7 +72,7 @@ describe('prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md: checkVulnerabilities'
     });
   });
 
-  it('returns vulnerability count when vulnerabilities found', async () => {
+  it('[REQ-AUDIT-CHECK] [REQ-TRANSITIVE-DEPS] returns vulnerability count when vulnerabilities found', async () => {
     // Mock npm install --package-lock-only
     execFile.mockImplementationOnce((cmd, args, opts, callback) => {
       callback(null, '', '');
@@ -105,7 +101,7 @@ describe('prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md: checkVulnerabilities'
     expect(result.vulnerabilities.moderate).toBe(2);
   });
 
-  it('cleans up temporary directory even on error', async () => {
+  it('[REQ-AUDIT-CHECK] cleans up temporary directory even on error', async () => {
     // Mock npm install --package-lock-only to fail
     execFile.mockImplementationOnce((cmd, args, opts, callback) => {
       callback(new Error('Network error'), '', 'Network error');
@@ -119,15 +115,15 @@ describe('prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md: checkVulnerabilities'
     });
   });
 
-  it('throws error for invalid package name', async () => {
+  it('[REQ-AUDIT-CHECK] throws error for invalid package name', async () => {
     await expect(checkVulnerabilities('invalid name with spaces', '1.0.0')).rejects.toThrow('Invalid package name');
 
     // Should not create temp directory for invalid input
     expect(fs.mkdtemp).not.toHaveBeenCalled();
   });
 
-  it('continues despite WARN in stderr during npm install (see story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md)', async () => {
-    // Simulate npm install warning in stderr (see story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md)
+  it('[REQ-AUDIT-CHECK] continues despite WARN in stderr during npm install', async () => {
+    // Simulate npm install warning in stderr
     execFile.mockImplementationOnce((cmd, args, opts, callback) => {
       callback(null, '', 'npm WARN deprecated package');
     });
