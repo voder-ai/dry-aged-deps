@@ -1,12 +1,6 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-annotation-format */
 /****
  * Tests for updatePackages function
- * @story prompts/011.0-DEV-AUTO-UPDATE.md
- * @req REQ-UPDATE-FLAG - Support --update flag to enable auto-update mode
- * @req REQ-YES-FLAG - Skip confirmation when --yes flag provided
- * @req REQ-BACKUP - Create backup of package.json before applying updates
- * @req REQ-PACKAGE-JSON - Read, modify, and write package.json preserving format
+ * @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-UPDATE-FLAG REQ-YES-FLAG REQ-BACKUP REQ-PACKAGE-JSON
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
@@ -16,7 +10,7 @@ import { promises as fsp } from 'fs';
 import fs from 'fs';
 import { updatePackages } from '../src/update-packages.js';
 
-describe('prompts/011.0-DEV-AUTO-UPDATE.md: updatePackages direct tests', () => {
+describe('Story 011.0-DEV-AUTO-UPDATE: updatePackages direct tests', () => {
   let tmpDir;
   let originalCwd;
   let consoleLogSpy;
@@ -42,13 +36,13 @@ describe('prompts/011.0-DEV-AUTO-UPDATE.md: updatePackages direct tests', () => 
     vi.restoreAllMocks();
   });
 
-  it('logs no safe updates and returns summary when safeRows is empty', async () => {
+  it('[REQ-SAFE-ONLY] logs no safe updates and returns summary when safeRows is empty', async () => {
     const result = await updatePackages([], true, summary);
     expect(consoleLogSpy).toHaveBeenCalledWith('No safe updates available.');
     expect(result).toBe(summary);
   });
 
-  it('skips confirmation when skipConfirmation=true, creates backup, applies updates, and logs messages', async () => {
+  it('[REQ-YES-FLAG] [REQ-BACKUP] [REQ-PACKAGE-JSON] skips confirmation when skipConfirmation=true, creates backup, applies updates, and logs messages', async () => {
     const safeRows = [['foo', '1.0.0', '1.2.0', '1.2.0', 5, 'prod']];
     const result = await updatePackages(safeRows, true, summary);
 

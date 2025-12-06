@@ -1,14 +1,6 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for updatePackages additional branches.
- * @story prompts/011.0-DEV-AUTO-UPDATE.md
- * @req REQ-UPDATE-FLAG - Support --update flag to enable update mode
- * @req REQ-YES-FLAG - Support --yes flag to skip confirmation
- * @req REQ-BACKUP - Create package.json backup before updates
- * @req REQ-CONFIRMATION - Interactive confirmation prompt before applying updates
- * @req REQ-ERROR-HANDLING - Graceful handling of backup/update failures
- * @req REQ-POST-UPDATE - Prompt user to run npm install after updates
+ * @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-UPDATE-FLAG REQ-YES-FLAG REQ-BACKUP REQ-CONFIRMATION
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import path from 'path';
@@ -16,7 +8,7 @@ import os from 'os';
 import { promises as fsp } from 'fs';
 import fs from 'fs';
 
-describe('prompts/011.0-DEV-AUTO-UPDATE.md: updatePackages additional branches', () => {
+describe('Story 011.0-DEV-AUTO-UPDATE: updatePackages additional branches', () => {
   let tmpDir;
   let originalCwd;
   let consoleLogSpy;
@@ -41,7 +33,7 @@ describe('prompts/011.0-DEV-AUTO-UPDATE.md: updatePackages additional branches',
     await fsp.rm(tmpDir, { recursive: true, force: true });
   });
 
-  it('aborts update when user answers no', async () => {
+  it('[REQ-CONFIRMATION] aborts update when user answers no', async () => {
     vi.resetModules();
     vi.doMock('readline', () => ({
       createInterface: () => ({
@@ -64,7 +56,7 @@ describe('prompts/011.0-DEV-AUTO-UPDATE.md: updatePackages additional branches',
     expect(result).toBe(summary);
   });
 
-  it('proceeds update when user answers yes', async () => {
+  it('[REQ-CONFIRMATION] [REQ-PACKAGE-JSON] proceeds update when user answers yes', async () => {
     vi.resetModules();
     vi.doMock('readline', () => ({
       createInterface: () => ({
@@ -84,7 +76,7 @@ describe('prompts/011.0-DEV-AUTO-UPDATE.md: updatePackages additional branches',
     expect(result).toBe(summary);
   });
 
-  it('handles backup failure and logs error', async () => {
+  it('[REQ-BACKUP] handles backup failure and logs error', async () => {
     vi.resetModules();
     const { updatePackages } = await import('../src/update-packages.js');
     vi.spyOn(fs, 'copyFileSync').mockImplementation(() => {
@@ -102,7 +94,7 @@ describe('prompts/011.0-DEV-AUTO-UPDATE.md: updatePackages additional branches',
     expect(result).toBe(summary);
   });
 
-  it('handles update failure and logs error', async () => {
+  it('[REQ-PACKAGE-JSON] handles update failure and logs error', async () => {
     vi.resetModules();
     const { updatePackages } = await import('../src/update-packages.js');
     vi.spyOn(fs, 'writeFileSync').mockImplementation(() => {
@@ -122,7 +114,7 @@ describe('prompts/011.0-DEV-AUTO-UPDATE.md: updatePackages additional branches',
     expect(result).toBe(summary);
   });
 
-  it('updates devDependencies when depType is dev and skipConfirmation=true', async () => {
+  it('[REQ-PACKAGE-JSON] updates devDependencies when depType is dev and skipConfirmation=true', async () => {
     vi.resetModules();
     const pkgDev = { name: 'test', version: '1.0.0', devDependencies: { bar: '1.0.0' } };
     await fsp.writeFile('package.json', JSON.stringify(pkgDev, null, 2), 'utf8');
@@ -138,7 +130,7 @@ describe('prompts/011.0-DEV-AUTO-UPDATE.md: updatePackages additional branches',
     expect(result).toBe(summary);
   });
 
-  it('handles missing devDependencies and skipConfirmation=true', async () => {
+  it('[REQ-PACKAGE-JSON] handles missing devDependencies and skipConfirmation=true', async () => {
     vi.resetModules();
     const pkgNoDev = { name: 'test', version: '1.0.0' };
     await fsp.writeFile('package.json', JSON.stringify(pkgNoDev, null, 2), 'utf8');
@@ -154,7 +146,7 @@ describe('prompts/011.0-DEV-AUTO-UPDATE.md: updatePackages additional branches',
     expect(result).toBe(summary);
   });
 
-  it('handles missing dependencies and skipConfirmation=true', async () => {
+  it('[REQ-PACKAGE-JSON] handles missing dependencies and skipConfirmation=true', async () => {
     vi.resetModules();
     const pkgNoDeps = { name: 'test', version: '1.0.0' };
     await fsp.writeFile('package.json', JSON.stringify(pkgNoDeps, null, 2), 'utf8');

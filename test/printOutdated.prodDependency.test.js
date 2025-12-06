@@ -1,9 +1,6 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for printOutdated handling prod dependencies in table output
- * @story prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md
- * @req REQ-OUTPUT-TYPE - Show correct dependency type column for prod dependencies
+ * @supports prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md REQ-OUTPUT-COLUMN
  */
 
 import fs from 'fs';
@@ -22,7 +19,7 @@ const vulnStub = vi.fn().mockResolvedValue(0);
 let tempDir;
 let originalCwd;
 
-describe('prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md: printOutdated unit tests - prod dependency type in table output', () => {
+describe('Story 007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS: printOutdated unit tests - prod dependency type in table output', () => {
   beforeAll(() => {
     originalCwd = process.cwd();
     // Create a temporary directory and write package.json with prod dependency
@@ -39,7 +36,7 @@ describe('prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md: printOutdated unit 
     fs.rmSync(tempDir, { recursive: true, force: true });
   });
 
-  test('prints prod type for dependencies listed in package.json', async () => {
+  test('[REQ-OUTPUT-COLUMN] prints prod type for dependencies listed in package.json', async () => {
     const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 

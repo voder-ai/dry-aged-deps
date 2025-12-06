@@ -1,15 +1,8 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Unit tests for printOutdated output and filtering.
- * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
- * @story prompts/003.0-DEV-IDENTIFY-OUTDATED.md
- * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
- * @req REQ-PRINT-UPTODATE - Prints up-to-date message when no packages are outdated
- * @req REQ-PRINT-DATA - Prints header and data rows with calculated age and type
- * @req REQ-HANDLE-FETCHFAIL - Handles fetchVersionTimes errors with warning and N/A age
- * @req REQ-FILTER-AGE - Filters out packages younger than minAge (default 7)
- * @req REQ-FILTER-VULN - Filters out packages with vulnerabilities
+ * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
+ * @supports prompts/003.0-DEV-IDENTIFY-OUTDATED.md REQ-AGE-THRESHOLD
+ * @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SAFE-ONLY
  */
 
 import { printOutdated } from '../src/print-outdated.js';
@@ -17,7 +10,7 @@ import * as fetchModule from '../src/fetch-version-times.js';
 import * as ageModule from '../src/age-calculator.js';
 import * as vulnModule from '../src/check-vulnerabilities.js';
 
-describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/003.0-DEV-IDENTIFY-OUTDATED.md & prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md: printOutdated', () => {
+describe('Story 001.0-DEV-RUN-NPM-OUTDATED / 003.0-DEV-IDENTIFY-OUTDATED / 004.0-DEV-FILTER-VULNERABLE-VERSIONS: printOutdated', () => {
   let logSpy, errorSpy;
 
   beforeEach(() => {
@@ -31,14 +24,14 @@ describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/003.0-DEV-IDENTIFY-OUT
     vi.restoreAllMocks();
   });
 
-  it('prints up to date message when no packages are outdated', async () => {
+  it('[REQ-OUTPUT-DISPLAY] prints up to date message when no packages are outdated', async () => {
     await printOutdated({});
     expect(logSpy).toHaveBeenCalledTimes(1);
     expect(logSpy).toHaveBeenCalledWith('All dependencies are up to date.');
     expect(errorSpy).not.toHaveBeenCalled();
   });
 
-  it('prints header and data row with calculated age', async () => {
+  it('[REQ-OUTPUT-DISPLAY] prints header and data row with calculated age', async () => {
     // Stub fetchVersionTimes to return a mapping with latest version time
     vi.spyOn(fetchModule, 'fetchVersionTimes').mockReturnValue({
       '2.0.0': '2023-01-01T00:00:00Z',
@@ -63,7 +56,7 @@ describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/003.0-DEV-IDENTIFY-OUT
     expect(errorSpy).not.toHaveBeenCalled();
   });
 
-  it('prints N/A when fetchVersionTimes throws', async () => {
+  it('[REQ-OUTPUT-DISPLAY] prints N/A when fetchVersionTimes throws', async () => {
     // Stub fetchVersionTimes to throw
     vi.spyOn(fetchModule, 'fetchVersionTimes').mockImplementation(() => {
       throw new Error('failed');
@@ -90,7 +83,7 @@ describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/003.0-DEV-IDENTIFY-OUT
     expect(errorSpy).toHaveBeenCalledWith(`Warning: failed to fetch version times for otherpkg: failed`);
   });
 
-  it('filters out packages with age < 7 days', async () => {
+  it('[REQ-AGE-THRESHOLD] filters out packages with age < 7 days', async () => {
     vi.spyOn(fetchModule, 'fetchVersionTimes').mockReturnValue({
       '2.0.0': '2023-01-01T00:00:00Z',
     });
@@ -111,7 +104,7 @@ describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/003.0-DEV-IDENTIFY-OUT
     expect(logSpy.mock.calls[2][0]).toContain('No outdated packages with mature versions found');
   });
 
-  it('shows only packages with age >= 7 days', async () => {
+  it('[REQ-AGE-THRESHOLD] shows only packages with age >= 7 days', async () => {
     vi.spyOn(fetchModule, 'fetchVersionTimes').mockImplementation(async (pkgName) => {
       if (pkgName === 'mature-pkg') {
         return { '2.0.0': '2023-01-01T00:00:00Z' };
@@ -142,7 +135,7 @@ describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/003.0-DEV-IDENTIFY-OUT
     expect(logSpy.mock.calls[3]).toBeUndefined(); // fresh-pkg should be filtered out
   });
 
-  it('filters out packages with vulnerabilities', async () => {
+  it('[REQ-SAFE-ONLY] filters out packages with vulnerabilities', async () => {
     vi.spyOn(fetchModule, 'fetchVersionTimes').mockResolvedValue({
       '2.0.0': '2023-01-01T00:00:00Z',
     });
@@ -163,7 +156,7 @@ describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/003.0-DEV-IDENTIFY-OUT
     expect(logSpy.mock.calls[2][0]).toContain('No outdated packages with safe, mature versions');
   });
 
-  it('shows packages without vulnerabilities', async () => {
+  it('[REQ-SAFE-ONLY] shows packages without vulnerabilities', async () => {
     vi.spyOn(fetchModule, 'fetchVersionTimes').mockResolvedValue({
       '2.0.0': '2023-01-01T00:00:00Z',
     });
