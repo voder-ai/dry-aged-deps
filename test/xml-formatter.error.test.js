@@ -1,15 +1,12 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-annotation-format */
 /**
  * Tests for XML Output Format - error output
- * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-ERROR-FORMAT - Format errors as XML when in XML mode
+ * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-ERROR-FORMAT
  */
 
 import { xmlFormatter } from '../src/xml-formatter.js';
 
-describe('prompts/009.0-DEV-XML-OUTPUT.md: xmlFormatter error output', () => {
-  it('should output error block with message, code, details and closing tag', () => {
+describe('Story 009.0-DEV-XML-OUTPUT: xmlFormatter error output', () => {
+  it('[REQ-ERROR-FORMAT] should output error block with message, code, details and closing tag', () => {
     const error = new Error('Test failure');
     error.code = 'E_TEST';
     error.details = 'detail text';

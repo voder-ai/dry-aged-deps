@@ -1,18 +1,12 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-annotation-format */
 /**
  * Tests for XML Formatter
- * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-XML-SCHEMA - Define consistent XML output schema
- * @req REQ-COMPLETE-DATA - Include all relevant package data in XML output
- * @req REQ-SUMMARY-STATS - Include summary statistics in XML output
- * @req REQ-XML-DECLARATION - Include proper XML declaration and encoding
+ * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-XML-SCHEMA REQ-COMPLETE-DATA REQ-SUMMARY-STATS REQ-XML-DECLARATION
  */
 
 import { xmlFormatter } from '../src/xml-formatter.js';
 
-describe('prompts/009.0-DEV-XML-OUTPUT.md: xmlFormatter', () => {
-  it('should produce valid XML with header, root, packages, and summary', () => {
+describe('Story 009.0-DEV-XML-OUTPUT: xmlFormatter', () => {
+  it('[REQ-XML-SCHEMA] [REQ-COMPLETE-DATA] [REQ-SUMMARY-STATS] [REQ-XML-DECLARATION] should produce valid XML with header, root, packages, and summary', () => {
     const rows = [
       ['pkg1', '1.0.0', '1.1.0', '1.1.0', 10],
       ['pkg2', '2.0.0', '2.1.0', '2.1.0', 8],

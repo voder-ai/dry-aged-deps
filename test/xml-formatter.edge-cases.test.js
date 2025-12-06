@@ -1,10 +1,6 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-annotation-format */
 /**
  * Tests for XML Output Format
- * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-CLI-FLAG - Support --format=xml flag
- * @req REQ-XML-SCHEMA - Output must follow XML schema
+ * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-CLI-FLAG REQ-XML-SCHEMA
  */
 import { xmlFormatter } from '../src/xml-formatter.js';
 
@@ -13,8 +9,8 @@ import { xmlFormatter } from '../src/xml-formatter.js';
  * Story: prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md (REQ-CLI-FLAGS)
  */
 
-describe('prompts/009.0-DEV-XML-OUTPUT.md: xmlFormatter error details omission', () => {
-  it('omits <details> element when error.details is undefined', () => {
+describe('Story 009.0-DEV-XML-OUTPUT: xmlFormatter error details omission', () => {
+  it('[REQ-CLI-FLAG] omits <details> element when error.details is undefined', () => {
     const error = new Error('Missing details');
     const timestamp = '2025-12-12T12:00:00Z';
     const xml = xmlFormatter({ error, timestamp });
@@ -27,8 +23,8 @@ describe('prompts/009.0-DEV-XML-OUTPUT.md: xmlFormatter error details omission',
   });
 });
 
-describe('xmlFormatter thresholds partial rendering', () => {
-  it('renders only prod thresholds when only prod threshold provided', () => {
+describe('Story 009.0-DEV-XML-OUTPUT: xmlFormatter thresholds partial rendering', () => {
+  it('[REQ-XML-SCHEMA] renders only prod thresholds when only prod threshold provided', () => {
     const thresholds = { prod: { minAge: 5, minSeverity: 'low' } };
     const timestamp = '2025-12-12T12:00:00Z';
     const xml = xmlFormatter({ thresholds, timestamp });
@@ -43,7 +39,7 @@ describe('xmlFormatter thresholds partial rendering', () => {
     expect(xml).not.toContain('<dev>');
   });
 
-  it('renders only dev thresholds when only dev threshold provided', () => {
+  it('[REQ-XML-SCHEMA] renders only dev thresholds when only dev threshold provided', () => {
     const thresholds = { dev: { minAge: 3, minSeverity: 'critical' } };
     const timestamp = '2025-12-12T12:00:00Z';
     const xml = xmlFormatter({ thresholds, timestamp });

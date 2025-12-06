@@ -1,16 +1,13 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for XML Output Format - object-style package entries
- * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-XML-ESCAPE - Proper XML escaping for special characters
+ * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-XML-SCHEMA REQ-COMPLETE-DATA
  */
 
 import { describe, it, expect } from 'vitest';
 import { xmlFormatter } from '../src/xml-formatter.js';
 
-describe('prompts/009.0-DEV-XML-OUTPUT.md: xmlFormatter object-style package entries', () => {
-  it('should format object-style rows with vulnerabilities and escape special characters', () => {
+describe('Story 009.0-DEV-XML-OUTPUT: xmlFormatter object-style package entries', () => {
+  it('[REQ-XML-SCHEMA] [REQ-COMPLETE-DATA] should format object-style rows with vulnerabilities and escape special characters', () => {
     const rows = [
       {
         name: 'pkg&<>"\'',
