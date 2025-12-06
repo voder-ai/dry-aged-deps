@@ -1,16 +1,13 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-annotation-format */
 /**
  * Tests for xmlFormatter error branch: omission of <details> element when error.details is absent
- * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-ERROR-FORMAT - Format errors as XML when in XML mode, omitting <details> if absent
+ * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-ERROR-FORMAT
  */
 
 import { describe, it, expect } from 'vitest';
 import { xmlFormatter } from '../src/xml-formatter.js';
 
-describe('prompts/009.0-DEV-XML-OUTPUT.md: xmlFormatter error branch without details', () => {
-  it('does not include <details> when error.details is undefined', () => {
+describe('Story 009.0-DEV-XML-OUTPUT: xmlFormatter error branch without details', () => {
+  it('[REQ-ERROR-FORMAT] does not include <details> when error.details is undefined', () => {
     const error = new Error('Another failure');
     error.code = 'E_OTHER';
     // No error.details provided

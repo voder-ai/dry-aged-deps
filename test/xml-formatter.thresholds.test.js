@@ -1,16 +1,13 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for XML Output Format - thresholds output
- * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-XML-THRESHOLDS - Include threshold info in XML output
+ * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-XML-SCHEMA REQ-COMPLETE-DATA
  */
 
 import { describe, it, expect } from 'vitest';
 import { xmlFormatter } from '../src/xml-formatter.js';
 
-describe('prompts/009.0-DEV-XML-OUTPUT.md: xmlFormatter thresholds output', () => {
-  it('should include thresholds for prod and dev with min-age and min-severity', () => {
+describe('Story 009.0-DEV-XML-OUTPUT: xmlFormatter thresholds output', () => {
+  it('[REQ-XML-SCHEMA] [REQ-COMPLETE-DATA] should include thresholds for prod and dev with min-age and min-severity', () => {
     const rows = [];
     const summary = {
       totalOutdated: 0,

@@ -1,15 +1,12 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for XML Output Format - partial thresholds values
- * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-XML-THRESHOLDS-PARTIAL - Support partial thresholds in XML output
+ * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-XML-SCHEMA
  */
 
 import { describe, it, expect } from 'vitest';
 import { xmlFormatter } from '../src/xml-formatter.js';
 
-describe('prompts/009.0-DEV-XML-OUTPUT.md: xmlFormatter thresholds partial values', () => {
+describe('Story 009.0-DEV-XML-OUTPUT: xmlFormatter thresholds partial values', () => {
   const summary = {
     totalOutdated: 0,
     safeUpdates: 0,
@@ -18,7 +15,7 @@ describe('prompts/009.0-DEV-XML-OUTPUT.md: xmlFormatter thresholds partial value
   };
   const timestamp = '2025-01-01T00:00:00.000Z';
 
-  it('renders only min-age when prod.minSeverity is undefined', () => {
+  it('[REQ-XML-SCHEMA] renders only min-age when prod.minSeverity is undefined', () => {
     const thresholds = { prod: { minAge: 5 } };
     const xml = xmlFormatter({ rows: [], summary, thresholds, timestamp });
 
@@ -29,7 +26,7 @@ describe('prompts/009.0-DEV-XML-OUTPUT.md: xmlFormatter thresholds partial value
     expect(xml).not.toContain('<dev>');
   });
 
-  it('renders only min-severity when dev.minAge is undefined', () => {
+  it('[REQ-XML-SCHEMA] renders only min-severity when dev.minAge is undefined', () => {
     const thresholds = { dev: { minSeverity: 'critical' } };
     const xml = xmlFormatter({ rows: [], summary, thresholds, timestamp });
 
