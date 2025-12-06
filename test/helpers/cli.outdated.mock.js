@@ -1,6 +1,8 @@
-/* eslint-disable traceability/require-test-traceability, traceability/require-story-annotation, traceability/require-req-annotation */
 /**
  * Stub module for dry-aged-deps CLI outdated testing
+ * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND REQ-OUTPUT-DISPLAY
+ * @supports prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md REQ-NPM-VIEW
+ * @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK
  */
 // test/helpers/cli.outdated.mock.js
 
