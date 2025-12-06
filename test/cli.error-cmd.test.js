@@ -1,11 +1,6 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-annotation-format */
 /**
  * Tests for CLI exit code behaviors
- * @story prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md
- * @req REQ-EXIT-0 - Exit code 0 on successful execution
- * @req REQ-EXIT-1 - Exit code 1 on usage errors
- * @req REQ-EXIT-2 - Exit code 2 on errors
+ * @supports prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md REQ-EXIT-0 REQ-EXIT-1 REQ-EXIT-2
  */
 
 import { execa } from 'execa';
@@ -17,7 +12,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-describe('prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md: dry-aged-deps CLI error exit code', () => {
+describe('Story 012.0-DEV-EXIT-CODE-REFINEMENT: dry-aged-deps CLI error exit code', () => {
   let fakeNpmDir;
 
   beforeAll(() => {
@@ -34,7 +29,7 @@ describe('prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md: dry-aged-deps CLI error exi
     fs.rmSync(fakeNpmDir, { recursive: true, force: true });
   });
 
-  it('exits with code 2 when npm outdated output is invalid JSON', async () => {
+  it('[REQ-EXIT-2] exits with code 2 when npm outdated output is invalid JSON', async () => {
     const cliPath = path.join(__dirname, '..', 'bin', 'dry-aged-deps.js');
     // Prepend fake npm directory to PATH
     const env = Object.assign({}, process.env, {

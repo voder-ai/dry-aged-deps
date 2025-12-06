@@ -1,10 +1,6 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-annotation-format */
 /**
  * Tests for CLI outdated mock output (Story 001.0-DEV-RUN-NPM-OUTDATED).
- * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
- * @req REQ-NPM-COMMAND - Execute npm outdated --json using child_process
- * @req REQ-OUTPUT-DISPLAY - Display results of npm outdated
+ * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND REQ-OUTPUT-DISPLAY
  */
 
 import { execa } from 'execa';
@@ -15,8 +11,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const cliPath = path.join(__dirname, '..', 'bin', 'dry-aged-deps.js');
 
-describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md: dry-aged-deps CLI mocked outdated output', () => {
-  it('prints mocked outdated package information', async () => {
+describe('Story 001.0-DEV-RUN-NPM-OUTDATED: dry-aged-deps CLI mocked outdated output', () => {
+  it('[REQ-NPM-COMMAND] [REQ-OUTPUT-DISPLAY] prints mocked outdated package information', async () => {
     const result = await execa('node', [cliPath], {
       env: { ...process.env, DRY_AGED_DEPS_MOCK: '1' },
       reject: false,
