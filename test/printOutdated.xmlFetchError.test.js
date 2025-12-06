@@ -1,9 +1,6 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for XML fetch error handling in printOutdated
- * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-FORMAT-XML - Suppress console.error in XML output
+ * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-SILENT-MODE
  */
 
 import { printOutdated } from '../src/print-outdated.js';
@@ -11,8 +8,8 @@ import { vi, describe, expect } from 'vitest';
 
 // Suppress xmlFormatter import to check raw XML output
 
-describe('prompts/009.0-DEV-XML-OUTPUT.md: printOutdated XML fetch error handling', () => {
-  it('suppresses fetchVersionTimes errors and prints <age>N/A</age>', async () => {
+describe('Story 009.0-DEV-XML-OUTPUT: printOutdated XML fetch error handling', () => {
+  it('[REQ-SILENT-MODE] suppresses fetchVersionTimes errors and prints <age>N/A</age>', async () => {
     const data = {
       pkgErr: { current: '1.0.0', wanted: '1.1.0', latest: '1.1.0' },
     };

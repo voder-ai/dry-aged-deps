@@ -1,13 +1,6 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-annotation-format */
 /**
  * Tests for auto-update mode
- * @story prompts/011.0-DEV-AUTO-UPDATE.md
- * @req REQ-UPDATE-FLAG - Accept --update flag to enable update mode
- * @req REQ-YES-FLAG - Support --yes flag to skip confirmation
- * @req REQ-BACKUP - Create backup of package.json before updating
- * @req REQ-SAFE-ONLY - Only update packages that meet safety criteria
- * @req REQ-SUMMARY - Display summary report after updating
+ * @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-UPDATE-FLAG REQ-YES-FLAG REQ-BACKUP REQ-SAFE-ONLY REQ-SUMMARY
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
@@ -16,7 +9,7 @@ import path from 'path';
 import os from 'os';
 import { printOutdated } from '../src/print-outdated.js';
 
-describe('prompts/011.0-DEV-AUTO-UPDATE.md: printOutdated auto-update mode', () => {
+describe('Story 011.0-DEV-AUTO-UPDATE: printOutdated auto-update mode', () => {
   let tmpDir;
   let originalCwd;
   let consoleLogSpy;
@@ -42,7 +35,7 @@ describe('prompts/011.0-DEV-AUTO-UPDATE.md: printOutdated auto-update mode', () 
     await fs.rm(tmpDir, { recursive: true, force: true });
   });
 
-  it('applies safe updates and writes package.json, creates backup, and outputs summary', async () => {
+  it('[REQ-UPDATE-FLAG][REQ-YES-FLAG][REQ-BACKUP][REQ-SUMMARY] applies safe updates and writes package.json, creates backup, and outputs summary', async () => {
     // Arrange
     const data = {
       foo: { current: '1.0.0', wanted: '1.1.0', latest: '1.1.0' },
@@ -85,7 +78,7 @@ describe('prompts/011.0-DEV-AUTO-UPDATE.md: printOutdated auto-update mode', () 
     expect(consoleLogSpy).toHaveBeenCalledWith(expect.stringContaining("Run 'npm install'"));
   });
 
-  it('logs no safe updates when none pass filters', async () => {
+  it('[REQ-SAFE-ONLY] logs no safe updates when none pass filters', async () => {
     // Arrange with checkVulnerabilities returns non-zero, so safeRows empty
     const data = {
       foo: { current: '1.0.0', wanted: '1.1.0', latest: '1.1.0' },

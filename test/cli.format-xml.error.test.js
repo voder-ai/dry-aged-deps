@@ -1,10 +1,6 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Integration tests for dry-aged-deps CLI XML error output.
- * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-ERROR-FORMAT - Format errors as XML when in XML mode
- * @req REQ-EXIT-2 - Exit code 2 on errors
+ * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-ERROR-FORMAT REQ-EXIT-CODES
  */
 
 import { execa } from 'execa';
@@ -12,8 +8,8 @@ import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
 
-describe('prompts/009.0-DEV-XML-OUTPUT.md: dry-aged-deps CLI XML error output', () => {
-  it('emits XML error block and exits with code 2 when npm outdated output is invalid JSON', async () => {
+describe('Story 009.0-DEV-XML-OUTPUT: dry-aged-deps CLI XML error output', () => {
+  it('[REQ-ERROR-FORMAT] emits XML error block and exits with code 2 when npm outdated output is invalid JSON', async () => {
     // Create a temporary directory
     const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'dry-aged-deps-'));
     // Create fake npm script that outputs invalid JSON

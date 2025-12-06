@@ -1,19 +1,12 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for JSON output format
- * @story prompts/008.0-DEV-JSON-OUTPUT.md
- * @req REQ-CLI-FLAG - Accept --format=json flag to enable JSON output
- * @req REQ-VALID-JSON - Output valid, parseable JSON
- * @req REQ-COMPLETE-DATA - Include all package information in output
- * @req REQ-SUMMARY-STATS - Include filtering statistics and thresholds
- * @req REQ-SILENT-MODE - Suppress console messages when outputting JSON
+ * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-CLI-FLAG REQ-JSON-SCHEMA REQ-COMPLETE-DATA REQ-SUMMARY-STATS REQ-SILENT-MODE
  */
 
 import { printOutdated } from '../src/print-outdated.js';
 import { vi, describe, test, expect, beforeEach, afterEach } from 'vitest';
 
-describe('prompts/008.0-DEV-JSON-OUTPUT.md: printOutdated unit tests - json output', () => {
+describe('Story 008.0-DEV-JSON-OUTPUT: printOutdated unit tests - json output', () => {
   let logSpy;
 
   beforeEach(() => {
@@ -24,7 +17,7 @@ describe('prompts/008.0-DEV-JSON-OUTPUT.md: printOutdated unit tests - json outp
     vi.restoreAllMocks();
   });
 
-  test('data with two entries logs valid JSON and returns correct summary', async () => {
+  test('[REQ-JSON-SCHEMA] data with two entries logs valid JSON and returns correct summary', async () => {
     const data = {
       pkg1: { current: '1.0.0', wanted: '1.1.0', latest: '1.1.0' },
       pkg2: { current: '2.0.0', wanted: '2.2.0', latest: '2.2.0' },

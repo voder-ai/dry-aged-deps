@@ -1,9 +1,6 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-annotation-format */
 /**
  * Tests for auto-update prompt abort
- * @story prompts/011.0-DEV-AUTO-UPDATE.md
- * @req REQ-CONFIRMATION - Abort when user denies confirmation
+ * @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-CONFIRMATION
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
@@ -20,7 +17,7 @@ import os from 'os';
 import { promises as fsp } from 'fs';
 import { printOutdated } from '../src/print-outdated.js';
 
-describe('prompts/011.0-DEV-AUTO-UPDATE.md: printOutdated auto-update prompt abort', () => {
+describe('Story 011.0-DEV-AUTO-UPDATE: printOutdated auto-update prompt abort', () => {
   let tmpDir;
   let originalCwd;
   let consoleLogSpy;
@@ -45,7 +42,7 @@ describe('prompts/011.0-DEV-AUTO-UPDATE.md: printOutdated auto-update prompt abo
     await fsp.rm(tmpDir, { recursive: true, force: true });
   });
 
-  it('aborts when user answers no and does not apply updates', async () => {
+  it('[REQ-CONFIRMATION] aborts when user answers no and does not apply updates', async () => {
     const data = {
       foo: { current: '1.0.0', wanted: '1.2.0', latest: '1.2.0' },
     };

@@ -1,19 +1,15 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Unit tests for printOutdated in XML mode when no packages are outdated (empty rows).
- * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
- * @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
- * @req REQ-XML-EMPTY-ROWS - xmlFormatter is called once with empty rows and default thresholds
- * @req REQ-SUMMARY-STATS - Summary counts (totalOutdated, safeUpdates, filteredByAge, filteredBySecurity) are zero
+ * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-SUMMARY-STATS
+ * @supports prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md REQ-DEFAULT-VALUE
+ * @supports prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md REQ-DEFAULT-VALUE
  */
 
 import { printOutdated } from '../src/print-outdated.js';
 import * as xmlFormatterModule from '../src/xml-formatter.js';
 
-describe('prompts/009.0-DEV-XML-OUTPUT.md & prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md & prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md: printOutdated XML empty rows', () => {
-  it('should call xmlFormatter with empty rows and default thresholds when no packages are outdated', async () => {
+describe('Story 009.0-DEV-XML-OUTPUT: printOutdated XML empty rows', () => {
+  it('[REQ-SUMMARY-STATS] should call xmlFormatter with empty rows and default thresholds when no packages are outdated', async () => {
     const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
     const formatSpy = vi.spyOn(xmlFormatterModule, 'xmlFormatter');
     const summary = await printOutdated({}, { format: 'xml' });

@@ -1,10 +1,6 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Integration tests for dry-aged-deps CLI JSON error output.
- * @story prompts/008.0-DEV-JSON-OUTPUT.md
- * @req REQ-ERROR-FORMAT - Format errors as JSON objects when in JSON mode
- * @req REQ-EXIT-2 - Exit code 2 on errors
+ * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-ERROR-FORMAT REQ-EXIT-CODES
  */
 
 import { execa } from 'execa';
@@ -12,9 +8,8 @@ import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
 
-// Story: prompts/008.0-DEV-JSON-OUTPUT.md - JSON error format tests
-describe('prompts/008.0-DEV-JSON-OUTPUT.md: dry-aged-deps CLI JSON error output', () => {
-  it('emits JSON error block and exits with code 2 when npm outdated command fails', async () => {
+describe('Story 008.0-DEV-JSON-OUTPUT: dry-aged-deps CLI JSON error output', () => {
+  it('[REQ-ERROR-FORMAT] emits JSON error block and exits with code 2 when npm outdated command fails', async () => {
     // Create a temporary directory
     const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'dry-aged-deps-'));
     // Create fake npm directory

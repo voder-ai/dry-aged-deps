@@ -1,12 +1,6 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for updatePackages auto-update flow: preview, confirmation, backup, and error handling
- * @story prompts/011.0-DEV-AUTO-UPDATE.md
- * @req REQ-PREVIEW - Show preview of changes before confirmation
- * @req REQ-CONFIRMATION - Interactive confirmation prompt unless --yes provided
- * @req REQ-BACKUP - Create backup of package.json before updating
- * @req REQ-ERROR-HANDLING - Gracefully handles file write errors
+ * @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-PREVIEW REQ-CONFIRMATION REQ-BACKUP
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
@@ -15,7 +9,7 @@ import os from 'os';
 import { promises as fsp } from 'fs';
 import fs from 'fs';
 
-describe('prompts/011.0-DEV-AUTO-UPDATE.md: updatePackages abort, confirm, and backup-error flows', () => {
+describe('Story 011.0-DEV-AUTO-UPDATE: updatePackages abort, confirm, and backup-error flows', () => {
   let tmpDir;
   let originalCwd;
   let safeRows;
@@ -43,7 +37,7 @@ describe('prompts/011.0-DEV-AUTO-UPDATE.md: updatePackages abort, confirm, and b
     await fsp.rm(tmpDir, { recursive: true, force: true });
   });
 
-  it('aborts update when user answers no', async () => {
+  it('[REQ-CONFIRMATION] aborts update when user answers no', async () => {
     vi.resetModules();
     vi.doMock('readline', () => ({
       createInterface: () => ({
@@ -63,7 +57,7 @@ describe('prompts/011.0-DEV-AUTO-UPDATE.md: updatePackages abort, confirm, and b
     expect(result).toBe(summary);
   });
 
-  it('proceeds update when user answers yes', async () => {
+  it('[REQ-PREVIEW][REQ-CONFIRMATION] proceeds update when user answers yes', async () => {
     vi.resetModules();
     vi.doMock('readline', () => ({
       createInterface: () => ({
@@ -80,7 +74,7 @@ describe('prompts/011.0-DEV-AUTO-UPDATE.md: updatePackages abort, confirm, and b
     expect(result).toBe(summary);
   });
 
-  it('handles backup failure and logs error', async () => {
+  it('[REQ-BACKUP] handles backup failure and logs error', async () => {
     vi.resetModules();
     vi.spyOn(fs, 'copyFileSync').mockImplementation(() => {
       throw new Error('backup fail');

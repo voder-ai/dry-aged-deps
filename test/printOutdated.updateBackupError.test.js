@@ -1,9 +1,6 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for auto-update backup error handling
- * @story prompts/011.0-DEV-AUTO-UPDATE.md
- * @req REQ-ERROR-HANDLING - Handle backup creation failure gracefully
+ * @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-BACKUP
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
@@ -13,7 +10,7 @@ import fs from 'fs';
 import { promises as fsp } from 'fs';
 import { printOutdated } from '../src/print-outdated.js';
 
-describe('prompts/011.0-DEV-AUTO-UPDATE.md: printOutdated auto-update backup error handling', () => {
+describe('Story 011.0-DEV-AUTO-UPDATE: printOutdated auto-update backup error handling', () => {
   let tmpDir;
   let originalCwd;
   let consoleErrorSpy;
@@ -41,7 +38,7 @@ describe('prompts/011.0-DEV-AUTO-UPDATE.md: printOutdated auto-update backup err
     await fsp.rm(tmpDir, { recursive: true, force: true });
   });
 
-  it('logs error when backup creation fails and does not create backup or modify package.json', async () => {
+  it('[REQ-BACKUP] logs error when backup creation fails and does not create backup or modify package.json', async () => {
     const data = {
       foo: { current: '1.0.0', wanted: '1.1.0', latest: '1.1.0' },
     };
