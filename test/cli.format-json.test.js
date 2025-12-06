@@ -1,14 +1,6 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Integration tests for dry-aged-deps CLI JSON output format.
- * @story prompts/008.0-DEV-JSON-OUTPUT.md
- * @req REQ-CLI-FLAG - Accepts --format=json flag to enable JSON output
- * @req REQ-VALID-JSON - Output valid, parseable JSON with timestamp, packages array, and summary object
- * @req REQ-COMPLETE-DATA - Include all relevant package information in output
- * @req REQ-SUMMARY-STATS - Include filtering statistics (filteredByAge, filteredBySecurity)
- * @req REQ-SILENT-MODE - Suppress log warnings for JSON format
- * @req REQ-EXIT-1 - Exit code 1 when safe updates available
+ * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-CLI-FLAG REQ-JSON-SCHEMA REQ-COMPLETE-DATA REQ-SUMMARY-STATS REQ-SILENT-MODE REQ-EXIT-CODES
  */
 
 import { execa } from 'execa';
@@ -21,8 +13,8 @@ const __dirname = path.dirname(__filename);
 const fixturesDir = process.cwd();
 const cliPath = path.join(__dirname, '..', 'bin', 'dry-aged-deps.js');
 
-describe('prompts/008.0-DEV-JSON-OUTPUT.md: dry-aged-deps CLI JSON output format', () => {
-  it('outputs valid JSON with timestamp, packages array, and summary object', async () => {
+describe('Story 008.0-DEV-JSON-OUTPUT: dry-aged-deps CLI JSON output format', () => {
+  it('[REQ-JSON-SCHEMA][REQ-COMPLETE-DATA][REQ-SUMMARY-STATS] outputs valid JSON with timestamp, packages array, and summary object', async () => {
     const result = await execa('node', [cliPath, '--format=json'], {
       cwd: fixturesDir,
       env: { ...process.env, DRY_AGED_DEPS_MOCK: '1' },
@@ -39,7 +31,7 @@ describe('prompts/008.0-DEV-JSON-OUTPUT.md: dry-aged-deps CLI JSON output format
     expect(typeof obj.summary.totalOutdated).toBe('number');
   });
 
-  it('excludes log warnings for JSON format', async () => {
+  it('[REQ-SILENT-MODE] excludes log warnings for JSON format', async () => {
     const result = await execa('node', [cliPath, '--format=json'], {
       cwd: fixturesDir,
       env: { ...process.env, DRY_AGED_DEPS_MOCK: '1' },
@@ -48,7 +40,7 @@ describe('prompts/008.0-DEV-JSON-OUTPUT.md: dry-aged-deps CLI JSON output format
     expect(result.stderr).toBe('');
   });
 
-  it('filters packages younger than min-age of 1', async () => {
+  it('[REQ-SUMMARY-STATS] filters packages younger than min-age of 1', async () => {
     const result = await execa('node', [cliPath, '--format=json', '--min-age=1'], {
       cwd: fixturesDir,
       env: { ...process.env, DRY_AGED_DEPS_MOCK: '1', DRY_AGED_DEPS_MOCK_AGE_NOW: '1' },
@@ -59,7 +51,7 @@ describe('prompts/008.0-DEV-JSON-OUTPUT.md: dry-aged-deps CLI JSON output format
     expect(obj.summary.filteredByAge).toBeGreaterThan(0);
   });
 
-  it('filters packages with vulnerabilities', async () => {
+  it('[REQ-SUMMARY-STATS] filters packages with vulnerabilities', async () => {
     const result = await execa('node', [cliPath, '--format=json'], {
       cwd: fixturesDir,
       env: { ...process.env, DRY_AGED_DEPS_MOCK: '1', DRY_AGED_DEPS_MOCK_VULN: '1' },

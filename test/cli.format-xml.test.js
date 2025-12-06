@@ -1,12 +1,6 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Integration tests for dry-aged-deps CLI XML output format.
- * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-CLI-FLAG - Accepts --format=xml command-line flag
- * @req REQ-XML-VALID - Outputs valid XML with proper root and package elements
- * @req REQ-SILENT-MODE - Suppresses log warnings for XML format
- * @req REQ-EXIT-1 - Exit code 1 when safe updates available
+ * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-CLI-FLAG REQ-XML-SCHEMA REQ-COMPLETE-DATA REQ-SUMMARY-STATS REQ-SILENT-MODE REQ-EXIT-CODES
  */
 
 import { execa } from 'execa';
@@ -18,8 +12,8 @@ const __dirname = path.dirname(__filename);
 // Use project root as fixtures directory since mock mode bypasses npm operations
 const fixturesDir = process.cwd();
 
-describe('prompts/009.0-DEV-XML-OUTPUT.md: dry-aged-deps CLI XML output format', () => {
-  it('outputs valid XML with proper root and package elements', async () => {
+describe('Story 009.0-DEV-XML-OUTPUT: dry-aged-deps CLI XML output format', () => {
+  it('[REQ-XML-SCHEMA][REQ-COMPLETE-DATA] outputs valid XML with proper root and package elements', async () => {
     const cliPath = path.join(__dirname, '..', 'bin', 'dry-aged-deps.js');
     const result = await execa('node', [cliPath, '--format=xml'], {
       cwd: fixturesDir,
@@ -34,7 +28,7 @@ describe('prompts/009.0-DEV-XML-OUTPUT.md: dry-aged-deps CLI XML output format',
     expect(xml).toMatch(/<package>\s*<name>.*<\/name>/);
   });
 
-  it('excludes log warnings for XML format', async () => {
+  it('[REQ-SILENT-MODE] excludes log warnings for XML format', async () => {
     const cliPath = path.join(__dirname, '..', 'bin', 'dry-aged-deps.js');
     const result = await execa('node', [cliPath, '--format=xml'], {
       cwd: fixturesDir,

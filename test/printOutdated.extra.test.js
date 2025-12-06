@@ -1,22 +1,17 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for printOutdated extra table and xml output cases
- * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
- * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
- * @story prompts/003.0-DEV-IDENTIFY-OUTDATED.md
- * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
- * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-OUTPUT-DISPLAY - Display table output correctly for outdated packages
- * @req REQ-FETCH-ERROR-HANDLING - Warn and fallback when fetchVersionTimes fails
- * @req REQ-XML-FILTER - Mark filtered entries in XML output for security filtering
+ * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
+ * @supports prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md REQ-NPM-VIEW
+ * @supports prompts/003.0-DEV-IDENTIFY-OUTDATED.md REQ-AGE-THRESHOLD
+ * @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK
+ * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-XML-SCHEMA
  */
 
 import { vi, describe, test, expect, beforeEach, afterEach } from 'vitest';
 import { printOutdated } from '../src/print-outdated.js';
 
 // Table output normal case
-describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md & prompts/003.0-DEV-IDENTIFY-OUTDATED.md & prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md & prompts/009.0-DEV-XML-OUTPUT.md: printOutdated unit tests - table output normal case', () => {
+describe('Story 001.0-DEV-RUN-NPM-OUTDATED: printOutdated unit tests - table output normal case', () => {
   let logSpy;
   let errorSpy;
 
@@ -27,7 +22,7 @@ describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/002.0-DEV-FETCH-AVAILA
 
   afterEach(() => vi.restoreAllMocks());
 
-  test('single entry above age threshold and no vulnerabilities prints row without errors', async () => {
+  test('[REQ-OUTPUT-DISPLAY] single entry above age threshold and no vulnerabilities prints row without errors', async () => {
     const data = {
       pkgN: { current: '4.0.0', wanted: '4.1.0', latest: '4.1.0' },
     };
@@ -50,7 +45,7 @@ describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/002.0-DEV-FETCH-AVAILA
 });
 
 // Table output fetch error branch
-describe('printOutdated unit tests - table fetch error branch', () => {
+describe('Story 002.0-DEV-FETCH-AVAILABLE-VERSIONS: printOutdated unit tests - table fetch error branch', () => {
   let logSpy;
   let errorSpy;
 
@@ -61,7 +56,7 @@ describe('printOutdated unit tests - table fetch error branch', () => {
 
   afterEach(() => vi.restoreAllMocks());
 
-  test('fetchVersionTimes rejects leads to warning and mature filter message', async () => {
+  test('[REQ-NPM-VIEW] fetchVersionTimes rejects leads to warning and mature filter message', async () => {
     const data = {
       pkgD: { current: '5.0.0', wanted: '5.1.0', latest: '5.1.0' },
     };
@@ -85,7 +80,7 @@ describe('printOutdated unit tests - table fetch error branch', () => {
 });
 
 // XML vulnerability filter
-describe('printOutdated unit tests - xml output vulnerability filter', () => {
+describe('Story 009.0-DEV-XML-OUTPUT: printOutdated unit tests - xml output vulnerability filter', () => {
   let logSpy;
 
   beforeEach(() => {
@@ -94,7 +89,7 @@ describe('printOutdated unit tests - xml output vulnerability filter', () => {
 
   afterEach(() => vi.restoreAllMocks());
 
-  test('single entry with vulnerabilities in xml output marked as filtered security', async () => {
+  test('[REQ-XML-SCHEMA] single entry with vulnerabilities in xml output marked as filtered security', async () => {
     const data = {
       pkgV: { current: '6.0.0', wanted: '6.1.0', latest: '6.1.0' },
     };

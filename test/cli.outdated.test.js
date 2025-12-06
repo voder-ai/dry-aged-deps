@@ -1,10 +1,6 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-annotation-format */
 /**
  * Tests for CLI outdated output behavior
- * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
- * @req REQ-NPM-COMMAND - Execute `npm outdated --json` using child_process
- * @req REQ-OUTPUT-DISPLAY - Display table with correct headers
+ * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND REQ-OUTPUT-DISPLAY
  */
 
 import { execa } from 'execa';
@@ -20,7 +16,7 @@ const fixturesSourceDir = path.join(__dirname, 'fixtures');
 let tempDir;
 let fixturesDir;
 
-describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md: dry-aged-deps CLI outdated output', () => {
+describe('Story 001.0-DEV-RUN-NPM-OUTDATED: dry-aged-deps CLI outdated output', () => {
   beforeAll(async () => {
     // Create a unique temporary directory for this test suite
     tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'dry-aged-deps-test-outdated-'));
@@ -44,7 +40,7 @@ describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md: dry-aged-deps CLI outdated outp
     }
   });
 
-  it('runs without error on test project with outdated dependencies', async () => {
+  it('[REQ-OUTPUT-DISPLAY] runs without error on test project with outdated dependencies', async () => {
     const cliPath = path.join(__dirname, '..', 'bin', 'dry-aged-deps.js');
 
     const result = await execa('node', [cliPath], {

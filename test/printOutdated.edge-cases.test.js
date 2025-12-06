@@ -1,24 +1,17 @@
-/* eslint-disable traceability/require-test-traceability */
-/* eslint-disable traceability/valid-req-reference , traceability/valid-annotation-format */
 /**
  * Tests for printOutdated function output edge cases (table, JSON, XML)
- * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
- * @story prompts/003.0-DEV-IDENTIFY-OUTDATED.md
- * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
- * @story prompts/008.0-DEV-JSON-OUTPUT.md
- * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-NO-OUTDATED-BRANCH - Handle no outdated dependencies scenario
- * @req REQ-AGE-THRESHOLD - Filter versions younger than minimum age
- * @req REQ-AUDIT-CHECK - Check vulnerabilities using audit API
- * @req REQ-FORMAT-JSON - Delegate JSON output branch
- * @req REQ-FORMAT-XML - Delegate XML output branch
+ * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
+ * @supports prompts/003.0-DEV-IDENTIFY-OUTDATED.md REQ-AGE-THRESHOLD REQ-COMPARISON
+ * @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK
+ * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-JSON-SCHEMA
+ * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-XML-SCHEMA
  */
 
 import { vi, describe, test, expect, beforeEach, afterEach } from 'vitest';
 import { printOutdated } from '../src/print-outdated.js';
 
 // Table output edge cases
-describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/003.0-DEV-IDENTIFY-OUTDATED.md & prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md & prompts/008.0-DEV-JSON-OUTPUT.md & prompts/009.0-DEV-XML-OUTPUT.md: printOutdated unit tests - table output edge cases (Stories 001.0, 003.0, 004.0)', () => {
+describe('Story 001.0-DEV-RUN-NPM-OUTDATED: printOutdated unit tests - table output edge cases', () => {
   let logSpy;
   let errorSpy;
 
@@ -31,14 +24,14 @@ describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/003.0-DEV-IDENTIFY-OUT
     vi.restoreAllMocks();
   });
 
-  test('no data ({}), default table mode prints up-to-date message and returns undefined', async () => {
+  test('[REQ-OUTPUT-DISPLAY] no data ({}), default table mode prints up-to-date message and returns undefined', async () => {
     const summary = await printOutdated({}, { format: 'table' });
     expect(summary).toBeUndefined();
     expect(logSpy).toHaveBeenCalledTimes(1);
     expect(logSpy).toHaveBeenCalledWith('All dependencies are up to date.');
   });
 
-  test('single entry below age threshold prints mature-filter message', async () => {
+  test('[REQ-AGE-THRESHOLD] single entry below age threshold prints mature-filter message', async () => {
     const data = {
       pkgA: { current: '1.0.0', wanted: '1.1.0', latest: '1.1.0' },
     };
@@ -57,7 +50,7 @@ describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/003.0-DEV-IDENTIFY-OUT
     expect(logSpy).toHaveBeenLastCalledWith(expect.stringContaining('No outdated packages with mature versions found'));
   });
 
-  test('single entry above age threshold but vulnerable prints safe-filter message', async () => {
+  test('[REQ-AUDIT-CHECK] single entry above age threshold but vulnerable prints safe-filter message', async () => {
     const data = {
       pkgB: { current: '2.0.0', wanted: '2.1.0', latest: '2.1.0' },
     };
@@ -77,7 +70,7 @@ describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/003.0-DEV-IDENTIFY-OUT
     expect(logSpy).toHaveBeenLastCalledWith(expect.stringContaining('No outdated packages with safe, mature versions'));
   });
 
-  test('single entry above age threshold and vulnerability check error prints row', async () => {
+  test('[REQ-AUDIT-CHECK] single entry above age threshold and vulnerability check error prints row', async () => {
     const data = {
       pkgC: { current: '3.0.0', wanted: '3.1.0', latest: '3.1.0' },
     };
@@ -103,7 +96,7 @@ describe('prompts/001.0-DEV-RUN-NPM-OUTDATED.md & prompts/003.0-DEV-IDENTIFY-OUT
 });
 
 // JSON empty output
-describe('printOutdated unit tests - json output empty (Story 008.0)', () => {
+describe('Story 008.0-DEV-JSON-OUTPUT: printOutdated unit tests - json output empty', () => {
   let logSpy;
 
   beforeEach(() => {
@@ -114,7 +107,7 @@ describe('printOutdated unit tests - json output empty (Story 008.0)', () => {
     vi.restoreAllMocks();
   });
 
-  test('empty data with json format prints valid JSON summary', async () => {
+  test('[REQ-JSON-SCHEMA] empty data with json format prints valid JSON summary', async () => {
     const result = await printOutdated({}, { format: 'json' });
     expect(result).toEqual({
       totalOutdated: 0,
@@ -143,7 +136,7 @@ describe('printOutdated unit tests - json output empty (Story 008.0)', () => {
 });
 
 // XML output tests
-describe('printOutdated unit tests - xml output (Story 009.0)', () => {
+describe('Story 009.0-DEV-XML-OUTPUT: printOutdated unit tests - xml output', () => {
   let logSpy;
   beforeEach(() => {
     logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
@@ -153,7 +146,7 @@ describe('printOutdated unit tests - xml output (Story 009.0)', () => {
     vi.restoreAllMocks();
   });
 
-  test('empty data with xml format prints empty XML and returns summary', async () => {
+  test('[REQ-XML-SCHEMA] empty data with xml format prints empty XML and returns summary', async () => {
     const summary = await printOutdated({}, { format: 'xml' });
     expect(summary).toEqual({
       totalOutdated: 0,
@@ -169,7 +162,7 @@ describe('printOutdated unit tests - xml output (Story 009.0)', () => {
     expect(output).toContain('<total-outdated>0</total-outdated>');
   });
 
-  test('single entry with xml format prints package element and summary', async () => {
+  test('[REQ-XML-SCHEMA] single entry with xml format prints package element and summary', async () => {
     const data = {
       pkgX: { current: '0.1.0', wanted: '0.2.0', latest: '0.2.0' },
     };
@@ -201,7 +194,7 @@ describe('printOutdated unit tests - xml output (Story 009.0)', () => {
 });
 
 // JSON non-empty data tests
-describe('printOutdated unit tests - json output with data (Story 008.0)', () => {
+describe('Story 008.0-DEV-JSON-OUTPUT: printOutdated unit tests - json output with data', () => {
   let logSpy;
   beforeEach(() => {
     logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
@@ -211,7 +204,7 @@ describe('printOutdated unit tests - json output with data (Story 008.0)', () =>
     vi.restoreAllMocks();
   });
 
-  test('data with json format prints valid JSON with packages and thresholds', async () => {
+  test('[REQ-JSON-SCHEMA] data with json format prints valid JSON with packages and thresholds', async () => {
     const data = {
       pkgY: { current: '1.0.0', wanted: '1.1.0', latest: '1.1.0' },
     };
