@@ -1,4 +1,3 @@
-/* eslint-disable traceability/require-branch-annotation */
 /**
  * Tests for JSON output format
  * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-CLI-FLAG REQ-JSON-SCHEMA REQ-COMPLETE-DATA REQ-SUMMARY-STATS REQ-SILENT-MODE
@@ -25,7 +24,11 @@ describe('Story 008.0-DEV-JSON-OUTPUT: printOutdated unit tests - json output', 
     };
 
     const fetchStub = vi.fn().mockImplementation((pkg) => {
+      // @story prompts/008.0-DEV-JSON-OUTPUT.md
+      // @req REQ-JSON-SCHEMA
       if (pkg === 'pkg1') return Promise.resolve({ '1.1.0': '2020-01-01T00:00:00.000Z' });
+      // @story prompts/008.0-DEV-JSON-OUTPUT.md
+      // @req REQ-JSON-SCHEMA
       if (pkg === 'pkg2') return Promise.resolve({ '2.2.0': '2020-02-01T00:00:00.000Z' });
       return Promise.resolve({});
     });
