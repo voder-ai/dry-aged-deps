@@ -84,10 +84,9 @@ describe('Story 010.0-DEV-CONFIG-FILE-SUPPORT: CLI config-file support', () => {
     // @req REQ-VALIDATION
     try {
       await execa('node', [cliPath], { cwd: tempDir });
-    }
-    // @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
-    // @req REQ-VALIDATION
-    catch (err) {
+    } catch (err) {
+      // @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
+      // @req REQ-VALIDATION
       expect(err.exitCode).toBe(2);
       expect(err.stderr).toContain('Invalid JSON in config file .dry-aged-deps.json');
     }
@@ -101,10 +100,9 @@ describe('Story 010.0-DEV-CONFIG-FILE-SUPPORT: CLI config-file support', () => {
     // @req REQ-VALIDATION
     try {
       await execa('node', [cliPath], { cwd: tempDir });
-    }
-    // @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
-    // @req REQ-VALIDATION
-    catch (err) {
+    } catch (err) {
+      // @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
+      // @req REQ-VALIDATION
       expect(err.stderr).toContain('Unknown config key: foo');
     }
   });
@@ -122,10 +120,9 @@ describe('Story 010.0-DEV-CONFIG-FILE-SUPPORT: CLI config-file support', () => {
     // @req REQ-VALIDATION
     try {
       await execa('node', [cliPath], { cwd: tempDir });
-    }
-    // @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
-    // @req REQ-VALIDATION
-    catch (err) {
+    } catch (err) {
+      // @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
+      // @req REQ-VALIDATION
       expect(err.exitCode).toBe(2);
       expect(err.stderr).toContain('Invalid config value for minAge: 366. Must be integer 1-365');
     }
@@ -152,10 +149,9 @@ describe('Story 010.0-DEV-CONFIG-FILE-SUPPORT: CLI config-file support', () => {
       await execa('node', [cliPath, `--config-file=${customName}`], {
         cwd: tempDir,
       });
-    }
-    // @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
-    // @req REQ-ERROR-MESSAGES
-    catch (err) {
+    } catch (err) {
+      // @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
+      // @req REQ-ERROR-MESSAGES
       expect(err.stderr).toContain(`Configuration file not found: ${customName}`);
     }
   });

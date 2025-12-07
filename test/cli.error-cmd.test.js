@@ -44,10 +44,9 @@ describe('Story 012.0-DEV-EXIT-CODE-REFINEMENT: dry-aged-deps CLI error exit cod
     // @req REQ-EXIT-2
     try {
       await execa('node', [cliPath], { env });
-    }
-    // @story prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md
-    // @req REQ-EXIT-2
-    catch (err) {
+    } catch (err) {
+      // @story prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md
+      // @req REQ-EXIT-2
       expect(err.stderr).toContain('Failed to parse npm outdated output');
     }
   }, 30000);

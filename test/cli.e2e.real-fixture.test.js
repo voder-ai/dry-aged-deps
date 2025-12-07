@@ -91,10 +91,9 @@ afterAll(async () => {
     // @req REQ-AGE-THRESHOLD
     try {
       await fs.rm(tempDir, { recursive: true, force: true });
-    }
-    // @story prompts/003.0-DEV-IDENTIFY-OUTDATED.md
-    // @req REQ-AGE-THRESHOLD
-    catch {
+    } catch {
+      // @story prompts/003.0-DEV-IDENTIFY-OUTDATED.md
+      // @req REQ-AGE-THRESHOLD
       // ignore cleanup errors
     }
   }
