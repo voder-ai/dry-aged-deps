@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 // @ts-check
-/* eslint-disable traceability/require-branch-annotation */
 
 import fs from 'fs';
 import path from 'path';
@@ -72,10 +71,18 @@ function printVersion() {
  * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-ERROR-FORMAT
  */
 function handleError(error, format) {
+  // @story prompts/009.0-DEV-XML-OUTPUT.md
+  // @req REQ-ERROR-FORMAT
   if (format === 'xml') {
+    // @story prompts/009.0-DEV-XML-OUTPUT.md
+    // @req REQ-ERROR-FORMAT
     const timestamp = new Date().toISOString();
     console.log(xmlFormatter({ timestamp, error }));
+    // @story prompts/009.0-DEV-XML-OUTPUT.md
+    // @req REQ-ERROR-FORMAT
   } else if (format === 'json') {
+    // @story prompts/008.0-DEV-JSON-OUTPUT.md
+    // @req REQ-ERROR-FORMAT
     const ts = new Date().toISOString();
     console.log(
       JSON.stringify(
@@ -92,8 +99,14 @@ function handleError(error, format) {
         2
       )
     );
+    // @story prompts/008.0-DEV-JSON-OUTPUT.md
+    // @req REQ-ERROR-FORMAT
   } else {
+    // @story prompts/014.0-DEV-INVALID-OPTION-ERROR.md
+    // @req REQ-ERROR-EXIT-CODE
     console.error(error.message);
+    // @story prompts/014.0-DEV-INVALID-OPTION-ERROR.md
+    // @req REQ-ERROR-EXIT-CODE
   }
   process.exit(2);
 }
@@ -111,35 +124,73 @@ async function loadOutdatedData(format) {
   let fetchVersionTimesOverride;
   let checkVulnerabilitiesOverride;
 
+  // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+  // @req REQ-NPM-COMMAND
   if (process.env.DRY_AGED_DEPS_MOCK === '1') {
+    // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+    // @req REQ-NPM-COMMAND
     const mockPath = pathToFileURL(path.resolve(__dirname, '../test/helpers/cli.outdated.mock.js')).href;
     const mock = await import(mockPath);
     data = mock.outdatedData;
     fetchVersionTimesOverride = mock.fetchVersionTimes;
     checkVulnerabilitiesOverride = mock.checkVulnerabilities;
+    // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+    // @req REQ-NPM-COMMAND
   } else if (format === 'json' && fs.existsSync(path.join(process.cwd(), 'package.json'))) {
+    // @story prompts/008.0-DEV-JSON-OUTPUT.md
+    // @req REQ-JSON-SCHEMA
     data = {};
+    // @story prompts/008.0-DEV-JSON-OUTPUT.md
+    // @req REQ-JSON-SCHEMA
   } else {
+    // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+    // @req REQ-NPM-COMMAND
     let outputStr;
+    // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+    // @req REQ-NPM-COMMAND
     try {
       outputStr = execFileSync('npm', ['outdated', '--json'], {
         encoding: 'utf8',
         stdio: ['ignore', 'pipe', 'ignore'],
       });
+      // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+      // @req REQ-NPM-COMMAND
     } catch (err) {
+      // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+      // @req REQ-NPM-COMMAND
       /** @type {any} */
       const errorAny = err;
+      // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+      // @req REQ-NPM-COMMAND
       if (errorAny.stdout && errorAny.stdout.toString().trim()) {
+        // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+        // @req REQ-NPM-COMMAND
         outputStr = errorAny.stdout.toString();
+        // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+        // @req REQ-NPM-COMMAND
       } else {
+        // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+        // @req REQ-NPM-COMMAND
         throw errorAny;
+        // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+        // @req REQ-NPM-COMMAND
       }
     }
+    // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+    // @req REQ-OUTPUT-DISPLAY
     try {
       data = outputStr ? JSON.parse(outputStr) : {};
+      // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+      // @req REQ-OUTPUT-DISPLAY
     } catch (parseErr) {
+      // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+      // @req REQ-OUTPUT-DISPLAY
       if (format === 'json' || format === 'xml') {
+        // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+        // @req REQ-OUTPUT-DISPLAY
         throw /** @type {Error} */ (parseErr);
+        // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+        // @req REQ-OUTPUT-DISPLAY
       }
       /** @type {Error} */
       const errObj = parseErr;
@@ -157,14 +208,26 @@ async function loadOutdatedData(format) {
 async function main() {
   const args = process.argv.slice(2);
 
+  // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+  // @req REQ-OUTPUT-DISPLAY
   if (args.includes('-h') || args.includes('--help')) {
+    // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+    // @req REQ-OUTPUT-DISPLAY
     printHelp();
     return;
+    // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+    // @req REQ-OUTPUT-DISPLAY
   }
 
+  // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+  // @req REQ-OUTPUT-DISPLAY
   if (args.includes('-v') || args.includes('--version')) {
+    // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+    // @req REQ-OUTPUT-DISPLAY
     printVersion();
     return;
+    // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+    // @req REQ-OUTPUT-DISPLAY
   }
 
   /** @type {CliOptions} */
@@ -181,12 +244,24 @@ async function main() {
   } = options;
 
   let data, fetchVersionTimesOverride, checkVulnerabilitiesOverride;
+  // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+  // @req REQ-NPM-COMMAND
   try {
+    // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+    // @req REQ-NPM-COMMAND
     ({ data, fetchVersionTimesOverride, checkVulnerabilitiesOverride } = await loadOutdatedData(format));
+    // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+    // @req REQ-NPM-COMMAND
   } catch (error) {
+    // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+    // @req REQ-NPM-COMMAND
     handleError(/** @type {Error & {code?: string, details?: string}} */ (error), format);
+    // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+    // @req REQ-NPM-COMMAND
   }
 
+  // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+  // @req REQ-OUTPUT-DISPLAY
   try {
     const summary = /** @type {{ safeUpdates: number }} */ (
       await printOutdated(/** @type {any} */ (data), {
@@ -203,15 +278,33 @@ async function main() {
       })
     );
 
+    // @story prompts/013.0-DEV-CHECK-MODE.md
+    // @req REQ-CHECK-FLAG
     if (checkMode) {
+      // @story prompts/013.0-DEV-CHECK-MODE.md
+      // @req REQ-CHECK-FLAG
       process.exit(summary.safeUpdates > 0 ? 1 : 0);
+      // @story prompts/013.0-DEV-CHECK-MODE.md
+      // @req REQ-CHECK-FLAG
     }
+    // @story prompts/011.0-DEV-AUTO-UPDATE.md
+    // @req REQ-UPDATE-FLAG
     if (updateMode) {
+      // @story prompts/011.0-DEV-AUTO-UPDATE.md
+      // @req REQ-UPDATE-FLAG
       process.exit(0);
+      // @story prompts/011.0-DEV-AUTO-UPDATE.md
+      // @req REQ-UPDATE-FLAG
     }
     process.exit(summary.safeUpdates > 0 ? 1 : 0);
+    // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+    // @req REQ-OUTPUT-DISPLAY
   } catch (error) {
+    // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+    // @req REQ-OUTPUT-DISPLAY
     handleError(/** @type {Error & {code?: string, details?: string}} */ (error), format);
+    // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+    // @req REQ-OUTPUT-DISPLAY
   }
 }
 
