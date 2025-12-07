@@ -1,8 +1,7 @@
 // @ts-check
 /**
  * Prepare JSON items for JSON output.
- * @story prompts/008.0-DEV-JSON-OUTPUT.md
- * @req REQ-COMPLETE-DATA
+ * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-COMPLETE-DATA
  * @param {Array<[string, string, string, string, number|string, string]>} rows - Each row tuple: [name, current, wanted, latest, age, dependencyType]
  * @param {{ prod: { minAge: number, minSeverity: string }, dev: { minAge: number, minSeverity: string } }} thresholds - Age and severity thresholds for filtering logic.
  * @param {Map<string, {count: number, maxSeverity: string, details: Array<any>}>} vulnMap - Mapping of package names to vulnerability info.

@@ -61,6 +61,7 @@ export default [
       'traceability/require-story-annotation': 'error',
       'traceability/require-req-annotation': 'error',
       'traceability/require-branch-annotation': 'error',
+      'traceability/prefer-supports-annotation': 'error',
       'traceability/valid-annotation-format': [
         'warn',
         {

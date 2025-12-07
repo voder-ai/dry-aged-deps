@@ -27,8 +27,7 @@
  * Escape special XML characters in a string
  * @param {*} unsafe
  * @returns {string}
- * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-XML-SCHEMA
+ * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-XML-SCHEMA
  */
 export function escapeXml(unsafe) {
   return String(unsafe)
@@ -42,8 +41,7 @@ export function escapeXml(unsafe) {
 /**
  * Build the XML declaration
  * @returns {string}
- * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-XML-DECLARATION
+ * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-XML-DECLARATION
  */
 export function buildXmlDeclaration() {
   return '<?xml version="1.0" encoding="UTF-8"?>\n';
@@ -53,8 +51,7 @@ export function buildXmlDeclaration() {
  * Build the opening root element with timestamp attribute
  * @param {string} timestamp
  * @returns {string}
- * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-XML-SCHEMA
+ * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-XML-SCHEMA
  */
 export function buildRootStart(timestamp) {
   return `<outdated-packages timestamp="${escapeXml(timestamp)}">\n`;
@@ -63,8 +60,7 @@ export function buildRootStart(timestamp) {
 /**
  * Build the closing root element
  * @returns {string}
- * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-XML-SCHEMA
+ * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-XML-SCHEMA
  */
 export function buildRootEnd() {
   return '</outdated-packages>';
@@ -74,8 +70,7 @@ export function buildRootEnd() {
  * Build XML for error section
  * @param {XmlError} error
  * @returns {string}
- * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-ERROR-FORMAT
+ * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-ERROR-FORMAT
  */
 export function buildErrorSection(error) {
   let xml = '  <error>\n';
@@ -94,8 +89,7 @@ export function buildErrorSection(error) {
  * Build XML for packages section
  * @param {Array<any>} rows
  * @returns {string}
- * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-XML-SCHEMA
+ * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-XML-SCHEMA
  */
 export function buildPackagesSection(rows) {
   let xml = '  <packages>\n';
@@ -156,8 +150,7 @@ export function buildPackagesSection(rows) {
  * Build XML for summary section
  * @param {SummaryOptions} [summary]
  * @returns {string}
- * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-SUMMARY-STATS
+ * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-SUMMARY-STATS
  */
 export function buildSummarySection({
   totalOutdated = 0,
@@ -184,8 +177,7 @@ export function buildSummarySection({
  * Build XML for thresholds section
  * @param {ThresholdsOptions} [thresholds]
  * @returns {string}
- * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-XML-SCHEMA
+ * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-XML-SCHEMA
  */
 export function buildThresholdsSection({ prod, dev } = {}) {
   let xml = '  <thresholds>\n';

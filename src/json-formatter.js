@@ -6,10 +6,7 @@
 
 /**
  * Format outdated dependencies data into JSON string.
- * @story prompts/008.0-DEV-JSON-OUTPUT.md
- * @req REQ-JSON-SCHEMA
- * @req REQ-COMPLETE-DATA
- * @req REQ-SUMMARY-STATS
+ * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-JSON-SCHEMA REQ-COMPLETE-DATA REQ-SUMMARY-STATS
  */
 
 /**

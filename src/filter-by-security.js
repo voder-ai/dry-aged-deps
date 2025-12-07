@@ -4,9 +4,7 @@ import { computeVulnerabilityStats, countAboveThreshold } from './security-helpe
 
 /**
  * Process object-based vulnerability result.
- * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
- * @req REQ-AUDIT-CHECK
- * @req REQ-TRANSITIVE-DEPS
+ * @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK REQ-TRANSITIVE-DEPS
  * @param {object} result - Vulnerability result object.
  * @param {string} minSeverity - Minimum severity threshold.
  * @param {{ [key: string]: number }} severityWeights - Severity weight mapping.
@@ -62,10 +60,7 @@ function processObjectResult(result, minSeverity, severityWeights) {
 
 /**
  * Process a single package version for vulnerability checking (original one-version logic).
- * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
- * @req REQ-AUDIT-CHECK
- * @req REQ-TRANSITIVE-DEPS
- * @req REQ-SAFE-ONLY
+ * @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK REQ-TRANSITIVE-DEPS REQ-SAFE-ONLY
  * @param {string} name - Package name.
  * @param {string} latest - Latest version.
  * @param {object} options - Processing options.
@@ -138,8 +133,7 @@ async function processOneVersion(name, latest, options) {
 
 /**
  * Attempt smart-search fallback to find a safe version.
- * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
- * @req REQ-SMART-SEARCH
+ * @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SMART-SEARCH
  * @param {string} name - Package name.
  * @param {string} current - Current version.
  * @param {string} wanted - Wanted version.
@@ -225,12 +219,8 @@ async function trySmartSearchFallback(name, current, wanted, depType, context) {
 
 /**
  * Filter rows by security vulnerabilities.
- * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
- * @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
- * @req REQ-AUDIT-CHECK
- * @req REQ-TRANSITIVE-DEPS
- * @req REQ-SMART-SEARCH
- * @req REQ-SAFE-ONLY
+ * @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK REQ-TRANSITIVE-DEPS REQ-SMART-SEARCH REQ-SAFE-ONLY
+ * @supports prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md REQ-CLI-FLAG REQ-SEVERITY-LEVELS
  * @param {Array<[string,string,string,string,number|string,string]>} rows - Array of [name, current, wanted, latest, age, depType].
  * @param {Function} checkVulnerabilities - Function to check vulnerabilities for a package version.
  * @param {{ prodMinSeverity: string, devMinSeverity: string }} thresholds - Minimum severity thresholds for prod and dev.

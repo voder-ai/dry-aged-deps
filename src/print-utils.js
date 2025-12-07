@@ -6,9 +6,8 @@
 
 /**
  * Create thresholds object for JSON/XML formatting.
- * @story prompts/008.0-DEV-JSON-OUTPUT.md
- * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-COMPLETE-DATA
+ * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-COMPLETE-DATA
+ * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-COMPLETE-DATA
  * @param {number} prodMinAge
  * @param {string} prodMinSeverity
  * @param {number} devMinAge
@@ -24,9 +23,8 @@ export function getThresholds(prodMinAge, prodMinSeverity, devMinAge, devMinSeve
 
 /**
  * Get current ISO timestamp string.
- * @story prompts/008.0-DEV-JSON-OUTPUT.md
- * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-COMPLETE-DATA
+ * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-COMPLETE-DATA
+ * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-COMPLETE-DATA
  * @returns {string} ISO formatted timestamp
  */
 export function getTimestamp() {

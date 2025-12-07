@@ -4,8 +4,7 @@ import path from 'path';
 
 /**
  * Load and parse package.json from the current working directory.
- * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
- * @req REQ-JSON-PARSE
+ * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-JSON-PARSE
  * @returns {{ dependencies: Record<string, string>, devDependencies: Record<string, string> }}
  */
 export function loadPackageJson() {

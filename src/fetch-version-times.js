@@ -6,8 +6,7 @@ import { execFile as cpExecFile } from 'child_process';
  * @param {string} packageName - The name of the npm package.
  * @param {any} [execFileImpl] - Optional execFile implementation (matches Node's execFile signature).
  * @returns {Promise<Record<string, string>>} A promise resolving to a mapping of version to publish date string.
- * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
- * @req REQ-NPM-VIEW
+ * @supports prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md REQ-NPM-VIEW
  */
 export async function fetchVersionTimes(packageName, execFileImpl = cpExecFile) {
   const pkgNameRegex = /^[a-z0-9@\-_/.]+$/i;

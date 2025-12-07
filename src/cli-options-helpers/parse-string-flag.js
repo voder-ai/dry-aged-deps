@@ -2,8 +2,7 @@
 import { getFlagRawValue } from './get-flag-raw-value.js';
 /**
  * Generic helper to parse string flags with optional validation.
- * @story prompts/014.0-DEV-INVALID-OPTION-ERROR.md
- * @req REQ-INVALID-VALUE-ERROR
+ * @supports prompts/014.0-DEV-INVALID-OPTION-ERROR.md REQ-INVALID-VALUE-ERROR
  * @param {string[]} args - CLI arguments.
  * @param {string} flag - Flag name, e.g., 'format', 'severity'.
  * @param {string} defaultValue - Default value if flag not provided.

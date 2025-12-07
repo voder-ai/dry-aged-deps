@@ -10,8 +10,7 @@ import path from 'path';
  * Assert a condition or exit with error.
  * @param {boolean} condition - Condition to assert.
  * @param {string} message - Error message to log on failure.
- * @story prompts/014.0-DEV-INVALID-OPTION-ERROR.md
- * @req REQ-ERROR-EXIT-CODE
+ * @supports prompts/014.0-DEV-INVALID-OPTION-ERROR.md REQ-ERROR-EXIT-CODE
  * @returns void
  */
 function assert(condition, message) {
@@ -31,8 +30,7 @@ function assert(condition, message) {
  * Ensure a value is a non-null object (not array).
  * @param {*} value - Value to check.
  * @param {string} name - Name used in error messages.
- * @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
- * @req REQ-VALIDATION
+ * @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-VALIDATION
  * @returns void
  */
 function ensureObject(value, name) {
@@ -47,8 +45,7 @@ function ensureObject(value, name) {
  * @param {object} obj - Object to validate.
  * @param {string[]} allowedKeys - Keys permitted in the object.
  * @param {string} context - Context suffix for error messages.
- * @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
- * @req REQ-VALIDATION
+ * @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-VALIDATION
  * @returns void
  */
 function validateKeys(obj, allowedKeys, context) {
@@ -61,8 +58,7 @@ function validateKeys(obj, allowedKeys, context) {
  * Validate an integer value is within 1-365.
  * @param {number|undefined} value - Value to validate.
  * @param {string} name - Name used in error message.
- * @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
- * @req REQ-VALIDATION
+ * @supports prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md REQ-VALIDATION
  * @returns void
  */
 function validateRangeInt(value, name) {
@@ -86,10 +82,9 @@ function validateRangeInt(value, name) {
  * @param {string|undefined} value - Value to validate.
  * @param {string[]} validList - List of permitted values.
  * @param {string} name - Name used in error message.
- * @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
- * @story prompts/008.0-DEV-JSON-OUTPUT.md
- * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-VALIDATION
+ * @supports prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md REQ-VALIDATION
+ * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-VALIDATION
+ * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-VALIDATION
  * @returns void
  */
 function validateAgainstList(value, validList, name) {
@@ -110,9 +105,7 @@ function validateAgainstList(value, validList, name) {
 
 /**
  * Load and validate configuration from a config file.
- * @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
- * @req REQ-CONFIG-LOCATION
- * @req REQ-VALIDATION
+ * @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-CONFIG-LOCATION REQ-VALIDATION
  * @param {string} configFileName - Name of the config file (relative to cwd).
  * @param {string|undefined} configFileArg - CLI arg if provided.
  * @param {string[]} validSeverities - List of valid severities.

@@ -1,8 +1,7 @@
 // @ts-check
 /**
  * Extract raw flag value from CLI arguments.
- * @story prompts/014.0-DEV-INVALID-OPTION-ERROR.md
- * @req REQ-ERROR-EXIT-CODE
+ * @supports prompts/014.0-DEV-INVALID-OPTION-ERROR.md REQ-ERROR-EXIT-CODE
  * @param {string[]} args - CLI arguments.
  * @param {string} flag - Flag name without leading hyphens.
  * @returns {string|undefined} The raw flag value, or undefined if not present.

@@ -12,8 +12,7 @@ import { getThresholds } from './print-utils.js';
 
 /**
  * Handle scenario when there are no outdated dependencies.
- * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
- * @req REQ-OUTPUT-DISPLAY
+ * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
  * @param {string} format - Output format ('table', 'json', 'xml').
  * @param {boolean} returnSummary - Whether to return summary object.
  * @param {{prod:{minAge:number,minSeverity:string},dev:{minAge:number,minSeverity:string}}} thresholds - Thresholds configuration.

@@ -4,10 +4,7 @@ import { calculateAgeInDays as defaultCalculateAgeInDays } from './age-calculato
 
 /**
  * Build rows with age and dependency type.
- * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
- * @req REQ-NPM-VIEW
- * @req REQ-AGE-CALC
- * @req REQ-OPTIMIZATION
+ * @supports prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md REQ-NPM-VIEW REQ-AGE-CALC REQ-OPTIMIZATION
  * @param {Record<string, { current: string; wanted: string; latest: string }>} data
  * @param {{
  *   fetchVersionTimes?: Function,

@@ -12,9 +12,7 @@ import { join } from 'path';
  * @param {string} packageName - The name of the npm package
  * @param {string} version - The version to check
  * @returns {Promise<{ count: number, vulnerabilities: { info: number, low: number, moderate: number, high: number, critical: number }, details: Array<Object> }>}
- * @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
- * @req REQ-AUDIT-CHECK
- * @req REQ-TRANSITIVE-DEPS
+ * @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK REQ-TRANSITIVE-DEPS
  */
 export async function checkVulnerabilities(packageName, version) {
   const pkgNameRegex = /^[a-z0-9@\-*/.]+$/i;

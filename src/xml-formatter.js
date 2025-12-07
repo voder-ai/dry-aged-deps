@@ -11,11 +11,7 @@ import {
 
 /**
  * Format data into XML string
- * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-XML-SCHEMA
- * @req REQ-COMPLETE-DATA
- * @req REQ-SUMMARY-STATS
- * @req REQ-XML-DECLARATION
+ * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-XML-SCHEMA REQ-COMPLETE-DATA REQ-SUMMARY-STATS REQ-XML-DECLARATION
  * @param {Object} params
  * @param {Array<any>} [params.rows]
  * @param {Object} [params.summary]

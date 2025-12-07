@@ -20,8 +20,7 @@ import { getTimestamp } from './print-utils.js';
 
 /**
  * Output JSON formatted results.
- * @story prompts/008.0-DEV-JSON-OUTPUT.md
- * @req REQ-CLI-FLAG
+ * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-CLI-FLAG
  * @param {{ rows: Array<[string, string, string, string, number|string, string]>, summary: FilterSummary, thresholds: Thresholds, vulnMap: Map<string, object>, filterReasonMap: Map<string, string> }} options
  * @returns {FilterSummary} Summary object returned from filtering.
  */
@@ -34,8 +33,7 @@ export function handleJsonOutput({ rows, summary, thresholds, vulnMap, filterRea
 
 /**
  * Output XML formatted results.
- * @story prompts/009.0-DEV-XML-OUTPUT.md
- * @req REQ-CLI-FLAG
+ * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-CLI-FLAG
  * @param {{ rows: Array<[string, string, string, string, number|string, string]>, summary: FilterSummary, thresholds: Thresholds, vulnMap: Map<string, object>, filterReasonMap: Map<string, string> }} options
  * @returns {FilterSummary} Summary object returned from filtering.
  */
@@ -48,8 +46,7 @@ export function handleXmlOutput({ rows, summary, thresholds, vulnMap, filterReas
 
 /**
  * Output table formatted results.
- * @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
- * @req REQ-OUTPUT-DISPLAY
+ * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
  * @param {{ safeRows: Array<Array>, matureRows: Array<Array>, summary: FilterSummary, prodMinAge: number, devMinAge: number, returnSummary: boolean }} options
  * @returns {FilterSummary|undefined} Summary when returnSummary is true or undefined otherwise.
  */

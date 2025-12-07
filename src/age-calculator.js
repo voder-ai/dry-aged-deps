@@ -3,8 +3,7 @@
  * Calculate the age in days since the publish date.
  * @param {string} publishDate - The publish date string (ISO format).
  * @returns {number} Number of days since publishDate.
- * @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
- * @req REQ-AGE-CALC
+ * @supports prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md REQ-AGE-CALC
  */
 export function calculateAgeInDays(publishDate) {
   const publishTime = new Date(publishDate).getTime();
