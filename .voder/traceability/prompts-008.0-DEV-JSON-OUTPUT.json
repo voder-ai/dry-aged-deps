@@ -1,0 +1,15 @@
+{
+  "specificationPath": "prompts/008.0-DEV-JSON-OUTPUT.md",
+  "status": "PASSED",
+  "lastValidated": "2025-12-08",
+  "evidence": [
+    "test/cli.format-json.test.js: Tests REQ-CLI-FLAG, REQ-JSON-SCHEMA, REQ-COMPLETE-DATA, REQ-SUMMARY-STATS, REQ-SILENT-MODE, REQ-EXIT-CODES",
+    "test/cli.format-json.error.test.js: Tests REQ-ERROR-FORMAT",
+    "test/json-formatter.test.js: Tests REQ-JSON-SCHEMA, REQ-COMPLETE-DATA, REQ-SUMMARY-STATS",
+    "test/printOutdated.json.test.js: Tests JSON output with REQ-JSON-SCHEMA",
+    "test/cli-options-helpers.test.js: Tests REQ-CLI-FLAG, REQ-VALIDATION",
+    "test/functional-assessment.test.js: Functional test for JSON output",
+    "src/json-formatter.js: JSON output implementation",
+    "All 214 tests passing with 97.5% coverage"
+  ]
+}

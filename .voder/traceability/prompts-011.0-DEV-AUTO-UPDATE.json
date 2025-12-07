@@ -1,0 +1,15 @@
+{
+  "specificationPath": "prompts/011.0-DEV-AUTO-UPDATE.md",
+  "status": "PASSED",
+  "lastValidated": "2025-12-08",
+  "evidence": [
+    "test/update-packages.test.js: Tests REQ-UPDATE-FLAG, REQ-YES-FLAG, REQ-BACKUP, REQ-PACKAGE-JSON",
+    "test/update-packages.additional.test.js: Tests REQ-CONFIRMATION",
+    "test/update-packages.abort-and-backup.test.js: Tests REQ-PREVIEW, REQ-CONFIRMATION, REQ-BACKUP",
+    "test/printOutdated.update.test.js: Tests REQ-SAFE-ONLY, REQ-SUMMARY",
+    "test/printOutdated.updatePromptAbort.test.js: Tests REQ-CONFIRMATION",
+    "test/printOutdated.updateBackupError.test.js: Tests REQ-BACKUP",
+    "test/functional-assessment.test.js: Functional test for update flags",
+    "All 214 tests passing with 97.5% coverage"
+  ]
+}

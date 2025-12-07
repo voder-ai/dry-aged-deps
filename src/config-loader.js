@@ -1,5 +1,4 @@
 // @ts-check
-/* eslint-disable traceability/require-branch-annotation */
 /**
  * Configuration loader for CLI options, supports JSON config file.
  * @module config-loader
@@ -16,9 +15,15 @@ import path from 'path';
  * @returns void
  */
 function assert(condition, message) {
+  // @story prompts/014.0-DEV-INVALID-OPTION-ERROR.md
+  // @req REQ-ERROR-EXIT-CODE
   if (!condition) {
+    // @story prompts/014.0-DEV-INVALID-OPTION-ERROR.md
+    // @req REQ-ERROR-EXIT-CODE
     console.error(message);
     process.exit(2);
+    // @story prompts/014.0-DEV-INVALID-OPTION-ERROR.md
+    // @req REQ-ERROR-EXIT-CODE
   }
 }
 
@@ -61,7 +66,15 @@ function validateKeys(obj, allowedKeys, context) {
  * @returns void
  */
 function validateRangeInt(value, name) {
-  if (value === undefined) return;
+  // @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
+  // @req REQ-VALIDATION
+  if (value === undefined) {
+    // @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
+    // @req REQ-VALIDATION
+    return;
+    // @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
+    // @req REQ-VALIDATION
+  }
   assert(
     Number.isInteger(value) && value >= 1 && value <= 365,
     `Invalid config value for ${name}: ${value}. Must be integer 1-365`
@@ -80,7 +93,15 @@ function validateRangeInt(value, name) {
  * @returns void
  */
 function validateAgainstList(value, validList, name) {
-  if (value === undefined) return;
+  // @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
+  // @req REQ-VALIDATION
+  if (value === undefined) {
+    // @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
+    // @req REQ-VALIDATION
+    return;
+    // @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
+    // @req REQ-VALIDATION
+  }
   assert(
     validList.includes(value),
     `Invalid config value for ${name}: ${value}. Valid values: ${validList.join(', ')}`
@@ -102,15 +123,27 @@ export function loadConfigFile(configFileName, configFileArg, validSeverities, v
   const configFilePath = path.resolve(process.cwd(), configFileName);
   let config = /** @type {Record<string, any>} */ ({});
 
+  // @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
+  // @req REQ-CONFIG-LOCATION
   if (fs.existsSync(configFilePath)) {
+    // @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
+    // @req REQ-CONFIG-LOCATION
     let raw;
+    // @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
+    // @req REQ-VALIDATION
     try {
       raw = fs.readFileSync(configFilePath, 'utf8');
       config = JSON.parse(raw);
+      // @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
+      // @req REQ-VALIDATION
     } catch (err) {
+      // @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
+      // @req REQ-VALIDATION
       const e = /** @type {any} */ (err);
       console.error(`Invalid JSON in config file ${configFileName}: ${e.message}`);
       process.exit(2);
+      // @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
+      // @req REQ-VALIDATION
     }
 
     ensureObject(config, configFileName);
@@ -120,22 +153,40 @@ export function loadConfigFile(configFileName, configFileArg, validSeverities, v
     validateAgainstList(config.severity, validSeverities, 'severity');
     validateAgainstList(config.format, validFormats, 'format');
 
+    // @story prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md
+    // @req REQ-CONFIG-SCHEMA
     if (config.prod !== undefined) {
+      // @story prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md
+      // @req REQ-CONFIG-SCHEMA
       ensureObject(config.prod, 'prod');
       validateKeys(config.prod, ['minAge', 'minSeverity'], ' in prod');
       validateRangeInt(config.prod.minAge, 'prod.minAge');
       validateAgainstList(config.prod.minSeverity, validSeverities, 'prod.minSeverity');
+      // @story prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md
+      // @req REQ-CONFIG-SCHEMA
     }
 
+    // @story prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md
+    // @req REQ-CONFIG-SCHEMA
     if (config.dev !== undefined) {
+      // @story prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md
+      // @req REQ-CONFIG-SCHEMA
       ensureObject(config.dev, 'dev');
       validateKeys(config.dev, ['minAge', 'minSeverity'], ' in dev');
       validateRangeInt(config.dev.minAge, 'dev.minAge');
       validateAgainstList(config.dev.minSeverity, validSeverities, 'dev.minSeverity');
+      // @story prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md
+      // @req REQ-CONFIG-SCHEMA
     }
+    // @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
+    // @req REQ-CONFIG-LOCATION
   } else if (configFileArg) {
+    // @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
+    // @req REQ-CONFIG-LOCATION
     console.error(`Configuration file not found: ${configFileName}`);
     process.exit(2);
+    // @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
+    // @req REQ-CONFIG-LOCATION
   }
 
   return config;

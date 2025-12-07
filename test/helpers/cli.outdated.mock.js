@@ -1,4 +1,3 @@
-/* eslint-disable traceability/require-branch-annotation */
 /**
  * Stub module for dry-aged-deps CLI outdated testing
  * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND REQ-OUTPUT-DISPLAY
@@ -14,13 +13,25 @@ export const outdatedData = {
 export async function fetchVersionTimes(packageName) {
   // eslint-disable-next-line security/detect-object-injection -- dynamic package name access is required for this test mock (see GH-1234)
   const data = outdatedData[packageName];
+  // @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
+  // @req REQ-NPM-VIEW
   if (!data) {
+    // @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
+    // @req REQ-NPM-VIEW
     return {};
+    // @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
+    // @req REQ-NPM-VIEW
   }
+  // @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
+  // @req REQ-NPM-VIEW
   if (process.env.DRY_AGED_DEPS_MOCK_AGE_NOW === '1') {
+    // @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
+    // @req REQ-NPM-VIEW
     return {
       [data.latest]: new Date().toISOString(),
     };
+    // @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
+    // @req REQ-NPM-VIEW
   }
   return {
     [data.current]: '2020-01-01T00:00:00Z',

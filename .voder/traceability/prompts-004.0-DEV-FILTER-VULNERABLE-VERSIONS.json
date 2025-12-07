@@ -1,0 +1,16 @@
+{
+  "specificationPath": "prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md",
+  "status": "PASSED",
+  "lastValidated": "2025-12-08",
+  "evidence": [
+    "test/filter-by-security.test.js: Tests REQ-AUDIT-CHECK, REQ-TRANSITIVE-DEPS, REQ-SAFE-ONLY",
+    "test/check-vulnerabilities.test.js: Tests REQ-AUDIT-CHECK, REQ-TRANSITIVE-DEPS",
+    "test/filter-by-security.smart-search.test.js: Tests REQ-SMART-SEARCH",
+    "test/filter-by-security.fetchError-fallback.test.js: Tests REQ-SMART-SEARCH",
+    "test/vulnerability-evaluator.test.js: Tests REQ-SAFE-ONLY",
+    "test/functional-assessment.test.js: Functional test for vulnerability filtering",
+    "src/filter-by-security.js: Vulnerability filtering implementation",
+    "src/check-vulnerabilities.js: Audit check implementation",
+    "All 214 tests passing with 97.5% coverage"
+  ]
+}

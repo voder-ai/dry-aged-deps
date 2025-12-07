@@ -1,5 +1,5 @@
-// @ts-check
 /* eslint-disable traceability/require-branch-annotation */
+// @ts-check
 import { execFile as cpExecFile } from 'child_process';
 
 /**
@@ -12,8 +12,14 @@ import { execFile as cpExecFile } from 'child_process';
  */
 export async function fetchVersionTimes(packageName, execFileImpl = cpExecFile) {
   const pkgNameRegex = /^[a-z0-9@\-_/.]+$/i;
+  // @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
+  // @req REQ-NPM-VIEW
   if (!pkgNameRegex.test(packageName)) {
+    // @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
+    // @req REQ-NPM-VIEW
     throw new Error(`Invalid package name: ${packageName}`);
+    // @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
+    // @req REQ-NPM-VIEW
   }
 
   const maxRetries = 2;

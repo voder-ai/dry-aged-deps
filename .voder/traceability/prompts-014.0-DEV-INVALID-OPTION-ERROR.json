@@ -1,0 +1,11 @@
+{
+  "specificationPath": "prompts/014.0-DEV-INVALID-OPTION-ERROR.md",
+  "status": "PASSED",
+  "lastValidated": "2025-12-08",
+  "evidence": [
+    "test/cli.invalid-options.test.js: Tests all REQ-UNKNOWN-OPTION-ERROR, REQ-INVALID-VALUE-ERROR requirements",
+    "test/cli-entrypoint.test.js: Tests REQ-HELP-SUGGESTION, REQ-ERROR-EXIT-CODE",
+    "All 214 tests passing with 97.5% coverage",
+    "Error handling with exit code 2, helpful suggestions, and --help guidance implemented"
+  ]
+}

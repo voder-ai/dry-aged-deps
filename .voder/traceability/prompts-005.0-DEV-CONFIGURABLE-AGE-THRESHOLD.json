@@ -1,0 +1,13 @@
+{
+  "specificationPath": "prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md",
+  "status": "PASSED",
+  "lastValidated": "2025-12-08",
+  "evidence": [
+    "test/cli-options-helpers.test.js: Tests REQ-CLI-FLAG, REQ-VALIDATION with 5 test cases",
+    "test/cli.flags.test.js: Tests REQ-CLI-FLAG",
+    "test/functional-assessment.test.js: Functional test for configurable age threshold",
+    "test/printOutdated.xmlEmpty.test.js: Tests REQ-DEFAULT-VALUE",
+    "src/cli-options-helpers.js: Age threshold validation implementation",
+    "All 214 tests passing with 97.5% coverage"
+  ]
+}

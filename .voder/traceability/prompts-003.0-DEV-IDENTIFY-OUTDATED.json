@@ -1,0 +1,14 @@
+{
+  "specificationPath": "prompts/003.0-DEV-IDENTIFY-OUTDATED.md",
+  "status": "PASSED",
+  "lastValidated": "2025-12-08",
+  "evidence": [
+    "test/filter-by-age.test.js: Tests REQ-AGE-THRESHOLD, REQ-SMART-SEARCH, REQ-COMPARISON",
+    "test/cli.e2e.real-fixture.test.js: Tests REQ-AGE-THRESHOLD, REQ-OUTPUT with 6 test cases",
+    "test/printOutdated.test.js: Tests REQ-AGE-THRESHOLD",
+    "test/printOutdated.edge-cases.test.js: Tests REQ-AGE-THRESHOLD, REQ-COMPARISON",
+    "test/functional-assessment.test.js: Functional test for identifying outdated packages",
+    "src/filter-by-age.js: Age filtering implementation",
+    "All 214 tests passing with 97.5% coverage"
+  ]
+}

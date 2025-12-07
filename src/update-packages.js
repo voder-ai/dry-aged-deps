@@ -1,5 +1,5 @@
-// @ts-check
 /* eslint-disable traceability/require-branch-annotation */
+// @ts-check
 import fs from 'fs';
 import path from 'path';
 

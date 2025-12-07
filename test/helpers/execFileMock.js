@@ -1,4 +1,3 @@
-/* eslint-disable traceability/require-branch-annotation */
 /**
  * Helper to mock execFile invocations for fetchVersionTimes tests.
  * @supports prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md REQ-NPM-VIEW
@@ -9,8 +8,14 @@ function createExecFileMock() {
 
   const mockImpl = (cmd, args, options, callback) => {
     calls.push([cmd, args, options, callback]);
+    // @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
+    // @req REQ-NPM-VIEW
     if (_mockImplementation) {
+      // @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
+      // @req REQ-NPM-VIEW
       return _mockImplementation(cmd, args, options, callback);
+      // @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
+      // @req REQ-NPM-VIEW
     }
   };
 

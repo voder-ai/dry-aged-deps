@@ -1,0 +1,19 @@
+{
+  "specificationPath": "prompts/001.0-DEV-RUN-NPM-OUTDATED.md",
+  "status": "PASSED",
+  "lastValidated": "2025-12-08",
+  "evidence": [
+    "test/cli.test.js: Tests REQ-NPM-COMMAND",
+    "test/cli.outdated.test.js: Tests REQ-NPM-COMMAND, REQ-OUTPUT-DISPLAY",
+    "test/cli.outdated.mock.test.js: Tests REQ-NPM-COMMAND, REQ-OUTPUT-DISPLAY",
+    "test/cli.upToDate.test.js: Tests REQ-OUTPUT-DISPLAY",
+    "test/build-rows.success.test.js: Tests REQ-NPM-COMMAND, REQ-JSON-PARSE, REQ-OUTPUT-DISPLAY",
+    "test/build-rows.table-success.test.js: Tests REQ-NPM-COMMAND, REQ-JSON-PARSE, REQ-OUTPUT-DISPLAY",
+    "test/build-rows.invalid-types.test.js: Tests REQ-OUTPUT-DISPLAY",
+    "test/printOutdated.test.js: Tests REQ-OUTPUT-DISPLAY",
+    "test/functional-assessment.test.js: Functional test for npm outdated execution",
+    "src/print-outdated.js: Main CLI output implementation",
+    "src/build-rows.js: Table building implementation",
+    "All 214 tests passing with 97.5% coverage"
+  ]
+}

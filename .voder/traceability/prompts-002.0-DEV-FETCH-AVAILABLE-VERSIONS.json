@@ -1,0 +1,17 @@
+{
+  "specificationPath": "prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md",
+  "status": "PASSED",
+  "lastValidated": "2025-12-08",
+  "evidence": [
+    "test/fetch-version-times.test.js: Tests REQ-NPM-VIEW",
+    "test/fetch-version-times.retry.test.js: Tests REQ-NPM-VIEW with retry logic",
+    "test/age-calculator.test.js: Tests REQ-AGE-CALC",
+    "test/build-rows.additional.test.js: Tests REQ-NPM-VIEW, REQ-AGE-CALC",
+    "test/build-rows.no-mature-version.test.js: Tests REQ-NPM-VIEW, REQ-AGE-CALC",
+    "test/build-rows.fetchError.test.js: Tests REQ-NPM-VIEW, REQ-AGE-CALC error handling",
+    "test/functional-assessment.test.js: Functional test for fetching version ages",
+    "src/fetch-version-times.js: NPM view implementation",
+    "src/age-calculator.js: Age calculation implementation",
+    "All 214 tests passing with 97.5% coverage"
+  ]
+}

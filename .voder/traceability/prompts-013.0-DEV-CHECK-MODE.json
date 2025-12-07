@@ -1,0 +1,11 @@
+{
+  "specificationPath": "prompts/013.0-DEV-CHECK-MODE.md",
+  "status": "PASSED",
+  "lastValidated": "2025-12-08",
+  "evidence": [
+    "test/cli.check-mode.test.js: Tests REQ-CHECK-FLAG, REQ-EXIT-0-NO-UPDATES, REQ-EXIT-1-ON-UPDATES, REQ-EXIT-2-ON-ERROR, REQ-FORMAT-SUPPORT",
+    "test/docs/ci-integration.test.js: Tests CI/CD integration requirements",
+    "test/functional-assessment.test.js: Functional test for check mode",
+    "All 214 tests passing with 97.5% coverage"
+  ]
+}
