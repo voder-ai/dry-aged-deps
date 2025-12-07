@@ -25,36 +25,36 @@ function processObjectResult(result, minSeverity, severityWeights) {
       // @req REQ-SEVERITY-LEVELS
       minWeight = severityWeights.low;
       break;
-      // @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
-      // @req REQ-SEVERITY-LEVELS
+    // @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
+    // @req REQ-SEVERITY-LEVELS
     case 'moderate':
       // @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
       // @req REQ-SEVERITY-LEVELS
       minWeight = severityWeights.moderate;
       break;
-      // @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
-      // @req REQ-SEVERITY-LEVELS
+    // @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
+    // @req REQ-SEVERITY-LEVELS
     case 'high':
       // @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
       // @req REQ-SEVERITY-LEVELS
       minWeight = severityWeights.high;
       break;
-      // @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
-      // @req REQ-SEVERITY-LEVELS
+    // @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
+    // @req REQ-SEVERITY-LEVELS
     case 'critical':
       // @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
       // @req REQ-SEVERITY-LEVELS
       minWeight = severityWeights.critical;
       break;
-      // @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
-      // @req REQ-SEVERITY-LEVELS
+    // @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
+    // @req REQ-SEVERITY-LEVELS
     case 'none':
     default:
       // @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
       // @req REQ-SEVERITY-LEVELS
       minWeight = severityWeights.none;
-      // @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
-      // @req REQ-SEVERITY-LEVELS
+    // @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
+    // @req REQ-SEVERITY-LEVELS
   }
   const include = countAboveThreshold(detailsList, minWeight, severityWeights) === 0;
   return { include, totalCount, detailsList, maxSeverity };
