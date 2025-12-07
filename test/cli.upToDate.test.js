@@ -1,4 +1,3 @@
-/* eslint-disable traceability/require-branch-annotation */
 /**
  * Tests for dry-aged-deps CLI up-to-date output
  * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
@@ -36,6 +35,8 @@ describe('Story 001.0-DEV-RUN-NPM-OUTDATED: dry-aged-deps CLI up-to-date output'
 
   afterAll(async () => {
     // Clean up temporary directory
+    // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+    // @req REQ-OUTPUT-DISPLAY
     if (tempDir) {
       await fs.rm(tempDir, { recursive: true, force: true });
     }

@@ -1,4 +1,3 @@
-/* eslint-disable traceability/require-branch-annotation */
 /**
  * Tests for retry logic in fetchVersionTimes.
  * @supports prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md REQ-NPM-VIEW
@@ -22,6 +21,8 @@ describe('Story 002.0-DEV-FETCH-AVAILABLE-VERSIONS: fetchVersionTimes retry logi
     let callCount = 0;
     execFileMock.mockImplementation((cmd, args, options, callback) => {
       callCount++;
+      // @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
+      // @req REQ-NPM-VIEW
       if (callCount === 1) {
         // First call fails
         callback(new Error('Transient error'));

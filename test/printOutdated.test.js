@@ -1,4 +1,3 @@
-/* eslint-disable traceability/require-branch-annotation */
 /**
  * Unit tests for printOutdated output and filtering.
  * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
@@ -107,6 +106,8 @@ describe('Story 001.0-DEV-RUN-NPM-OUTDATED / 003.0-DEV-IDENTIFY-OUTDATED / 004.0
 
   it('[REQ-AGE-THRESHOLD] shows only packages with age >= 7 days', async () => {
     vi.spyOn(fetchModule, 'fetchVersionTimes').mockImplementation(async (pkgName) => {
+      // @story prompts/003.0-DEV-IDENTIFY-OUTDATED.md
+      // @req REQ-AGE-THRESHOLD
       if (pkgName === 'mature-pkg') {
         return { '2.0.0': '2023-01-01T00:00:00Z' };
       }

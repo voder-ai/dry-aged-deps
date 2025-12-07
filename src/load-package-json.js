@@ -19,10 +19,9 @@ export function loadPackageJson() {
       dependencies: pkg.dependencies || {},
       devDependencies: pkg.devDependencies || {},
     };
-  }
-  // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
-  // @req REQ-JSON-PARSE
-  catch {
+  } catch {
+    // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+    // @req REQ-JSON-PARSE
     // If package.json is missing or invalid, treat all as dev dependencies
     return { dependencies: {}, devDependencies: {} };
   }

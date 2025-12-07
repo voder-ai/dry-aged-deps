@@ -1,4 +1,3 @@
-/* eslint-disable traceability/require-branch-annotation */
 /**
  * Tests for smart-search fallback logic in filterBySecurity.
  * @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SMART-SEARCH
@@ -22,6 +21,8 @@ describe('Story 004.0-DEV-FILTER-VULNERABLE-VERSIONS: filterBySecurity smart-sea
     const rows = [['pkg1', '1.0.0', '1.3.0', '1.3.0', 30, 'prod']];
     // Simulate vulnerability for 1.3.0, safe for 1.2.0
     const checkVuln = async (name, version) => {
+      // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
+      // @req REQ-SMART-SEARCH
       if (version === '1.3.0') return 1; // vulnerable
       return 0; // safe for others
     };

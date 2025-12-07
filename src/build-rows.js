@@ -38,10 +38,9 @@ export async function buildRows(data, options) {
         if (latestTime) {
           age = calculateAgeInDays(latestTime);
         }
-      }
-      // @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
-      // @req REQ-NPM-VIEW
-      catch (err) {
+      } catch (err) {
+        // @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
+        // @req REQ-NPM-VIEW
         // @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
         // @req REQ-NPM-VIEW
         if (format !== 'xml' && format !== 'json') {

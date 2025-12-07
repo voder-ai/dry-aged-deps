@@ -1,4 +1,3 @@
-/* eslint-disable traceability/require-branch-annotation */
 /**
  * Tests for filterBySecurity function behavior
  * @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK REQ-TRANSITIVE-DEPS REQ-SAFE-ONLY
@@ -24,7 +23,11 @@ describe('Story 004.0-DEV-FILTER-VULNERABLE-VERSIONS: filterBySecurity', () => {
     ];
     // stub for vulnerabilities: pkg1 safe, pkg2 has 3 vulns, pkg3 throws error
     const checkVuln = async (name, version) => {
+      // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
+      // @req REQ-AUDIT-CHECK
       if (name === 'pkg1') return 0;
+      // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
+      // @req REQ-AUDIT-CHECK
       if (name === 'pkg2') return 3;
       throw new Error('audit failure');
     };
