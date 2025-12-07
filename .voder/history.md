@@ -356,3 +356,27 @@ Which would you like me to do next:
   - **Progress**: Fixed 4 files with branch annotations, removed 4 suppressions
   - **Impact**: Progress tracking shows 588/618 files already fixed (95% completion) - significant prior work existed
   - **Remaining Work**: Plan created for systematic completion of remaining files in NEXT and LATER phases
+
+- Configuration Error Fixes (2025-12-07)
+  - **Assessment Discovery**: Failed at Phase 3 due to 6 critical configuration errors
+    - Deprecated `mode:` attribute in 5 prompt files (should be `agent:`)
+    - Broken file references in `.github/instructions/base.instructions.md` (3 non-existent files)
+    - Broken problem management references in `plan.prompt.md`
+  - **Implementation**:
+    - Updated 7 prompt files to use `agent: 'agent'` attribute instead of deprecated `mode: agent`
+      - `.github/prompts/assess.prompt.md`
+      - `.github/prompts/commit-push.prompt.md`
+      - `.github/prompts/plan.prompt.md`
+      - `.github/prompts/act.prompt.md`
+      - `.github/prompts/subprompts/do-assess.prompt.md`
+      - `.github/prompts/subprompts/phase-10-traceability.prompt.md`
+      - `.github/prompts/subprompts/phase-11-report.prompt.md`
+    - Removed broken file references from `.github/instructions/base.instructions.md`:
+      - `#file:../../prompt-assets/adr-template.md` (non-existent)
+      - `#file:../../docs/libraries` (non-existent)
+      - `#file:../../docs/conventional-commits-guide.md` (non-existent)
+    - Removed broken problem management references from `plan.prompt.md`
+    - Fixed relative paths in `act.prompt.md` for .voder directory references
+  - **Verification**: ✅ npm run lint (0 errors), ✅ npm test (214 tests, 97.5% coverage), ✅ typecheck pass, ✅ format:check pass
+  - **Impact**: All blocking configuration errors resolved, only runtime file warnings remain (expected)
+  - **Pattern**: Fail-fast approach - stop assessment on critical errors and fix immediately
