@@ -1,5 +1,4 @@
 // @ts-check
-/* eslint-disable traceability/require-branch-annotation */
 import { fetchVersionTimes as defaultFetchVersionTimes } from './fetch-version-times.js';
 import { calculateAgeInDays as defaultCalculateAgeInDays } from './age-calculator.js';
 
@@ -29,13 +28,22 @@ export async function buildRows(data, options) {
     (async () => {
       let age = 'N/A';
       const depType = getDependencyType(name);
+      // @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
+      // @req REQ-NPM-VIEW
       try {
         const versionTimes = await fetchVersionTimes(name);
         const latestTime = versionTimes[info.latest];
+        // @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
+        // @req REQ-AGE-CALC
         if (latestTime) {
           age = calculateAgeInDays(latestTime);
         }
-      } catch (err) {
+      }
+      // @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
+      // @req REQ-NPM-VIEW
+      catch (err) {
+        // @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
+        // @req REQ-NPM-VIEW
         if (format !== 'xml' && format !== 'json') {
           const message = err instanceof Error ? (err.message ?? err.toString()) : String(err);
           console.error(`Warning: failed to fetch version times for ${name}: ${message}`);

@@ -1,5 +1,4 @@
 // @ts-check
-/* eslint-disable traceability/require-branch-annotation */
 import fs from 'fs';
 import path from 'path';
 
@@ -20,7 +19,10 @@ export function loadPackageJson() {
       dependencies: pkg.dependencies || {},
       devDependencies: pkg.devDependencies || {},
     };
-  } catch {
+  }
+  // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+  // @req REQ-JSON-PARSE
+  catch {
     // If package.json is missing or invalid, treat all as dev dependencies
     return { dependencies: {}, devDependencies: {} };
   }
