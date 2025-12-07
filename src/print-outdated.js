@@ -1,5 +1,4 @@
 // @ts-check
-/* eslint-disable traceability/require-branch-annotation */
 
 import { fetchVersionTimes as defaultFetchVersionTimes } from './fetch-version-times.js';
 import { calculateAgeInDays as defaultCalculateAgeInDays } from './age-calculator.js';
@@ -27,13 +26,19 @@ export function handleNoOutdated(format, returnSummary, thresholds) {
     filteredByAge: 0,
     filteredBySecurity: 0,
   };
+  // @story prompts/008.0-DEV-JSON-OUTPUT.md
+  // @req REQ-CLI-FLAG
   if (format === 'json') {
     return handleJsonOutput({ rows: [], summary, thresholds, vulnMap: new Map(), filterReasonMap: new Map() });
   }
+  // @story prompts/009.0-DEV-XML-OUTPUT.md
+  // @req REQ-CLI-FLAG
   if (format === 'xml') {
     return handleXmlOutput({ rows: [], summary, thresholds, vulnMap: new Map(), filterReasonMap: new Map() });
   }
   console.log('All dependencies are up to date.');
+  // @story prompts/013.0-DEV-CHECK-MODE.md
+  // @req REQ-CHECK-FLAG
   if (returnSummary) return summary;
   return;
 }
@@ -75,6 +80,8 @@ export async function printOutdated(data, options = {}) {
   const entries = Object.entries(data);
 
   // No outdated dependencies
+  // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
+  // @req REQ-OUTPUT-DISPLAY
   if (entries.length === 0) {
     return handleNoOutdated(format, returnSummary, thresholds);
   }
@@ -97,15 +104,21 @@ export async function printOutdated(data, options = {}) {
     format,
   });
 
+  // @story prompts/008.0-DEV-JSON-OUTPUT.md
+  // @req REQ-CLI-FLAG
   if (format === 'json') {
     return handleJsonOutput({ rows: safeRows, summary, thresholds, vulnMap, filterReasonMap });
   }
 
+  // @story prompts/011.0-DEV-AUTO-UPDATE.md
+  // @req REQ-UPDATE-FLAG
   if (updateMode) {
     const result = await updatePackages(safeRows, skipConfirmation, summary);
     return result;
   }
 
+  // @story prompts/009.0-DEV-XML-OUTPUT.md
+  // @req REQ-CLI-FLAG
   if (format === 'xml') {
     return handleXmlOutput({ rows, summary, thresholds, vulnMap, filterReasonMap });
   }

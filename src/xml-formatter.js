@@ -1,5 +1,4 @@
 // @ts-check
-/* eslint-disable traceability/require-branch-annotation */
 import {
   buildXmlDeclaration,
   buildRootStart,
@@ -29,6 +28,8 @@ export function xmlFormatter({ rows = [], summary = {}, thresholds = {}, timesta
   let xml = buildXmlDeclaration();
   xml += buildRootStart(timestamp);
 
+  // @story prompts/009.0-DEV-XML-OUTPUT.md
+  // @req REQ-ERROR-FORMAT
   if (error) {
     xml += buildErrorSection(error);
     xml += buildRootEnd();
@@ -38,6 +39,8 @@ export function xmlFormatter({ rows = [], summary = {}, thresholds = {}, timesta
   xml += buildPackagesSection(rows);
   xml += buildSummarySection(summary);
 
+  // @story prompts/009.0-DEV-XML-OUTPUT.md
+  // @req REQ-XML-SCHEMA
   if (thresholds && (thresholds.prod || thresholds.dev)) {
     xml += buildThresholdsSection(thresholds);
   }

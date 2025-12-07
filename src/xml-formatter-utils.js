@@ -1,5 +1,4 @@
 // @ts-check
-/* eslint-disable traceability/require-branch-annotation */
 // Utility functions for xml-formatter.js to build XML sections
 
 /**
@@ -82,6 +81,8 @@ export function buildErrorSection(error) {
   let xml = '  <error>\n';
   xml += `    <message>${escapeXml(error.message)}</message>\n`;
   xml += `    <code>${escapeXml(error.code || '')}</code>\n`;
+  // @story prompts/009.0-DEV-XML-OUTPUT.md
+  // @req REQ-ERROR-FORMAT
   if (error.details) {
     xml += `    <details>${escapeXml(error.details)}</details>\n`;
   }
@@ -98,8 +99,12 @@ export function buildErrorSection(error) {
  */
 export function buildPackagesSection(rows) {
   let xml = '  <packages>\n';
+  // @story prompts/009.0-DEV-XML-OUTPUT.md
+  // @req REQ-XML-SCHEMA
   for (const item of rows) {
     xml += '    <package>\n';
+    // @story prompts/009.0-DEV-XML-OUTPUT.md
+    // @req REQ-XML-SCHEMA
     if (Array.isArray(item)) {
       const [name, current, wanted, latest, age] = item;
       xml += `      <name>${escapeXml(name)}</name>\n`;
@@ -121,7 +126,11 @@ export function buildPackagesSection(rows) {
       xml += `        <count>${escapeXml(countStr)}</count>\n`;
       xml += `        <max-severity>${escapeXml(maxSeverity)}</max-severity>\n`;
       xml += '        <details>\n';
+      // @story prompts/009.0-DEV-XML-OUTPUT.md
+      // @req REQ-XML-SCHEMA
       if (Array.isArray(vuln.details)) {
+        // @story prompts/009.0-DEV-XML-OUTPUT.md
+        // @req REQ-XML-SCHEMA
         for (const detail of vuln.details) {
           xml += '          <vulnerability>\n';
           xml += `            <name>${escapeXml(detail.name)}</name>\n`;
@@ -162,6 +171,8 @@ export function buildSummarySection({
   xml += `    <safe-updates>${escapeXml(String(safeUpdates))}</safe-updates>\n`;
   xml += `    <filtered-by-age>${escapeXml(String(filteredByAge))}</filtered-by-age>\n`;
   xml += `    <filtered-by-security>${escapeXml(String(filteredBySecurity))}</filtered-by-security>\n`;
+  // @story prompts/009.0-DEV-XML-OUTPUT.md
+  // @req REQ-SUMMARY-STATS
   if (minAge != null) {
     xml += `    <min-age>${escapeXml(String(minAge))}</min-age>\n`;
   }
@@ -178,21 +189,33 @@ export function buildSummarySection({
  */
 export function buildThresholdsSection({ prod, dev } = {}) {
   let xml = '  <thresholds>\n';
+  // @story prompts/009.0-DEV-XML-OUTPUT.md
+  // @req REQ-XML-SCHEMA
   if (prod) {
     xml += '    <prod>\n';
+    // @story prompts/009.0-DEV-XML-OUTPUT.md
+    // @req REQ-XML-SCHEMA
     if (prod.minAge != null) {
       xml += `      <min-age>${escapeXml(String(prod.minAge))}</min-age>\n`;
     }
+    // @story prompts/009.0-DEV-XML-OUTPUT.md
+    // @req REQ-XML-SCHEMA
     if (prod.minSeverity != null) {
       xml += `      <min-severity>${escapeXml(prod.minSeverity)}</min-severity>\n`;
     }
     xml += '    </prod>\n';
   }
+  // @story prompts/009.0-DEV-XML-OUTPUT.md
+  // @req REQ-XML-SCHEMA
   if (dev) {
     xml += '    <dev>\n';
+    // @story prompts/009.0-DEV-XML-OUTPUT.md
+    // @req REQ-XML-SCHEMA
     if (dev.minAge != null) {
       xml += `      <min-age>${escapeXml(String(dev.minAge))}</min-age>\n`;
     }
+    // @story prompts/009.0-DEV-XML-OUTPUT.md
+    // @req REQ-XML-SCHEMA
     if (dev.minSeverity != null) {
       xml += `      <min-severity>${escapeXml(dev.minSeverity)}</min-severity>\n`;
     }

@@ -1,5 +1,4 @@
 // @ts-check
-/* eslint-disable traceability/require-branch-annotation */
 import { evaluateVersionVulnerabilities } from './vulnerability-evaluator.js';
 /**
  * Find the safest/most recent version using smart-search fallback logic.
@@ -18,6 +17,8 @@ export async function findSafeVersionSmartSearch(name, versionTimes, options) {
   const { checkVulnerabilities, minSeverity, calculateAgeInDays, severityWeights } = options;
   const entries = Object.entries(versionTimes);
   entries.sort(([, timeA], [, timeB]) => new Date(timeB).getTime() - new Date(timeA).getTime());
+  // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
+  // @req REQ-SMART-SEARCH
   for (const [ver, pubTime] of entries) {
     const { safe, totalCount, maxSeverity, detailsList } = await evaluateVersionVulnerabilities(
       name,
@@ -26,6 +27,8 @@ export async function findSafeVersionSmartSearch(name, versionTimes, options) {
       minSeverity,
       severityWeights
     );
+    // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
+    // @req REQ-SMART-SEARCH
     if (safe) {
       const recAge = calculateAgeInDays(pubTime);
       return { version: ver, recAge, totalCount, maxSeverity, detailsList };
