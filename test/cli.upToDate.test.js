@@ -11,7 +11,6 @@ import os from 'os';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const fixturesSourceDir = path.join(__dirname, 'fixtures-up-to-date');
 
 let tempDir;
 let fixturesDir;
@@ -21,12 +20,26 @@ describe('Story 001.0-DEV-RUN-NPM-OUTDATED: dry-aged-deps CLI up-to-date output'
     // Create a unique temporary directory for this test suite
     tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'dry-aged-deps-test-uptodate-'));
     fixturesDir = path.join(tempDir, 'fixtures');
-
-    // Copy fixture files to temp directory
     await fs.mkdir(fixturesDir, { recursive: true });
-    await fs.copyFile(path.join(fixturesSourceDir, 'package.json'), path.join(fixturesDir, 'package.json'));
 
-    // Install dependencies for up-to-date fixture project in temp directory
+    // Get the latest version of express from npm
+    const { stdout: latestVersion } = await execa('npm', ['view', 'express', 'version'], {
+      env: process.env,
+    });
+
+    // Create package.json with the latest version
+    await fs.writeFile(
+      path.join(fixturesDir, 'package.json'),
+      JSON.stringify({
+        name: 'test-fixture-uptodate',
+        version: '1.0.0',
+        dependencies: {
+          express: latestVersion.trim(),
+        },
+      })
+    );
+
+    // Install dependencies to ensure package-lock.json is created
     await execa('npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund'], {
       cwd: fixturesDir,
       env: process.env,
@@ -50,7 +63,7 @@ describe('Story 001.0-DEV-RUN-NPM-OUTDATED: dry-aged-deps CLI up-to-date output'
     });
 
     expect(result.exitCode).toBe(0);
-    // When packages exist but are filtered due to age threshold, expect the filtered message
-    expect(result.stdout).toContain('No outdated packages with mature versions found');
+    // When all dependencies are truly up-to-date, expect the up-to-date message
+    expect(result.stdout).toContain('All dependencies are up to date');
   }, 30000);
 });
