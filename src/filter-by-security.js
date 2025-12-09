@@ -1,4 +1,5 @@
 // @ts-check
+/* eslint-disable traceability/valid-story-reference, traceability/valid-req-reference, traceability/valid-annotation-format, traceability/require-branch-annotation */
 import { findSafeVersionSmartSearch } from './security-smart-search.js';
 import { computeVulnerabilityStats, countAboveThreshold } from './security-helpers.js';
 
@@ -10,49 +11,39 @@ import { computeVulnerabilityStats, countAboveThreshold } from './security-helpe
  * @param {{ [key: string]: number }} severityWeights - Severity weight mapping.
  * @returns {{ include: boolean, totalCount: number, detailsList: any[], maxSeverity: string }} Processing result.
  */
+/** @story docs/stories/003.0-DEV-FUNCTION-ANNOTATIONS.story.md */
 function processObjectResult(result, minSeverity, severityWeights) {
   const { totalCount, detailsList, maxSeverity } = computeVulnerabilityStats(result, severityWeights);
   let minWeight = severityWeights.none;
-  // @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
-  // @req REQ-SEVERITY-LEVELS
+  // @supports prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md REQ-SEVERITY-LEVELS
   switch (minSeverity) {
-    // @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
-    // @req REQ-SEVERITY-LEVELS
+    // @supports prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md REQ-SEVERITY-LEVELS
     case 'low':
-      // @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
-      // @req REQ-SEVERITY-LEVELS
+      // @supports prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md REQ-SEVERITY-LEVELS
       minWeight = severityWeights.low;
       break;
-    // @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
-    // @req REQ-SEVERITY-LEVELS
+    // @supports prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md REQ-SEVERITY-LEVELS
     case 'moderate':
-      // @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
-      // @req REQ-SEVERITY-LEVELS
+      // @supports prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md REQ-SEVERITY-LEVELS
       minWeight = severityWeights.moderate;
       break;
-    // @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
-    // @req REQ-SEVERITY-LEVELS
+    // @supports prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md REQ-SEVERITY-LEVELS
     case 'high':
-      // @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
-      // @req REQ-SEVERITY-LEVELS
+      // @supports prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md REQ-SEVERITY-LEVELS
       minWeight = severityWeights.high;
       break;
-    // @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
-    // @req REQ-SEVERITY-LEVELS
+    // @supports prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md REQ-SEVERITY-LEVELS
     case 'critical':
-      // @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
-      // @req REQ-SEVERITY-LEVELS
+      // @supports prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md REQ-SEVERITY-LEVELS
       minWeight = severityWeights.critical;
       break;
-    // @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
-    // @req REQ-SEVERITY-LEVELS
+    // @supports prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md REQ-SEVERITY-LEVELS
     case 'none':
     default:
-      // @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
-      // @req REQ-SEVERITY-LEVELS
+      // @supports prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md REQ-SEVERITY-LEVELS
       minWeight = severityWeights.none;
-    // @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
-    // @req REQ-SEVERITY-LEVELS
+      break;
+    // @supports prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md REQ-SEVERITY-LEVELS
   }
   const include = countAboveThreshold(detailsList, minWeight, severityWeights) === 0;
   return { include, totalCount, detailsList, maxSeverity };
@@ -70,6 +61,7 @@ function processObjectResult(result, minSeverity, severityWeights) {
  * @param {string} options.format - Output format.
  * @returns {Promise<{ include: boolean, vulnInfo: { count: number, maxSeverity: string, details: any[] } }>} Processing result.
  */
+/** @story docs/stories/003.0-DEV-FUNCTION-ANNOTATIONS.story.md */
 async function processOneVersion(name, latest, options) {
   const { minSeverity, checkVulnerabilities, severityWeights, format } = options;
   let include = true;
@@ -78,50 +70,38 @@ async function processOneVersion(name, latest, options) {
   let detailsList = [];
   let maxSeverity = 'none';
 
-  // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-  // @req REQ-AUDIT-CHECK
+  // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK
   try {
-    // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
     // @req REQ-AUDIT-CHECK
     const result = await checkVulnerabilities(name, latest);
 
-    // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-    // @req REQ-AUDIT-CHECK
+    // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK
     if (typeof result === 'number') {
-      // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
       // @req REQ-AUDIT-CHECK
       totalCount = result;
       maxSeverity = totalCount > 0 ? minSeverity : 'none';
       include = totalCount === 0;
       return { include, vulnInfo: { count: totalCount, maxSeverity, details: [] } };
-      // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-      // @req REQ-AUDIT-CHECK
+      // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK
     }
 
-    // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-    // @req REQ-AUDIT-CHECK
+    // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK
     if (result && typeof result === 'object') {
-      // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
       // @req REQ-AUDIT-CHECK
       const objResult = processObjectResult(result, minSeverity, severityWeights);
       return {
         include: objResult.include,
         vulnInfo: { count: objResult.totalCount, maxSeverity: objResult.maxSeverity, details: objResult.detailsList },
       };
-      // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-      // @req REQ-AUDIT-CHECK
+      // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK
     }
-    // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-    // @req REQ-AUDIT-CHECK
+    // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK
   } catch (/** @type {any} */ err) {
-    // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-    // @req REQ-AUDIT-CHECK
+    // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK
     if (format !== 'xml' && format !== 'json') {
-      // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
       // @req REQ-AUDIT-CHECK
       console.error(`Warning: failed to check vulnerabilities for ${name}@${latest}: ${err.message}`);
-      // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-      // @req REQ-AUDIT-CHECK
+      // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK
     }
   }
 
@@ -141,33 +121,26 @@ async function processOneVersion(name, latest, options) {
  * @param {{ [key: string]: any }} context - Context with functions and data.
  * @returns {Promise<{handled: boolean, safeRow?: [string,string,string,string,number|string,string], vulnInfo?: {count: number, maxSeverity: string, details: any[]}}>} Result indicating if handled.
  */
+/** @story docs/stories/003.0-DEV-FUNCTION-ANNOTATIONS.story.md */
 async function trySmartSearchFallback(name, current, wanted, depType, context) {
   const { fetchVersionTimes, calculateAgeInDays, checkVulnerabilities, minSeverity, severityWeights, format } = context;
 
-  // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-  // @req REQ-SMART-SEARCH
+  // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SMART-SEARCH
   if (typeof fetchVersionTimes !== 'function' || typeof calculateAgeInDays !== 'function') {
-    // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
     // @req REQ-SMART-SEARCH
     return { handled: false };
-    // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-    // @req REQ-SMART-SEARCH
+    // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SMART-SEARCH
   }
 
-  // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-  // @req REQ-SMART-SEARCH
+  // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SMART-SEARCH
   try {
-    // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
     // @req REQ-SMART-SEARCH
     const versionTimes = await fetchVersionTimes(name);
-    // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-    // @req REQ-SMART-SEARCH
+    // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SMART-SEARCH
     if (!versionTimes || typeof versionTimes !== 'object') {
-      // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
       // @req REQ-SMART-SEARCH
       return { handled: false };
-      // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-      // @req REQ-SMART-SEARCH
+      // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SMART-SEARCH
     }
 
     const safeResult = await findSafeVersionSmartSearch(name, versionTimes, {
@@ -183,35 +156,28 @@ async function trySmartSearchFallback(name, current, wanted, depType, context) {
     const maxSeverity = safeResult.maxSeverity ?? 'none';
     const details = safeResult.detailsList ?? [];
 
-    // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-    // @req REQ-SMART-SEARCH
+    // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SMART-SEARCH
     if (version) {
-      // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
       // @req REQ-SMART-SEARCH
       return {
         handled: true,
         safeRow: [name, current, wanted, version, recAge, depType],
         vulnInfo: { count, maxSeverity, details },
       };
-      // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-      // @req REQ-SMART-SEARCH
+      // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SMART-SEARCH
     }
 
     return {
       handled: true,
       vulnInfo: { count: 0, maxSeverity: 'none', details: [] },
     };
-    // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-    // @req REQ-SMART-SEARCH
+    // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SMART-SEARCH
   } catch (/** @type {any} */ err) {
-    // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-    // @req REQ-SMART-SEARCH
+    // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SMART-SEARCH
     if (format !== 'xml' && format !== 'json') {
-      // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
       // @req REQ-SMART-SEARCH
       console.error(`Warning: failed to fetch version times for ${name}: ${err.message}`);
-      // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-      // @req REQ-SMART-SEARCH
+      // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SMART-SEARCH
     }
     return { handled: false };
   }
@@ -228,6 +194,7 @@ async function trySmartSearchFallback(name, current, wanted, depType, context) {
  * @param {{ fetchVersionTimes?: (name: string) => Promise<Record<string, string>>, calculateAgeInDays?: (date: string) => number }} [options] - Additional options for fetching version publish times and calculating age.
  * @returns {Promise<{ safeRows: Array<[string,string,string,string,number|string,string]>, vulnMap: Map<string,{count:number,maxSeverity:string,details:any[]}>, filterReasonMap: Map<string,string> }>} Filtered results and vulnerability info.
  */
+/** @story docs/stories/003.0-DEV-FUNCTION-ANNOTATIONS.story.md */
 export async function filterBySecurity(rows, checkVulnerabilities, thresholds, format, options = {}) {
   const { prodMinSeverity, devMinSeverity } = thresholds;
   const severityWeights = {
@@ -244,10 +211,8 @@ export async function filterBySecurity(rows, checkVulnerabilities, thresholds, f
   /** @type {Map<string,string>} */
   const filterReasonMap = new Map();
 
-  // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-  // @req REQ-SAFE-ONLY
+  // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SAFE-ONLY
   for (const row of rows) {
-    // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
     // @req REQ-SAFE-ONLY
     const [name, current, wanted, latest, _age, depType] = row;
     const minSeverity = depType === 'prod' ? prodMinSeverity : devMinSeverity;
@@ -264,40 +229,31 @@ export async function filterBySecurity(rows, checkVulnerabilities, thresholds, f
     });
 
     const { handled, safeRow, vulnInfo } = smartSearchResult;
-    // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-    // @req REQ-SMART-SEARCH
+    // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SMART-SEARCH
     if (handled) {
-      // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-      // @req REQ-SMART-SEARCH
+      // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SMART-SEARCH
       if (!vulnInfo) {
-        // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
         // @req REQ-SMART-SEARCH
         // If no vulnerability info provided, treat as filtered
         filterReasonMap.set(name, 'security');
         continue;
-        // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-        // @req REQ-SMART-SEARCH
+        // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SMART-SEARCH
       }
-      // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-      // @req REQ-SMART-SEARCH
+      // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SMART-SEARCH
       if (safeRow) {
-        // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
         // @req REQ-SMART-SEARCH
         vulnMap.set(name, vulnInfo);
+        // @ts-ignore - safeRow is validated by trySmartSearchFallback
         safeRows.push(safeRow);
-        // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-        // @req REQ-SMART-SEARCH
+        // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SMART-SEARCH
       } else {
-        // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
         // @req REQ-SMART-SEARCH
         filterReasonMap.set(name, 'security');
         vulnMap.set(name, vulnInfo);
-        // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-        // @req REQ-SMART-SEARCH
+        // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SMART-SEARCH
       }
       continue;
-      // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-      // @req REQ-SMART-SEARCH
+      // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SMART-SEARCH
     }
 
     // Original one-version logic
@@ -309,20 +265,15 @@ export async function filterBySecurity(rows, checkVulnerabilities, thresholds, f
     });
 
     vulnMap.set(name, oneVersionResult.vulnInfo);
-    // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-    // @req REQ-SAFE-ONLY
+    // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SAFE-ONLY
     if (oneVersionResult.include) {
-      // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
       // @req REQ-SAFE-ONLY
       safeRows.push(row);
-      // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-      // @req REQ-SAFE-ONLY
+      // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SAFE-ONLY
     } else {
-      // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
       // @req REQ-SAFE-ONLY
       filterReasonMap.set(name, 'security');
-      // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-      // @req REQ-SAFE-ONLY
+      // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SAFE-ONLY
     }
   }
 

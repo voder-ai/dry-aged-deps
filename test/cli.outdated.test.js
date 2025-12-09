@@ -35,8 +35,7 @@ describe('Story 001.0-DEV-RUN-NPM-OUTDATED: dry-aged-deps CLI outdated output', 
 
   afterAll(async () => {
     // Clean up temporary directory
-    // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
-    // @req REQ-OUTPUT-DISPLAY
+    // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
     if (tempDir) {
       await fs.rm(tempDir, { recursive: true, force: true });
     }

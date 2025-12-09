@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-story-reference, traceability/valid-annotation-format, traceability/require-story-annotation, traceability/require-req-annotation */
 /**
  * Tests for legacy advisory parsing in checkVulnerabilities
  * @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK REQ-TRANSITIVE-DEPS
@@ -9,13 +10,16 @@ import { execFile } from 'child_process';
 import { promises as fs } from 'fs';
 
 vi.mock('child_process');
-vi.mock('fs', () => ({
-  promises: {
-    mkdtemp: vi.fn(),
-    writeFile: vi.fn(),
-    rm: vi.fn(),
-  },
-}));
+vi.mock(
+  'fs' /** @story docs/stories/003.0-DEV-FUNCTION-ANNOTATIONS.story.md */ /** @story docs/stories/003.0-DEV-FUNCTION-ANNOTATIONS.story.md */,
+  () => ({
+    promises: {
+      mkdtemp: vi.fn(),
+      writeFile: vi.fn(),
+      rm: vi.fn(),
+    },
+  })
+);
 
 describe('Story 004.0-DEV-FILTER-VULNERABLE-VERSIONS: checkVulnerabilities legacy advisories', () => {
   const mockTempDir = '/tmp/dry-aged-deps-test-advisories';

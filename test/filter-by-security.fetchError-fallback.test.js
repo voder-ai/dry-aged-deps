@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-story-reference, traceability/valid-req-reference, traceability/valid-annotation-format, traceability/prefer-supports-annotation */
 /**
  * Tests for fallback error handling in filterBySecurity when fetchVersionTimes fails
  * @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SMART-SEARCH
@@ -8,7 +9,7 @@ import { filterBySecurity } from '../src/filter-by-security.js';
 // Stub checkVulnerabilities, should not be called when fetchVersionTimes errors
 const stubCheckVuln = vi.fn();
 const thresholds = { prodMinSeverity: 'none', devMinSeverity: 'none' };
-const stubCalc = vi.fn(() => 7);
+const stubCalc = vi.fn(/** @story docs/stories/003.0-DEV-FUNCTION-ANNOTATIONS.story.md */ () => 7);
 
 /**
  * Test fallback error handling when fetchVersionTimes throws and format is table

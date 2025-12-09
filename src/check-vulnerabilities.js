@@ -16,8 +16,7 @@ import { join } from 'path';
  */
 export async function checkVulnerabilities(packageName, version) {
   const pkgNameRegex = /^[a-z0-9@\-*/.]+$/i;
-  // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-  // @req REQ-AUDIT-CHECK
+  // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK
   if (!pkgNameRegex.test(packageName)) {
     throw new Error(`Invalid package name: ${packageName}`);
   }
@@ -25,8 +24,7 @@ export async function checkVulnerabilities(packageName, version) {
   // Create temporary directory
   const tempDir = await fs.mkdtemp(join(tmpdir(), 'dry-aged-deps-'));
 
-  // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-  // @req REQ-AUDIT-CHECK
+  // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK
   try {
     // Create minimal package.json with the package@version to test
     const packageJson = {
@@ -46,13 +44,11 @@ export async function checkVulnerabilities(packageName, version) {
         ['install', '--package-lock-only', '--no-audit'],
         { cwd: tempDir, encoding: 'utf8' },
         (error, stdout, stderr) => {
-          // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-          // @req REQ-AUDIT-CHECK
+          // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK
           if (error) {
             // npm install can exit with non-zero even on success for peer dep warnings
             // Only reject on actual errors
-            // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-            // @req REQ-AUDIT-CHECK
+            // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK
             if (stderr && !stderr.includes('WARN')) {
               return reject(error);
             }
@@ -92,8 +88,7 @@ export async function checkVulnerabilities(packageName, version) {
 
     // Collect detailed vulnerability entries
     let details = [];
-    // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-    // @req REQ-AUDIT-CHECK
+    // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK
     if (auditResult.vulnerabilities && typeof auditResult.vulnerabilities === 'object') {
       details = Object.entries(auditResult.vulnerabilities).map(([moduleName, vuln]) => ({ moduleName, ...vuln }));
     }
@@ -102,8 +97,7 @@ export async function checkVulnerabilities(packageName, version) {
       details = Object.values(auditResult.advisories);
     }
 
-    // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-    // @req REQ-AUDIT-CHECK
+    // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK
     if (auditResult.advisories) {
       total = details.length;
     }

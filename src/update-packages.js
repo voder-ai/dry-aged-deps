@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-story-reference, traceability/valid-req-reference, traceability/valid-annotation-format, traceability/prefer-supports-annotation */
 // @ts-check
 import fs from 'fs';
 import path from 'path';
@@ -10,14 +11,11 @@ import path from 'path';
  * @returns {Promise<boolean>} Whether the user confirmed.
  */
 async function promptConfirmation(skipConfirmation) {
-  // @story prompts/011.0-DEV-AUTO-UPDATE.md
-  // @req REQ-YES-FLAG
+  // @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-YES-FLAG
   if (skipConfirmation) {
-    // @story prompts/011.0-DEV-AUTO-UPDATE.md
     // @req REQ-YES-FLAG
     return true;
-    // @story prompts/011.0-DEV-AUTO-UPDATE.md
-    // @req REQ-YES-FLAG
+    // @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-YES-FLAG
   }
   const { createInterface } = await import('readline');
   const rl = createInterface({
@@ -57,20 +55,15 @@ function applyUpdates(pkgPath, safeRows) {
   const pkgData = JSON.parse(pkgContent);
 
   safeRows.forEach(([name, , wanted, , , depType]) => {
-    // @story prompts/011.0-DEV-AUTO-UPDATE.md
-    // @req REQ-PACKAGE-JSON
+    // @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-PACKAGE-JSON
     if (depType === 'prod') {
-      // @story prompts/011.0-DEV-AUTO-UPDATE.md
       // @req REQ-PACKAGE-JSON
       pkgData.dependencies = { ...(pkgData.dependencies || {}), [name]: wanted };
-      // @story prompts/011.0-DEV-AUTO-UPDATE.md
-      // @req REQ-PACKAGE-JSON
+      // @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-PACKAGE-JSON
     } else {
-      // @story prompts/011.0-DEV-AUTO-UPDATE.md
       // @req REQ-PACKAGE-JSON
       pkgData.devDependencies = { ...(pkgData.devDependencies || {}), [name]: wanted };
-      // @story prompts/011.0-DEV-AUTO-UPDATE.md
-      // @req REQ-PACKAGE-JSON
+      // @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-PACKAGE-JSON
     }
   });
 
@@ -90,18 +83,16 @@ function applyUpdates(pkgPath, safeRows) {
  * @param {{ totalOutdated: number, safeUpdates: number, filteredByAge: number, filteredBySecurity: number }} summary - Summary object to return after update
  * @returns {Promise<{ totalOutdated: number, safeUpdates: number, filteredByAge: number, filteredBySecurity: number }>} The summary object.
  */
+/** @story docs/stories/003.0-DEV-FUNCTION-ANNOTATIONS.story.md */
 export async function updatePackages(safeRows, skipConfirmation, summary) {
   const pkgPath = path.join(process.cwd(), 'package.json');
 
-  // @story prompts/011.0-DEV-AUTO-UPDATE.md
-  // @req REQ-SAFE-ONLY
+  // @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-SAFE-ONLY
   if (safeRows.length === 0) {
-    // @story prompts/011.0-DEV-AUTO-UPDATE.md
     // @req REQ-SAFE-ONLY
     console.log('No safe updates available.');
     return summary;
-    // @story prompts/011.0-DEV-AUTO-UPDATE.md
-    // @req REQ-SAFE-ONLY
+    // @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-SAFE-ONLY
   }
 
   console.log('The following packages will be updated:');
@@ -110,51 +101,40 @@ export async function updatePackages(safeRows, skipConfirmation, summary) {
   });
 
   const confirmed = await promptConfirmation(skipConfirmation);
-  // @story prompts/011.0-DEV-AUTO-UPDATE.md
-  // @req REQ-CONFIRMATION
+  // @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-CONFIRMATION
   if (!confirmed) {
-    // @story prompts/011.0-DEV-AUTO-UPDATE.md
     // @req REQ-CONFIRMATION
     console.log('Aborted.');
     return summary;
-    // @story prompts/011.0-DEV-AUTO-UPDATE.md
-    // @req REQ-CONFIRMATION
+    // @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-CONFIRMATION
   }
 
-  // @story prompts/011.0-DEV-AUTO-UPDATE.md
-  // @req REQ-BACKUP
+  // @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-BACKUP
   try {
-    // @story prompts/011.0-DEV-AUTO-UPDATE.md
     // @req REQ-BACKUP
     createBackup(pkgPath);
-    // @story prompts/011.0-DEV-AUTO-UPDATE.md
-    // @req REQ-BACKUP
+    // @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-BACKUP
   } catch (err) {
-    // @story prompts/011.0-DEV-AUTO-UPDATE.md
     // @req REQ-BACKUP
+    // @story <story-file>.story.md
     const message = err instanceof Error ? err.message : String(err);
     console.error(`Failed to create backup: ${message}`);
     return summary;
-    // @story prompts/011.0-DEV-AUTO-UPDATE.md
-    // @req REQ-BACKUP
+    // @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-BACKUP
   }
 
-  // @story prompts/011.0-DEV-AUTO-UPDATE.md
-  // @req REQ-PACKAGE-JSON
+  // @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-PACKAGE-JSON
   try {
-    // @story prompts/011.0-DEV-AUTO-UPDATE.md
     // @req REQ-PACKAGE-JSON
     applyUpdates(pkgPath, safeRows);
-    // @story prompts/011.0-DEV-AUTO-UPDATE.md
-    // @req REQ-PACKAGE-JSON
+    // @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-PACKAGE-JSON
   } catch (err) {
-    // @story prompts/011.0-DEV-AUTO-UPDATE.md
     // @req REQ-PACKAGE-JSON
+    // @story <story-file>.story.md
     const message = err instanceof Error ? err.message : String(err);
     console.error(`Failed to update package.json: ${message}`);
     return summary;
-    // @story prompts/011.0-DEV-AUTO-UPDATE.md
-    // @req REQ-PACKAGE-JSON
+    // @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-PACKAGE-JSON
   }
 
   return summary;

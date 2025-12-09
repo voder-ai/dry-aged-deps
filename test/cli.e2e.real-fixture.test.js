@@ -32,16 +32,14 @@ beforeAll(async () => {
   // Safety assertion: ensure tempDir is inside os.tmpdir()
   const resolvedTmp = path.resolve(os.tmpdir());
   const resolvedTempDir = path.resolve(tempDir);
-  // @story prompts/003.0-DEV-IDENTIFY-OUTDATED.md
-  // @req REQ-AGE-THRESHOLD
+  // @supports prompts/003.0-DEV-IDENTIFY-OUTDATED.md REQ-AGE-THRESHOLD
   if (!resolvedTempDir.startsWith(resolvedTmp)) {
     // Fail early if the tempDir is not within the system temp directory
     throw new Error(`Safety check failed: tempDir (${resolvedTempDir}) is not inside os.tmpdir() (${resolvedTmp})`);
   }
 
   const entries = await fs.readdir(fixturesDir);
-  // @story prompts/003.0-DEV-IDENTIFY-OUTDATED.md
-  // @req REQ-AGE-THRESHOLD
+  // @supports prompts/003.0-DEV-IDENTIFY-OUTDATED.md REQ-AGE-THRESHOLD
   for (const entry of entries) {
     await fs.cp(path.join(fixturesDir, entry), path.join(tempDir, entry), { recursive: true });
   }
@@ -75,8 +73,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
   // Restore environment variable
-  // @story prompts/003.0-DEV-IDENTIFY-OUTDATED.md
-  // @req REQ-AGE-THRESHOLD
+  // @supports prompts/003.0-DEV-IDENTIFY-OUTDATED.md REQ-AGE-THRESHOLD
   if (originalMock === undefined) {
     delete process.env.DRY_AGED_DEPS_MOCK;
   } else {
@@ -84,16 +81,13 @@ afterAll(async () => {
   }
 
   // Clean up temporary directory
-  // @story prompts/003.0-DEV-IDENTIFY-OUTDATED.md
-  // @req REQ-AGE-THRESHOLD
+  // @supports prompts/003.0-DEV-IDENTIFY-OUTDATED.md REQ-AGE-THRESHOLD
   if (tempDir) {
-    // @story prompts/003.0-DEV-IDENTIFY-OUTDATED.md
-    // @req REQ-AGE-THRESHOLD
+    // @supports prompts/003.0-DEV-IDENTIFY-OUTDATED.md REQ-AGE-THRESHOLD
     try {
       await fs.rm(tempDir, { recursive: true, force: true });
     } catch {
-      // @story prompts/003.0-DEV-IDENTIFY-OUTDATED.md
-      // @req REQ-AGE-THRESHOLD
+      // @supports prompts/003.0-DEV-IDENTIFY-OUTDATED.md REQ-AGE-THRESHOLD
       // ignore cleanup errors
     }
   }
@@ -114,8 +108,7 @@ describe('Story 003.0-DEV-IDENTIFY-OUTDATED: dry-aged-deps CLI E2E with real fix
 
   test('[REQ-AGE-THRESHOLD] all ages are positive integers', () => {
     expect(ages.length).toBeGreaterThan(0);
-    // @story prompts/003.0-DEV-IDENTIFY-OUTDATED.md
-    // @req REQ-AGE-THRESHOLD
+    // @supports prompts/003.0-DEV-IDENTIFY-OUTDATED.md REQ-AGE-THRESHOLD
     for (const age of ages) {
       expect(Number.isInteger(age)).toBe(true);
       expect(age).toBeGreaterThan(0);

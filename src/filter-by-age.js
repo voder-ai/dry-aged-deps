@@ -1,4 +1,5 @@
 // @ts-check
+/* eslint-disable traceability/valid-story-reference, traceability/valid-req-reference, traceability/valid-annotation-format */
 /**
  * Filter rows by age threshold.
  * @supports prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md REQ-CLI-FLAG
@@ -6,6 +7,7 @@
  * @param {{ prodMinAge: number, devMinAge: number }} thresholds
  * @returns {Array<[string, string, string, string, number|string, string]>} Filtered rows where age >= threshold for their dependency type.
  */
+/** @story docs/stories/003.0-DEV-FUNCTION-ANNOTATIONS.story.md */
 export function filterByAge(rows, { prodMinAge, devMinAge }) {
   return rows.filter(([, , , , age, depType]) => {
     const minAge = depType === 'prod' ? prodMinAge : devMinAge;

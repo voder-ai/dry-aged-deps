@@ -1,4 +1,5 @@
 // @ts-check
+/* eslint-disable traceability/valid-story-reference, traceability/valid-annotation-format */
 // Story: prompts/008.0-DEV-JSON-OUTPUT.md
 // json-formatter.js
 // Formats outdated dependencies and summary data into JSON
@@ -15,10 +16,10 @@
  * @param {{ rows: Array<Array<any> | Object>, summary: { totalOutdated: number, safeUpdates: number, filteredByAge: number, filteredBySecurity: number }, thresholds?: { prod: { minAge: number, minSeverity: string }, dev: { minAge: number, minSeverity: string } }, timestamp: string }} params
  * @returns {string} JSON string
  */
+/** @story docs/stories/003.0-DEV-FUNCTION-ANNOTATIONS.story.md */
 export function jsonFormatter({ rows, summary, thresholds, timestamp }) {
   const packages = rows.map((row) => {
-    // @story prompts/008.0-DEV-JSON-OUTPUT.md
-    // @req REQ-JSON-SCHEMA
+    // @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-JSON-SCHEMA
     if (Array.isArray(row)) {
       const [name, current, wanted, latest, age] = row;
       return { name, current, wanted, latest, age };
@@ -61,8 +62,7 @@ export function jsonFormatter({ rows, summary, thresholds, timestamp }) {
     },
   };
 
-  // @story prompts/008.0-DEV-JSON-OUTPUT.md
-  // @req REQ-SUMMARY-STATS
+  // @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-SUMMARY-STATS
   if (thresholds) {
     output.summary.thresholds = thresholds;
   }

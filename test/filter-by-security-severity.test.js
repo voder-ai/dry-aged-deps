@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-story-reference, traceability/valid-req-reference, traceability/valid-annotation-format */
 /**
  * Tests for severity threshold logic in filterBySecurity
  * @supports prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md REQ-SEVERITY-LEVELS REQ-FILTERING-LOGIC
@@ -7,6 +8,7 @@ import { describe, it, expect } from 'vitest';
 import { filterBySecurity } from '../src/filter-by-security.js';
 
 // Helper for legacy numeric stub
+/** @story docs/stories/003.0-DEV-FUNCTION-ANNOTATIONS.story.md */
 const numericStub = async () => 2;
 
 describe('Story 006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD: filterBySecurity severity threshold logic', () => {

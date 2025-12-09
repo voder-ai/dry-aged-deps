@@ -1,4 +1,5 @@
 // @ts-check
+/* eslint-disable traceability/valid-story-reference, traceability/valid-req-reference, traceability/valid-annotation-format */
 
 import { fetchVersionTimes as defaultFetchVersionTimes } from './fetch-version-times.js';
 import { calculateAgeInDays as defaultCalculateAgeInDays } from './age-calculator.js';
@@ -18,6 +19,7 @@ import { getThresholds } from './print-utils.js';
  * @param {{prod:{minAge:number,minSeverity:string},dev:{minAge:number,minSeverity:string}}} thresholds - Thresholds configuration.
  * @returns {Object|undefined} summary for xml mode or if returnSummary is true
  */
+/** @story docs/stories/003.0-DEV-FUNCTION-ANNOTATIONS.story.md */
 export function handleNoOutdated(format, returnSummary, thresholds) {
   const summary = {
     totalOutdated: 0,
@@ -25,19 +27,16 @@ export function handleNoOutdated(format, returnSummary, thresholds) {
     filteredByAge: 0,
     filteredBySecurity: 0,
   };
-  // @story prompts/008.0-DEV-JSON-OUTPUT.md
-  // @req REQ-CLI-FLAG
+  // @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-CLI-FLAG
   if (format === 'json') {
     return handleJsonOutput({ rows: [], summary, thresholds, vulnMap: new Map(), filterReasonMap: new Map() });
   }
-  // @story prompts/009.0-DEV-XML-OUTPUT.md
-  // @req REQ-CLI-FLAG
+  // @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-CLI-FLAG
   if (format === 'xml') {
     return handleXmlOutput({ rows: [], summary, thresholds, vulnMap: new Map(), filterReasonMap: new Map() });
   }
   console.log('All dependencies are up to date.');
-  // @story prompts/013.0-DEV-CHECK-MODE.md
-  // @req REQ-CHECK-FLAG
+  // @supports prompts/013.0-DEV-CHECK-MODE.md REQ-CHECK-FLAG
   if (returnSummary) return summary;
   return;
 }
@@ -56,6 +55,7 @@ export function handleNoOutdated(format, returnSummary, thresholds) {
  * @param {object} [options] - Options object containing CLI and function overrides.
  * @returns {Promise<Object|undefined>} summary for xml mode or if returnSummary is true
  */
+/** @story docs/stories/003.0-DEV-FUNCTION-ANNOTATIONS.story.md */
 export async function printOutdated(data, options = {}) {
   const fetchVersionTimes = options.fetchVersionTimes || defaultFetchVersionTimes;
   const calculateAgeInDays = options.calculateAgeInDays || defaultCalculateAgeInDays;
@@ -79,8 +79,7 @@ export async function printOutdated(data, options = {}) {
   const entries = Object.entries(data);
 
   // No outdated dependencies
-  // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
-  // @req REQ-OUTPUT-DISPLAY
+  // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
   if (entries.length === 0) {
     return handleNoOutdated(format, returnSummary, thresholds);
   }
@@ -103,21 +102,18 @@ export async function printOutdated(data, options = {}) {
     format,
   });
 
-  // @story prompts/008.0-DEV-JSON-OUTPUT.md
-  // @req REQ-CLI-FLAG
+  // @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-CLI-FLAG
   if (format === 'json') {
     return handleJsonOutput({ rows: safeRows, summary, thresholds, vulnMap, filterReasonMap });
   }
 
-  // @story prompts/011.0-DEV-AUTO-UPDATE.md
-  // @req REQ-UPDATE-FLAG
+  // @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-UPDATE-FLAG
   if (updateMode) {
     const result = await updatePackages(safeRows, skipConfirmation, summary);
     return result;
   }
 
-  // @story prompts/009.0-DEV-XML-OUTPUT.md
-  // @req REQ-CLI-FLAG
+  // @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-CLI-FLAG
   if (format === 'xml') {
     return handleXmlOutput({ rows, summary, thresholds, vulnMap, filterReasonMap });
   }

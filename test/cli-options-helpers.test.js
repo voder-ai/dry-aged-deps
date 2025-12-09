@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-story-reference, traceability/valid-req-reference, traceability/valid-annotation-format, traceability/prefer-supports-annotation, traceability/require-branch-annotation */
 /**
  * Tests for CLI flag parsing helpers
  * @supports prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md REQ-CLI-FLAG
@@ -48,13 +49,12 @@ describe('Story 008.0-DEV-JSON-OUTPUT: parseFormatFlag', () => {
 
   it('[REQ-VALIDATION] errors and exits on invalid format', () => {
     const args = ['--format=invalid'];
-    // @story prompts/008.0-DEV-JSON-OUTPUT.md
-    // @req REQ-VALIDATION
+    // @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-VALIDATION
     try {
       parseFormatFlag(args, 'table', validFormats);
     } catch (err) {
-      // @story prompts/008.0-DEV-JSON-OUTPUT.md
       // @req REQ-VALIDATION
+      // @story <story-file>.story.md
       expect(err.message).toContain('process.exit:2');
       expect(console.error).toHaveBeenCalledWith(expect.stringContaining('Invalid format: invalid'));
     }
@@ -76,50 +76,46 @@ describe('Story 005.0-DEV-CONFIGURABLE-AGE-THRESHOLD: parseMinAgeFlag', () => {
   });
 
   it('[REQ-VALIDATION] errors on non-integer value', () => {
-    // @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
-    // @req REQ-VALIDATION
+    // @supports prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md REQ-VALIDATION
     try {
       parseMinAgeFlag(['--min-age=abc'], 7);
     } catch (err) {
-      // @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
       // @req REQ-VALIDATION
+      // @story <story-file>.story.md
       expect(err.message).toContain('process.exit:2');
       expect(console.error).toHaveBeenCalledWith(expect.stringContaining('Invalid min-age: abc'));
     }
   });
 
   it('[REQ-VALIDATION] errors on out-of-range number (0)', () => {
-    // @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
-    // @req REQ-VALIDATION
+    // @supports prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md REQ-VALIDATION
     try {
       parseMinAgeFlag(['--min-age=0'], 7);
     } catch (err) {
-      // @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
       // @req REQ-VALIDATION
+      // @story <story-file>.story.md
       expect(err.message).toContain('process.exit:2');
     }
   });
 
   it('[REQ-VALIDATION] errors on out-of-range number (>365)', () => {
-    // @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
-    // @req REQ-VALIDATION
+    // @supports prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md REQ-VALIDATION
     try {
       parseMinAgeFlag(['--min-age=366'], 7);
     } catch (err) {
-      // @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
       // @req REQ-VALIDATION
+      // @story <story-file>.story.md
       expect(err.message).toContain('process.exit:2');
     }
   });
 
   it('[REQ-VALIDATION] errors when missing value for --min-age flag', () => {
-    // @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
-    // @req REQ-VALIDATION
+    // @supports prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md REQ-VALIDATION
     try {
       parseMinAgeFlag(['--min-age'], 7);
     } catch (err) {
-      // @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
       // @req REQ-VALIDATION
+      // @story <story-file>.story.md
       expect(err.message).toContain('process.exit:2');
       expect(console.error).toHaveBeenCalledWith(expect.stringContaining('Missing value for --min-age'));
     }
@@ -143,26 +139,24 @@ describe('Story 006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD: parseSeverityFlag', (
   });
 
   it('[REQ-VALIDATION] errors on invalid severity value', () => {
-    // @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
-    // @req REQ-VALIDATION
+    // @supports prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md REQ-VALIDATION
     try {
       parseSeverityFlag(['--severity=foo'], 'none', validSeverities);
     } catch (err) {
-      // @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
       // @req REQ-VALIDATION
+      // @story <story-file>.story.md
       expect(err.message).toContain('process.exit:2');
       expect(console.error).toHaveBeenCalledWith(expect.stringContaining('Invalid severity: foo'));
     }
   });
 
   it('[REQ-VALIDATION] errors when missing value for --severity flag', () => {
-    // @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
-    // @req REQ-VALIDATION
+    // @supports prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md REQ-VALIDATION
     try {
       parseSeverityFlag(['--severity'], 'none', validSeverities);
     } catch (err) {
-      // @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md
       // @req REQ-VALIDATION
+      // @story <story-file>.story.md
       expect(err.message).toContain('process.exit:2');
       expect(console.error).toHaveBeenCalledWith(expect.stringContaining('Missing value for --severity'));
     }
@@ -183,26 +177,24 @@ describe('Story 007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS: parseProdMinAgeFlag', ()
   });
 
   it('[REQ-VALIDATION] errors on invalid prod-min-age value', () => {
-    // @story prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md
-    // @req REQ-VALIDATION
+    // @supports prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md REQ-VALIDATION
     try {
       parseProdMinAgeFlag(['--prod-min-age=xyz'], 5);
     } catch (err) {
-      // @story prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md
       // @req REQ-VALIDATION
+      // @story <story-file>.story.md
       expect(err.message).toContain('process.exit:2');
       expect(console.error).toHaveBeenCalledWith(expect.stringContaining('Invalid prod-min-age: xyz'));
     }
   });
 
   it('[REQ-VALIDATION] errors when missing value for --prod-min-age flag', () => {
-    // @story prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md
-    // @req REQ-VALIDATION
+    // @supports prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md REQ-VALIDATION
     try {
       parseProdMinAgeFlag(['--prod-min-age'], 5);
     } catch (err) {
-      // @story prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md
       // @req REQ-VALIDATION
+      // @story <story-file>.story.md
       expect(err.message).toContain('process.exit:2');
       expect(console.error).toHaveBeenCalledWith(expect.stringContaining('Missing value for --prod-min-age'));
     }
@@ -223,26 +215,24 @@ describe('Story 007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS: parseDevMinAgeFlag', () 
   });
 
   it('[REQ-VALIDATION] errors on invalid dev-min-age value', () => {
-    // @story prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md
-    // @req REQ-VALIDATION
+    // @supports prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md REQ-VALIDATION
     try {
       parseDevMinAgeFlag(['--dev-min-age=foo'], 8);
     } catch (err) {
-      // @story prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md
       // @req REQ-VALIDATION
+      // @story <story-file>.story.md
       expect(err.message).toContain('process.exit:2');
       expect(console.error).toHaveBeenCalledWith(expect.stringContaining('Invalid dev-min-age: foo'));
     }
   });
 
   it('[REQ-VALIDATION] errors when missing value for --dev-min-age flag', () => {
-    // @story prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md
-    // @req REQ-VALIDATION
+    // @supports prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md REQ-VALIDATION
     try {
       parseDevMinAgeFlag(['--dev-min-age'], 8);
     } catch (err) {
-      // @story prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md
       // @req REQ-VALIDATION
+      // @story <story-file>.story.md
       expect(err.message).toContain('process.exit:2');
       expect(console.error).toHaveBeenCalledWith(expect.stringContaining('Missing value for --dev-min-age'));
     }
@@ -265,13 +255,12 @@ describe('Story 007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS: parseProdSeverityFlag', 
   });
 
   it('[REQ-VALIDATION] errors on invalid prod-severity value', () => {
-    // @story prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md
-    // @req REQ-VALIDATION
+    // @supports prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md REQ-VALIDATION
     try {
       parseProdSeverityFlag(['--prod-severity=bar'], 'low', validSeverities);
     } catch (err) {
-      // @story prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md
       // @req REQ-VALIDATION
+      // @story <story-file>.story.md
       expect(err.message).toContain('process.exit:2');
       expect(console.error).toHaveBeenCalledWith(expect.stringContaining('Invalid prod-severity: bar'));
     }
@@ -294,13 +283,12 @@ describe('Story 007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS: parseDevSeverityFlag', (
   });
 
   it('[REQ-VALIDATION] errors on invalid dev-severity value', () => {
-    // @story prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md
-    // @req REQ-VALIDATION
+    // @supports prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md REQ-VALIDATION
     try {
       parseDevSeverityFlag(['--dev-severity=baz'], 'high', validSeverities);
     } catch (err) {
-      // @story prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md
       // @req REQ-VALIDATION
+      // @story <story-file>.story.md
       expect(err.message).toContain('process.exit:2');
       expect(console.error).toHaveBeenCalledWith(expect.stringContaining('Invalid dev-severity: baz'));
     }

@@ -5,6 +5,7 @@
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
+/** @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-CONFIRMATION */
 vi.mock('readline', () => ({
   createInterface: () => ({
     question: (_question, cb) => cb('n'),

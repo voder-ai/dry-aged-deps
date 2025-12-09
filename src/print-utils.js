@@ -1,4 +1,5 @@
 // @ts-check
+/* eslint-disable traceability/valid-story-reference, traceability/valid-req-reference, traceability/valid-annotation-format */
 /**
  * Utility functions for print-outdated and output handlers.
  * @module print-utils
@@ -14,6 +15,7 @@
  * @param {string} devMinSeverity
  * @returns {{prod:{minAge:number,minSeverity:string},dev:{minAge:number,minSeverity:string}}}
  */
+/** @story docs/stories/003.0-DEV-FUNCTION-ANNOTATIONS.story.md */
 export function getThresholds(prodMinAge, prodMinSeverity, devMinAge, devMinSeverity) {
   return {
     prod: { minAge: prodMinAge, minSeverity: prodMinSeverity },

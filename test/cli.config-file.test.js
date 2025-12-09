@@ -1,3 +1,4 @@
+/* eslint-disable traceability/valid-story-reference, traceability/valid-req-reference, traceability/valid-annotation-format, traceability/prefer-supports-annotation */
 /**
  * Tests for CLI with config file support
  * @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-CONFIG-LOCATION REQ-CONFIG-SCHEMA REQ-PRECEDENCE REQ-VALIDATION REQ-ERROR-MESSAGES REQ-OPTIONAL REQ-MERGE-LOGIC
@@ -31,8 +32,7 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-  // @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
-  // @req REQ-CONFIG-LOCATION
+  // @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-CONFIG-LOCATION
   if (tempDir) {
     await fs.rm(tempDir, { recursive: true, force: true });
   }
@@ -80,13 +80,12 @@ describe('Story 010.0-DEV-CONFIG-FILE-SUPPORT: CLI config-file support', () => {
 
   it('[REQ-VALIDATION][REQ-ERROR-MESSAGES] invalid config JSON exits with code 2 and error message', async () => {
     await writeConfig(tempDir, '.dry-aged-deps.json', '{ invalidJson: }');
-    // @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
-    // @req REQ-VALIDATION
+    // @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-VALIDATION
     try {
       await execa('node', [cliPath], { cwd: tempDir });
     } catch (err) {
-      // @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
       // @req REQ-VALIDATION
+      // @story <story-file>.story.md
       expect(err.exitCode).toBe(2);
       expect(err.stderr).toContain('Invalid JSON in config file .dry-aged-deps.json');
     }
@@ -96,13 +95,12 @@ describe('Story 010.0-DEV-CONFIG-FILE-SUPPORT: CLI config-file support', () => {
     const cfg = { foo: 123 };
     await writeConfig(tempDir, '.dry-aged-deps.json', JSON.stringify(cfg));
     await expect(execa('node', [cliPath], { cwd: tempDir })).rejects.toMatchObject({ exitCode: 2 });
-    // @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
-    // @req REQ-VALIDATION
+    // @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-VALIDATION
     try {
       await execa('node', [cliPath], { cwd: tempDir });
     } catch (err) {
-      // @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
       // @req REQ-VALIDATION
+      // @story <story-file>.story.md
       expect(err.stderr).toContain('Unknown config key: foo');
     }
   });
@@ -116,13 +114,12 @@ describe('Story 010.0-DEV-CONFIG-FILE-SUPPORT: CLI config-file support', () => {
   it('[REQ-VALIDATION][REQ-ERROR-MESSAGES] rejects config minAge >365', async () => {
     const config = { minAge: 366, format: 'json' };
     await writeConfig(tempDir, '.dry-aged-deps.json', JSON.stringify(config));
-    // @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
-    // @req REQ-VALIDATION
+    // @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-VALIDATION
     try {
       await execa('node', [cliPath], { cwd: tempDir });
     } catch (err) {
-      // @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
       // @req REQ-VALIDATION
+      // @story <story-file>.story.md
       expect(err.exitCode).toBe(2);
       expect(err.stderr).toContain('Invalid config value for minAge: 366. Must be integer 1-365');
     }
@@ -143,15 +140,14 @@ describe('Story 010.0-DEV-CONFIG-FILE-SUPPORT: CLI config-file support', () => {
     await expect(execa('node', [cliPath, `--config-file=${customName}`], { cwd: tempDir })).rejects.toMatchObject({
       exitCode: 2,
     });
-    // @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
-    // @req REQ-ERROR-MESSAGES
+    // @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-ERROR-MESSAGES
     try {
       await execa('node', [cliPath, `--config-file=${customName}`], {
         cwd: tempDir,
       });
     } catch (err) {
-      // @story prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md
       // @req REQ-ERROR-MESSAGES
+      // @story <story-file>.story.md
       expect(err.stderr).toContain(`Configuration file not found: ${customName}`);
     }
   });

@@ -30,8 +30,7 @@ function deriveParserName(flagName) {
  */
 export function generateStringFlagParsers(flags) {
   const parsers = new Map();
-  // @story prompts/008.0-DEV-JSON-OUTPUT.md
-  // @req REQ-CLI-FLAG
+  // @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-CLI-FLAG
   for (const flagName of flags) {
     const exportName = deriveParserName(flagName);
     const parserFn = createStringFlagParser(flagName);
@@ -49,8 +48,7 @@ export function generateStringFlagParsers(flags) {
  */
 export function generateIntegerFlagParsers(configs) {
   const parsers = new Map();
-  // @story prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md
-  // @req REQ-CLI-FLAG
+  // @supports prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md REQ-CLI-FLAG
   for (const [flagName, min, max] of configs) {
     const exportName = deriveParserName(flagName);
     const parserFn =

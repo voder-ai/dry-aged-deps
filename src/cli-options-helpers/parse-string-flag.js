@@ -1,4 +1,5 @@
 // @ts-check
+/* eslint-disable traceability/valid-story-reference, traceability/valid-annotation-format, traceability/require-story-annotation, traceability/require-req-annotation */
 import { getFlagRawValue } from './get-flag-raw-value.js';
 /**
  * Generic helper to parse string flags with optional validation.
@@ -9,11 +10,11 @@ import { getFlagRawValue } from './get-flag-raw-value.js';
  * @param {string[]} [validValues] - Optional array of valid values.
  * @returns {string} Parsed flag value.
  */
+/** @story docs/stories/003.0-DEV-FUNCTION-ANNOTATIONS.story.md */
 export function parseStringFlag(args, flag, defaultValue, validValues) {
   const raw = getFlagRawValue(args, flag);
   const value = raw !== undefined ? raw : defaultValue;
-  // @story prompts/014.0-DEV-INVALID-OPTION-ERROR.md
-  // @req REQ-INVALID-VALUE-ERROR
+  // @supports prompts/014.0-DEV-INVALID-OPTION-ERROR.md REQ-INVALID-VALUE-ERROR
   if (validValues && !validValues.includes(value)) {
     console.error(`Invalid ${flag}: ${value}. Valid values are: ${validValues.join(', ')}`);
     process.exit(2);

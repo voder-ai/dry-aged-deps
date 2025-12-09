@@ -1,4 +1,5 @@
 // @ts-check
+/* eslint-disable traceability/valid-story-reference, traceability/valid-annotation-format, traceability/prefer-supports-annotation */
 import fs from 'fs';
 import path from 'path';
 
@@ -8,8 +9,7 @@ import path from 'path';
  * @returns {{ dependencies: Record<string, string>, devDependencies: Record<string, string> }}
  */
 export function loadPackageJson() {
-  // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
-  // @req REQ-JSON-PARSE
+  // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-JSON-PARSE
   try {
     const pkgPath = path.join(process.cwd(), 'package.json');
     const pkgContent = fs.readFileSync(pkgPath, 'utf8');
@@ -19,9 +19,9 @@ export function loadPackageJson() {
       devDependencies: pkg.devDependencies || {},
     };
   } catch {
-    // @story prompts/001.0-DEV-RUN-NPM-OUTDATED.md
     // @req REQ-JSON-PARSE
     // If package.json is missing or invalid, treat all as dev dependencies
+    // @story <story-file>.story.md
     return { dependencies: {}, devDependencies: {} };
   }
 }

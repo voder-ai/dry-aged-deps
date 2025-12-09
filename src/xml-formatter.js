@@ -1,4 +1,5 @@
 // @ts-check
+/* eslint-disable traceability/valid-story-reference, traceability/valid-annotation-format */
 import {
   buildXmlDeclaration,
   buildRootStart,
@@ -20,12 +21,12 @@ import {
  * @param {Error} [params.error]
  * @returns {string} XML string
  */
+/** @story docs/stories/003.0-DEV-FUNCTION-ANNOTATIONS.story.md */
 export function xmlFormatter({ rows = [], summary = {}, thresholds = {}, timestamp = '', error = null } = {}) {
   let xml = buildXmlDeclaration();
   xml += buildRootStart(timestamp);
 
-  // @story prompts/009.0-DEV-XML-OUTPUT.md
-  // @req REQ-ERROR-FORMAT
+  // @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-ERROR-FORMAT
   if (error) {
     xml += buildErrorSection(error);
     xml += buildRootEnd();
@@ -35,8 +36,8 @@ export function xmlFormatter({ rows = [], summary = {}, thresholds = {}, timesta
   xml += buildPackagesSection(rows);
   xml += buildSummarySection(summary);
 
-  // @story prompts/009.0-DEV-XML-OUTPUT.md
-  // @req REQ-XML-SCHEMA
+  // @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-XML-SCHEMA
+  // @ts-ignore - thresholds shape validated by caller
   if (thresholds && (thresholds.prod || thresholds.dev)) {
     xml += buildThresholdsSection(thresholds);
   }

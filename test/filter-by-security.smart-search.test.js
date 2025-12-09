@@ -6,14 +6,20 @@
 import { describe, it, expect } from 'vitest';
 import { filterBySecurity } from '../src/filter-by-security.js';
 
-// Stub fetchVersionTimes returns a mapping of version -> publish time
+/**
+ * Stub fetchVersionTimes returns a mapping of version -> publish time
+ * @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SMART-SEARCH
+ */
 const stubFetchVersionTimes = async (pkg) => ({
   '1.3.0': '2025-11-10T00:00:00.000Z',
   '1.2.0': '2025-11-05T00:00:00.000Z',
   '1.1.0': '2025-10-01T00:00:00.000Z',
 });
 
-// Stub calculateAgeInDays always returns fixed age
+/**
+ * Stub calculateAgeInDays always returns fixed age
+ * @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SMART-SEARCH
+ */
 const stubCalculateAgeInDays = () => 42;
 
 describe('Story 004.0-DEV-FILTER-VULNERABLE-VERSIONS: filterBySecurity smart-search fallback', () => {
@@ -21,8 +27,7 @@ describe('Story 004.0-DEV-FILTER-VULNERABLE-VERSIONS: filterBySecurity smart-sea
     const rows = [['pkg1', '1.0.0', '1.3.0', '1.3.0', 30, 'prod']];
     // Simulate vulnerability for 1.3.0, safe for 1.2.0
     const checkVuln = async (name, version) => {
-      // @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md
-      // @req REQ-SMART-SEARCH
+      // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SMART-SEARCH
       if (version === '1.3.0') return 1; // vulnerable
       return 0; // safe for others
     };

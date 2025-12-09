@@ -8,14 +8,11 @@ function createExecFileMock() {
 
   const mockImpl = (cmd, args, options, callback) => {
     calls.push([cmd, args, options, callback]);
-    // @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
-    // @req REQ-NPM-VIEW
+    // @supports prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md REQ-NPM-VIEW
     if (_mockImplementation) {
-      // @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
       // @req REQ-NPM-VIEW
       return _mockImplementation(cmd, args, options, callback);
-      // @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md
-      // @req REQ-NPM-VIEW
+      // @supports prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md REQ-NPM-VIEW
     }
   };
 

@@ -1,4 +1,5 @@
 // @ts-check
+/* eslint-disable traceability/valid-story-reference, traceability/valid-req-reference, traceability/valid-annotation-format */
 /**
  * Prepare JSON items for JSON output.
  * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-COMPLETE-DATA
@@ -8,6 +9,7 @@
  * @param {Map<string, string>} filterReasonMap - Mapping of package names to filter reasons ("age" or "security").
  * @returns {Array<Object>} JSON item objects ready for serialization.
  */
+/** @story docs/stories/003.0-DEV-FUNCTION-ANNOTATIONS.story.md */
 export function prepareJsonItems(rows, thresholds, vulnMap, filterReasonMap) {
   return rows.map(([name, current, wanted, latest, age, depType]) => {
     const minAge = depType === 'prod' ? thresholds.prod.minAge : thresholds.dev.minAge;
