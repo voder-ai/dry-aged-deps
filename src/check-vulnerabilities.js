@@ -92,7 +92,7 @@ export async function checkVulnerabilities(packageName, version) {
     if (auditResult.vulnerabilities && typeof auditResult.vulnerabilities === 'object') {
       details = Object.entries(auditResult.vulnerabilities).map(([moduleName, vuln]) => ({ moduleName, ...vuln }));
     }
-    // eslint-disable-next-line traceability/require-branch-annotation -- Prettier/traceability conflict with else-if (see issue #4)
+    // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK
     else if (auditResult.advisories && typeof auditResult.advisories === 'object') {
       details = Object.values(auditResult.advisories);
     }

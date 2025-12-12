@@ -75,7 +75,7 @@ export function parseOptions(argv) {
       let suggestion;
       // @supports prompts/014.0-DEV-INVALID-OPTION-ERROR.md REQ-DID-YOU-MEAN
       if (arg === '--json') suggestion = '--format=json';
-      // eslint-disable-next-line traceability/require-branch-annotation -- Prettier/traceability conflict with else-if (see issue #4)
+      // @supports prompts/014.0-DEV-INVALID-OPTION-ERROR.md REQ-DID-YOU-MEAN
       else if (arg.startsWith('--format')) suggestion = '--format';
       // @supports prompts/014.0-DEV-INVALID-OPTION-ERROR.md REQ-HELP-SUGGESTION
       if (suggestion) {
