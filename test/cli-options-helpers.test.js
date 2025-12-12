@@ -1,4 +1,4 @@
-/* eslint-disable traceability/valid-story-reference, traceability/valid-req-reference, traceability/valid-annotation-format, traceability/prefer-supports-annotation, traceability/require-branch-annotation */
+/* eslint-disable traceability/valid-story-reference, traceability/valid-req-reference, traceability/valid-annotation-format, traceability/prefer-supports-annotation */
 /**
  * Tests for CLI flag parsing helpers
  * @supports prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md REQ-CLI-FLAG

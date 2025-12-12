@@ -1,9 +1,7 @@
 // @ts-check
-/* eslint-disable traceability/valid-story-reference, traceability/valid-annotation-format, traceability/require-story-annotation, traceability/require-req-annotation */
 import { evaluateVersionVulnerabilities } from './vulnerability-evaluator.js';
 /**
  * Find the safest/most recent version using smart-search fallback logic.
- * @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SMART-SEARCH
  * @param {string} name - Package name.
  * @param {{ [version: string]: string }} versionTimes - Mapping of version to publish time.
  * @param {object} options - Search options.
@@ -12,8 +10,8 @@ import { evaluateVersionVulnerabilities } from './vulnerability-evaluator.js';
  * @param {function} options.calculateAgeInDays - Function to calculate age from date.
  * @param {{ [key: string]: number }} options.severityWeights - Mapping of severity labels to weight.
  * @returns {Promise<{ version: string|null, recAge?: number, totalCount?: number, maxSeverity?: string, detailsList?: Array<any> }>} Safe version info.
+ * @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SMART-SEARCH
  */
-/** @story docs/stories/003.0-DEV-FUNCTION-ANNOTATIONS.story.md */
 export async function findSafeVersionSmartSearch(name, versionTimes, options) {
   const { checkVulnerabilities, minSeverity, calculateAgeInDays, severityWeights } = options;
   const entries = Object.entries(versionTimes);

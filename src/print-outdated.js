@@ -1,5 +1,4 @@
 // @ts-check
-/* eslint-disable traceability/valid-story-reference, traceability/valid-req-reference, traceability/valid-annotation-format */
 
 import { fetchVersionTimes as defaultFetchVersionTimes } from './fetch-version-times.js';
 import { calculateAgeInDays as defaultCalculateAgeInDays } from './age-calculator.js';
@@ -13,13 +12,12 @@ import { getThresholds } from './print-utils.js';
 
 /**
  * Handle scenario when there are no outdated dependencies.
- * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
  * @param {string} format - Output format ('table', 'json', 'xml').
  * @param {boolean} returnSummary - Whether to return summary object.
  * @param {{prod:{minAge:number,minSeverity:string},dev:{minAge:number,minSeverity:string}}} thresholds - Thresholds configuration.
  * @returns {Object|undefined} summary for xml mode or if returnSummary is true
+ * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
  */
-/** @story docs/stories/003.0-DEV-FUNCTION-ANNOTATIONS.story.md */
 export function handleNoOutdated(format, returnSummary, thresholds) {
   const summary = {
     totalOutdated: 0,
@@ -43,6 +41,10 @@ export function handleNoOutdated(format, returnSummary, thresholds) {
 
 /**
  * Print outdated dependencies information with age
+ * @param {Record<string, { current: string; wanted: string; latest: string }>} data
+ * @param {{ fetchVersionTimes?: function, calculateAgeInDays?: function, checkVulnerabilities?: function, format?: string, prodMinAge?: number, devMinAge?: number, prodMinSeverity?: string, devMinSeverity?: string, returnSummary?: boolean, updateMode?: boolean, skipConfirmation?: boolean }} [options]
+ * @param {object} [options] - Options object containing CLI and function overrides.
+ * @returns {Promise<Object|undefined>} summary for xml mode or if returnSummary is true
  * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND
  * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
  * @supports prompts/003.0-DEV-IDENTIFY-OUTDATED.md REQ-SMART-SEARCH
@@ -50,12 +52,7 @@ export function handleNoOutdated(format, returnSummary, thresholds) {
  * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-CLI-FLAG
  * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-CLI-FLAG
  * @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-UPDATE-FLAG
- * @param {Record<string, { current: string; wanted: string; latest: string }>} data
- * @param {{ fetchVersionTimes?: function, calculateAgeInDays?: function, checkVulnerabilities?: function, format?: string, prodMinAge?: number, devMinAge?: number, prodMinSeverity?: string, devMinSeverity?: string, returnSummary?: boolean, updateMode?: boolean, skipConfirmation?: boolean }} [options]
- * @param {object} [options] - Options object containing CLI and function overrides.
- * @returns {Promise<Object|undefined>} summary for xml mode or if returnSummary is true
  */
-/** @story docs/stories/003.0-DEV-FUNCTION-ANNOTATIONS.story.md */
 export async function printOutdated(data, options = {}) {
   const fetchVersionTimes = options.fetchVersionTimes || defaultFetchVersionTimes;
   const calculateAgeInDays = options.calculateAgeInDays || defaultCalculateAgeInDays;

@@ -1,13 +1,11 @@
 // @ts-check
-/* eslint-disable traceability/valid-story-reference, traceability/valid-annotation-format */
 /**
  * Compute vulnerability metrics from result object.
- * @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SAFE-ONLY
  * @param {{ count?: number, details?: Array<any> }} result - Vulnerability result object.
  * @param {{ [key: string]: number }} severityWeights - Mapping of severity labels to weight.
  * @returns {{ totalCount: number, detailsList: Array<any>, maxSeverity: string }} Computed metrics.
+ * @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SAFE-ONLY
  */
-/** @story docs/stories/003.0-DEV-FUNCTION-ANNOTATIONS.story.md */
 export function computeVulnerabilityStats(result, severityWeights) {
   const totalCount =
     typeof result.count === 'number' ? result.count : Array.isArray(result.details) ? result.details.length : 0;
@@ -41,13 +39,12 @@ export function computeVulnerabilityStats(result, severityWeights) {
 
 /**
  * Count vulnerabilities above a given severity threshold.
- * @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SAFE-ONLY
  * @param {Array<any>} detailsList - Array of vulnerability details objects with severity properties.
  * @param {number} minWeight - Minimum weight threshold.
  * @param {{ [key: string]: number }} severityWeights - Mapping of severity labels to weight.
  * @returns {number} Number of vulnerabilities above the threshold.
+ * @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SAFE-ONLY
  */
-/** @story docs/stories/003.0-DEV-FUNCTION-ANNOTATIONS.story.md */
 export function countAboveThreshold(detailsList, minWeight, severityWeights) {
   // Create a Map for safe weight lookup
   const weightMap = new Map(Object.entries(severityWeights));

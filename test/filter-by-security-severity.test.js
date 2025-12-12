@@ -1,4 +1,4 @@
-/* eslint-disable traceability/valid-story-reference, traceability/valid-req-reference, traceability/valid-annotation-format */
+/* eslint-disable traceability/valid-story-reference, traceability/valid-annotation-format */
 /**
  * Tests for severity threshold logic in filterBySecurity
  * @supports prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md REQ-SEVERITY-LEVELS REQ-FILTERING-LOGIC

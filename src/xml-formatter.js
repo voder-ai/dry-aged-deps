@@ -1,5 +1,4 @@
 // @ts-check
-/* eslint-disable traceability/valid-story-reference, traceability/valid-annotation-format */
 import {
   buildXmlDeclaration,
   buildRootStart,
@@ -12,7 +11,6 @@ import {
 
 /**
  * Format data into XML string
- * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-XML-SCHEMA REQ-COMPLETE-DATA REQ-SUMMARY-STATS REQ-XML-DECLARATION
  * @param {Object} params
  * @param {Array<any>} [params.rows]
  * @param {Object} [params.summary]
@@ -20,8 +18,8 @@ import {
  * @param {string} [params.timestamp]
  * @param {Error} [params.error]
  * @returns {string} XML string
+ * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-XML-SCHEMA REQ-COMPLETE-DATA REQ-SUMMARY-STATS REQ-XML-DECLARATION
  */
-/** @story docs/stories/003.0-DEV-FUNCTION-ANNOTATIONS.story.md */
 export function xmlFormatter({ rows = [], summary = {}, thresholds = {}, timestamp = '', error = null } = {}) {
   let xml = buildXmlDeclaration();
   xml += buildRootStart(timestamp);

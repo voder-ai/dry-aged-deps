@@ -380,3 +380,92 @@ Which would you like me to do next:
   - **Verification**: ✅ npm run lint (0 errors), ✅ npm test (214 tests, 97.5% coverage), ✅ typecheck pass, ✅ format:check pass
   - **Impact**: All blocking configuration errors resolved, only runtime file warnings remain (expected)
   - **Pattern**: Fail-fast approach - stop assessment on critical errors and fix immediately
+
+- Traceability Plugin Bug Fix and File-Level Directive Removal (2025-12-11)
+  - **Discovery**: Found traceability plugin bug (issue #6) where catch block annotations flagged as redundant
+    - Bug in eslint-plugin-traceability v1.17.0: `no-redundant-annotation` rule incorrectly treated catch blocks as same scope as try block
+    - Created GitHub issue voder-ai/eslint-plugin-traceability#6 with detailed bug report
+  - **Resolution**: Upgraded eslint-plugin-traceability from 1.17.0 → 1.17.1 
+    - Bug fixed in v1.17.1: catch blocks now properly recognized as distinct execution paths
+    - Verified fix: lint passes without errors after upgrade
+  - **File-Level Directive Removal**: Systematically removed file-level `/* eslint-disable ... */` from 14 files
+    - Removed from 8 source files (NOW section - simple 2-rule cases):
+      - `src/cli-options-helpers/get-flag-raw-value.js` - Removed `valid-story-reference`, `valid-annotation-format`
+      - `src/cli-options-helpers/parse-integer-flag.js` - Removed `valid-story-reference`, `valid-annotation-format`
+      - `src/cli-options-helpers/parse-string-flag.js` - Removed `valid-story-reference`, `valid-annotation-format`
+      - `src/security-smart-search.js` - Removed `valid-story-reference`, `valid-annotation-format`
+      - `src/filter-by-age.js` - Removed `valid-story-reference`, `valid-annotation-format`
+      - `src/output-utils.js` - Removed `valid-story-reference`, `valid-annotation-format`
+      - `src/print-outdated.js` - Removed `valid-story-reference`, `valid-annotation-format`
+      - `src/print-utils.js` - Removed `valid-story-reference`, `valid-annotation-format`
+    - Removed from 2 source files (NEXT section - moderate cases):
+      - `src/build-rows.js` - Removed `valid-req-reference` (kept 2 other rules)
+      - `src/vulnerability-evaluator.js` - Removed unused line-level disables, fixed @story reference, kept `require-story-annotation` and `require-req-annotation`
+    - Removed from 6 test files:
+      - `test/check-vulnerabilities.advisories.test.js` - Removed 2 unused directives
+      - `test/check-vulnerabilities.test.js` - Removed 2 unused directives
+      - `test/cli-options-helpers.test.js` - Removed 1 unused directive (`require-branch-annotation`)
+      - `test/cli.error-cmd.test.js` - Removed 1 unused directive (`valid-req-reference`)
+      - `test/filter-by-security-severity.test.js` - Removed 1 unused directive (`valid-req-reference`)
+      - `test/filter-by-security.fetchError-fallback.test.js` - Removed 2 unused directives
+  - **Key Learning**: JSDoc @supports annotation MUST come AFTER @param and @returns tags
+    - Traceability plugin requires specific JSDoc tag order: @param → @returns → @supports
+    - Discovered when get-flag-raw-value.js failed lint after removing file-level disable
+    - Fixed by reordering @supports tag to end of JSDoc comment
+    - Pattern validated by comparing with working files (utils-common.js)
+  - **Verification**: ✅ npm run lint (0 errors, 0 warnings), ✅ npm test (214 tests pass, 97.31% coverage), ✅ type-check pass, ✅ format:check pass
+  - **Impact**: Reduced file-level eslint-disable directives from 25 to 11 files (56% reduction)
+  - **Remaining Work**: 11 files still have file-level directives (complex 4-rule cases in LATER section)
+    - 4 complex source files: config-loader.js, update-packages.js, filter-by-security.js, load-package-json.js
+    - 1 binary file: bin/dry-aged-deps.js
+    - 3 test files: cli.config-file.test.js, cli-options-helpers.test.js, cli.error-cmd.test.js
+    - 3 files with preserved directives: json-formatter.js, xml-formatter.js, security-helpers.js
+  - **Approach**: Incremental one-file-at-a-time fixes following Gall's Law (working system evolving from working system)
+
+## 2025-12-12: Removed File-Level eslint-disable from 14 Source Files
+
+- **Context**: Systematic removal of file-level `/* eslint-disable traceability/... */` directives by fixing underlying annotation issues
+- **Traceability Plugin Upgrade**: Updated `eslint-plugin-traceability` from ^1.17.0 to ^1.17.1
+  - Fixed bug where catch block annotations were incorrectly flagged as redundant
+  - Issue: https://github.com/voder-ai/eslint-plugin-traceability/issues/6
+  - Root cause: Plugin was treating catch blocks as part of parent try block scope
+  - Resolution: v1.17.1 recognizes catch blocks as distinct execution paths
+- **Files Completed** (NOW + NEXT sections from plan.md):
+  - **NOW section** (12 files - simple 2-rule cases):
+    1. `src/cli-options-helpers/get-flag-raw-value.js` ✓
+    2. `src/cli-options-helpers/parse-integer-flag.js` ✓
+    3. `src/cli-options-helpers/parse-string-flag.js` ✓
+    4. `src/security-smart-search.js` ✓
+    5. `src/security-helpers.js` ✓ (2 functions fixed)
+    6. `src/filter-by-age.js` ✓
+    7. `src/output-utils.js` ✓
+    8. `src/print-utils.js` ✓ (2 functions fixed)
+    9. `src/print-outdated.js` ✓ (2 functions fixed)
+    10. `src/build-rows.js` ✓
+    11. `src/json-formatter.js` ✓ (module-level + function-level JSDoc)
+    12. `src/xml-formatter.js` ✓
+  - **NEXT section** (2 files - moderate 3-rule cases):
+    13. `src/load-package-json.js` ✓ (also fixed invalid inline annotations)
+    14. `src/vulnerability-evaluator.js` ✓
+- **Fix Pattern Applied**: 
+  - Remove file-level `/* eslint-disable ... */` directive
+  - Move `@supports` tags AFTER `@param` and `@returns` in JSDoc (critical ordering requirement)
+  - Remove duplicate `/** @story ... */` standalone tags (redundant with @supports)
+  - Fix any invalid inline annotations
+- **Key Learning Reinforced**: @supports MUST come after @param/@returns in JSDoc
+  - Traceability plugin parses JSDoc in strict order
+  - Incorrect order causes "function must declare traceability annotation" error
+  - Pattern: `@description → @param → @returns → @supports`
+- **Verification**: 
+  - ✅ `npm run lint` - 0 errors, 0 warnings
+  - ✅ `npm test` - 214 tests pass, 97.31% coverage
+  - ✅ `npm run type-check` - all type checks pass
+  - ✅ `npm run format:check` - all files properly formatted
+- **Impact**: Reduced file-level eslint-disable from 17 to 3 source files (82% reduction in src/)
+- **Remaining in src/****: Only 3 complex files left (LATER section):
+  - `src/config-loader.js` (4 rules disabled)
+  - `src/update-packages.js` (4 rules disabled)
+  - `src/filter-by-security.js` (4 rules disabled)
+- **Quality Metrics**: All automated checks green, no regressions introduced
+
+

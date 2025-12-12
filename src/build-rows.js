@@ -1,11 +1,9 @@
 // @ts-check
-/* eslint-disable traceability/valid-story-reference, traceability/valid-req-reference, traceability/valid-annotation-format */
 import { fetchVersionTimes as defaultFetchVersionTimes } from './fetch-version-times.js';
 import { calculateAgeInDays as defaultCalculateAgeInDays } from './age-calculator.js';
 
 /**
  * Build rows with age and dependency type.
- * @supports prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md REQ-NPM-VIEW REQ-AGE-CALC REQ-OPTIMIZATION
  * @param {Record<string, { current: string; wanted: string; latest: string }>} data
  * @param {{
  *   fetchVersionTimes?: Function,
@@ -14,8 +12,8 @@ import { calculateAgeInDays as defaultCalculateAgeInDays } from './age-calculato
  *   format?: string
  * }} options
  * @returns {Promise<Array<[string, string, string, string, number|string, string]>>}
+ * @supports prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md REQ-NPM-VIEW REQ-AGE-CALC REQ-OPTIMIZATION
  */
-/** @story docs/stories/003.0-DEV-FUNCTION-ANNOTATIONS.story.md */
 export async function buildRows(data, options) {
   const fetchVersionTimes = options.fetchVersionTimes || defaultFetchVersionTimes;
   const calculateAgeInDays = options.calculateAgeInDays || defaultCalculateAgeInDays;

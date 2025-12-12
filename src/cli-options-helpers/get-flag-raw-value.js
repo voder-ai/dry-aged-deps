@@ -1,14 +1,12 @@
 // @ts-check
-/* eslint-disable traceability/valid-story-reference, traceability/valid-annotation-format */
 /**
  * Extract raw flag value from CLI arguments.
- * @supports prompts/014.0-DEV-INVALID-OPTION-ERROR.md REQ-ERROR-EXIT-CODE
  * @param {string[]} args - CLI arguments.
  * @param {string} flag - Flag name without leading hyphens.
  * @returns {string|undefined} The raw flag value, or undefined if not present.
  * Exits with code 2 if flag provided without a value.
+ * @supports prompts/014.0-DEV-INVALID-OPTION-ERROR.md REQ-ERROR-EXIT-CODE
  */
-/** @story docs/stories/003.0-DEV-FUNCTION-ANNOTATIONS.story.md */
 export function getFlagRawValue(args, flag) {
   const prefix = `--${flag}=`;
   const eqArg = args.find((a) => a.startsWith(prefix));
