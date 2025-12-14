@@ -1,5 +1,4 @@
 // @ts-check
-/* eslint-disable traceability/valid-story-reference, traceability/valid-req-reference, traceability/valid-annotation-format, traceability/prefer-supports-annotation */
 /**
  * Configuration loader for CLI options, supports JSON config file.
  * @module config-loader
@@ -11,16 +10,14 @@ import path from 'path';
  * Assert a condition or exit with error.
  * @param {boolean} condition - Condition to assert.
  * @param {string} message - Error message to log on failure.
- * @supports prompts/014.0-DEV-INVALID-OPTION-ERROR.md REQ-ERROR-EXIT-CODE
  * @returns void
+ * @supports prompts/014.0-DEV-INVALID-OPTION-ERROR.md REQ-ERROR-EXIT-CODE
  */
 function assert(condition, message) {
   // @supports prompts/014.0-DEV-INVALID-OPTION-ERROR.md REQ-ERROR-EXIT-CODE
   if (!condition) {
-    // @req REQ-ERROR-EXIT-CODE
     console.error(message);
     process.exit(2);
-    // @supports prompts/014.0-DEV-INVALID-OPTION-ERROR.md REQ-ERROR-EXIT-CODE
   }
 }
 
@@ -28,8 +25,8 @@ function assert(condition, message) {
  * Ensure a value is a non-null object (not array).
  * @param {*} value - Value to check.
  * @param {string} name - Name used in error messages.
- * @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-VALIDATION
  * @returns void
+ * @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-VALIDATION
  */
 function ensureObject(value, name) {
   assert(
@@ -43,8 +40,8 @@ function ensureObject(value, name) {
  * @param {object} obj - Object to validate.
  * @param {string[]} allowedKeys - Keys permitted in the object.
  * @param {string} context - Context suffix for error messages.
- * @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-VALIDATION
  * @returns void
+ * @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-VALIDATION
  */
 function validateKeys(obj, allowedKeys, context) {
   Object.keys(obj).forEach((key) => {
@@ -56,15 +53,13 @@ function validateKeys(obj, allowedKeys, context) {
  * Validate an integer value is within 1-365.
  * @param {number|undefined} value - Value to validate.
  * @param {string} name - Name used in error message.
- * @supports prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md REQ-VALIDATION
  * @returns void
+ * @supports prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md REQ-VALIDATION
  */
 function validateRangeInt(value, name) {
   // @supports prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md REQ-VALIDATION
   if (value === undefined) {
-    // @req REQ-VALIDATION
     return;
-    // @supports prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md REQ-VALIDATION
   }
   assert(
     Number.isInteger(value) && value >= 1 && value <= 365,
@@ -77,17 +72,15 @@ function validateRangeInt(value, name) {
  * @param {string|undefined} value - Value to validate.
  * @param {string[]} validList - List of permitted values.
  * @param {string} name - Name used in error message.
+ * @returns void
  * @supports prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md REQ-VALIDATION
  * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-VALIDATION
  * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-VALIDATION
- * @returns void
  */
 function validateAgainstList(value, validList, name) {
   // @supports prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md REQ-VALIDATION
   if (value === undefined) {
-    // @req REQ-VALIDATION
     return;
-    // @supports prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md REQ-VALIDATION
   }
   assert(
     validList.includes(value),
@@ -97,34 +90,30 @@ function validateAgainstList(value, validList, name) {
 
 /**
  * Load and validate configuration from a config file.
- * @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-CONFIG-LOCATION REQ-VALIDATION
  * @param {string} configFileName - Name of the config file (relative to cwd).
  * @param {string|undefined} configFileArg - CLI arg if provided.
  * @param {string[]} validSeverities - List of valid severities.
  * @param {string[]} validFormats - List of valid formats.
  * @returns {object} Parsed config or empty object if none.
+ * @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-CONFIG-LOCATION REQ-VALIDATION
  */
-/** @story docs/stories/003.0-DEV-FUNCTION-ANNOTATIONS.story.md */
 export function loadConfigFile(configFileName, configFileArg, validSeverities, validFormats) {
   const configFilePath = path.resolve(process.cwd(), configFileName);
   let config = /** @type {Record<string, any>} */ ({});
 
   // @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-CONFIG-LOCATION
   if (fs.existsSync(configFilePath)) {
-    // @req REQ-CONFIG-LOCATION
     let raw;
     // @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-VALIDATION
     try {
       raw = fs.readFileSync(configFilePath, 'utf8');
       config = JSON.parse(raw);
-      // @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-VALIDATION
-    } catch (err) {
-      // @req REQ-VALIDATION
-      // @story <story-file>.story.md
+    }
+    // @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-VALIDATION
+    catch (err) {
       const e = /** @type {any} */ (err);
       console.error(`Invalid JSON in config file ${configFileName}: ${e.message}`);
       process.exit(2);
-      // @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-VALIDATION
     }
 
     ensureObject(config, configFileName);
@@ -136,29 +125,24 @@ export function loadConfigFile(configFileName, configFileArg, validSeverities, v
 
     // @supports prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md REQ-CONFIG-SCHEMA
     if (config.prod !== undefined) {
-      // @req REQ-CONFIG-SCHEMA
       ensureObject(config.prod, 'prod');
       validateKeys(config.prod, ['minAge', 'minSeverity'], ' in prod');
       validateRangeInt(config.prod.minAge, 'prod.minAge');
       validateAgainstList(config.prod.minSeverity, validSeverities, 'prod.minSeverity');
-      // @supports prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md REQ-CONFIG-SCHEMA
     }
 
     // @supports prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md REQ-CONFIG-SCHEMA
     if (config.dev !== undefined) {
-      // @req REQ-CONFIG-SCHEMA
       ensureObject(config.dev, 'dev');
       validateKeys(config.dev, ['minAge', 'minSeverity'], ' in dev');
       validateRangeInt(config.dev.minAge, 'dev.minAge');
       validateAgainstList(config.dev.minSeverity, validSeverities, 'dev.minSeverity');
-      // @supports prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md REQ-CONFIG-SCHEMA
     }
-    // @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-CONFIG-LOCATION
-  } else if (configFileArg) {
-    // @req REQ-CONFIG-LOCATION
+  }
+  // @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-CONFIG-LOCATION
+  else if (configFileArg) {
     console.error(`Configuration file not found: ${configFileName}`);
     process.exit(2);
-    // @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-CONFIG-LOCATION
   }
 
   return config;
