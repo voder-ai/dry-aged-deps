@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 // @ts-check
-/* eslint-disable traceability/valid-story-reference, traceability/valid-req-reference, traceability/valid-annotation-format, traceability/prefer-supports-annotation */
 
 import fs from 'fs';
 import path from 'path';
@@ -16,6 +15,7 @@ import { parseOptions } from '../src/cli-options.js';
 
 /**
  * Print usage help for the CLI.
+ *
  * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
  * @supports prompts/014.0-DEV-INVALID-OPTION-ERROR.md REQ-HELP-SUGGESTION
  */
@@ -54,6 +54,7 @@ function printHelp() {
 
 /**
  * Print the installed package version.
+ *
  * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
  */
 function printVersion() {
@@ -66,6 +67,7 @@ function printVersion() {
 
 /**
  * Handle errors by formatting output according to the selected format.
+ *
  * @param {any} error - The error to handle.
  * @param {string} format - The output format.
  * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-ERROR-FORMAT
@@ -74,12 +76,10 @@ function printVersion() {
 function handleError(error, format) {
   // @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-ERROR-FORMAT
   if (format === 'xml') {
-    // @req REQ-ERROR-FORMAT
     const timestamp = new Date().toISOString();
     console.log(xmlFormatter({ timestamp, error }));
-    // @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-ERROR-FORMAT
-  } else if (format === 'json') {
     // @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-ERROR-FORMAT
+  } else if (format === 'json') {
     const ts = new Date().toISOString();
     console.log(
       JSON.stringify(
@@ -96,17 +96,16 @@ function handleError(error, format) {
         2
       )
     );
-    // @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-ERROR-FORMAT
   } else {
     // @supports prompts/014.0-DEV-INVALID-OPTION-ERROR.md REQ-ERROR-EXIT-CODE
     console.error(error.message);
-    // @supports prompts/014.0-DEV-INVALID-OPTION-ERROR.md REQ-ERROR-EXIT-CODE
   }
   process.exit(2);
 }
 
 /**
  * Load outdated data either from mock, skip, or by running `npm outdated --json`.
+ *
  * @param {string} format - Output format.
  * @returns {Promise<{data: object, fetchVersionTimesOverride: function|undefined, checkVulnerabilitiesOverride: function|undefined}>}
  * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND REQ-JSON-PARSE
@@ -120,19 +119,15 @@ async function loadOutdatedData(format) {
 
   // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND
   if (process.env.DRY_AGED_DEPS_MOCK === '1') {
-    // @req REQ-NPM-COMMAND
     const mockPath = pathToFileURL(path.resolve(__dirname, '../test/helpers/cli.outdated.mock.js')).href;
     const mock = await import(mockPath);
     data = mock.outdatedData;
     fetchVersionTimesOverride = mock.fetchVersionTimes;
     checkVulnerabilitiesOverride = mock.checkVulnerabilities;
-    // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND
+    // @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-JSON-SCHEMA
   } else if (format === 'json' && fs.existsSync(path.join(process.cwd(), 'package.json'))) {
-    // @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-JSON-SCHEMA
     data = {};
-    // @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-JSON-SCHEMA
   } else {
-    // @req REQ-NPM-COMMAND
     let outputStr;
     // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND
     try {
@@ -140,33 +135,25 @@ async function loadOutdatedData(format) {
         encoding: 'utf8',
         stdio: ['ignore', 'pipe', 'ignore'],
       });
-      // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND
     } catch (err) {
-      // @req REQ-NPM-COMMAND
+      // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND
       /** @type {any} */
-      // @story <story-file>.story.md
       const errorAny = err;
       // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND
       if (errorAny.stdout && errorAny.stdout.toString().trim()) {
-        // @req REQ-NPM-COMMAND
         outputStr = errorAny.stdout.toString();
-        // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND
       } else {
         // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND
         throw errorAny;
-        // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND
       }
     }
     // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
     try {
       data = outputStr ? JSON.parse(outputStr) : {};
-      // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
     } catch (parseErr) {
       // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
       if (format === 'json' || format === 'xml') {
-        // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
         throw /** @type {Error} */ (parseErr);
-        // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
       }
       /** @type {Error} */
       const errObj = parseErr;
@@ -178,26 +165,23 @@ async function loadOutdatedData(format) {
 
 /**
  * Main CLI entrypoint.
- * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND
+ *
  * @returns {Promise<void>}
+ * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND
  */
 async function main() {
   const args = process.argv.slice(2);
 
   // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
   if (args.includes('-h') || args.includes('--help')) {
-    // @req REQ-OUTPUT-DISPLAY
     printHelp();
     return;
-    // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
   }
 
   // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
   if (args.includes('-v') || args.includes('--version')) {
-    // @req REQ-OUTPUT-DISPLAY
     printVersion();
     return;
-    // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
   }
 
   /** @type {CliOptions} */
@@ -216,14 +200,10 @@ async function main() {
   let data, fetchVersionTimesOverride, checkVulnerabilitiesOverride;
   // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND
   try {
-    // @req REQ-NPM-COMMAND
     ({ data, fetchVersionTimesOverride, checkVulnerabilitiesOverride } = await loadOutdatedData(format));
-    // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND
   } catch (error) {
-    // @req REQ-NPM-COMMAND
-    // @story <story-file>.story.md
-    handleError(/** @type {Error & {code?: string, details?: string}} */ (error), format);
     // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND
+    handleError(/** @type {Error & {code?: string, details?: string}} */ (error), format);
   }
 
   // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
@@ -245,28 +225,21 @@ async function main() {
 
     // @supports prompts/013.0-DEV-CHECK-MODE.md REQ-CHECK-FLAG
     if (checkMode) {
-      // @req REQ-CHECK-FLAG
       process.exit(summary.safeUpdates > 0 ? 1 : 0);
-      // @supports prompts/013.0-DEV-CHECK-MODE.md REQ-CHECK-FLAG
     }
     // @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-UPDATE-FLAG
     if (updateMode) {
-      // @req REQ-UPDATE-FLAG
       process.exit(0);
-      // @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-UPDATE-FLAG
     }
     process.exit(summary.safeUpdates > 0 ? 1 : 0);
-    // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
   } catch (error) {
-    // @req REQ-OUTPUT-DISPLAY
-    // @story <story-file>.story.md
-    handleError(/** @type {Error & {code?: string, details?: string}} */ (error), format);
     // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
+    handleError(/** @type {Error & {code?: string, details?: string}} */ (error), format);
   }
 }
 
 main().catch(
-  /** @story docs/stories/003.0-DEV-FUNCTION-ANNOTATIONS.story.md */
+  // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
   (err) => {
     console.error(err);
     process.exit(2);
