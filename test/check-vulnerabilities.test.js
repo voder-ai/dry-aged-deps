@@ -1,6 +1,6 @@
-/* eslint-disable traceability/valid-story-reference, traceability/valid-annotation-format */
 /**
  * Tests for checkVulnerabilities function
+ *
  * @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK REQ-TRANSITIVE-DEPS
  */
 
@@ -11,7 +11,8 @@ import { promises as fs } from 'fs';
 // Mock the child_process and fs modules
 vi.mock('child_process');
 vi.mock(
-  'fs' /** @story docs/stories/003.0-DEV-FUNCTION-ANNOTATIONS.story.md */ /** @story docs/stories/003.0-DEV-FUNCTION-ANNOTATIONS.story.md */,
+  'fs',
+  // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK
   () => ({
     promises: {
       mkdtemp: vi.fn(),
