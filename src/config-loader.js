@@ -108,9 +108,8 @@ export function loadConfigFile(configFileName, configFileArg, validSeverities, v
     try {
       raw = fs.readFileSync(configFilePath, 'utf8');
       config = JSON.parse(raw);
-    }
-    // @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-VALIDATION
-    catch (err) {
+    } catch (err) {
+      // @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-VALIDATION
       const e = /** @type {any} */ (err);
       console.error(`Invalid JSON in config file ${configFileName}: ${e.message}`);
       process.exit(2);
