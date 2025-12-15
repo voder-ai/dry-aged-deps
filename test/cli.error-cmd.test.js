@@ -1,6 +1,6 @@
-/* eslint-disable traceability/valid-story-reference, traceability/valid-annotation-format, traceability/prefer-supports-annotation */
 /**
  * Tests for CLI exit code behaviors
+ *
  * @supports prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md REQ-EXIT-0 REQ-EXIT-1 REQ-EXIT-2
  */
 
@@ -45,8 +45,7 @@ describe('Story 012.0-DEV-EXIT-CODE-REFINEMENT: dry-aged-deps CLI error exit cod
     try {
       await execa('node', [cliPath], { env });
     } catch (err) {
-      // @req REQ-EXIT-2
-      // @story <story-file>.story.md
+      // @supports prompts/012.0-DEV-EXIT-CODE-REFINEMENT.md REQ-EXIT-2
       expect(err.stderr).toContain('Failed to parse npm outdated output');
     }
   }, 30000);

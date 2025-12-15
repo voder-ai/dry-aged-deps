@@ -1,6 +1,6 @@
-/* eslint-disable traceability/valid-story-reference, traceability/valid-req-reference, traceability/valid-annotation-format, traceability/prefer-supports-annotation */
 /**
  * Tests for CLI with config file support
+ *
  * @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-CONFIG-LOCATION REQ-CONFIG-SCHEMA REQ-PRECEDENCE REQ-VALIDATION REQ-ERROR-MESSAGES REQ-OPTIONAL REQ-MERGE-LOGIC
  */
 
@@ -14,6 +14,11 @@ const cliPath = path.join(__dirname, '..', 'bin', 'dry-aged-deps.js');
 let tempDir;
 /**
  * Helper to write CLI config files for tests
+ *
+ * @param {string} dir - Directory path
+ * @param {string} name - Config file name
+ * @param {string} content - File content
+ * @returns {Promise<string>} File path
  * @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-CONFIG-SCHEMA
  */
 async function writeConfig(dir, name, content) {
@@ -84,8 +89,7 @@ describe('Story 010.0-DEV-CONFIG-FILE-SUPPORT: CLI config-file support', () => {
     try {
       await execa('node', [cliPath], { cwd: tempDir });
     } catch (err) {
-      // @req REQ-VALIDATION
-      // @story <story-file>.story.md
+      // @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-VALIDATION
       expect(err.exitCode).toBe(2);
       expect(err.stderr).toContain('Invalid JSON in config file .dry-aged-deps.json');
     }
@@ -99,8 +103,7 @@ describe('Story 010.0-DEV-CONFIG-FILE-SUPPORT: CLI config-file support', () => {
     try {
       await execa('node', [cliPath], { cwd: tempDir });
     } catch (err) {
-      // @req REQ-VALIDATION
-      // @story <story-file>.story.md
+      // @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-VALIDATION
       expect(err.stderr).toContain('Unknown config key: foo');
     }
   });
@@ -118,8 +121,7 @@ describe('Story 010.0-DEV-CONFIG-FILE-SUPPORT: CLI config-file support', () => {
     try {
       await execa('node', [cliPath], { cwd: tempDir });
     } catch (err) {
-      // @req REQ-VALIDATION
-      // @story <story-file>.story.md
+      // @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-VALIDATION
       expect(err.exitCode).toBe(2);
       expect(err.stderr).toContain('Invalid config value for minAge: 366. Must be integer 1-365');
     }
@@ -146,8 +148,7 @@ describe('Story 010.0-DEV-CONFIG-FILE-SUPPORT: CLI config-file support', () => {
         cwd: tempDir,
       });
     } catch (err) {
-      // @req REQ-ERROR-MESSAGES
-      // @story <story-file>.story.md
+      // @supports prompts/010.0-DEV-CONFIG-FILE-SUPPORT.md REQ-ERROR-MESSAGES
       expect(err.stderr).toContain(`Configuration file not found: ${customName}`);
     }
   });
