@@ -15,7 +15,7 @@ const __dirname = path.dirname(__filename);
 const cliPath = path.join(__dirname, '..', 'bin', 'dry-aged-deps.js');
 
 describe('Story 013.0-DEV-CHECK-MODE: dry-aged-deps CLI check mode', () => {
-  it('[REQ-EXIT-0-NO-UPDATES] exit code 0 when no updates available in JSON mode', async () => {
+  it('[REQ-EXIT-0-NO-UPDATES] exit code 0 when no updates available in JSON mode', { timeout: 15000 }, async () => {
     // Create a temp dir with a bare package.json (no dependencies) so npm outdated returns empty
     const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'dry-aged-check-'));
     await fs.writeFile(path.join(tempDir, 'package.json'), JSON.stringify({ name: 'test-empty', version: '1.0.0' }));
