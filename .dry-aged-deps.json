@@ -1,0 +1,6 @@
+{
+  "exclude": {
+    "eslint": "Blocked by eslint-plugin-traceability incompatibility with ESLint 10 API",
+    "@eslint/js": "Must upgrade together with eslint"
+  }
+}

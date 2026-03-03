@@ -33,6 +33,9 @@ export interface CliOptions {
 
   /** If true, return summary object instead of printing results */
   returnSummary: boolean;
+
+  /** Packages to exclude from analysis (name -> reason) */
+  exclude?: Record<string, string>;
 }
 
 /**

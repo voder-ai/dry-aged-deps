@@ -22,6 +22,7 @@ import {
  * @property {boolean} updateMode - Whether to update dependencies to latest safe versions.
  * @property {boolean} skipConfirmation - Whether to skip confirmation prompts.
  * @property {boolean} returnSummary - If true, return summary instead of printing (check mode).
+ * @property {object|undefined} exclude - Packages to exclude from analysis (name -> reason).
  */
 
 /**
@@ -128,5 +129,6 @@ export function parseOptions(argv) {
     updateMode,
     skipConfirmation,
     returnSummary: checkMode,
+    exclude: config.exclude,
   };
 }

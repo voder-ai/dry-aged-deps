@@ -116,7 +116,7 @@ export function loadConfigFile(configFileName, configFileArg, validSeverities, v
     }
 
     ensureObject(config, configFileName);
-    validateKeys(config, ['minAge', 'severity', 'prod', 'dev', 'format'], '');
+    validateKeys(config, ['minAge', 'severity', 'prod', 'dev', 'format', 'exclude'], '');
 
     validateRangeInt(config.minAge, 'minAge');
     validateAgainstList(config.severity, validSeverities, 'severity');
@@ -128,6 +128,17 @@ export function loadConfigFile(configFileName, configFileArg, validSeverities, v
       validateKeys(config.prod, ['minAge', 'minSeverity'], ' in prod');
       validateRangeInt(config.prod.minAge, 'prod.minAge');
       validateAgainstList(config.prod.minSeverity, validSeverities, 'prod.minSeverity');
+    }
+
+    // @supports prompts/015.0-DEV-EXCLUDE-PACKAGES.md REQ-EXCLUDE-VALIDATION
+    if (config.exclude !== undefined) {
+      ensureObject(config.exclude, 'exclude');
+      Object.entries(config.exclude).forEach(([key, value]) => {
+        assert(
+          typeof value === 'string' && value.length > 0,
+          `Invalid config value for exclude.${key}: reason must be a non-empty string`
+        );
+      });
     }
 
     // @supports prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md REQ-CONFIG-SCHEMA

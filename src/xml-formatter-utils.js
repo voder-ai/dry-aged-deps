@@ -204,3 +204,21 @@ export function buildThresholdsSection({ prod, dev } = {}) {
   xml += '  </thresholds>\n';
   return xml;
 }
+
+/**
+ * Build XML for excluded packages section
+ * @param {Array<{ name: string, reason: string }>} excluded
+ * @returns {string}
+ * @supports prompts/015.0-DEV-EXCLUDE-PACKAGES.md REQ-EXCLUDE-OUTPUT
+ */
+export function buildExcludedSection(excluded) {
+  let xml = '  <excluded>\n';
+  for (const { name, reason } of excluded) {
+    xml += '    <package>\n';
+    xml += `      <name>${escapeXml(name)}</name>\n`;
+    xml += `      <reason>${escapeXml(reason)}</reason>\n`;
+    xml += '    </package>\n';
+  }
+  xml += '  </excluded>\n';
+  return xml;
+}

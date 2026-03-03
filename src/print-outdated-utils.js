@@ -21,36 +21,41 @@ import { getTimestamp } from './print-utils.js';
 /**
  * Output JSON formatted results.
  * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-CLI-FLAG
- * @param {{ rows: Array<[string, string, string, string, number|string, string]>, summary: FilterSummary, thresholds: Thresholds, vulnMap: Map<string, object>, filterReasonMap: Map<string, string> }} options
+ * @param {{ rows: Array<[string, string, string, string, number|string, string]>, summary: FilterSummary, thresholds: Thresholds, vulnMap: Map<string, object>, filterReasonMap: Map<string, string>, excludeMap?: Record<string, string> }} options
  * @returns {FilterSummary} Summary object returned from filtering.
  */
-export function handleJsonOutput({ rows, summary, thresholds, vulnMap, filterReasonMap }) {
+export function handleJsonOutput({ rows, summary, thresholds, vulnMap, filterReasonMap, excludeMap = {} }) {
   const timestamp = getTimestamp();
   const items = prepareJsonItems(rows, thresholds, vulnMap, filterReasonMap);
-  console.log(jsonFormatter({ rows: items, summary, thresholds, timestamp }));
+  const excluded = Object.entries(excludeMap).map(([name, reason]) => ({ name, reason }));
+  console.log(jsonFormatter({ rows: items, summary, thresholds, timestamp, excluded }));
   return summary;
 }
 
 /**
  * Output XML formatted results.
  * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-CLI-FLAG
- * @param {{ rows: Array<[string, string, string, string, number|string, string]>, summary: FilterSummary, thresholds: Thresholds, vulnMap: Map<string, object>, filterReasonMap: Map<string, string> }} options
+ * @param {{ rows: Array<[string, string, string, string, number|string, string]>, summary: FilterSummary, thresholds: Thresholds, vulnMap: Map<string, object>, filterReasonMap: Map<string, string>, excludeMap?: Record<string, string> }} options
  * @returns {FilterSummary} Summary object returned from filtering.
  */
-export function handleXmlOutput({ rows, summary, thresholds, vulnMap, filterReasonMap }) {
+export function handleXmlOutput({ rows, summary, thresholds, vulnMap, filterReasonMap, excludeMap = {} }) {
   const timestamp = getTimestamp();
   const items = prepareJsonItems(rows, thresholds, vulnMap, filterReasonMap);
-  console.log(xmlFormatter({ rows: items, summary, thresholds, timestamp }));
+  const excluded = Object.entries(excludeMap).map(([name, reason]) => ({ name, reason }));
+  console.log(xmlFormatter({ rows: items, summary, thresholds, timestamp, excluded }));
   return summary;
 }
 
 /**
  * Output table formatted results.
  * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
- * @param {{ safeRows: Array<Array>, matureRows: Array<Array>, summary: FilterSummary, prodMinAge: number, devMinAge: number, returnSummary: boolean }} options
+ * @param {{ safeRows: Array<Array>, matureRows: Array<Array>, summary: FilterSummary, prodMinAge: number, devMinAge: number, returnSummary: boolean, excludeMap?: Record<string, string> }} options
  * @returns {FilterSummary|undefined} Summary when returnSummary is true or undefined otherwise.
  */
-export function handleTableOutput({ safeRows, matureRows, summary, prodMinAge, devMinAge, returnSummary }) {
+export function handleTableOutput({ safeRows, matureRows, summary, prodMinAge, devMinAge, returnSummary, excludeMap = {} }) {
+  // @supports prompts/015.0-DEV-EXCLUDE-PACKAGES.md REQ-EXCLUDE-OUTPUT
+  const excludedCount = Object.keys(excludeMap).length;
+
   console.log('Outdated packages:');
   console.log(['Name', 'Current', 'Wanted', 'Latest', 'Age (days)', 'Type'].join('	'));
 
@@ -59,6 +64,9 @@ export function handleTableOutput({ safeRows, matureRows, summary, prodMinAge, d
     console.log(
       `No outdated packages with mature versions found (prod >= ${prodMinAge} days, dev >= ${devMinAge} days).`
     );
+    if (excludedCount > 0) {
+      console.log(`${excludedCount} package(s) excluded from analysis (see .dry-aged-deps.json)`);
+    }
     // @supports prompts/013.0-DEV-CHECK-MODE.md REQ-CHECK-FLAG
     if (returnSummary) return summary; // returns {FilterSummary} when returnSummary is true
     return undefined; // returns undefined when returnSummary is false
@@ -69,6 +77,9 @@ export function handleTableOutput({ safeRows, matureRows, summary, prodMinAge, d
     console.log(
       `No outdated packages with safe, mature versions (>= ${prodMinAge}/${devMinAge} days old, no vulnerabilities) found.`
     );
+    if (excludedCount > 0) {
+      console.log(`${excludedCount} package(s) excluded from analysis (see .dry-aged-deps.json)`);
+    }
     // @supports prompts/013.0-DEV-CHECK-MODE.md REQ-CHECK-FLAG
     if (returnSummary) return summary; // returns {FilterSummary} when returnSummary is true
     return undefined; // returns undefined when returnSummary is false
@@ -77,6 +88,9 @@ export function handleTableOutput({ safeRows, matureRows, summary, prodMinAge, d
   // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
   for (const row of safeRows) {
     console.log(row.join('\t'));
+  }
+  if (excludedCount > 0) {
+    console.log(`${excludedCount} package(s) excluded from analysis (see .dry-aged-deps.json)`);
   }
   // @supports prompts/013.0-DEV-CHECK-MODE.md REQ-CHECK-FLAG
   if (returnSummary) return summary; // returns {FilterSummary} when returnSummary is true

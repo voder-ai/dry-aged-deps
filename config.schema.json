@@ -37,6 +37,11 @@
         "minSeverity": { "type": "string", "enum": ["none", "low", "moderate", "high", "critical"] }
       },
       "additionalProperties": false
+    },
+    "exclude": {
+      "type": "object",
+      "description": "Packages to exclude from analysis. Keys are package names, values are reason strings (required, non-empty).",
+      "additionalProperties": { "type": "string", "minLength": 1 }
     }
   },
   "additionalProperties": false

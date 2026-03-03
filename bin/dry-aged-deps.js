@@ -192,6 +192,7 @@ async function main() {
     updateMode,
     skipConfirmation,
     returnSummary: checkMode,
+    exclude,
   } = options;
 
   let data, fetchVersionTimesOverride, checkVulnerabilitiesOverride;
@@ -217,6 +218,7 @@ async function main() {
         updateMode,
         skipConfirmation,
         returnSummary: true,
+        exclude,
       })
     );
 

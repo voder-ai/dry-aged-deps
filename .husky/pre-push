@@ -33,6 +33,6 @@ npm run test:cli
 # Run E2E CLI test
 npm run test:cli -- test/cli.e2e.real-fixture.test.js
 
-# Vulnerability scan (informational – major-version-only bumps should not block push)
-npx dry-aged-deps || true
+# Check for stale dependencies (excluded packages configured in .dry-aged-deps.json)
+npm run check:deps
 npm run audit:ci

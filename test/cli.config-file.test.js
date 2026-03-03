@@ -151,6 +151,46 @@ describe('Story 010.0-DEV-CONFIG-FILE-SUPPORT: CLI config-file support', () => {
     expect(obj.summary.thresholds.prod.minSeverity).toBe('moderate');
   });
 
+  // @supports prompts/015.0-DEV-EXCLUDE-PACKAGES.md REQ-EXCLUDE-CONFIG REQ-EXCLUDE-VALIDATION
+  it('[REQ-EXCLUDE-CONFIG] valid exclude object is accepted', async () => {
+    const config = {
+      format: 'json',
+      exclude: {
+        eslint: 'Blocked by plugin incompatibility',
+        '@eslint/js': 'Must upgrade together with eslint',
+      },
+    };
+    await writeConfig(tempDir, '.dry-aged-deps.json', JSON.stringify(config));
+    const result = await execa('node', [cliPath], {
+      cwd: tempDir,
+      env: { ...process.env, DRY_AGED_DEPS_MOCK: '1' },
+      reject: false,
+    });
+    // Should not exit with code 2 (validation error)
+    expect(result.exitCode).not.toBe(2);
+  });
+
+  // @supports prompts/015.0-DEV-EXCLUDE-PACKAGES.md REQ-EXCLUDE-VALIDATION
+  it('[REQ-EXCLUDE-VALIDATION] exclude with empty string reason exits with code 2', async () => {
+    const config = { exclude: { eslint: '' } };
+    await writeConfig(tempDir, '.dry-aged-deps.json', JSON.stringify(config));
+    await expect(execa('node', [cliPath], { cwd: tempDir })).rejects.toMatchObject({ exitCode: 2 });
+  });
+
+  // @supports prompts/015.0-DEV-EXCLUDE-PACKAGES.md REQ-EXCLUDE-VALIDATION
+  it('[REQ-EXCLUDE-VALIDATION] exclude that is an array exits with code 2', async () => {
+    const config = { exclude: ['eslint'] };
+    await writeConfig(tempDir, '.dry-aged-deps.json', JSON.stringify(config));
+    await expect(execa('node', [cliPath], { cwd: tempDir })).rejects.toMatchObject({ exitCode: 2 });
+  });
+
+  // @supports prompts/015.0-DEV-EXCLUDE-PACKAGES.md REQ-EXCLUDE-VALIDATION
+  it('[REQ-EXCLUDE-VALIDATION] exclude with non-string value exits with code 2', async () => {
+    const config = { exclude: { eslint: 123 } };
+    await writeConfig(tempDir, '.dry-aged-deps.json', JSON.stringify(config));
+    await expect(execa('node', [cliPath], { cwd: tempDir })).rejects.toMatchObject({ exitCode: 2 });
+  });
+
   it('[REQ-ERROR-MESSAGES] missing custom config file exits with code 2 and error message', async () => {
     const customName = 'nope.json';
     await expect(execa('node', [cliPath, `--config-file=${customName}`], { cwd: tempDir })).rejects.toMatchObject({
