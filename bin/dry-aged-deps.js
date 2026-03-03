@@ -74,12 +74,12 @@ function printVersion() {
  * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-ERROR-FORMAT
  */
 function handleError(error, format) {
-  // @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-ERROR-FORMAT
   if (format === 'xml') {
+    // @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-ERROR-FORMAT
     const timestamp = new Date().toISOString();
     console.log(xmlFormatter({ timestamp, error }));
-    // @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-ERROR-FORMAT
   } else if (format === 'json') {
+    // @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-ERROR-FORMAT
     const ts = new Date().toISOString();
     console.log(
       JSON.stringify(
@@ -117,20 +117,17 @@ async function loadOutdatedData(format) {
   let fetchVersionTimesOverride;
   let checkVulnerabilitiesOverride;
 
-  // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND
   if (process.env.DRY_AGED_DEPS_MOCK === '1') {
+    // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND
     const mockPath = pathToFileURL(path.resolve(__dirname, '../test/helpers/cli.outdated.mock.js')).href;
     const mock = await import(mockPath);
     data = mock.outdatedData;
     fetchVersionTimesOverride = mock.fetchVersionTimes;
     checkVulnerabilitiesOverride = mock.checkVulnerabilities;
-    // @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-JSON-SCHEMA
-  } else if (format === 'json' && fs.existsSync(path.join(process.cwd(), 'package.json'))) {
-    data = {};
   } else {
     let outputStr;
-    // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND
     try {
+      // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND
       outputStr = execFileSync('npm', ['outdated', '--json'], {
         encoding: 'utf8',
         stdio: ['ignore', 'pipe', 'ignore'],
@@ -139,7 +136,6 @@ async function loadOutdatedData(format) {
       // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND
       /** @type {any} */
       const errorAny = err;
-      // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND
       if (errorAny.stdout && errorAny.stdout.toString().trim()) {
         outputStr = errorAny.stdout.toString();
       } else {
@@ -147,12 +143,13 @@ async function loadOutdatedData(format) {
         throw errorAny;
       }
     }
-    // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
     try {
+      // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
       data = outputStr ? JSON.parse(outputStr) : {};
     } catch (parseErr) {
-      // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
+      // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-JSON-PARSE
       if (format === 'json' || format === 'xml') {
+        // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
         throw /** @type {Error} */ (parseErr);
       }
       /** @type {Error} */
@@ -172,14 +169,14 @@ async function loadOutdatedData(format) {
 async function main() {
   const args = process.argv.slice(2);
 
-  // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
   if (args.includes('-h') || args.includes('--help')) {
+    // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
     printHelp();
     return;
   }
 
-  // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
   if (args.includes('-v') || args.includes('--version')) {
+    // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
     printVersion();
     return;
   }
@@ -198,16 +195,16 @@ async function main() {
   } = options;
 
   let data, fetchVersionTimesOverride, checkVulnerabilitiesOverride;
-  // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND
   try {
+    // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND
     ({ data, fetchVersionTimesOverride, checkVulnerabilitiesOverride } = await loadOutdatedData(format));
   } catch (error) {
     // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND
     handleError(/** @type {Error & {code?: string, details?: string}} */ (error), format);
   }
 
-  // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
   try {
+    // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
     const summary = /** @type {{ safeUpdates: number }} */ (
       await printOutdated(/** @type {any} */ (data), {
         format,
@@ -223,12 +220,12 @@ async function main() {
       })
     );
 
-    // @supports prompts/013.0-DEV-CHECK-MODE.md REQ-CHECK-FLAG
     if (checkMode) {
+      // @supports prompts/013.0-DEV-CHECK-MODE.md REQ-CHECK-FLAG
       process.exit(summary.safeUpdates > 0 ? 1 : 0);
     }
-    // @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-UPDATE-FLAG
     if (updateMode) {
+      // @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-UPDATE-FLAG
       process.exit(0);
     }
     process.exit(summary.safeUpdates > 0 ? 1 : 0);
@@ -238,10 +235,8 @@ async function main() {
   }
 }
 
-main().catch(
-  // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
-  (err) => {
-    console.error(err);
-    process.exit(2);
-  }
-);
+// @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
+main().catch((err) => {
+  console.error(err);
+  process.exit(2);
+});

@@ -5,6 +5,8 @@
 
 import { describe, it, expect } from 'vitest';
 import { execa } from 'execa';
+import fs from 'fs/promises';
+import os from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -14,14 +16,22 @@ const cliPath = path.join(__dirname, '..', 'bin', 'dry-aged-deps.js');
 
 describe('Story 013.0-DEV-CHECK-MODE: dry-aged-deps CLI check mode', () => {
   it('[REQ-EXIT-0-NO-UPDATES] exit code 0 when no updates available in JSON mode', async () => {
-    const result = await execa('node', [cliPath, '--check', '--format=json'], {
-      env: { ...process.env },
-      reject: false,
-    });
-    expect(result.exitCode).toBe(0);
-    // JSON output should have summary.safeUpdates = 0
-    const output = JSON.parse(result.stdout);
-    expect(output.summary.safeUpdates).toBe(0);
+    // Create a temp dir with a bare package.json (no dependencies) so npm outdated returns empty
+    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'dry-aged-check-'));
+    await fs.writeFile(path.join(tempDir, 'package.json'), JSON.stringify({ name: 'test-empty', version: '1.0.0' }));
+    try {
+      const result = await execa('node', [cliPath, '--check', '--format=json'], {
+        cwd: tempDir,
+        env: { ...process.env },
+        reject: false,
+      });
+      expect(result.exitCode).toBe(0);
+      // JSON output should have summary.safeUpdates = 0
+      const output = JSON.parse(result.stdout);
+      expect(output.summary.safeUpdates).toBe(0);
+    } finally {
+      await fs.rm(tempDir, { recursive: true, force: true });
+    }
   });
 
   it('[REQ-EXIT-1-ON-UPDATES] exit code 1 when safe updates available in table (default) mode', async () => {

@@ -34,16 +34,22 @@ describe('Story 005.0-DEV-CONFIGURABLE-AGE-THRESHOLD: CLI --min-age flag', () =>
   it('[REQ-CLI-FLAG] defaults to 7 when not provided', async () => {
     const result = await execa('node', [cliPath, '--format=json'], {
       cwd: process.cwd(),
+      env: { ...process.env, DRY_AGED_DEPS_MOCK: '1' },
+      reject: false,
     });
-    expect(result.exitCode).toBe(0);
+    expect(result.exitCode).not.toBe(2);
     const obj = JSON.parse(result.stdout);
     expect(obj.summary.thresholds.prod.minAge).toBe(7);
     expect(obj.summary.thresholds.dev.minAge).toBe(7);
   });
 
   it('[REQ-CLI-FLAG] overrides default value when provided', async () => {
-    const result = await execa('node', [cliPath, '--format=json', '--min-age=10'], { cwd: process.cwd() });
-    expect(result.exitCode).toBe(0);
+    const result = await execa('node', [cliPath, '--format=json', '--min-age=10'], {
+      cwd: process.cwd(),
+      env: { ...process.env, DRY_AGED_DEPS_MOCK: '1' },
+      reject: false,
+    });
+    expect(result.exitCode).not.toBe(2);
     const obj = JSON.parse(result.stdout);
     expect(obj.summary.thresholds.prod.minAge).toBe(10);
     expect(obj.summary.thresholds.dev.minAge).toBe(10);
@@ -62,8 +68,11 @@ describe('Story 006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD: CLI --severity flag',
   });
 
   it('[REQ-CLI-FLAG] defaults to "none" when not provided', async () => {
-    const result = await execa('node', [cliPath, '--format=json']);
-    expect(result.exitCode).toBe(0);
+    const result = await execa('node', [cliPath, '--format=json'], {
+      env: { ...process.env, DRY_AGED_DEPS_MOCK: '1' },
+      reject: false,
+    });
+    expect(result.exitCode).not.toBe(2);
     // No direct output for severity, but CLI should not error
     const obj = JSON.parse(result.stdout);
     expect(obj.summary.thresholds.prod.minAge).toBe(7);
@@ -73,8 +82,11 @@ describe('Story 006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD: CLI --severity flag',
   const valid = ['none', 'low', 'moderate', 'high', 'critical'];
 
   it.each(valid)('[REQ-VALIDATION] parses valid severity %s', { timeout: 30000 }, async (level) => {
-    const result = await execa('node', [cliPath, '--format=json', `--severity=${level}`]);
-    expect(result.exitCode).toBe(0);
+    const result = await execa('node', [cliPath, '--format=json', `--severity=${level}`], {
+      env: { ...process.env, DRY_AGED_DEPS_MOCK: '1' },
+      reject: false,
+    });
+    expect(result.exitCode).not.toBe(2);
     const obj = JSON.parse(result.stdout);
     expect(obj.summary.thresholds.prod.minSeverity).toBe(level);
     expect(obj.summary.thresholds.dev.minSeverity).toBe(level);

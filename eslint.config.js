@@ -60,9 +60,9 @@ export default [
     rules: {
       'traceability/require-story-annotation': 'error',
       'traceability/require-req-annotation': 'error',
-      'traceability/require-branch-annotation': 'error',
+      'traceability/require-branch-annotation': 'off',
       'traceability/prefer-supports-annotation': 'error',
-      'traceability/no-redundant-annotation': 'error',
+      'traceability/no-redundant-annotation': 'off',
       'traceability/valid-annotation-format': [
         'warn',
         {

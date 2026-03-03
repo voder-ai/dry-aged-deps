@@ -56,7 +56,11 @@ describe('Story 010.0-DEV-CONFIG-FILE-SUPPORT: CLI config-file support', () => {
     await writeConfig(tempDir, '.dry-aged-deps.json', JSON.stringify(config));
 
     // Act: run CLI in tempDir
-    const result = await execa('node', [cliPath], { cwd: tempDir });
+    const result = await execa('node', [cliPath], {
+      cwd: tempDir,
+      env: { ...process.env, DRY_AGED_DEPS_MOCK: '1' },
+      reject: false,
+    });
 
     // Assert: JSON output includes thresholds from config
     const obj = JSON.parse(result.stdout);
@@ -72,11 +76,17 @@ describe('Story 010.0-DEV-CONFIG-FILE-SUPPORT: CLI config-file support', () => {
     const config = { minAge: 8, severity: 'low', format: 'json' };
     await writeConfig(tempDir, '.dry-aged-deps.json', JSON.stringify(config));
 
-    const result = await execa('node', [cliPath, '--min-age=15', '--severity=high', '--format=xml'], { cwd: tempDir });
+    const result = await execa('node', [cliPath, '--min-age=15', '--severity=high', '--format=xml'], {
+      cwd: tempDir,
+      env: { ...process.env, DRY_AGED_DEPS_MOCK: '1' },
+      reject: false,
+    });
     // XML format with error summary may print, but exit code should be 0 or 1
     // For JSON tests, adapt: force JSON output
     const jsonRes = await execa('node', [cliPath, '--format=json', '--min-age=15', '--severity=high'], {
       cwd: tempDir,
+      env: { ...process.env, DRY_AGED_DEPS_MOCK: '1' },
+      reject: false,
     });
     const obj = JSON.parse(jsonRes.stdout);
     expect(obj.summary.thresholds.prod.minAge).toBe(15);
@@ -131,7 +141,11 @@ describe('Story 010.0-DEV-CONFIG-FILE-SUPPORT: CLI config-file support', () => {
     const customName = 'custom.json';
     const cfg = { minAge: 12, severity: 'moderate', format: 'json' };
     await writeConfig(tempDir, customName, JSON.stringify(cfg));
-    const result = await execa('node', [cliPath, `--config-file=${customName}`], { cwd: tempDir });
+    const result = await execa('node', [cliPath, `--config-file=${customName}`], {
+      cwd: tempDir,
+      env: { ...process.env, DRY_AGED_DEPS_MOCK: '1' },
+      reject: false,
+    });
     const obj = JSON.parse(result.stdout);
     expect(obj.summary.thresholds.prod.minAge).toBe(12);
     expect(obj.summary.thresholds.prod.minSeverity).toBe('moderate');
