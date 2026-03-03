@@ -2,7 +2,7 @@ export default {
   test: {
     environment: 'node',
     globals: true,
-    timeout: 60000,
+    testTimeout: 60000,
   },
   coverage: {
     provider: 'v8',
