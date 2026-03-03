@@ -43,11 +43,14 @@ describe('Story 011.0-DEV-AUTO-UPDATE: printOutdated auto-update mode', () => {
     };
     // stub helpers to mark both as safe and aged
     const tenDays = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString();
+    /** @story prompts/011.0-DEV-AUTO-UPDATE.md */
     const fetchVersionTimes = async () => ({
       '1.1.0': tenDays,
       '2.1.0': tenDays,
     });
+    /** @story prompts/011.0-DEV-AUTO-UPDATE.md */
     const calculateAgeInDays = () => 10;
+    /** @story prompts/011.0-DEV-AUTO-UPDATE.md */
     const checkVulnerabilities = async () => 0;
 
     // Act
@@ -84,8 +87,11 @@ describe('Story 011.0-DEV-AUTO-UPDATE: printOutdated auto-update mode', () => {
       foo: { current: '1.0.0', wanted: '1.1.0', latest: '1.1.0' },
     };
     const tenDays = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString();
+    /** @story prompts/011.0-DEV-AUTO-UPDATE.md */
     const fetchVersionTimes = async () => ({ '1.1.0': tenDays });
+    /** @story prompts/011.0-DEV-AUTO-UPDATE.md */
     const calculateAgeInDays = () => 10;
+    /** @story prompts/011.0-DEV-AUTO-UPDATE.md */
     const checkVulnerabilities = async () => 5; // treat as vulnerable
 
     // Act

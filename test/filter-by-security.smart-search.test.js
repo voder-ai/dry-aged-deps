@@ -26,6 +26,7 @@ describe('Story 004.0-DEV-FILTER-VULNERABLE-VERSIONS: filterBySecurity smart-sea
   it('[REQ-SMART-SEARCH] falls back to next-newest safe version when latest mature version is vulnerable', async () => {
     const rows = [['pkg1', '1.0.0', '1.3.0', '1.3.0', 30, 'prod']];
     // Simulate vulnerability for 1.3.0, safe for 1.2.0
+    /** @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md */
     const checkVuln = async (name, version) => {
       // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-SMART-SEARCH
       if (version === '1.3.0') return 1; // vulnerable
@@ -50,6 +51,7 @@ describe('Story 004.0-DEV-FILTER-VULNERABLE-VERSIONS: filterBySecurity smart-sea
   it('[REQ-SMART-SEARCH] indicates no safe version when all mature versions are vulnerable', async () => {
     const rows = [['pkg2', '2.0.0', '2.3.0', '2.3.0', 30, 'dev']];
     // All versions vulnerable
+    /** @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md */
     const checkVuln = async () => 2;
 
     const { safeRows, vulnMap, filterReasonMap } = await filterBySecurity(

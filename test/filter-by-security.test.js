@@ -22,6 +22,7 @@ describe('Story 004.0-DEV-FILTER-VULNERABLE-VERSIONS: filterBySecurity', () => {
       ['pkg3', '2.0.0', '2.1.0', '2.1.0', 8, 'prod'],
     ];
     // stub for vulnerabilities: pkg1 safe, pkg2 has 3 vulns, pkg3 throws error
+    /** @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md */
     const checkVuln = async (name, version) => {
       // @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK
       if (name === 'pkg1') return 0;

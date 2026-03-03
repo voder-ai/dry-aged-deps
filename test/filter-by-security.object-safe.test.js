@@ -19,6 +19,7 @@ describe('Story 004.0-DEV-FILTER-VULNERABLE-VERSIONS: filterBySecurity object re
       { id: 'VULN-2', title: 'Low vulnerability', severity: 'low', cvssScore: 2, url: 'http://example.com' },
     ];
     // Stub returns object result
+    /** @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md */
     const stubCheckVuln = async (name, version) => ({ count: details.length, details });
 
     const { safeRows, vulnMap, filterReasonMap } = await filterBySecurity(rows, stubCheckVuln, thresholds, 'table');

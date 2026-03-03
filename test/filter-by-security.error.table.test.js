@@ -13,6 +13,7 @@ describe('Story 004.0-DEV-FILTER-VULNERABLE-VERSIONS: filterBySecurity error han
   it('[REQ-AUDIT-CHECK] [REQ-SAFE-ONLY] logs warning to console.error when checkVulnerabilities throws in table format', async () => {
     const rows = [['pkgError', '1.0.0', '1.1.0', '1.1.0', 5, 'prod']];
     // stub that throws an error
+    /** @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md */
     const stubCheckVuln = async () => {
       throw new Error('audit failure');
     };

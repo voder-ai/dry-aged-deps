@@ -10,10 +10,12 @@ import { buildRows } from '../src/build-rows.js';
 describe('Story 002.0-DEV-FETCH-AVAILABLE-VERSIONS: buildRows error logging', () => {
   it('[REQ-NPM-VIEW] logs warning when fetchVersionTimes throws and format is table', async () => {
     const data = { pkg1: { current: '1.0.0', wanted: '1.1.0', latest: '1.1.0' } };
+    /** @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md */
     const stubFetch = async () => {
       throw new Error('fetch fail');
     };
     const stubCalc = vi.fn(() => {});
+    /** @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md */
     const stubGetDep = () => 'prod';
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
@@ -34,10 +36,12 @@ describe('Story 002.0-DEV-FETCH-AVAILABLE-VERSIONS: buildRows error logging', ()
 
   it('[REQ-NPM-VIEW] does not log warning when format is json or xml', async () => {
     const data = { pkg1: { current: '1.0.0', wanted: '1.1.0', latest: '1.1.0' } };
+    /** @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md */
     const stubFetch = async () => {
       throw new Error('fetch error');
     };
     const stubCalc = vi.fn(() => 42);
+    /** @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md */
     const stubGetDep = () => 'dev';
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
@@ -69,10 +73,12 @@ describe('Story 002.0-DEV-FETCH-AVAILABLE-VERSIONS: buildRows error logging', ()
 describe('Story 002.0-DEV-FETCH-AVAILABLE-VERSIONS: buildRows missing latestTime handling', () => {
   it('[REQ-AGE-CALC] leaves age as "N/A" when versionTimes has no matching latest version', async () => {
     const data = { pkg2: { current: '2.0.0', wanted: '2.1.0', latest: '2.1.0' } };
+    /** @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md */
     const stubFetch = async () => ({ '2.0.5': '2024-01-01T00:00:00.000Z' });
     const stubCalc = vi.fn(() => {
       throw new Error('should not be called');
     });
+    /** @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md */
     const stubGetDep = () => 'prod';
 
     const rows = await buildRows(data, {

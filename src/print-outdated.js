@@ -71,6 +71,7 @@ export async function printOutdated(data, options = {}) {
 
   // Load package.json to determine dependency types
   const { dependencies: prodDeps, devDependencies: _devDeps } = loadPackageJson();
+  /** @story prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md */
   const getDependencyType = (/** @type {string} */ packageName) => (packageName in prodDeps ? 'prod' : 'dev');
 
   const entries = Object.entries(data);

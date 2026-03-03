@@ -5,10 +5,13 @@
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
-/** @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-CONFIRMATION */
+/** @story prompts/011.0-DEV-AUTO-UPDATE.md */
 vi.mock('readline', () => ({
+  /** @story prompts/011.0-DEV-AUTO-UPDATE.md */
   createInterface: () => ({
+    /** @story prompts/011.0-DEV-AUTO-UPDATE.md */
     question: (_question, cb) => cb('n'),
+    /** @story prompts/011.0-DEV-AUTO-UPDATE.md */
     close: () => {},
   }),
 }));
@@ -48,8 +51,11 @@ describe('Story 011.0-DEV-AUTO-UPDATE: printOutdated auto-update prompt abort', 
       foo: { current: '1.0.0', wanted: '1.2.0', latest: '1.2.0' },
     };
     const tenDays = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString();
+    /** @story prompts/011.0-DEV-AUTO-UPDATE.md */
     const fetchVersionTimes = async () => ({ '1.2.0': tenDays });
+    /** @story prompts/011.0-DEV-AUTO-UPDATE.md */
     const calculateAgeInDays = () => 10;
+    /** @story prompts/011.0-DEV-AUTO-UPDATE.md */
     const checkVulnerabilities = async () => 0;
 
     const summary = await printOutdated(data, {

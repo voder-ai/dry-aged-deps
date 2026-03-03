@@ -21,6 +21,7 @@ export async function fetchVersionTimes(packageName, execFileImpl = cpExecFile) 
   const retryDelayMs = 50;
   let attempt = 0;
 
+  /** @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md */
   const doExec = () =>
     new Promise((resolve, reject) => {
       execFileImpl('npm', ['view', packageName, 'time', '--json'], { encoding: 'utf8' }, (error, stdout) => {

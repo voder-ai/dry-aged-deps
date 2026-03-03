@@ -19,10 +19,12 @@ describe('Story 004.0-DEV-FILTER-VULNERABLE-VERSIONS: filterBySecurity fallback 
   it('[REQ-SMART-SEARCH] logs warning and uses original logic for table format', async () => {
     const rows = [['pkgX', '1.0.0', '1.2.0', '1.2.0', 5, 'prod']];
     // fetchVersionTimes throws error
+    /** @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md */
     const stubFetch = async () => {
       throw new Error('fetch-time error');
     };
     // checkVuln returns safe
+    /** @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md */
     const stubCheck = async (name, version) => 0;
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
@@ -47,9 +49,11 @@ describe('Story 004.0-DEV-FILTER-VULNERABLE-VERSIONS: filterBySecurity fallback 
 
   it('[REQ-SMART-SEARCH] does not log warning when fetchVersionTimes throws and format is json or xml', async () => {
     const rows = [['pkgY', '2.0.0', '2.2.0', '2.2.0', 9, 'dev']];
+    /** @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md */
     const stubFetch = async () => {
       throw new Error('fail');
     };
+    /** @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md */
     const stubCheck = async () => 0;
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 

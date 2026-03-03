@@ -18,6 +18,7 @@ describe('Story 006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD: filterBySecurity seve
       { severity: 'low', title: 'low-severity', name: 'v1' },
       { severity: 'moderate', title: 'moderate-severity', name: 'v2' },
     ];
+    /** @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md */
     const checkVuln = async () => ({
       count: details.length,
       details,
@@ -40,6 +41,7 @@ describe('Story 006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD: filterBySecurity seve
       { severity: 'low', title: 'low-severity', name: 'v1' },
       { severity: 'critical', title: 'critical-severity', name: 'v2' },
     ];
+    /** @story prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md */
     const checkVuln = async () => ({
       count: details.length,
       details,

@@ -23,12 +23,15 @@ describe('Story 002.0-DEV-FETCH-AVAILABLE-VERSIONS: buildRows error handling', (
     const data = {
       pkg1: { current: '1.0.0', wanted: '1.1.0', latest: '1.1.0' },
     };
+    /** @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md */
     const stubFetchVersionTimes = async (name) => {
       throw new Error('fetch failure');
     };
+    /** @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md */
     const stubCalculateAgeInDays = () => {
       throw new Error('calculateAgeInDays should not be called on error');
     };
+    /** @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md */
     const stubGetDependencyType = () => 'prod';
 
     const rows = await buildRows(data, {

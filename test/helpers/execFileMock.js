@@ -6,6 +6,7 @@ function createExecFileMock() {
   const calls = [];
   let _mockImplementation;
 
+  /** @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md */
   const mockImpl = (cmd, args, options, callback) => {
     calls.push([cmd, args, options, callback]);
     // @supports prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md REQ-NPM-VIEW
@@ -24,6 +25,7 @@ function createExecFileMock() {
     _mockImplementation = undefined;
   };
   Object.defineProperty(mockImpl, 'calls', {
+    /** @story prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md */
     get: () => calls,
   });
 

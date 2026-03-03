@@ -36,8 +36,11 @@ describe('Story 011.0-DEV-AUTO-UPDATE: updatePackages additional branches', () =
   it('[REQ-CONFIRMATION] aborts update when user answers no', async () => {
     vi.resetModules();
     vi.doMock('readline', () => ({
+      /** @story prompts/011.0-DEV-AUTO-UPDATE.md */
       createInterface: () => ({
+        /** @story prompts/011.0-DEV-AUTO-UPDATE.md */
         question: (_prompt, cb) => cb('n'),
+        /** @story prompts/011.0-DEV-AUTO-UPDATE.md */
         close: () => {},
       }),
     }));
@@ -59,8 +62,11 @@ describe('Story 011.0-DEV-AUTO-UPDATE: updatePackages additional branches', () =
   it('[REQ-CONFIRMATION] [REQ-PACKAGE-JSON] proceeds update when user answers yes', async () => {
     vi.resetModules();
     vi.doMock('readline', () => ({
+      /** @story prompts/011.0-DEV-AUTO-UPDATE.md */
       createInterface: () => ({
+        /** @story prompts/011.0-DEV-AUTO-UPDATE.md */
         question: (_prompt, cb) => cb('yes'),
+        /** @story prompts/011.0-DEV-AUTO-UPDATE.md */
         close: () => {},
       }),
     }));

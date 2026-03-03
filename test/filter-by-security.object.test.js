@@ -19,6 +19,7 @@ describe('Story 004.0-DEV-FILTER-VULNERABLE-VERSIONS & Story 006.0-DEV-CONFIGURA
       { id: 'VULN-1', title: 'High vulnerability', severity: 'high', cvssScore: 9, url: 'http://example.com' },
       { id: 'VULN-2', title: 'Low vulnerability', severity: 'low', cvssScore: 2, url: 'http://example.com' },
     ];
+    /** @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md */
     const stubCheckVuln = async (name, version) => {
       expect(name).toBe('pkgA');
       expect(version).toBe('1.2.0');
@@ -40,6 +41,7 @@ describe('Story 004.0-DEV-FILTER-VULNERABLE-VERSIONS & Story 006.0-DEV-CONFIGURA
   });
 
   it('[REQ-AUDIT-CHECK] [REQ-SAFE-ONLY] treats errors as safe without logging in json format', async () => {
+    /** @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md */
     const stubCheckVuln = async () => {
       throw new Error('audit failure');
     };
