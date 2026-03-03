@@ -28,11 +28,25 @@ export function handleNoOutdated(format, returnSummary, thresholds, excludeMap =
   };
   // @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-CLI-FLAG
   if (format === 'json') {
-    return handleJsonOutput({ rows: [], summary, thresholds, vulnMap: new Map(), filterReasonMap: new Map(), excludeMap });
+    return handleJsonOutput({
+      rows: [],
+      summary,
+      thresholds,
+      vulnMap: new Map(),
+      filterReasonMap: new Map(),
+      excludeMap,
+    });
   }
   // @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-CLI-FLAG
   if (format === 'xml') {
-    return handleXmlOutput({ rows: [], summary, thresholds, vulnMap: new Map(), filterReasonMap: new Map(), excludeMap });
+    return handleXmlOutput({
+      rows: [],
+      summary,
+      thresholds,
+      vulnMap: new Map(),
+      filterReasonMap: new Map(),
+      excludeMap,
+    });
   }
   console.log('All dependencies are up to date.');
   // @supports prompts/015.0-DEV-EXCLUDE-PACKAGES.md REQ-EXCLUDE-OUTPUT

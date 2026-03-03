@@ -52,7 +52,15 @@ export function handleXmlOutput({ rows, summary, thresholds, vulnMap, filterReas
  * @param {{ safeRows: Array<Array>, matureRows: Array<Array>, summary: FilterSummary, prodMinAge: number, devMinAge: number, returnSummary: boolean, excludeMap?: Record<string, string> }} options
  * @returns {FilterSummary|undefined} Summary when returnSummary is true or undefined otherwise.
  */
-export function handleTableOutput({ safeRows, matureRows, summary, prodMinAge, devMinAge, returnSummary, excludeMap = {} }) {
+export function handleTableOutput({
+  safeRows,
+  matureRows,
+  summary,
+  prodMinAge,
+  devMinAge,
+  returnSummary,
+  excludeMap = {},
+}) {
   // @supports prompts/015.0-DEV-EXCLUDE-PACKAGES.md REQ-EXCLUDE-OUTPUT
   const excludedCount = Object.keys(excludeMap).length;
 

@@ -23,7 +23,14 @@ import {
  * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-XML-SCHEMA REQ-COMPLETE-DATA REQ-SUMMARY-STATS REQ-XML-DECLARATION
  * @supports prompts/015.0-DEV-EXCLUDE-PACKAGES.md REQ-EXCLUDE-OUTPUT
  */
-export function xmlFormatter({ rows = [], summary = {}, thresholds = {}, timestamp = '', error = null, excluded = [] } = {}) {
+export function xmlFormatter({
+  rows = [],
+  summary = {},
+  thresholds = {},
+  timestamp = '',
+  error = null,
+  excluded = [],
+} = {}) {
   let xml = buildXmlDeclaration();
   xml += buildRootStart(timestamp);
 
