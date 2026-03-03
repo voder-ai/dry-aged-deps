@@ -39,7 +39,7 @@
     "@vitest/coverage-v8": "^4.0.15",
     "better-npm-audit": "^3.11.0",
     "eslint": "9.39.1",
-    "eslint-plugin-security": "^3.0.1",
+    "eslint-plugin-security": "4.0.0",
     "eslint-plugin-traceability": "1.21.0",
     "execa": "^9.6.1",
     "globals": "17.4.0",
