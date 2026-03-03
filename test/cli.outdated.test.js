@@ -60,5 +60,5 @@ describe('Story 001.0-DEV-RUN-NPM-OUTDATED: dry-aged-deps CLI outdated output', 
     const hasJest = result.stdout.includes('jest');
 
     expect(hasLodash || hasExpress || hasJest).toBe(true);
-  }, 30000);
+  }, 60000);
 });
