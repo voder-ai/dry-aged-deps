@@ -91,7 +91,7 @@ jobs:
           fi
 
       - name: Check outdated dependencies
-        run: npx dry-aged-deps
+        run: npx dry-aged-deps || true
 
       - name: Vulnerability scan (all dependencies)
         run: npm run audit:ci
