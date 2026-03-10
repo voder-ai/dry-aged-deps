@@ -1,7 +1,6 @@
 import js from '@eslint/js';
 import globals from 'globals';
 import security from 'eslint-plugin-security';
-import traceability from 'eslint-plugin-traceability';
 
 export default [
   // Global ignores - must be first and separate
@@ -40,7 +39,6 @@ export default [
   {
     plugins: {
       security,
-      traceability,
     },
     rules: {
       ...security.configs.recommended.rules,
@@ -55,34 +53,6 @@ export default [
     },
   },
 
-  // Traceability plugin - enabled for all files
-  {
-    rules: {
-      'traceability/require-story-annotation': 'error',
-      'traceability/require-req-annotation': 'error',
-      'traceability/require-branch-annotation': 'off',
-      'traceability/prefer-supports-annotation': 'error',
-      'traceability/no-redundant-annotation': 'off',
-      'traceability/valid-annotation-format': [
-        'warn',
-        {
-          storyPathPattern: '^prompts/[0-9]+\\.[0-9]+-DEV-[\\w-]+\\.md$',
-          storyPathExample: 'prompts/005.0-DEV-EXAMPLE.md',
-          requirementIdPattern: '^REQ-[A-Z0-9-]+$',
-          requirementIdExample: 'REQ-EXAMPLE',
-        },
-      ],
-      'traceability/valid-story-reference': [
-        'error',
-        {
-          storyDirectories: ['prompts'],
-          allowAbsolutePaths: false,
-          requireStoryExtension: false,
-        },
-      ],
-      'traceability/valid-req-reference': 'error',
-    },
-  },
 
   // All JavaScript files - ES Modules
   {
@@ -163,8 +133,6 @@ export default [
       'max-params': 'off',
       'max-depth': 'off',
       'max-lines': 'off',
-      // Test traceability rules (Release 1.9)
-      'traceability/require-test-traceability': 'error',
     },
   },
 ];

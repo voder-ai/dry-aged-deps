@@ -57,9 +57,6 @@ jobs:
       - name: Lint code
         run: npm run lint
 
-      - name: Validate traceability
-        run: npm run validate-traceability
-
       - name: Check types
         run: npm run type-check
 

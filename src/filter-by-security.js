@@ -13,7 +13,7 @@ import { computeVulnerabilityStats, countAboveThreshold } from './security-helpe
  */
 function processObjectResult(result, minSeverity, severityWeights) {
   const { totalCount, detailsList, maxSeverity } = computeVulnerabilityStats(result, severityWeights);
-  let minWeight = severityWeights.none;
+  let minWeight;
   // @supports prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md REQ-SEVERITY-LEVELS
   switch (minSeverity) {
     // @supports prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md REQ-SEVERITY-LEVELS

@@ -154,7 +154,7 @@ async function loadOutdatedData(format) {
       }
       /** @type {Error} */
       const errObj = parseErr;
-      throw new Error(`Failed to parse npm outdated output: ${errObj.message}`);
+      throw new Error(`Failed to parse npm outdated output: ${errObj.message}`, { cause: parseErr });
     }
   }
   return { data, fetchVersionTimesOverride, checkVulnerabilitiesOverride };
