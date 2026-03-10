@@ -53,7 +53,6 @@ export default [
     },
   },
 
-
   // All JavaScript files - ES Modules
   {
     files: ['src/**/*.js', 'bin/**/*.js'],
