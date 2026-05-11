@@ -1,7 +1,7 @@
 ---
-status: "proposed"
+status: 'proposed'
 date: 2026-05-11
-decision-makers: ["Tom Howard"]
+decision-makers: ['Tom Howard']
 consulted: []
 informed: []
 reassessment-date: 2026-08-11
@@ -72,7 +72,7 @@ Project-specific subsections (for example operational state tables, implementati
 
 ### Lifecycle transitions
 
-- **proposed → accepted**: `git mv` the file from `.proposed.md` to `.accepted.md`, then in a *separate* commit change `status:` in frontmatter from `"proposed"` to `"accepted"`. The two commits keep git rename-detection working when the body is later edited.
+- **proposed → accepted**: `git mv` the file from `.proposed.md` to `.accepted.md`, then in a _separate_ commit change `status:` in frontmatter from `"proposed"` to `"accepted"`. The two commits keep git rename-detection working when the body is later edited.
 - **accepted → superseded**: `git mv` the file from `.accepted.md` to `.superseded.md`. Add `superseded-by: NNNN-decision-title` to its frontmatter and a brief "Superseded by" note at the top of `## Context and Problem Statement`. The superseding ADR adds `supersedes: NNNN-decision-title` to its own frontmatter.
 - **proposed → withdrawn**: there is no `.withdrawn.md` suffix; withdrawn proposals are deleted, with the rationale captured in the commit message. ADRs that were considered and rejected are recorded as `.superseded.md` with a `supersedes:` chain only if they were ever accepted.
 
@@ -80,7 +80,7 @@ Project-specific subsections (for example operational state tables, implementati
 
 ADRs 0001–0008 are migrated to MADR 4.0 in a sequence that preserves history:
 
-- 0001–0004 are renamed via `git mv` to `.accepted.md`. The rename and the body restructure happen in *separate* commits so git rename-detection records the rename correctly.
+- 0001–0004 are renamed via `git mv` to `.accepted.md`. The rename and the body restructure happen in _separate_ commits so git rename-detection records the rename correctly.
 - 0005–0008 already use `.accepted.md`; only their bodies are restructured.
 - Migration preserves all substantive content of every ADR. Operational content that does not fit standard MADR sections (for example ADR-0005's CHANGELOG strategy, ADR-0007's selective-rule recommendation, ADR-0008's exception-management process and current-exceptions table) is preserved verbatim under the closest standard section.
 - No underlying decision is changed by the migration.

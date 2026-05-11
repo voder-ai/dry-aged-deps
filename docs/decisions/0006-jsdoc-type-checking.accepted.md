@@ -1,7 +1,7 @@
 ---
-status: "accepted"
+status: 'accepted'
 date: 2025-11-13
-decision-makers: ["Tom Howard"]
+decision-makers: ['Tom Howard']
 consulted: []
 informed: []
 reassessment-date: 2026-11-13
@@ -68,10 +68,10 @@ We will:
     "strict": true, // Enable all strict type checks
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "skipLibCheck": true // Skip checking node_modules types
+    "skipLibCheck": true, // Skip checking node_modules types
   },
   "include": ["src/**/*", "bin/**/*"],
-  "exclude": ["node_modules", "coverage", "test"]
+  "exclude": ["node_modules", "coverage", "test"],
 }
 ```
 

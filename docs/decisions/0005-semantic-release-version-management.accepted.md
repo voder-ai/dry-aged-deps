@@ -1,7 +1,7 @@
 ---
-status: "accepted"
+status: 'accepted'
 date: 2025-11-12
-decision-makers: ["Tom Howard"]
+decision-makers: ['Tom Howard']
 consulted: []
 informed: []
 reassessment-date: 2026-11-12

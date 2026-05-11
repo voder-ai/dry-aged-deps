@@ -1,7 +1,7 @@
 ---
-status: "accepted"
+status: 'accepted'
 date: 2025-11-19
-decision-makers: ["Tom Howard"]
+decision-makers: ['Tom Howard']
 consulted: []
 informed: []
 reassessment-date: 2026-05-19
@@ -208,11 +208,11 @@ When an exception should be removed:
 
 ### Current exceptions (2025-11-19)
 
-| Advisory | Vulnerability | Status | Justification |
-| -------- | ------------- | ------ | ------------- |
-| 1109840 | glob CLI command injection (10.3.7-10.4.5) | False Positive | Only affects glob CLI; project uses glob as library only. Bundled in dev dependency. |
-| 1109841 | glob CLI command injection (11.0.0-11.0.3) | False Positive | Only affects glob CLI; project uses glob as library only. Bundled in dev dependency. |
-| 1109463 | tar race condition (7.5.1) | False Positive | Requires specific sync-mode race condition not present in project usage. Bundled in dev dependency. |
+| Advisory | Vulnerability                              | Status         | Justification                                                                                       |
+| -------- | ------------------------------------------ | -------------- | --------------------------------------------------------------------------------------------------- |
+| 1109840  | glob CLI command injection (10.3.7-10.4.5) | False Positive | Only affects glob CLI; project uses glob as library only. Bundled in dev dependency.                |
+| 1109841  | glob CLI command injection (11.0.0-11.0.3) | False Positive | Only affects glob CLI; project uses glob as library only. Bundled in dev dependency.                |
+| 1109463  | tar race condition (7.5.1)                 | False Positive | Requires specific sync-mode race condition not present in project usage. Bundled in dev dependency. |
 
 See: `docs/security-incidents/006-2025-11-19-glob-tar-vulnerabilities.md`.
 

@@ -1,7 +1,7 @@
 ---
-status: "accepted"
+status: 'accepted'
 date: 2025-11-10
-decision-makers: ["Tom Howard"]
+decision-makers: ['Tom Howard']
 consulted: []
 informed: []
 reassessment-date: 2027-05-10
@@ -41,11 +41,11 @@ This ambiguity complicated CI flows:
 
 Chosen option: **three-code scheme**, because it gives automation a single deterministic contract that survives the introduction of new modes and aligns with the principle that exit code `2` is reserved for tool errors (mirroring `getopt` and similar conventions).
 
-| Code | Meaning |
-| ---- | ------- |
-| 0 | Success: no safe updates available, or command completed successfully |
-| 1 | Updates available: safe updates exist (informational in default mode, CI failure in check mode) |
-| 2 | Error: invalid input, parsing failure, execution error, or unexpected exception |
+| Code | Meaning                                                                                         |
+| ---- | ----------------------------------------------------------------------------------------------- |
+| 0    | Success: no safe updates available, or command completed successfully                           |
+| 1    | Updates available: safe updates exist (informational in default mode, CI failure in check mode) |
+| 2    | Error: invalid input, parsing failure, execution error, or unexpected exception                 |
 
 ### Implementation
 

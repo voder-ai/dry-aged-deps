@@ -1,7 +1,7 @@
 ---
-status: "proposed"
+status: 'proposed'
 date: 2026-05-11
-decision-makers: ["Tom Howard"]
+decision-makers: ['Tom Howard']
 consulted: []
 informed: []
 reassessment-date: 2026-08-11
@@ -22,7 +22,7 @@ But an AI with commit authority on a project's main branch (even indirectly via 
 - The husky `pre-push` suite and `ci-publish.yml` as canonical quality gates.
 - `commitlint.config.cjs`, `eslint.config.js`, `tsconfig.json` as the policy surface for what "valid code" means.
 
-A poorly bounded AI fixer could silently weaken any of these gates to make CI green — and the worst form of that failure is the one that *doesn't* trip a human review because the PR auto-merges. The trust boundary must therefore be explicit, narrow, and defended by file-path rules.
+A poorly bounded AI fixer could silently weaken any of these gates to make CI green — and the worst form of that failure is the one that _doesn't_ trip a human review because the PR auto-merges. The trust boundary must therefore be explicit, narrow, and defended by file-path rules.
 
 The relevant JTBD job is JTBD-106 (recover-from-pr-failures) from the CI/Automation Engineer persona.
 

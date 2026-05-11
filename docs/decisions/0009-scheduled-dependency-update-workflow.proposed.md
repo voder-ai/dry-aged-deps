@@ -1,7 +1,7 @@
 ---
-status: "proposed"
+status: 'proposed'
 date: 2026-05-11
-decision-makers: ["Tom Howard"]
+decision-makers: ['Tom Howard']
 consulted: []
 informed: []
 reassessment-date: 2026-08-11
@@ -35,7 +35,7 @@ The relevant JTBD jobs this workflow implements are JTBD-103 (run dependency hyg
 - **JTBD-104 outcomes.** Identifiable bot account; project commit-message conventions; reuses the same `build-and-test` job that gates human PRs; squash-mergeable.
 - **JTBD-105 outcome.** The choice of commit type must be derived from data `dry-aged-deps` already produces (severity information), not from human judgement.
 - **No-silent-failures rule (`CLAUDE.md`).** The workflow must not use `|| echo {}` or similar patterns; it must let commands fail so root causes are addressable.
-- **Trunk-based development.** The project follows TBD: the maintainer pushes directly to `main` and integration is continuous. Branch protection on `main` must not require PRs for human contributors — direct pushes by the maintainer must remain possible. The auto-merge contract here therefore relies on required *status checks* but explicitly NOT on required pull requests.
+- **Trunk-based development.** The project follows TBD: the maintainer pushes directly to `main` and integration is continuous. Branch protection on `main` must not require PRs for human contributors — direct pushes by the maintainer must remain possible. The auto-merge contract here therefore relies on required _status checks_ but explicitly NOT on required pull requests.
 
 ## Considered Options
 
@@ -53,18 +53,18 @@ Chosen option: **Pure scheduled GitHub Actions workflow opening a PR with `gh pr
 
 ### Workflow policy
 
-| Parameter | Value | Rationale |
-| --- | --- | --- |
-| Trigger | `schedule: cron '0 6 * * *'` plus `workflow_dispatch` | Daily 06:00 UTC catches updates as soon as they cross the 7-day age threshold; small per-PR diff; minimal Actions minutes. Manual dispatch retained for on-demand runs and testing (JTBD-103 outcome). |
-| Detection | `node bin/dry-aged-deps.js --check` (ADR-0004) | Exit 1 signals "updates available"; exit 0 short-circuits the workflow with no PR. |
-| Application | `node bin/dry-aged-deps.js --update --yes` against the default `--min-age=7` | Aligns with the tool's documented default and its supply-chain rationale. No project-specific override. |
-| Validation | `npm ci && npm run prepush` inside the runner | Same suite the husky pre-push hook runs locally. PR will not be opened if local validation fails. |
-| Landing mode | Pull request, not direct push to `main` | Re-uses the existing `ci-publish.yml` build-and-test job as the canonical gate (JTBD-104 outcome). `GITHUB_TOKEN` would not trigger downstream workflows on a direct push; this avoids that whole class of issue. |
-| Commit type | `chore(deps): update safe dependencies` by default; `fix(deps):` when any included row has a non-`none` `severity` in the `dry-aged-deps --format=json` output | Interacts correctly with semantic-release's commit-analyzer (ADR-0005). Security updates trigger a patch release; routine bumps batch until the next `feat:` or `fix:`. Derivation is mechanical from JSON output (JTBD-105 outcome). |
-| Commit-type derivation rule | `severity === 'none'` ∀ rows → `chore(deps):`; otherwise → `fix(deps):` | Conservative: any non-`none` severity in any included row promotes the entire commit to `fix(deps):` so the security patch ships at next CI run. |
-| Branch name | `auto/deps/YYYY-MM-DD` | Stable, sortable, predictable. One branch per scheduled run; subsequent runs open new branches rather than amending. |
-| Bot identity | `github-actions[bot]` for commits; PR creation uses a fine-grained bot PAT stored as `DEPS_BOT_TOKEN` | A new repo secret is required because GitHub does not fire `pull_request` event workflows for PRs opened by `GITHUB_TOKEN` (see "Required secrets" below). Commits are still attributed to `github-actions[bot]` so blame is clear (JTBD-104 outcome — bot account, not impersonation). |
-| Permissions | `contents: write`, `pull-requests: write` on the scheduled job | Minimum required to push a branch and open a PR. |
+| Parameter                   | Value                                                                                                                                                          | Rationale                                                                                                                                                                                                                                                                               |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Trigger                     | `schedule: cron '0 6 * * *'` plus `workflow_dispatch`                                                                                                          | Daily 06:00 UTC catches updates as soon as they cross the 7-day age threshold; small per-PR diff; minimal Actions minutes. Manual dispatch retained for on-demand runs and testing (JTBD-103 outcome).                                                                                  |
+| Detection                   | `node bin/dry-aged-deps.js --check` (ADR-0004)                                                                                                                 | Exit 1 signals "updates available"; exit 0 short-circuits the workflow with no PR.                                                                                                                                                                                                      |
+| Application                 | `node bin/dry-aged-deps.js --update --yes` against the default `--min-age=7`                                                                                   | Aligns with the tool's documented default and its supply-chain rationale. No project-specific override.                                                                                                                                                                                 |
+| Validation                  | `npm ci && npm run prepush` inside the runner                                                                                                                  | Same suite the husky pre-push hook runs locally. PR will not be opened if local validation fails.                                                                                                                                                                                       |
+| Landing mode                | Pull request, not direct push to `main`                                                                                                                        | Re-uses the existing `ci-publish.yml` build-and-test job as the canonical gate (JTBD-104 outcome). `GITHUB_TOKEN` would not trigger downstream workflows on a direct push; this avoids that whole class of issue.                                                                       |
+| Commit type                 | `chore(deps): update safe dependencies` by default; `fix(deps):` when any included row has a non-`none` `severity` in the `dry-aged-deps --format=json` output | Interacts correctly with semantic-release's commit-analyzer (ADR-0005). Security updates trigger a patch release; routine bumps batch until the next `feat:` or `fix:`. Derivation is mechanical from JSON output (JTBD-105 outcome).                                                   |
+| Commit-type derivation rule | `severity === 'none'` ∀ rows → `chore(deps):`; otherwise → `fix(deps):`                                                                                        | Conservative: any non-`none` severity in any included row promotes the entire commit to `fix(deps):` so the security patch ships at next CI run.                                                                                                                                        |
+| Branch name                 | `auto/deps/YYYY-MM-DD`                                                                                                                                         | Stable, sortable, predictable. One branch per scheduled run; subsequent runs open new branches rather than amending.                                                                                                                                                                    |
+| Bot identity                | `github-actions[bot]` for commits; PR creation uses a fine-grained bot PAT stored as `DEPS_BOT_TOKEN`                                                          | A new repo secret is required because GitHub does not fire `pull_request` event workflows for PRs opened by `GITHUB_TOKEN` (see "Required secrets" below). Commits are still attributed to `github-actions[bot]` so blame is clear (JTBD-104 outcome — bot account, not impersonation). |
+| Permissions                 | `contents: write`, `pull-requests: write` on the scheduled job                                                                                                 | Minimum required to push a branch and open a PR.                                                                                                                                                                                                                                        |
 
 ### Required secrets
 
