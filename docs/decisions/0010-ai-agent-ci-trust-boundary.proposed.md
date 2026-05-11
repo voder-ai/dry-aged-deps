@@ -103,6 +103,18 @@ The no-touch list is enforced by:
 - If the agent's fix still fails CI, no further automation runs against that PR. The PR is labelled `needs-human` and remains open for the maintainer.
 - If the agent's fix violates the no-touch list, the post-step closes the PR and comments with the violating file list.
 
+### Required labels
+
+The recovery workflow adds a `needs-human` label to PRs where the agent ran but produced no commits (out-of-scope failure). The label must exist on the repository before the workflow runs; create it once with:
+
+```bash
+gh label create needs-human \
+  --description "Automated recovery couldn't fix; human intervention required" \
+  --color BFD4F2
+```
+
+If the label is missing, the recovery workflow fails loudly on the label-add step (no silent-failure swallow), surfacing the operational gap rather than burying it.
+
 ### Secret management
 
 - `ANTHROPIC_API_KEY` is stored as a repo secret.

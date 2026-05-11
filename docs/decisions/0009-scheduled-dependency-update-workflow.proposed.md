@@ -93,6 +93,17 @@ The trade-off: required status checks may in some GitHub configurations gate dir
 | Concurrency | `concurrency: group: auto-deps, cancel-in-progress: false` | Prevents two scheduled runs racing. New runs queue rather than cancel so a manual dispatch never aborts an in-flight automated PR. |
 | Failure behaviour | Workflow fails loudly; PR is left in failed state for the AI escalation path in ADR-0010 to act on. The workflow does NOT swallow errors with `|| true` or `|| echo {}`. | Keeps this ADR's contract simple. Recovery is a separate concern (`CLAUDE.md` "no silent failures" rule). |
 
+### Staged rollout
+
+The workflow file lands on `main` with its `schedule:` trigger commented out, leaving only `workflow_dispatch:`. The schedule is re-enabled in a follow-up commit once all of the following are in place:
+
+1. `DEPS_BOT_TOKEN` is provisioned as a repo secret.
+2. `ANTHROPIC_API_KEY` is provisioned (governed by ADR-0010 but required for the recovery path the schedule depends on).
+3. Branch protection on `main` is configured per "Required branch-protection configuration" above.
+4. A single `workflow_dispatch` invocation has been verified to complete end-to-end (PR opened, build-and-test green, squash-merged, semantic-release behaviour correct).
+
+The schedule re-enable is a one-line commit (`feat(ci):` is appropriate as it activates user-visible automation). Confirmation criterion 1 below describes the steady state after re-enable.
+
 ### Out of scope for this ADR
 
 - AI-assisted recovery from `prepush` or `ci-publish.yml` failures. Governed by ADR-0010.
