@@ -1,0 +1,234 @@
+# Failure-only recovery workflow for the scheduled dependency-update flow.
+# Implements ADR-0010 (docs/decisions/0010-ai-agent-ci-trust-boundary.proposed.md).
+#
+# Required repo secrets:
+#   - ANTHROPIC_API_KEY: API key for anthropics/claude-code-action. Referenced ONLY
+#     by this workflow per ADR-0010 §Secret management.
+#   - DEPS_BOT_TOKEN: same fine-grained PAT used by auto-update.yml. Needed so the
+#     agent's recovery commits trigger ci-publish.yml on re-run.
+#
+# IMPORTANT: workflow_run.branches filters by the workflow-file branch (typically
+# main), NOT the head branch of the triggering run. Filtering for auto/deps/* is
+# therefore done in the job-level `if:` below, not on the trigger.
+
+name: Auto-update Recovery
+
+on:
+  workflow_run:
+    workflows:
+      - 'Auto-update Dependencies'
+      - 'CI & Publish'
+    types:
+      - completed
+
+permissions:
+  contents: read
+
+jobs:
+  recover:
+    name: Attempt AI-assisted recovery
+    # Fire only on FAILURE and only when the triggering run's HEAD branch is auto/deps/*.
+    if: >-
+      github.event.workflow_run.conclusion == 'failure' &&
+      startsWith(github.event.workflow_run.head_branch, 'auto/deps/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: read
+    # Single-invocation per failing run (ADR-0010 Confirmation criterion 3).
+    concurrency:
+      group: auto-deps-recover-${{ github.event.workflow_run.id }}
+      cancel-in-progress: false
+
+    steps:
+      - name: Identify failing PR
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.DEPS_BOT_TOKEN }}
+        run: |
+          set -e
+          HEAD_BRANCH="${{ github.event.workflow_run.head_branch }}"
+          HEAD_SHA="${{ github.event.workflow_run.head_sha }}"
+          echo "head_branch=$HEAD_BRANCH" >> "$GITHUB_OUTPUT"
+          echo "head_sha=$HEAD_SHA" >> "$GITHUB_OUTPUT"
+          # Locate the PR for this branch
+          PR_NUMBER=$(gh pr list --head "$HEAD_BRANCH" --state open --json number --jq '.[0].number')
+          if [ -z "$PR_NUMBER" ] || [ "$PR_NUMBER" = "null" ]; then
+            echo "::error::No open PR found for branch $HEAD_BRANCH"
+            exit 1
+          fi
+          echo "pr_number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.pr.outputs.head_sha }}
+          fetch-depth: 0
+          token: ${{ secrets.DEPS_BOT_TOKEN }}
+
+      - name: Capture pre-agent commit SHA
+        id: pre
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Fetch failing-run logs
+        env:
+          GH_TOKEN: ${{ secrets.DEPS_BOT_TOKEN }}
+        run: |
+          set -e
+          mkdir -p .recover
+          # Fail loudly if the failing-run logs cannot be captured.
+          # ADR-0010 lists "full logs" as a load-bearing input to the agent; feeding the
+          # agent an empty .recover/failed-logs.txt would produce a fix grounded in no
+          # context and erode the trust boundary.
+          gh run view "${{ github.event.workflow_run.id }}" --log-failed > .recover/failed-logs.txt
+          gh pr diff "${{ steps.pr.outputs.pr_number }}" > .recover/pr.diff
+          echo "Captured logs and diff:"
+          ls -la .recover/
+
+      - name: Run AI recovery
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          # The prompt encodes ADR-0010's writable-paths allow-list and no-touch list
+          # verbatim. The prompt is a SOFT constraint — the post-step diff below is
+          # the HARD enforcement (ADR-0010 Confirmation criterion 4).
+          prompt: |
+            You are a recovery agent invoked because the automated dependency-update PR
+            at #${{ steps.pr.outputs.pr_number }} (branch ${{ steps.pr.outputs.head_branch }})
+            failed CI.
+
+            Your job: investigate and fix ONLY failures introduced by the dependency
+            bump in this PR. Do not modify product behaviour. Do not weaken any quality
+            gate. Do not touch any file on the no-touch list below.
+
+            Inputs available in the working tree:
+              - .recover/failed-logs.txt  — full logs from the failing CI run
+              - .recover/pr.diff           — the dependency bump diff
+
+            WRITABLE PATHS (you MAY edit these):
+              - src/**/*.js
+              - bin/**/*.js   (but DO NOT change exit-code semantics)
+              - test/**/*.js  (including snapshots and fixtures)
+              - package.json  (only the dependencies / devDependencies sections)
+              - package-lock.json (only as a consequence of legitimate package.json changes)
+
+            NO-TOUCH PATHS (you MUST NOT edit any of these):
+              - .nsprc
+              - docs/security-incidents/**
+              - .releaserc.json
+              - docs/decisions/**
+              - docs/jtbd/**
+              - prompts/**
+              - .husky/**
+              - .github/workflows/**
+              - commitlint.config.cjs
+              - eslint.config.js
+              - tsconfig.json
+              - .dry-aged-deps.json
+              - CLAUDE.md
+              - CHANGELOG.md
+              - .voder/**
+              - package.json scripts (especially audit:ci) and the "version" field
+              - any other config or policy file
+
+            If the failure cannot be fixed within the writable paths, exit with an
+            explanation and let a human take over. Do NOT attempt to satisfy CI by
+            relaxing tests, deleting failing assertions, or weakening type/lint config.
+            Make root-cause fixes only.
+
+            After making changes, run `npm run prepush` locally to verify. Commit your
+            fix with a clear conventional-commit message describing what changed and why.
+          # Single-invocation per failing run is enforced by this workflow's concurrency
+          # group keyed on workflow_run.id. The agent itself should not loop.
+          max_iterations: 1
+
+      - name: Enforce no-touch list (HARD gate)
+        id: enforce
+        env:
+          GH_TOKEN: ${{ secrets.DEPS_BOT_TOKEN }}
+        run: |
+          set -e
+          PRE_SHA="${{ steps.pre.outputs.sha }}"
+          # Files modified by the agent since pre-agent SHA
+          MODIFIED=$(git diff --name-only "$PRE_SHA" HEAD)
+          echo "Files modified by agent:"
+          echo "$MODIFIED"
+
+          # ADR-0010 no-touch globs. Any match is a hard violation.
+          # Patterns are checked as path prefixes or exact paths.
+          VIOLATIONS=""
+          while IFS= read -r f; do
+            [ -z "$f" ] && continue
+            case "$f" in
+              .nsprc|.releaserc.json|commitlint.config.cjs|eslint.config.js|tsconfig.json|.dry-aged-deps.json|CLAUDE.md|CHANGELOG.md)
+                VIOLATIONS="$VIOLATIONS
+          - $f" ;;
+              docs/security-incidents/*|docs/decisions/*|docs/jtbd/*|prompts/*|.husky/*|.github/workflows/*|.voder/*)
+                VIOLATIONS="$VIOLATIONS
+          - $f" ;;
+            esac
+          done <<< "$MODIFIED"
+
+          # Catch package.json edits to anything other than dependencies/devDependencies/overrides.
+          if echo "$MODIFIED" | grep -qx 'package.json'; then
+            # Diff the structure outside dependencies/devDependencies/overrides
+            if git diff "$PRE_SHA" HEAD -- package.json | grep -E '^[+-]\s*"(version|scripts|engines|publishConfig|repository|license|main|bin|type|name)"' > /dev/null; then
+              VIOLATIONS="$VIOLATIONS
+          - package.json (forbidden top-level field touched)"
+            fi
+          fi
+
+          if [ -n "$VIOLATIONS" ]; then
+            echo "violation=true" >> "$GITHUB_OUTPUT"
+            {
+              echo "violations<<EOF"
+              echo "$VIOLATIONS"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+            echo "::error::Agent touched no-touch path(s). Closing PR."
+          else
+            echo "violation=false" >> "$GITHUB_OUTPUT"
+            echo "No no-touch violations."
+          fi
+
+      - name: Close PR on violation
+        if: steps.enforce.outputs.violation == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.DEPS_BOT_TOKEN }}
+        run: |
+          set -e
+          gh pr comment "${{ steps.pr.outputs.pr_number }}" --body "Automated recovery aborted: the AI agent modified one or more files on the ADR-0010 no-touch list. Closing this PR. A human can re-run the dep update manually if needed.
+
+          Files violating the no-touch list:
+          ${{ steps.enforce.outputs.violations }}"
+          gh pr close "${{ steps.pr.outputs.pr_number }}" --delete-branch
+          exit 1
+
+      - name: Push agent's fix
+        if: steps.enforce.outputs.violation == 'false'
+        run: |
+          set -e
+          if [ "$(git rev-parse HEAD)" = "${{ steps.pre.outputs.sha }}" ]; then
+            echo "::warning::Agent made no commits. Leaving PR in failed state for human review."
+            gh pr comment "${{ steps.pr.outputs.pr_number }}" --body "Automated recovery ran but the agent made no commits. The failure is outside the writable-paths scope; a human must intervene."
+            exit 0
+          fi
+          # The agent's commit is already in HEAD; push to the PR branch.
+          git push origin "HEAD:${{ steps.pr.outputs.head_branch }}"
+          gh pr comment "${{ steps.pr.outputs.pr_number }}" --body "Automated recovery pushed a fix. CI will re-run; if it passes, auto-merge will proceed."
+        env:
+          GH_TOKEN: ${{ secrets.DEPS_BOT_TOKEN }}
+
+      - name: Label needs-human on no-op
+        if: steps.enforce.outputs.violation == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.DEPS_BOT_TOKEN }}
+        run: |
+          # If we reached here with no agent commits, the previous step already commented.
+          # If there were commits, we don't need to label.
+          if [ "$(git rev-parse HEAD)" = "${{ steps.pre.outputs.sha }}" ]; then
+            # `needs-human` label must exist (created via `gh label create needs-human ...`).
+            # If it does not, fail loudly so the maintainer knows to create it.
+            gh pr edit "${{ steps.pr.outputs.pr_number }}" --add-label "needs-human"
+          fi

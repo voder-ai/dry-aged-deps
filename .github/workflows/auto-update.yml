@@ -1,0 +1,190 @@
+# Scheduled autonomous dependency-update workflow
+# Implements ADR-0009 (docs/decisions/0009-scheduled-dependency-update-workflow.proposed.md).
+#
+# Required repo secrets:
+#   - DEPS_BOT_TOKEN: fine-grained PAT (or GitHub App token) with `contents: write`
+#     and `pull-requests: write` scoped to this repo. Required because PRs opened by
+#     the workflow-scoped GITHUB_TOKEN do NOT trigger `pull_request` event workflows,
+#     and the auto-merge contract depends on `ci-publish.yml` firing on the bot's PR.
+
+name: Auto-update Dependencies
+
+on:
+  # Schedule is intentionally disabled at landing time (staged rollout per
+  # ADR-0009 §"Staged rollout"). Arming the cron before DEPS_BOT_TOKEN,
+  # ANTHROPIC_API_KEY, and branch protection are provisioned would produce
+  # daily loud failures on `main`. Once the preconditions are met and a
+  # workflow_dispatch run has been verified end-to-end, uncomment the
+  # `schedule:` block below in a follow-up commit to arm the daily cron.
+  #
+  # schedule:
+  #   - cron: '0 6 * * *'  # Daily at 06:00 UTC. See ADR-0009.
+  workflow_dispatch:
+
+concurrency:
+  # Queue rather than cancel; never abort an in-flight automated PR.
+  group: auto-deps
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  update:
+    name: Detect and apply safe updates
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Pin npm version (matches ci-publish.yml)
+        run: npm install -g npm@10.9.2
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check for safe updates
+        id: check
+        run: |
+          set +e
+          node ./bin/dry-aged-deps.js --check --format=json > updates.json
+          exit_code=$?
+          set -e
+          if [ "$exit_code" = "0" ]; then
+            echo "has_updates=false" >> "$GITHUB_OUTPUT"
+            echo "No safe updates available."
+          elif [ "$exit_code" = "1" ]; then
+            echo "has_updates=true" >> "$GITHUB_OUTPUT"
+            echo "Safe updates available:"
+            cat updates.json
+          else
+            echo "::error::dry-aged-deps --check failed with exit code $exit_code"
+            exit "$exit_code"
+          fi
+
+      - name: Derive commit type from severity
+        if: steps.check.outputs.has_updates == 'true'
+        id: commit_type
+        run: |
+          set -e
+          # Per ADR-0009: any row with non-'none' severity promotes the commit to fix(deps):
+          if jq -e '
+              if has("rows") then .rows
+              elif has("packages") then .packages
+              else .
+              end
+              | if type == "array" then .[] else . end
+              | select((.severity // "none") != "none")
+            ' updates.json > /dev/null 2>&1; then
+            echo "type=fix(deps)" >> "$GITHUB_OUTPUT"
+            echo "Security-relevant update detected; using fix(deps):"
+          else
+            echo "type=chore(deps)" >> "$GITHUB_OUTPUT"
+            echo "Routine update; using chore(deps):"
+          fi
+
+      - name: Apply updates
+        if: steps.check.outputs.has_updates == 'true'
+        run: node ./bin/dry-aged-deps.js --update --yes
+
+      - name: Normalize lockfile after update
+        if: steps.check.outputs.has_updates == 'true'
+        # Ensures check:lockfile (part of prepush) sees a canonical lockfile.
+        run: npm install --ignore-scripts --package-lock-only
+
+      - name: Configure git identity
+        if: steps.check.outputs.has_updates == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Create branch
+        if: steps.check.outputs.has_updates == 'true'
+        id: branch
+        run: |
+          BRANCH="auto/deps/$(date -u +%Y-%m-%d)"
+          echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
+          git checkout -b "$BRANCH"
+
+      - name: Stage dep changes
+        if: steps.check.outputs.has_updates == 'true'
+        # Stage explicitly (NOT `git add -A`) so unrelated working-tree state is not picked up.
+        run: git add package.json package-lock.json
+
+      - name: Validate via prepush
+        if: steps.check.outputs.has_updates == 'true'
+        # Runs the same suite husky pre-push runs locally and ci-publish.yml mirrors in CI.
+        run: npm run prepush
+
+      - name: Commit
+        if: steps.check.outputs.has_updates == 'true'
+        run: |
+          SUMMARY=$(jq -r '
+              if has("rows") then .rows
+              elif has("packages") then .packages
+              else .
+              end
+              | if type == "array" then . else [.] end
+              | map("- \(.package // .name): \(.current // .currentVersion) → \(.safeUpdate // .latestSafe // .target) (severity \(.severity // "none"))")
+              | join("\n")
+            ' updates.json)
+          git commit -m "${{ steps.commit_type.outputs.type }}: update safe dependencies
+
+          Automated by .github/workflows/auto-update.yml (ADR-0009).
+
+          $SUMMARY"
+
+      - name: Push branch
+        if: steps.check.outputs.has_updates == 'true'
+        # Push using GITHUB_TOKEN; the bot identity is preserved for blame.
+        run: git push --set-upstream origin "${{ steps.branch.outputs.branch }}"
+
+      - name: Open pull request
+        if: steps.check.outputs.has_updates == 'true'
+        env:
+          # PAT, not GITHUB_TOKEN — see ADR-0009 Required secrets section.
+          GH_TOKEN: ${{ secrets.DEPS_BOT_TOKEN }}
+        run: |
+          BODY=$(cat <<EOF
+          Automated dependency update produced by \`dry-aged-deps\`.
+
+          ## Updates
+
+          $(jq -r '
+              if has("rows") then .rows
+              elif has("packages") then .packages
+              else .
+              end
+              | if type == "array" then . else [.] end
+              | map("- **\(.package // .name)**: \(.current // .currentVersion) → \(.safeUpdate // .latestSafe // .target) (age \(.ageInDays // .age // "?")d, severity \(.severity // "none"))")
+              | join("\n")
+            ' updates.json)
+
+          ---
+
+          Opened by \`.github/workflows/auto-update.yml\` per [ADR-0009](../blob/main/docs/decisions/0009-scheduled-dependency-update-workflow.proposed.md).
+          If CI fails, [ADR-0010](../blob/main/docs/decisions/0010-ai-agent-ci-trust-boundary.proposed.md)'s recovery workflow will attempt a single autonomous fix.
+          Auto-merge is enabled; merge proceeds when \`build-and-test\` passes.
+          EOF
+          )
+          gh pr create \
+            --title "${{ steps.commit_type.outputs.type }}: update safe dependencies" \
+            --body "$BODY" \
+            --base main \
+            --head "${{ steps.branch.outputs.branch }}"
+
+      - name: Enable auto-merge (squash)
+        if: steps.check.outputs.has_updates == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.DEPS_BOT_TOKEN }}
+        run: gh pr merge --auto --squash "${{ steps.branch.outputs.branch }}"
