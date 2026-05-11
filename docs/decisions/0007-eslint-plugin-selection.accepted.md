@@ -1,112 +1,163 @@
+---
+status: "accepted"
+date: 2025-11-13
+decision-makers: ["Tom Howard"]
+consulted: []
+informed: []
+reassessment-date: 2026-11-13
+---
+
 # 0007. ESLint Plugin Selection Strategy
 
-Date: 2025-11-13
-
-## Status
-
-Accepted
-
-## Context
+## Context and Problem Statement
 
 The project currently uses ESLint with two configurations:
 
-- ESLint recommended rules (built-in)
-- eslint-plugin-security (security-focused rules)
+- ESLint recommended rules (built-in).
+- `eslint-plugin-security` (security-focused rules).
 
 We need to decide whether to add additional ESLint plugins to improve code quality, particularly considering:
 
-- **eslint-plugin-unicorn**: 100+ opinionated rules for modern JavaScript
-- **eslint-plugin-sonarjs**: Bug detection and cognitive complexity rules
-- Other alternatives
+- `eslint-plugin-unicorn`: 100+ opinionated rules for modern JavaScript.
+- `eslint-plugin-sonarjs`: bug detection and cognitive-complexity rules.
+- Other alternatives.
 
-### Current State
+### Prior state
 
-**Project Characteristics:**
+**Project characteristics:**
 
-- Small, mature codebase: 1,815 lines of code
-- 10 source modules, 13 implemented features
-- Single active contributor
-- Stable functionality (not rapidly evolving)
-- Fast linting: 0.67 seconds
+- Small, mature codebase: 1,815 lines of code.
+- 10 source modules, 13 implemented features.
+- Single active contributor.
+- Stable functionality (not rapidly evolving).
+- Fast linting: 0.67 seconds.
 
-**Existing Quality Measures:**
+**Existing quality measures:**
 
-- ESLint recommended rules
-- eslint-plugin-security (critical for npm packages)
-- TypeScript type checking via JSDoc (ADR 0006)
-- Prettier for formatting
-- Vitest with 96.96% statement coverage
-- Only 3 eslint-disable comments (all justified)
+- ESLint recommended rules.
+- `eslint-plugin-security` (critical for npm packages).
+- TypeScript type checking via JSDoc (ADR-0006).
+- Prettier for formatting.
+- vitest with 96.96% statement coverage.
+- Only 3 `eslint-disable` comments (all justified).
 
-### Plugins Evaluated
+### Plugins evaluated
 
-**eslint-plugin-unicorn (v62.0.0):**
+**`eslint-plugin-unicorn` (v62.0.0):**
 
-- 100+ opinionated rules
-- 6M+ weekly downloads
-- Focuses on modern JavaScript patterns, consistency, best practices
-- Highly configurable but very comprehensive
-- Many auto-fixable rules
+- 100+ opinionated rules.
+- 6M+ weekly downloads.
+- Focuses on modern JavaScript patterns, consistency, best practices.
+- Highly configurable but very comprehensive.
+- Many auto-fixable rules.
 
-**eslint-plugin-sonarjs (v3.0.5):**
+**`eslint-plugin-sonarjs` (v3.0.5):**
 
-- ~30 cognitive complexity and bug detection rules
-- 2M+ weekly downloads
-- Focused on code smells, complexity tracking, and logic bugs
-- Less opinionated than unicorn (bugs over style)
-- From SonarSource (static analysis experts)
-- Fewer auto-fixes (requires manual refactoring)
+- ~30 cognitive-complexity and bug-detection rules.
+- 2M+ weekly downloads.
+- Focused on code smells, complexity tracking, and logic bugs.
+- Less opinionated than unicorn (bugs over style).
+- From SonarSource (static-analysis experts).
+- Fewer auto-fixes (requires manual refactoring).
 
-## Decision
+## Decision Drivers
 
-**Do NOT add eslint-plugin-unicorn or additional linting plugins at this time.**
+- **Appropriate for project scale**: 1,815 LOC does not warrant 100+ additional rules.
+- **Single contributor**: consistency enforcement is less critical without team coordination.
+- **Already comprehensive**: security + TypeScript + ESLint covers essential quality checks.
+- **High current quality**: only 3 justified `eslint-disable` comments indicates clean code.
+- **YAGNI**: no evidence of problems these plugins would solve.
+- **Fast feedback loop**: the current 0.67-second linting time should not be degraded.
+- **Mature codebase**: 13 features implemented; stability preferred over refactoring churn.
+- **Cost/benefit**: refactoring effort would exceed value gained.
 
-Maintain current ESLint configuration:
+## Considered Options
 
-- ESLint recommended rules
-- eslint-plugin-security
-- TypeScript type checking (ADR 0006)
-- Prettier formatting
+1. **Do NOT add additional plugins; maintain the current configuration.**
+2. **Add `eslint-plugin-unicorn` with full configuration.**
+3. **Add `eslint-plugin-unicorn` with selective rules.**
+4. **Add `eslint-plugin-sonarjs`.**
+5. **Use `@stylistic/eslint-plugin`.**
+6. **Add `eslint-plugin-node`.**
 
-### Rationale
+## Decision Outcome
 
-1. **Appropriate for Project Scale**: 1,815 LOC doesn't warrant 100+ additional rules
-2. **Single Contributor**: Consistency enforcement less critical without team coordination
-3. **Already Comprehensive**: Security + TypeScript + ESLint covers essential quality checks
-4. **High Current Quality**: Only 3 justified eslint-disables indicates clean code
-5. **YAGNI Principle**: No evidence of problems these plugins would solve
-6. **Fast Feedback Loop**: Current 0.67s linting time shouldn't be degraded
-7. **Mature Codebase**: 13 features implemented; stability preferred over refactoring churn
-8. **Cost/Benefit**: Refactoring effort would exceed value gained
+Chosen option: **Do NOT add `eslint-plugin-unicorn` or additional linting plugins at this time**, because current quality measures are sufficient for the project's scale and there is no evidence of problems these plugins would solve.
+
+Maintain the current ESLint configuration:
+
+- ESLint recommended rules.
+- `eslint-plugin-security`.
+- TypeScript type checking (ADR-0006).
+- Prettier formatting.
+
+### Recommendation if adding a plugin
+
+Choose **`eslint-plugin-sonarjs`** over unicorn for its focus on bugs and maintainability over style. See Option 4 below for the example configuration if circumstances change.
+
+### Alternative: selective rule adoption
+
+If specific improvements are identified, consider adding individual rules from plugins without full plugin adoption.
+
+**High-value unicorn rules to consider individually:**
+
+```javascript
+// If adopting selective rules later
+{
+  plugins: { unicorn },
+  rules: {
+    'unicorn/prefer-node-protocol': 'error',      // import 'node:fs' vs 'fs'
+    'unicorn/prefer-module': 'error',             // ESM best practices
+    'unicorn/error-message': 'error',             // new Error() must have message
+    'unicorn/explicit-length-check': 'error',     // .length > 0 clarity
+    'unicorn/no-array-reduce': 'warn',            // reduce() often unclear
+    'unicorn/prefer-array-some': 'error',         // .some() vs .find()
+    'unicorn/prefer-spread': 'error',             // [...array] vs Array.from()
+    'unicorn/throw-new-error': 'error',           // throw new Error() not Error()
+  }
+}
+```
+
+**Criteria for selective adoption:**
+
+- Rule prevents actual bugs (not just style).
+- Auto-fixable (minimal manual effort).
+- Addresses observed code-review feedback.
+- Team consensus on value.
 
 ## Consequences
 
-### Positive
+### Good
 
-- **Simplicity**: Fewer dependencies and configurations to maintain
-- **Fast CI**: Linting remains quick (<1 second)
-- **Lower Maintenance**: No plugin update breaking changes to manage
-- **Focus on Features**: Developer time spent on functionality, not style debates
-- **Stable Workflow**: No disruptive refactoring required
-- **Clear Standards**: Current rules are well-understood and proven
-
-### Negative
-
-- **Missed Modernization**: Won't automatically adopt latest JavaScript best practices
-- **Manual Review**: Some patterns that plugins would catch require human review
-- **Potential Technical Debt**: Some code patterns may become outdated
-- **Less Guidance**: New contributors won't have extensive style enforcement
+- **Simplicity**: fewer dependencies and configurations to maintain.
+- **Fast CI**: linting remains quick (<1 second).
+- **Lower maintenance**: no plugin-update breaking changes to manage.
+- **Focus on features**: developer time spent on functionality, not style debates.
+- **Stable workflow**: no disruptive refactoring required.
+- **Clear standards**: current rules are well-understood and proven.
 
 ### Neutral
 
-- **Selective Adoption Available**: Can still manually apply specific best practices
-- **Future Flexibility**: Decision can be revisited as project evolves
+- **Selective adoption available**: can still manually apply specific best practices.
+- **Future flexibility**: the decision can be revisited as the project evolves.
 
-## Implementation
+### Bad
 
-### No Changes Required
+- **Missed modernisation**: won't automatically adopt the latest JavaScript best practices.
+- **Manual review**: some patterns that plugins would catch require human review.
+- **Potential technical debt**: some code patterns may become outdated.
+- **Less guidance**: new contributors will not have extensive style enforcement.
 
-Continue using current `eslint.config.js`:
+## Confirmation
+
+This decision is implemented when:
+
+1. `eslint.config.js` does NOT include `eslint-plugin-unicorn`, `eslint-plugin-sonarjs`, `@stylistic/eslint-plugin`, or `eslint-plugin-node` as plugins.
+2. `eslint.config.js` includes `@eslint/js` recommended rules and `eslint-plugin-security`.
+3. `npm run lint` completes in under ~2 seconds on the current codebase.
+4. The number of `eslint-disable` comments remains in single digits.
+
+### Continue using current `eslint.config.js`
 
 ```javascript
 import js from '@eslint/js';
@@ -132,135 +183,80 @@ export default [
 ];
 ```
 
-### When to Reconsider
+## Pros and Cons of the Options
 
-Review this decision if:
+### Option 1 — Keep current configuration (chosen)
 
-1. **Project Growth**: Codebase exceeds 5,000 LOC
-2. **Team Expansion**: Multiple active contributors join
-3. **Maintenance Issues**: Bugs that linting plugins would prevent
-4. **Major Refactoring**: Natural time to adopt stricter standards
-5. **Quality Problems**: eslint-disable comments proliferate
-6. **Dependency Issues**: Security plugin no longer maintained
-7. **Complexity Creep**: Functions becoming difficult to understand/maintain
+- Good: zero migration; fast CI; low maintenance.
+- Good: current quality measures are demonstrably sufficient.
+- Bad: relies on human review to catch patterns plugins would automate.
 
-**Recommendation if adding a plugin**: Choose **eslint-plugin-sonarjs** over unicorn for its focus on bugs and maintainability over style.
+### Option 2 — `eslint-plugin-unicorn` (full configuration)
 
-### Alternative: Selective Rule Adoption
+**Approach**: enable all 100+ unicorn rules.
 
-If specific improvements are identified, consider adding individual rules from plugins without full plugin adoption:
+- Good: maximum consistency and modernisation.
+- Good: enforces latest JavaScript best practices.
+- Good: many auto-fixable rules reduce manual work.
+- Good: popular, well-maintained plugin.
+- Bad: very opinionated; may not agree with all rules.
+- Bad: significant initial refactoring (likely 50–100 issues).
+- Bad: slower CI/linting times.
+- Bad: overkill for a small, single-contributor project.
+- Bad: breaking changes in plugin updates.
+- Bad: time spent on style > functionality.
+- Rejection reason: cost/benefit ratio unfavourable for project scale. Would introduce churn without addressing actual problems.
 
-**High-value unicorn rules to consider individually:**
+### Option 3 — `eslint-plugin-unicorn` (selective rules)
 
-```javascript
-// If adopting selective rules later
-{
-  plugins: { unicorn },
-  rules: {
-    'unicorn/prefer-node-protocol': 'error',      // import 'node:fs' vs 'fs'
-    'unicorn/prefer-module': 'error',             // ESM best practices
-    'unicorn/error-message': 'error',             // new Error() must have message
-    'unicorn/explicit-length-check': 'error',     // .length > 0 clarity
-    'unicorn/no-array-reduce': 'warn',            // reduce() often unclear
-    'unicorn/prefer-array-some': 'error',         // .some() vs .find()
-    'unicorn/prefer-spread': 'error',             // [...array] vs Array.from()
-    'unicorn/throw-new-error': 'error',           // throw new Error() not Error()
-  }
-}
-```
+**Approach**: cherry-pick 10–20 specific unicorn rules.
 
-**Criteria for selective adoption:**
+- Good: targeted improvements without full plugin overhead.
+- Good: can focus on bug-prevention rules.
+- Good: lower refactoring cost.
+- Bad: still requires dependency and configuration maintenance.
+- Bad: need to research and select "right" rules.
+- Bad: partial adoption may be inconsistent.
+- Bad: no current problems these would solve.
+- Rejection reason: even selective adoption adds complexity without clear need. Current quality measures are sufficient.
 
-- Rule prevents actual bugs (not just style)
-- Auto-fixable (minimal manual effort)
-- Addresses observed code review feedback
-- Team consensus on value
+### Option 4 — `eslint-plugin-sonarjs`
 
-## Alternatives Considered
+**Approach**: add ~30 cognitive-complexity and bug-detection rules from SonarSource.
 
-### Add eslint-plugin-unicorn (Full Configuration)
+- Good: **bug-prevention focus** — catches logic errors, duplicated code, confusing patterns.
+- Good: **cognitive-complexity tracking** — quantifies function complexity (measurable metric).
+- Good: smaller footprint (~30 rules vs 100+).
+- Good: less opinionated; focuses on correctness over style preferences.
+- Good: professional pedigree (SonarSource).
+- Good: lower false positives; rules target genuine maintainability issues.
+- Good: **better than unicorn**: if adding anything, this is the best choice.
+- Bad: another dependency to maintain.
+- Bad: may flag working code (complex but correct functions).
+- Bad: subjective thresholds (complexity limit default 15 is somewhat arbitrary).
+- Bad: most issues require manual refactoring.
+- Bad: configuration tuning may be needed.
+- Bad: not necessary given current quality.
 
-**Approach**: Enable all 100+ unicorn rules
+**Expected impact on `dry-aged-deps`:**
 
-**Pros:**
+- 5–10 warnings likely (based on codebase analysis at the time of the decision).
+- `printOutdated()` (277 lines) may exceed cognitive complexity.
+- `cli-options.js` (470 lines) validation logic might be flagged.
+- 2–4 hours of refactoring effort to address issues.
+- Potential improvements: extract validation functions, simplify conditionals.
 
-- Maximum consistency and modernization
-- Enforces latest JavaScript best practices
-- Many auto-fixable rules reduce manual work
-- Popular, well-maintained plugin
+**Rejection reason**: while sonarjs is superior to unicorn (bug prevention > style), the project's current quality measures are sufficient. The codebase shows no evidence of complexity problems:
 
-**Cons:**
-
-- Very opinionated; may not agree with all rules
-- Significant initial refactoring (likely 50-100 issues)
-- Slower CI/linting times
-- Overkill for small, single-contributor project
-- Breaking changes in plugin updates
-- Time spent on style > functionality
-
-**Rejection Reason**: Cost/benefit ratio unfavorable for project scale. Would introduce churn without addressing actual problems.
-
-### Add eslint-plugin-unicorn (Selective Rules)
-
-**Approach**: Cherry-pick 10-20 specific unicorn rules
-
-**Pros:**
-
-- Targeted improvements without full plugin overhead
-- Can focus on bug-prevention rules
-- Lower refactoring cost
-
-**Cons:**
-
-- Still requires dependency and configuration maintenance
-- Need to research and select "right" rules
-- Partial adoption may be inconsistent
-- No current problems these would solve
-
-**Rejection Reason**: Even selective adoption adds complexity without clear need. Current quality measures are sufficient.
-
-### Add eslint-plugin-sonarjs
-
-**Approach**: Add ~30 cognitive complexity and bug detection rules from SonarSource
-
-**Pros:**
-
-- **Bug Prevention Focus**: Catches logic errors, duplicated code, and confusing patterns
-- **Cognitive Complexity Tracking**: Quantifies function complexity (measurable metric)
-- **Smaller Footprint**: ~30 rules vs 100+ (more targeted than unicorn)
-- **Less Opinionated**: Focuses on correctness over style preferences
-- **Professional Pedigree**: From SonarSource (static analysis experts)
-- **Lower False Positives**: Rules target genuine maintainability issues
-- **Better Than Unicorn**: If adding anything, this is the best choice
-
-**Cons:**
-
-- **Another Dependency**: More maintenance overhead
-- **May Flag Working Code**: Complex but correct functions will be flagged for refactoring
-- **Subjective Thresholds**: Complexity limits (default: 15) are somewhat arbitrary
-- **Not Auto-Fixable**: Most issues require manual refactoring
-- **Configuration Needed**: Thresholds may need tuning for project
-- **Still Not Necessary**: Current quality is good without it
-
-**Expected Impact on dry-aged-deps:**
-
-- **5-10 warnings** likely (based on codebase analysis)
-- `printOutdated()` (277 lines) may exceed cognitive complexity
-- `cli-options.js` (470 lines) validation logic might be flagged
-- **2-4 hours** refactoring effort to address issues
-- **Potential improvements**: Extract validation functions, simplify conditionals
-
-**Rejection Reason**: While sonarjs is superior to unicorn (bug prevention > style), the project's current quality measures are sufficient. The codebase shows no evidence of complexity problems:
-
-- Only 236 control structures across 1,815 LOC (healthy ratio)
-- No deeply nested conditionals found
-- 96.96% test coverage catches logic bugs
-- TypeScript type checking prevents type errors
-- Single contributor understands complexity trade-offs
+- Only 236 control structures across 1,815 LOC (healthy ratio).
+- No deeply nested conditionals found.
+- 96.96% test coverage catches logic bugs.
+- TypeScript type checking prevents type errors.
+- Single contributor understands complexity trade-offs.
 
 **If circumstances change** (team growth, complexity issues), sonarjs would be the first plugin to add.
 
-**Example Configuration if Adopted:**
+**Example configuration if adopted:**
 
 ```javascript
 import sonarjs from 'eslint-plugin-sonarjs';
@@ -287,45 +283,45 @@ export default [
 ];
 ```
 
-### Use @stylistic/eslint-plugin
+### Option 5 — `@stylistic/eslint-plugin`
 
-**Approach**: Add formatting-focused rules
+**Approach**: add formatting-focused rules.
 
-**Pros:**
+- Good: modern replacement for deprecated formatting rules.
+- Good: comprehensive style enforcement.
+- Bad: Prettier already handles formatting.
+- Bad: redundant with existing tooling.
+- Bad: would conflict with Prettier.
+- Rejection reason: Prettier already provides formatting. Adding stylistic rules would create conflicts and duplication.
 
-- Modern replacement for deprecated formatting rules
-- Comprehensive style enforcement
+### Option 6 — `eslint-plugin-node`
 
-**Cons:**
+**Approach**: Node.js-specific best practices.
 
-- Prettier already handles formatting
-- Redundant with existing tooling
-- Would conflict with Prettier
+- Good: tailored for Node.js projects.
+- Good: catches Node.js-specific issues.
+- Bad: ESLint + security plugin cover critical Node.js concerns.
+- Bad: project uses modern Node.js (v18+) without deprecated APIs.
+- Bad: would add minimal value.
+- Rejection reason: current rules cover Node.js essentials. Project does not use deprecated Node.js features.
 
-**Rejection Reason**: Prettier already provides formatting. Adding stylistic rules would create conflicts and duplication.
+## Reassessment Criteria
 
-### Add eslint-plugin-node
+Review this decision when:
 
-**Approach**: Node.js-specific best practices
-
-**Pros:**
-
-- Tailored for Node.js projects
-- Catches Node.js-specific issues
-
-**Cons:**
-
-- ESLint + security plugin cover critical Node.js concerns
-- Project uses modern Node.js (v18+) without deprecated APIs
-- Would add minimal value
-
-**Rejection Reason**: Current rules cover Node.js essentials. Project doesn't use deprecated Node.js features.
+1. **Project growth**: codebase exceeds 5,000 LOC.
+2. **Team expansion**: multiple active contributors join.
+3. **Maintenance issues**: bugs emerge that linting plugins would prevent.
+4. **Major refactoring**: a natural time to adopt stricter standards.
+5. **Quality problems**: `eslint-disable` comments proliferate.
+6. **Dependency issues**: the security plugin is no longer maintained.
+7. **Complexity creep**: functions become difficult to understand/maintain.
 
 ## Related Decisions
 
-- **ADR 0001**: Use ES Modules - Modern JavaScript already adopted
-- **ADR 0006**: JSDoc Type Checking - Type safety covered by TypeScript
-- Prettier configuration - Formatting already handled
+- **ADR-0001**: Use ES Modules — modern JavaScript already adopted.
+- **ADR-0006**: JSDoc Type Checking — type safety covered by TypeScript.
+- Prettier configuration — formatting already handled.
 
 ## References
 
@@ -333,14 +329,3 @@ export default [
 - [eslint-plugin-sonarjs](https://github.com/SonarSource/eslint-plugin-sonarjs)
 - [ESLint Recommended Rules](https://eslint.org/docs/latest/rules/)
 - [eslint-plugin-security](https://github.com/eslint-community/eslint-plugin-security)
-
-## Review Schedule
-
-This decision should be reviewed:
-
-- When codebase exceeds 5,000 LOC
-- When adding additional active contributors
-- If code quality issues emerge that linting would prevent
-- During major refactoring efforts
-- Every 12 months or with significant project changes
-- If security plugin becomes unmaintained

@@ -1,69 +1,61 @@
+---
+status: "accepted"
+date: 2025-11-12
+decision-makers: ["Tom Howard"]
+consulted: []
+informed: []
+reassessment-date: 2026-11-12
+---
+
 # 0005. Semantic Release Version Management
 
-Date: 2025-11-12
-
-## Status
-
-Accepted
-
-## Context
+## Context and Problem Statement
 
 We use semantic-release to automate version management, changelog generation, and npm publishing in our CI/CD pipeline. This decision addresses how version information is managed in source control versus published packages.
 
-### Key Considerations
+### Key considerations
 
-1. **Semantic Release Philosophy**: Versions are determined by commit messages, not manually set
-2. **Source of Truth**: Git tags represent the authoritative version history
-3. **Package Distribution**: Published npm packages need accurate version information
-4. **CHANGELOG Management**: Users and developers need clear release history
-5. **CI/CD Automation**: The pipeline handles version bumps and publishing
+1. **Semantic-release philosophy**: versions are determined by commit messages, not manually set.
+2. **Source of truth**: git tags represent the authoritative version history.
+3. **Package distribution**: published npm packages need accurate version information.
+4. **CHANGELOG management**: users and developers need clear release history.
+5. **CI/CD automation**: the pipeline handles version bumps and publishing.
 
-### Current State
+### Prior state
 
-- Semantic-release runs in the CI/CD pipeline (`ci-publish.yml`)
-- Configuration in `.releaserc.json` uses default plugins
-- `package.json` in the repository may not reflect the latest published version
-- CHANGELOG.md is not automatically maintained by semantic-release
+- Semantic-release runs in the CI/CD pipeline (`ci-publish.yml`).
+- Configuration in `.releaserc.json` uses default plugins.
+- `package.json` in the repository may not reflect the latest published version.
+- CHANGELOG.md is not automatically maintained by semantic-release.
 
-## Decision
+## Decision Drivers
 
-**Version bumps and package.json updates are managed exclusively by semantic-release in the CI/CD pipeline and are NOT committed back to the repository.**
+- **Single source of truth**: git tags created by semantic-release are the authoritative version record.
+- **Clean history**: avoid automated "chore: release" commits that clutter git history.
+- **No conflicts**: eliminate merge conflicts from version-bump commits.
+- **Standard practice**: align with semantic-release best practices for CI/CD environments.
+- **Trust the process**: published packages always have correct versions; the repo version is a development placeholder.
+
+## Considered Options
+
+1. **Version bumps managed exclusively by semantic-release in CI; not committed back to the repository.**
+2. **Commit version updates back to the repo** via `@semantic-release/git`.
+3. **Manual version management** — developers update versions following semver.
+4. **Keep `package.json` updated in CI but don't commit** — the same as Option 1, named separately to disambiguate.
+
+## Decision Outcome
+
+Chosen option: **Version bumps and `package.json` updates are managed exclusively by semantic-release in the CI/CD pipeline and are NOT committed back to the repository**, because git tags are the authoritative version record, clean history avoids automated noise, and avoiding commit-back eliminates merge conflicts.
 
 ### Rationale
 
-1. **Single Source of Truth**: Git tags created by semantic-release are the authoritative version record
-2. **Clean History**: Avoids automated "chore: release" commits that clutter git history
-3. **No Conflicts**: Eliminates merge conflicts from version bump commits
-4. **Standard Practice**: Aligns with semantic-release best practices for CI/CD environments
-5. **Trust the Process**: Published packages always have correct versions; repo version is a development placeholder
+1. **Single source of truth**: git tags created by semantic-release are the authoritative version record.
+2. **Clean history**: avoids automated "chore: release" commits that clutter git history.
+3. **No conflicts**: eliminates merge conflicts from version-bump commits.
+4. **Standard practice**: aligns with semantic-release best practices for CI/CD environments.
+5. **Trust the process**: published packages always have correct versions; repo version is a development placeholder.
 
-## Consequences
-
-### Positive
-
-- **Clean Git History**: No automated version bump commits
-- **No Merge Conflicts**: Version updates don't create conflicts in PRs
-- **Simplified Workflow**: Developers don't need to manually update versions
-- **CI/CD Owned**: Version management is fully automated and consistent
-- **Tag Authority**: Git tags clearly show all released versions
-
-### Negative
-
-- **Repo/Package Version Mismatch**: `package.json` version in the repo may lag behind published version
-- **Manual CHANGELOG**: Need alternative approach for maintaining CHANGELOG.md
-- **Developer Confusion**: May be unclear what version will be published next
-- **Tooling Assumptions**: Some tools expect repo and published versions to match
-
-### Mitigation Strategies
-
-1. **CHANGELOG Management**: Maintain CHANGELOG.md manually or use a separate tool
-2. **Documentation**: Clearly document that git tags are the version source of truth
-3. **Version Queries**: Use `npm show dry-aged-deps version` to check published version
-4. **Pre-release Information**: Document how to determine next version from commits
-
-## Implementation Notes
-
-### Semantic Release Configuration
+### Semantic-release configuration
 
 ```json
 {
@@ -77,18 +69,21 @@ We use semantic-release to automate version management, changelog generation, an
 }
 ```
 
-**Note**: No `@semantic-release/git` plugin, which would commit changes back to the repo.
+**Note**: no `@semantic-release/git` plugin, which would commit changes back to the repo.
 
-### CHANGELOG.md Management
+### CI/CD workflow
 
-Since semantic-release doesn't update CHANGELOG.md in our configuration, we must:
+1. Developer commits with a conventional commit message.
+2. CI/CD runs tests and validation.
+3. semantic-release analyses commits.
+4. If a release is warranted:
+   - Determines the next version.
+   - Updates `package.json` (in CI only).
+   - Creates a git tag.
+   - Publishes to npm.
+   - Creates a GitHub Release with notes.
 
-1. **Manual Updates**: Update CHANGELOG.md when making significant changes
-2. **GitHub Releases**: Primary source of release notes (automated by semantic-release)
-3. **Repo CHANGELOG**: Acts as a summary; GitHub releases are authoritative
-4. **Version References**: Don't include specific version numbers in development documentation
-
-### Checking Versions
+### Checking versions
 
 ```bash
 # Published version
@@ -104,57 +99,47 @@ npm show dry-aged-deps versions
 git tag -l "v*"
 ```
 
-### CI/CD Workflow
+## Consequences
 
-1. Developer commits with conventional commit message
-2. CI/CD runs tests and validation
-3. Semantic-release analyzes commits
-4. If release warranted:
-   - Determines next version
-   - Updates package.json (in CI only)
-   - Creates git tag
-   - Publishes to npm
-   - Creates GitHub release with notes
+### Good
 
-## Alternatives Considered
+- **Clean git history**: no automated version-bump commits.
+- **No merge conflicts**: version updates do not create conflicts in PRs.
+- **Simplified workflow**: developers do not need to manually update versions.
+- **CI/CD owned**: version management is fully automated and consistent.
+- **Tag authority**: git tags clearly show all released versions.
 
-### Commit Version Updates Back to Repo
+### Neutral
 
-Using `@semantic-release/git` plugin to commit version bumps.
+- **CHANGELOG management**: the project must adopt a separate strategy for human-readable history (see CHANGELOG implications below).
 
-- **Pros**: Repo and published versions always match
-- **Cons**: Creates automated commits, potential conflicts, cluttered history
-- **Rejection Reason**: Clean history and avoiding conflicts outweigh version synchronization benefits
+### Bad
 
-### Manual Version Management
+- **Repo/package version mismatch**: `package.json` version in the repo may lag behind the published version.
+- **Manual CHANGELOG**: an alternative approach is needed for maintaining CHANGELOG.md.
+- **Developer confusion**: may be unclear what version will be published next.
+- **Tooling assumptions**: some tools expect repo and published versions to match.
 
-Developers manually update versions following semantic versioning.
+### Mitigation strategies
 
-- **Pros**: Direct control, explicit version decisions
-- **Cons**: Human error, inconsistent versioning, additional workflow steps
-- **Rejection Reason**: Automation reduces errors and ensures consistency
+1. **CHANGELOG management**: maintain CHANGELOG.md manually or use a separate tool.
+2. **Documentation**: clearly document that git tags are the version source of truth.
+3. **Version queries**: use `npm show dry-aged-deps version` to check the published version.
+4. **Pre-release information**: document how to determine the next version from commits.
 
-### Keep package.json Updated Without Commits
-
-Update package.json in CI but don't commit (current approach).
-
-- **Pros**: Clean history, simple workflow, published packages correct
-- **Cons**: Repo version lags behind
-- **Selection Reason**: Best balance of automation, clean history, and correctness
-
-## CHANGELOG.md Implications
+### CHANGELOG.md implications
 
 With this approach to version management:
 
-1. **CHANGELOG.md is NOT auto-generated** by semantic-release
-2. **GitHub Releases are authoritative** and auto-generated with full release notes
-3. **CHANGELOG.md becomes redundant** - semantic-release already creates comprehensive changelogs
+1. **CHANGELOG.md is NOT auto-generated** by semantic-release.
+2. **GitHub Releases are authoritative** and auto-generated with full release notes.
+3. **CHANGELOG.md becomes redundant** — semantic-release already creates comprehensive changelogs.
 
-### Recommendation: Simplify CHANGELOG.md
+#### Recommendation: simplify CHANGELOG.md
 
-Since semantic-release automatically generates detailed release notes on GitHub Releases (including version links, categorized changes, commit links), maintaining a separate CHANGELOG.md creates duplicate effort with no added value.
+Since semantic-release automatically generates detailed release notes on GitHub Releases (including version links, categorised changes, and commit links), maintaining a separate CHANGELOG.md creates duplicate effort with no added value.
 
-**Recommended approach**: Replace CHANGELOG.md with a pointer to GitHub Releases.
+**Recommended approach**: replace CHANGELOG.md with a pointer to GitHub Releases.
 
 ```markdown
 # Changelog
@@ -171,22 +156,69 @@ Each release includes:
 For historical context, see the [Releases page](https://github.com/voder-ai/dry-aged-deps/releases).
 ```
 
-### Why This Makes Sense
+#### Why this makes sense
 
-1. **Single Source of Truth**: GitHub Releases are already comprehensive
-2. **No Duplication**: Avoid maintaining two changelogs
-3. **Auto-Generated Quality**: Semantic-release creates better changelogs than manual updates
-4. **Always Current**: Never gets out of sync with actual releases
-5. **Rich Features**: GitHub UI provides filtering, searching, and RSS feeds
-6. **Standard Practice**: Many projects using semantic-release follow this pattern
+1. **Single source of truth**: GitHub Releases are already comprehensive.
+2. **No duplication**: avoid maintaining two changelogs.
+3. **Auto-generated quality**: semantic-release creates better changelogs than manual updates.
+4. **Always current**: never gets out of sync with actual releases.
+5. **Rich features**: the GitHub UI provides filtering, searching, and RSS feeds.
+6. **Standard practice**: many projects using semantic-release follow this pattern.
 
-### If You Must Maintain CHANGELOG.md
+#### If you must maintain CHANGELOG.md
 
-If project requirements mandate a CHANGELOG.md file (e.g., for npm package consumers who don't use GitHub):
+If project requirements mandate a CHANGELOG.md file (for example for npm package consumers who don't use GitHub):
 
-1. Consider adding `@semantic-release/changelog` plugin to auto-generate it
-2. Or use `@semantic-release/git` to commit both version and changelog updates
-3. Accept the trade-off of automated commits in git history
+1. Consider adding the `@semantic-release/changelog` plugin to auto-generate it.
+2. Or use `@semantic-release/git` to commit both version and changelog updates.
+3. Accept the trade-off of automated commits in git history.
+
+## Confirmation
+
+This decision is implemented when:
+
+1. `.releaserc.json` specifies the plugin set `commit-analyzer`, `release-notes-generator`, `npm`, `github` — and does NOT include `@semantic-release/git`.
+2. The CI pipeline runs semantic-release on push to `main`.
+3. Git tags exist for every published version and are the authoritative version record.
+4. `package.json` in the repository is not updated by automation as part of release.
+5. CHANGELOG.md either points to GitHub Releases or is not maintained as a duplicate of the GitHub Releases content.
+
+## Pros and Cons of the Options
+
+### Option 1 — semantic-release in CI, no commit-back (chosen)
+
+- Good: clean git history; no automated commits.
+- Good: aligned with semantic-release best practices.
+- Good: no merge conflicts on version bumps.
+- Bad: repo version lags behind published version.
+- Bad: manual CHANGELOG strategy needed.
+
+### Option 2 — Commit version updates back to repo
+
+- Good: repo and published versions always match.
+- Bad: creates automated commits, potential conflicts, cluttered history.
+- Rejection reason: clean history and avoiding conflicts outweigh version synchronisation benefits.
+
+### Option 3 — Manual version management
+
+- Good: direct control, explicit version decisions.
+- Bad: human error, inconsistent versioning, additional workflow steps.
+- Rejection reason: automation reduces errors and ensures consistency.
+
+### Option 4 — Keep `package.json` updated without commits (current approach, equivalent to Option 1)
+
+- Good: clean history, simple workflow, published packages correct.
+- Bad: repo version lags behind.
+- Selection reason: best balance of automation, clean history, and correctness.
+
+## Reassessment Criteria
+
+Reassess this decision when:
+
+- CHANGELOG maintenance becomes too burdensome.
+- The repo/package version mismatch causes significant issues.
+- Considering alternative release-automation tools.
+- Every 12 months, or with major workflow changes.
 
 ## References
 
@@ -194,12 +226,3 @@ If project requirements mandate a CHANGELOG.md file (e.g., for npm package consu
 - [Conventional Commits](https://www.conventionalcommits.org/)
 - [Keep a Changelog](https://keepachangelog.com/)
 - [Semantic Release Git Plugin](https://github.com/semantic-release/git) (intentionally not used)
-
-## Review Schedule
-
-This decision should be reviewed:
-
-- If CHANGELOG maintenance becomes too burdensome
-- If repo/package version mismatch causes significant issues
-- When considering alternative release automation tools
-- Every 12 months or with major workflow changes
