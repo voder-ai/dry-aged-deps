@@ -1,11 +1,20 @@
 # Problem 001: dry-aged-deps --update skips exact-pinned dependencies
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-05-12
+**Released**: 2026-05-13
 **Priority**: 16 (High) — Impact: Significant (4) x Likelihood: Likely (4)
 **Effort**: M — multiple files (src/update-packages.js, src/build-rows.js), spec clarification needed in prompts/011.0, plus reproduction test
 **WSJF**: 16.0 = (16 × 2.0) / 2
 **Type**: technical
+
+## Verification trigger
+
+Next `node ./bin/dry-aged-deps.js --update --yes` against a project with an exact-pinned, mature, vulnerability-free dependency (e.g. lift the `globals` entry from `.dry-aged-deps.json` exclude list and re-run) writes the `latest` version into `package.json` (not `current`) and prints `${current} → ${latest}` in the preview (no `X → X` line).
+
+## Resolution
+
+Recorded in ADR-0014 (`docs/decisions/0014-update-target-is-latest-safe-not-wanted.proposed.md`): `applyUpdates()` now writes the 4th tuple element (`latest`, the post-filter / post-smart-search safe target) instead of the 3rd (`wanted`). Preview line updated to `${current} → ${latest}`. Reproduction test landed at `src/update-packages.test.js`. Spec language in `prompts/011.0-DEV-AUTO-UPDATE.md` REQ-SAFE-ONLY clarified to remove the "latest safe version" ambiguity.
 
 ## Description
 

@@ -210,7 +210,10 @@ describe('Story 001.0-DEV-RUN-NPM-OUTDATED: Functional assessment - CLI end-to-e
     expect(result.exitCode).toBe(0);
     expect(result.stdout).toContain('The following packages will be updated');
     const updated = JSON.parse(await fs.readFile(path.join(tmpDir, 'package.json'), 'utf8'));
-    expect(updated.devDependencies).toHaveProperty('fakepkg', '1.1.0');
+    // Per ADR-0014, --update writes the latest-safe version (mock's `latest` = 2.0.0),
+    // not the semver-range-satisfying `wanted` (1.1.0). Both are mature + vulnerability-free
+    // in the mock, so the filter pipeline produces 2.0.0 as the safe target.
+    expect(updated.devDependencies).toHaveProperty('fakepkg', '2.0.0');
     // backup exists
     const stat = await fs.stat(path.join(tmpDir, 'package.json.backup'));
     expect(stat.isFile()).toBe(true);

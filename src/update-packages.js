@@ -43,20 +43,26 @@ function createBackup(pkgPath) {
 /**
  * Apply dependency updates to package.json.
  *
+ * Writes the 4th tuple element (`latest`) — the post-filter / post-smart-search safe
+ * target produced by applyFilters() — into the corresponding package.json entry. Per
+ * ADR-0014, this is the canonical "latest safe version" and the only column that has
+ * been validated by the maturity + security filters. Writing the 3rd element (`wanted`)
+ * would produce a no-op for exact-pinned dependencies (P001).
+ *
  * @param {string} pkgPath - Path to package.json.
- * @param {Array<[string, string, string, string, number|string, string]>} safeRows - Array of tuples [name, current, wanted, latest, age, depType] where name is package name, current is installed version, wanted is safe version to update to, latest is latest available version, age is release age in days or version distance, depType is 'prod' or 'dev'.
- * @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-PACKAGE-JSON REQ-POST-UPDATE
+ * @param {Array<[string, string, string, string, number|string, string]>} safeRows - Array of tuples [name, current, wanted, latest, age, depType] where name is package name, current is installed version, wanted is the semver-range-satisfying version (unused — see ADR-0014), latest is the post-filter / post-smart-search safe target written to package.json, age is release age in days or version distance, depType is 'prod' or 'dev'.
+ * @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-PACKAGE-JSON REQ-POST-UPDATE REQ-SAFE-ONLY
  */
 function applyUpdates(pkgPath, safeRows) {
   const pkgContent = fs.readFileSync(pkgPath, 'utf8');
   const pkgData = JSON.parse(pkgContent);
 
-  safeRows.forEach(([name, , wanted, , , depType]) => {
-    // @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-PACKAGE-JSON
+  safeRows.forEach(([name, , , latest, , depType]) => {
+    // @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-PACKAGE-JSON REQ-SAFE-ONLY
     if (depType === 'prod') {
-      pkgData.dependencies = { ...(pkgData.dependencies || {}), [name]: wanted };
+      pkgData.dependencies = { ...(pkgData.dependencies || {}), [name]: latest };
     } else {
-      pkgData.devDependencies = { ...(pkgData.devDependencies || {}), [name]: wanted };
+      pkgData.devDependencies = { ...(pkgData.devDependencies || {}), [name]: latest };
     }
   });
 
@@ -85,8 +91,11 @@ export async function updatePackages(safeRows, skipConfirmation, summary) {
   }
 
   console.log('The following packages will be updated:');
-  safeRows.forEach(([name, current, wanted]) => {
-    console.log(`  ${name}: ${current} → ${wanted}`);
+  // Preview shows the actual target written to package.json (latest, element[3]) per ADR-0014.
+  // The pre-fix code rendered `${current} → ${wanted}` which produced a misleading `X → X` for
+  // exact-pinned packages (P001 symptom).
+  safeRows.forEach(([name, current, , latest]) => {
+    console.log(`  ${name}: ${current} → ${latest}`);
   });
 
   const confirmed = await promptConfirmation(skipConfirmation);

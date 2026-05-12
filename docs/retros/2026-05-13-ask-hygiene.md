@@ -140,3 +140,71 @@ None this iter. The iter was clean: TDD worked smoothly (RED → GREEN), archite
 
 - TDD workflow on shell scripts via static-content vitest tests is documented in the project's existing pattern (`test/husky-pre-commit.test.js`). The new `test/push-watch.script-contract.test.js` follows the same shape — no codification needed.
 - Pre-commit hook abort + re-stage flow exercised correctly per P003 design — see Verification Candidates section above.
+
+---
+
+## Iteration retro — AFK `/wr-itil:work-problems` (P001 fix)
+
+Scope: single AFK iteration that worked P001 (dry-aged-deps --update skips exact-pinned dependencies) to verifying. First iter this session to touch PRODUCT code in `src/`. Iteration explicitly forbids mid-loop `AskUserQuestion` (P135 / ADR-044); observations queue to `ITERATION_SUMMARY.outstanding_questions` instead.
+
+| Call # | Header | Classification | Citation                                                                                                                                                   |
+| ------ | ------ | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| (none) | n/a    | n/a            | n/a — zero AskUserQuestion calls fired in this iteration per the AFK mid-loop prohibition (dispatch prompt: "NEVER call AskUserQuestion mid-loop in AFK"). |
+
+**Lazy count: 0**
+**Direction count: 0**
+**Override count: 0**
+**Silent-framework count: 0**
+**Taste count: 0**
+**Correction-followup count: 0**
+
+**Total: 0 calls**
+
+The day's trend across four retros so far: interactive ~3 → P003 AFK iter 0 → P002 AFK iter 0 → P001 AFK iter 0. R6 gate (≥2 lazy across 3 consecutive retros) NOT fired — three AFK iters in a row with lazy count 0.
+
+### Session Retrospective — P001 iter
+
+#### Briefing Changes
+
+- No new entries added. The fix discharges P001's "no-op on exact pins" content from the Critical Points roll-up; remove on the next interactive retro (signal score will decay once the verifying-close lands).
+- Per-entry signal scoring deferred to next interactive retro. The autonomous-dep-updates entry on line 25-26 ("Almost every scheduled run on this repo will short-circuit because `dry-aged-deps --update` can't bump exact pins") needs to be updated once P001 closes (the short-circuit reason changes).
+
+#### Problems Created/Updated
+
+- **P001** — transitioned `.known-error.md` → `.verifying.md` per ADR-022. Fix landed: `src/update-packages.js applyUpdates()` now writes the 4th tuple element `latest` (post-filter / post-smart-search safe target) instead of the 3rd `wanted` per ADR-0014. Preview line updated to `${current} → ${latest}`. Reproduction test at `src/update-packages.test.js`. Spec clarified in `prompts/011.0-DEV-AUTO-UPDATE.md` REQ-SAFE-ONLY. Functional-assessment test asserting `1.1.0` (wanted) updated to assert `2.0.0` (latest).
+- **ADR-0014** — new ADR created (`docs/decisions/0014-update-target-is-latest-safe-not-wanted.proposed.md`) recording the disambiguation between `wanted` vs `latest` as the `--update` target. Status `proposed`; will move to `.accepted.md` once P001 closes verifying.
+
+#### Verification Candidates
+
+(None this iter — the only `.verifying.md` files in the corpus (P001 newly transitioned, P002 + P003 from prior iters) were not exercised by this iter's tool calls beyond their existing close-candidates. No new evidence beyond what the prior P002/P003 retros surfaced.)
+
+#### Pipeline Instability
+
+| Signal                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | Category               | Citations                                                                                                                                                                                                                                                                                                                         | Decision                                                                                 |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| TDD hook expects co-located tests (`STEM.test.<ext>` same-dir or `__tests__/` subdir) but the project convention puts all tests in `test/`. First Edit attempt on `src/update-packages.js` blocked: "TDD state is IDLE. Write a failing test first (e.g., /Users/tomhoward/Projects/dry-aged-deps/src/update-packages.test.js)". Inspecting `~/.claude/plugins/marketplaces/windyroad/packages/tdd/hooks/lib/tdd-gate.sh tdd_find_test_for_impl()` confirmed the per-test-file mapping uses `${STEM}.test.*` or `${STEM}.spec.*` in `$DIR` or `${DIR}/__tests__`. No mapping for `test/` directory siblings. Forced creating `src/update-packages.test.js` co-located (violates project convention but satisfies hook). | Hook-protocol friction | First block at turn ~30 after writing `test/update-packages.exact-pin.test.js`. Resolution: deleted the test/ file, recreated at `src/update-packages.test.js`. Then second block: tsconfig.json `include: ["src/**/*"]` type-checks the new test file → 3 TS2345 errors on tuple types → forced adding `@type` JSDoc assertions. | flagged (non-interactive) — queue at outstanding_questions for ticket creation on return |
+| JTBD currency advisory: not applicable (no `packages/` directory in this adopter-tree project; detector is plugin-suite-scoped).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | n/a                    | n/a                                                                                                                                                                                                                                                                                                                               | n/a                                                                                      |
+
+#### Context Usage (Cheap Layer)
+
+Not measured this iter — script not invoked. Prior snapshot from P002 iter retro on 2026-05-13 remains the latest reading for this project. Bucket totals unlikely changed materially: this iter added one ADR (~13 KB to `decisions`), one source test file (~5 KB), one ADR's worth of churn to `problems` (P001 verifying transition). Aggregate delta likely < 5% across buckets.
+
+Threshold remains 10,240 bytes per bucket. Deep analysis still recommended on `memory` and `decisions` (per prior retro); invoke `/wr-retrospective:analyze-context` on return.
+
+#### Topic File Rotation Candidates
+
+None this iter — no Step 3 rotation pass run (no briefing edits beyond observation; the cited entries are stable).
+
+#### Codification Candidates
+
+| Kind    | Shape                  | Suggested name / Target file                                                                           | Scope / Flaw                                                                                                                                                                                                                                                                                                                                                                    | Triggers / Evidence                                                                                                                                                                                                                             | Decision                                                                                 |
+| ------- | ---------------------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| improve | settings / hook config | `~/.claude/plugins/marketplaces/windyroad/packages/tdd/hooks/lib/tdd-gate.sh tdd_find_test_for_impl()` | TDD hook assumes co-located tests OR `__tests__/` subdir but does not recognize the common `test/` top-level-directory convention. The current logic in tdd_find_test_for_impl checks `$tracked_dir = $DIR` and `$tracked_dir = ${DIR}/__tests__` and `*/__tests__/*` paths — but a project where tests live in `test/<stem>.test.js` for impl in `src/<stem>.js` has no match. | Forced this iter to create `src/update-packages.test.js` co-located even though the project convention is all tests in `test/`. This will fire every time the same situation arises (any new src module + test in this or any similar project). | flagged (non-interactive) — queue at outstanding_questions for ticket creation on return |
+| improve | docs                   | `CLAUDE.md` (project)                                                                                  | If TDD hook conflict above is resolved upstream, the project may want to document its `test/` convention vs co-located. Optional.                                                                                                                                                                                                                                               | Same evidence as above.                                                                                                                                                                                                                         | flagged (non-interactive); subordinate to the upstream hook fix                          |
+
+#### No Action Needed
+
+- Architect gate correctly flagged that a new ADR was required (ADR-0014) before implementing the P001 fix. This was not friction — it was the gate working as designed (architect "ISSUES FOUND" pattern from briefing/governance-workflow.md line 11-12 confirmed: architect pushback was substantive, the disambiguation IS load-bearing for ADR-0009 and ADR-0004). Extended the iter scope from "fix + test" to "ADR + spec clarification + fix + test" but the resulting work is more durable.
+- JTBD gate PASSed first call. The project-maintainer / ci-automation-engineer JTBDs already covered this fix; no new persona or job needed.
+- TDD RED→GREEN cycle worked end-to-end once the file was co-located. All 4 new tests went RED (4/4 failing), then GREEN (4/4 passing) after the minimal applyUpdates change.
+- Full validation suite passed (lint 0 errors / 1 pre-existing warning, type-check clean, format clean, 234 tests pass, coverage 97% lines, duplication 0, audit clean).
