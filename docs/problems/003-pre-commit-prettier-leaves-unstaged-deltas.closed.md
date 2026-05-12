@@ -1,10 +1,11 @@
 # Problem 003: husky pre-commit `prettier --write` leaves unstaged working-tree deltas
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-05-13
+**Closed**: 2026-05-13 — verified during work-problems session: read-only `format:check` hook held cleanly across iter 2's commit cycle AND the 10-commit v2.7.1 drain push (no unstaged prettier deltas observed on either occasion). Closure authorised by user via /wr-itil:work-problems Step 2.5 routing.
 **Priority**: 10 (High) — Impact: Minor (2) x Likelihood: Almost certain (5)
 **Effort**: S — single-file change to .husky/pre-commit (lint-staged or format:check), plus test
-**WSJF**: 0 (excluded — Verification Pending per ADR-022)
+**WSJF**: 0 (excluded — Closed)
 **Type**: technical
 
 ## Description
