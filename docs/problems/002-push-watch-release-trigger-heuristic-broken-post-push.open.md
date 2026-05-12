@@ -10,7 +10,7 @@
 
 `scripts/push-watch.sh` (this project's, ported from windyroad and trimmed) reports `"No release-triggering commit types in this push (semantic-release will skip publish)"` even when a release IS cut. Observed this session: a push containing `feat(ci): adopt OIDC token-exchange for workflow auth` and `fix(deps): npm audit fix...` triggered `dry-aged-deps@2.7.0` to be published, but push:watch's trailing heuristic claimed no triggers were present.
 
-**Root cause**: the heuristic uses `git log --format=%s "@{push}.."`, which after a successful push returns the commits between the previous remote head and the current local head. *After* `git push` succeeds, `@{push}` points at the new remote head — same as the local head — so `@{push}..HEAD` is empty. The grep then matches zero lines and the script reports "no release-triggering commits".
+**Root cause**: the heuristic uses `git log --format=%s "@{push}.."`, which after a successful push returns the commits between the previous remote head and the current local head. _After_ `git push` succeeds, `@{push}` points at the new remote head — same as the local head — so `@{push}..HEAD` is empty. The grep then matches zero lines and the script reports "no release-triggering commits".
 
 **Fix shape**: capture the pre-push remote head into a variable BEFORE `git push` runs (`PRE_PUSH_REMOTE=$(git rev-parse @{push})` or equivalent), then use `${PRE_PUSH_REMOTE}..HEAD` for the heuristic. Test: a push of a `fix:` commit should report "Commits include release-triggering types".
 

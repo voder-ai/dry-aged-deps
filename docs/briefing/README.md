@@ -13,9 +13,9 @@ Per-topic briefing index. Each topic file holds short, durable observations acro
 
 ## Topic Index
 
-| Topic | File | Scope |
-|---|---|---|
-| Releases & CI | [`releases-and-ci.md`](releases-and-ci.md) | semantic-release, ci-publish.yml, version handling, push:watch |
-| Hooks & gates | [`hooks-and-gates.md`](hooks-and-gates.md) | architect/JTBD/TDD/ITIL gates, husky hooks, marker files |
-| Governance workflow | [`governance-workflow.md`](governance-workflow.md) | ADR / risk-policy / JTBD review cadence, capture-on-correction |
+| Topic                  | File                                                     | Scope                                                                             |
+| ---------------------- | -------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| Releases & CI          | [`releases-and-ci.md`](releases-and-ci.md)               | semantic-release, ci-publish.yml, version handling, push:watch                    |
+| Hooks & gates          | [`hooks-and-gates.md`](hooks-and-gates.md)               | architect/JTBD/TDD/ITIL gates, husky hooks, marker files                          |
+| Governance workflow    | [`governance-workflow.md`](governance-workflow.md)       | ADR / risk-policy / JTBD review cadence, capture-on-correction                    |
 | Autonomous dep updates | [`autonomous-dep-updates.md`](autonomous-dep-updates.md) | auto-update.yml + auto-update-recover.yml, OIDC token-exchange, branch protection |
