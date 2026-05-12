@@ -74,7 +74,7 @@ To satisfy the contract, the project must provision:
 
 - **`DEPS_BOT_TOKEN`** — a fine-grained personal access token (or a GitHub App installation token) with `contents: write` and `pull-requests: write` scoped to this repository. The token is used by the workflow only for `gh pr create` and `gh pr merge --auto --squash`. Branch pushes use `GITHUB_TOKEN` (the bot identity for commits remains `github-actions[bot]`).
 
-`ANTHROPIC_API_KEY` is governed by ADR-0010 and is not required by this ADR.
+`CLAUDE_CODE_OAUTH_TOKEN` (the Claude Code GitHub App OAuth token used by the recovery workflow) is governed by ADR-0010 and is not required by this ADR.
 
 ### Required branch-protection configuration
 
@@ -98,7 +98,7 @@ The trade-off: required status checks may in some GitHub configurations gate dir
 The workflow file lands on `main` with its `schedule:` trigger commented out, leaving only `workflow_dispatch:`. The schedule is re-enabled in a follow-up commit once all of the following are in place:
 
 1. `DEPS_BOT_TOKEN` is provisioned as a repo secret.
-2. `ANTHROPIC_API_KEY` is provisioned (governed by ADR-0010 but required for the recovery path the schedule depends on).
+2. `CLAUDE_CODE_OAUTH_TOKEN` is provisioned (auto-created by installing the Claude Code GitHub App on this repository; governed by ADR-0010 but required for the recovery path the schedule depends on).
 3. Branch protection on `main` is configured per "Required branch-protection configuration" above.
 4. A single `workflow_dispatch` invocation has been verified to complete end-to-end (PR opened, build-and-test green, squash-merged, semantic-release behaviour correct).
 
@@ -116,7 +116,7 @@ The schedule re-enable is a one-line commit (`feat(ci):` is appropriate as it ac
 ### Good
 
 - **Autonomous routine hygiene.** Aged-and-safe updates land within a day of crossing the threshold without requiring the maintainer's machine.
-- **Minimal secret surface.** Only one new secret (`DEPS_BOT_TOKEN`) is introduced; commits still use `GITHUB_TOKEN`. The recovery workflow's `ANTHROPIC_API_KEY` is governed separately by ADR-0010.
+- **Minimal secret surface.** Only one new manually-provisioned secret (`DEPS_BOT_TOKEN`) is introduced; commits still use `GITHUB_TOKEN`. The recovery workflow's `CLAUDE_CODE_OAUTH_TOKEN` (auto-provisioned by the Claude Code GitHub App) is governed separately by ADR-0010.
 - **One canonical CI gate.** The PR is validated by the same `ci-publish.yml` build-and-test job that gates human PRs, so there is no second validation surface to keep in lockstep.
 - **Clean release semantics.** `chore(deps):` and `fix(deps):` commits compose correctly with semantic-release: routine bumps accumulate without forcing releases; security bumps trigger patch releases.
 - **Human reviewable.** The PR is visible and squashable on demand for the period between opening and auto-merge.
@@ -145,7 +145,7 @@ This decision is implemented when all of the following hold:
 5. The workflow calls `gh pr merge --auto --squash` on the PR.
 6. Branch protection on `main` requires the `Build & Test` status check from `ci-publish.yml` AND does NOT require a pull request before merging (preserves TBD for the maintainer's direct pushes).
 7. Two consecutive successful scheduled runs land their PRs onto `main` without human intervention, with semantic-release publishing a release on the `fix(deps):` case and no release on the `chore(deps):` case.
-8. No `ANTHROPIC_API_KEY` or other AI-related secret is required for this workflow to function (such secrets are governed by ADR-0010).
+8. No `CLAUDE_CODE_OAUTH_TOKEN` or other AI-related secret is required for this workflow to function (such secrets are governed by ADR-0010).
 9. `DEPS_BOT_TOKEN` is configured at the repo level and is referenced by `auto-update.yml` only for `gh pr create` and `gh pr merge --auto --squash`. The token is NOT used for `git push` (which uses `GITHUB_TOKEN`).
 10. No step in the workflow uses `|| echo {}`, `|| true`, or any silent-failure pattern.
 

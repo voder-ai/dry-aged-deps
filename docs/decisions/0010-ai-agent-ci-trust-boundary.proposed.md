@@ -1,13 +1,15 @@
 ---
 status: 'proposed'
-date: 2026-05-11
+date: 2026-05-12
 decision-makers: ['Tom Howard']
 consulted: []
 informed: []
-reassessment-date: 2026-08-11
+reassessment-date: 2026-08-12
 ---
 
 # 0010. AI Agent CI Trust Boundary for Dependency-Update Recovery
+
+> **Amendment 2026-05-12:** funding model corrected. The recovery agent authenticates via the Claude Code GitHub App's `CLAUDE_CODE_OAUTH_TOKEN` and is billed against the maintainer's Claude subscription. The previous draft assumed a metered Anthropic API account (`ANTHROPIC_API_KEY`), which does not exist for this project. The underlying trust boundary, writable-paths allow-list, no-touch list, and single-retry policy are unchanged.
 
 ## Context and Problem Statement
 
@@ -35,7 +37,7 @@ The relevant JTBD job is JTBD-106 (recover-from-pr-failures) from the CI/Automat
 - **ADR-0008 integrity.** The agent must not silently widen the `.nsprc` exception list or the `audit:ci` `--exclude` list, because either would bypass the security-incident process.
 - **ADR-0005 integrity.** The agent must not modify `.releaserc.json` or `package.json#version`, because either would interfere with semantic-release ownership.
 - **Gate integrity.** The agent must fix root cause; it must not weaken the `prepush` suite, the husky hooks, the lint config, the commitlint config, the type-checker config, or the CI workflows in order to make CI pass.
-- **Cost discipline.** AI invocation costs real money per call. The trust boundary should keep invocation rare (failure-only) and bounded (one retry per failure).
+- **Capacity discipline.** AI invocation consumes Claude subscription capacity (rate-limit budget and seat usage), not metered API spend. The trust boundary should still keep invocation rare (failure-only) and bounded (one retry per failure) so a pathological day of dep-update failures cannot exhaust the maintainer's subscription quota.
 
 ## Considered Options
 
@@ -117,9 +119,10 @@ If the label is missing, the recovery workflow fails loudly on the label-add ste
 
 ### Secret management
 
-- `ANTHROPIC_API_KEY` is stored as a repo secret.
+- The recovery workflow authenticates to Claude via `CLAUDE_CODE_OAUTH_TOKEN`, a repo secret auto-provisioned by the Claude Code GitHub App when it was installed on this repository (via `/install-github-app` or equivalent GitHub App installation flow).
+- The token is bound to the maintainer's Claude subscription; billing is against subscription capacity (rate-limit budget and seat usage), not against a metered Anthropic API account. **This project does not have, and will not use, an `ANTHROPIC_API_KEY`.**
 - The secret is exposed only to the failure-handler job, not to the scheduled `auto-update.yml` workflow.
-- The secret is rotated according to the project's general secret-rotation cadence (no project-specific rotation policy currently exists; a future ADR may add one).
+- Rotation: the OAuth token's lifetime is managed by the Claude Code GitHub App; re-running `/install-github-app` regenerates the secret if it is revoked or expires. No project-specific rotation policy currently exists; a future ADR may add one.
 
 ### Audit log
 
@@ -146,8 +149,8 @@ If the label is missing, the recovery workflow fails loudly on the label-add ste
 
 ### Neutral
 
-- **One new secret.** `ANTHROPIC_API_KEY` joins the repo's secret surface. This is a real but small operational cost.
-- **One new vendor relationship.** Anthropic becomes a CI dependency. If their API is unavailable, the failure-handler simply does not fire and the PR stays failed — equivalent to "no AI escalation" (Option 4).
+- **One new secret, auto-provisioned.** `CLAUDE_CODE_OAUTH_TOKEN` joins the repo's secret surface. The Claude Code GitHub App provisions and refreshes it; no manual key generation or rotation. Operational cost is essentially zero.
+- **Existing vendor relationship deepened.** Anthropic's Claude is already the maintainer's primary AI tooling (per the Claude subscription); the recovery workflow uses that same subscription. If Claude is unavailable, the failure-handler simply does not fire and the PR stays failed — equivalent to "no AI escalation" (Option 4).
 
 ### Bad
 
@@ -163,7 +166,7 @@ This decision is implemented when all of the following hold:
 2. The recovery workflow invokes `anthropics/claude-code-action` with the failing-job logs, the PR diff, and a prompt that lists the writable-paths allow-list and the no-touch list verbatim.
 3. The recovery workflow runs at most once per failing run (no retry loop).
 4. After the agent finishes, a workflow step diffs the agent's commit against the no-touch globs. If any file in the no-touch list was modified, the step closes the PR, comments on it with the offending files, and exits non-zero.
-5. The `ANTHROPIC_API_KEY` secret is configured at the repository level and is referenced only by the recovery workflow.
+5. The `CLAUDE_CODE_OAUTH_TOKEN` secret is configured at the repository level (auto-provisioned by the Claude Code GitHub App) and is referenced only by the recovery workflow. No `ANTHROPIC_API_KEY` is configured, provisioned, or referenced anywhere in the repository.
 6. The agent's commits are co-authored by an identifiable bot account (not impersonating a human).
 7. Two consecutive simulated dep-bump failures with fixable root causes are recovered to green by the agent without any no-touch file being modified.
 8. One simulated failure that requires modifying a no-touch file is correctly refused: the PR ends up closed-with-comment, not merged.
@@ -173,13 +176,13 @@ This decision is implemented when all of the following hold:
 ### Option 1 — `claude-code-action` on every scheduled run
 
 - Good: simplest invocation model (no `workflow_run` chaining).
-- Bad: pays Anthropic API spend on every scheduled run including the dozens of clean ones.
+- Bad: consumes Claude subscription capacity on every scheduled run including the dozens of clean ones, eating into the rate-limit budget the maintainer relies on for interactive work.
 - Bad: AI authority is the default path, not the exception.
 - Rejection reason: paying for AI inference on every scheduled run is the worst cost/benefit point on the curve.
 
 ### Option 2 — Failure-only escalation with strict allow/no-touch lists (chosen)
 
-- Good: matches cost to value — Anthropic API spend only on failures.
+- Good: matches capacity to value — Claude subscription capacity is consumed only on failures, preserving rate-limit budget for the maintainer's interactive work.
 - Good: keeps the happy path in human-auditable GitHub Actions.
 - Good: explicit writable-paths allow-list and no-touch list defend every existing gate.
 - Good: single-retry policy avoids thrashing.
@@ -208,11 +211,11 @@ Reassess this decision when any of the following occur:
 
 1. The agent's commit produces a CI-green outcome that later turns out to mask a real regression (gate-integrity failure that the no-touch list did not prevent). One occurrence is a signal; two is a trigger for re-evaluating the writable-paths allow-list.
 2. The no-touch post-step rejects more than ~25% of agent commits over a four-week window. Either the agent's prompt needs tightening or the no-touch list is too aggressive.
-3. The recovery workflow fires more often than ~25% of scheduled runs — the steady-state cost of Anthropic API spend has crept beyond the failure-only assumption.
-4. Anthropic changes the pricing or capability surface of `claude-code-action` such that the cost/value calculus shifts.
+3. The recovery workflow fires more often than ~25% of scheduled runs — the steady-state consumption of Claude subscription capacity has crept beyond the failure-only assumption and starts impacting the maintainer's interactive rate-limit budget.
+4. Anthropic changes the Claude subscription terms, the Claude Code GitHub App authentication model, or the `claude-code-action` capability surface in a way that shifts the cost/value calculus.
 5. The maintainer's tolerance for AI-modified commits on `main` changes.
 6. ADR-0005 (semantic-release ownership) or ADR-0008 (better-npm-audit exception process) is amended in a way that changes the no-touch list.
-7. Three months from the date on this ADR (2026-08-11), as a default review checkpoint.
+7. Three months from the date on this ADR (2026-08-12), as a default review checkpoint.
 
 ## Related Decisions
 

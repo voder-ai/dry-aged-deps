@@ -12,7 +12,7 @@ name: Auto-update Dependencies
 on:
   # Schedule is intentionally disabled at landing time (staged rollout per
   # ADR-0009 §"Staged rollout"). Arming the cron before DEPS_BOT_TOKEN,
-  # ANTHROPIC_API_KEY, and branch protection are provisioned would produce
+  # CLAUDE_CODE_OAUTH_TOKEN, and branch protection are provisioned would produce
   # daily loud failures on `main`. Once the preconditions are met and a
   # workflow_dispatch run has been verified end-to-end, uncomment the
   # `schedule:` block below in a follow-up commit to arm the daily cron.

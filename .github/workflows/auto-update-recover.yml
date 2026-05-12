@@ -2,8 +2,11 @@
 # Implements ADR-0010 (docs/decisions/0010-ai-agent-ci-trust-boundary.proposed.md).
 #
 # Required repo secrets:
-#   - ANTHROPIC_API_KEY: API key for anthropics/claude-code-action. Referenced ONLY
-#     by this workflow per ADR-0010 §Secret management.
+#   - CLAUDE_CODE_OAUTH_TOKEN: OAuth token for anthropics/claude-code-action, auto-
+#     provisioned by the Claude Code GitHub App (install via the Claude CLI command
+#     /install-github-app). Billed against the maintainer's Claude subscription,
+#     NOT a metered Anthropic API account. Referenced ONLY by this workflow per
+#     ADR-0010 §Secret management. This project does NOT use ANTHROPIC_API_KEY.
 #   - DEPS_BOT_TOKEN: same fine-grained PAT used by auto-update.yml. Needed so the
 #     agent's recovery commits trigger ci-publish.yml on re-run.
 #
@@ -89,7 +92,9 @@ jobs:
       - name: Run AI recovery
         uses: anthropics/claude-code-action@v1
         with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          # Auth via the Claude Code GitHub App's OAuth token (subscription-billed).
+          # This project does NOT use ANTHROPIC_API_KEY. See ADR-0010 §Secret management.
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           # The prompt encodes ADR-0010's writable-paths allow-list and no-touch list
           # verbatim. The prompt is a SOFT constraint — the post-step diff below is
           # the HARD enforcement (ADR-0010 Confirmation criterion 4).
@@ -139,9 +144,11 @@ jobs:
 
             After making changes, run `npm run prepush` locally to verify. Commit your
             fix with a clear conventional-commit message describing what changed and why.
-          # Single-invocation per failing run is enforced by this workflow's concurrency
-          # group keyed on workflow_run.id. The agent itself should not loop.
-          max_iterations: 1
+          # Single-invocation per failing CI run is enforced by this workflow's
+          # concurrency group keyed on workflow_run.id. Belt-and-braces: cap the agent's
+          # turns-per-invocation at 1 via the Claude Code CLI's --max-turns flag, passed
+          # through the action's claude_args input.
+          claude_args: '--max-turns 1'
 
       - name: Enforce no-touch list (HARD gate)
         id: enforce
