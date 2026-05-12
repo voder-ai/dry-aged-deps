@@ -68,6 +68,11 @@ elif [ "$DEPS_EXIT" != "0" ]; then
 fi
 
 # ── 3. Push ──────────────────────────────────────────────────────────────────
+# Capture the pre-push remote head BEFORE `git push` runs. After push,
+# `@{push}` resolves to the new remote head (== HEAD), so `@{push}..HEAD`
+# is empty and the step-6 release-trigger heuristic would always miss
+# (P002).
+PRE_PUSH_REMOTE=$(git rev-parse @{push})
 git push "$@"
 COMMIT_SHA=$(git rev-parse HEAD)
 REPO=$(gh repo view --json nameWithOwner -q .nameWithOwner)
@@ -127,8 +132,12 @@ if [ -n "$PUBLISHED_VERSION" ]; then
 fi
 
 # Heuristic: if the commit types in this push include feat/fix/BREAKING,
-# a release should have been cut. If not, no release expected.
-RELEASE_TYPES=$(git log --format=%s "@{push}.." 2>/dev/null \
+# a release should have been cut. If not, no release expected. The regex
+# tracks ADR-0005's commit-analyzer mapping (feat → minor, fix → patch,
+# BREAKING → major). Range starts at PRE_PUSH_REMOTE (captured in step 3
+# before push) because post-push `@{push}` resolves to the new remote
+# head and would make the range empty (P002).
+RELEASE_TYPES=$(git log --format=%s "${PRE_PUSH_REMOTE}..HEAD" 2>/dev/null \
   | grep -cE '^(feat|fix)(\(.+\))?!?:|^.+!:|^BREAKING CHANGE:' || true)
 if [ "${RELEASE_TYPES:-0}" -gt 0 ]; then
   echo ""

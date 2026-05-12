@@ -1,9 +1,9 @@
 # Problem 002: push:watch's release-trigger heuristic is empty post-push
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-05-13
 **Priority**: 8 (Medium) — Impact: Minor (2) x Likelihood: Likely (4)
-**Effort**: S — single-file patch to scripts/push-watch.sh capturing PRE_PUSH_REMOTE before push, plus bats fixture
+**Effort**: S — single-file patch to scripts/push-watch.sh capturing PRE_PUSH_REMOTE before push, plus vitest contract test
 **WSJF**: 16.0 = (8 × 2.0) / 1
 **Type**: technical
 
@@ -33,9 +33,13 @@ Read the "Latest GitHub release" and "Latest npm version" lines that push:watch 
 
 ### Investigation Tasks
 
-- [ ] Re-rate Priority and Effort at next `/wr-itil:review-problems`
-- [ ] Patch `scripts/push-watch.sh`: capture `PRE_PUSH_REMOTE=$(git rev-parse @{push})` before `git push` runs; use that as the range start for the release-trigger heuristic.
-- [ ] Add a bats fixture or shell test that exercises the post-push heuristic on a known release-triggering commit and asserts the correct branch fires.
+- [x] Re-rate Priority and Effort at next `/wr-itil:review-problems` (held: 8 Medium / S, WSJF 16.0 — fix landed at marginal cost; no scope expansion)
+- [x] Patch `scripts/push-watch.sh`: capture `PRE_PUSH_REMOTE=$(git rev-parse @{push})` before `git push` runs; use that as the range start for the release-trigger heuristic.
+- [x] Add a vitest contract test (`test/push-watch.script-contract.test.js`) asserting the structural fix — static script-content assertions, mirroring `test/husky-pre-commit.test.js` (chose this over bats since the project has no bats infrastructure and the contract is static).
+
+## Fix Released
+
+Patched in this commit (next push will exercise the fixed heuristic). Fix shape: `PRE_PUSH_REMOTE=$(git rev-parse @{push})` captured before `git push "$@"` runs; release-trigger heuristic at step 6 now uses `git log --format=%s "${PRE_PUSH_REMOTE}..HEAD"` instead of the post-push-empty `git log --format=%s "@{push}.."`. Vitest contract test (`test/push-watch.script-contract.test.js`) asserts both the capture-before-push ordering and the corrected range. Awaiting user verification: next `npm run push:watch` that includes a `feat:` / `fix:` / `BREAKING CHANGE:` commit should print "Commits include release-triggering types — expect a new release version above" instead of the previous false-negative.
 
 ## Dependencies
 
