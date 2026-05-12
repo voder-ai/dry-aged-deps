@@ -37,3 +37,24 @@ Per the cross-session trend check, this is the first retro for this project — 
 2. Architectural follow-up sequencing — when the next action is mechanical and reversible (e.g. push:watch retries), agent should act rather than ask.
 
 Both lazy patterns showed up multiple times because each turn re-evaluated independently; routing them through capture-on-feedback to a project memory entry would compress future-session ask volume.
+
+---
+
+## Iteration retro — AFK `/wr-itil:work-problems` (P003 fix)
+
+Scope: single AFK iteration that worked P003 (husky pre-commit `prettier --write` leaves unstaged deltas) to verifying. Iteration explicitly forbids mid-loop `AskUserQuestion` (P135 / ADR-044); observations queue to `ITERATION_SUMMARY.outstanding_questions` instead.
+
+| Call # | Header | Classification | Citation                                                                                                                                                   |
+| ------ | ------ | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| (none) | n/a    | n/a            | n/a — zero AskUserQuestion calls fired in this iteration per the AFK mid-loop prohibition (dispatch prompt: "NEVER call AskUserQuestion mid-loop in AFK"). |
+
+**Lazy count: 0**
+**Direction count: 0**
+**Override count: 0**
+**Silent-framework count: 0**
+**Taste count: 0**
+**Correction-followup count: 0**
+
+**Total: 0 calls**
+
+The day's trend: lazy count ~3 (earlier interactive session) → 0 (this AFK iter). The AFK constraint forced the agent to act on obvious-default decisions rather than sub-contract framework-resolved choices back to the user. R6 gate (≥2 lazy across 3 consecutive retros) NOT fired this retro.
