@@ -131,3 +131,13 @@ docs/generated/
 *.patch
 *.tmp
 *.diff
+
+# Workspace state — observable locally, never committed.
+# Mirrors .prettierignore precedent (P003 / ADR-0013): keeps these scoped out
+# of both formatting and version control. Risk-scorer corpus stays observable
+# in .risk-reports/ for local audit; AFK orchestrator queue stays in
+# .afk-run-state/; stray `package.json.backup` files from `--update` runs
+# (per src/update-packages.js createBackup) match the *.backup pattern.
+.afk-run-state/
+.risk-reports/
+*.backup
