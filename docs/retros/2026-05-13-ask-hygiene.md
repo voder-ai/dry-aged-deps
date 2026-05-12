@@ -58,3 +58,85 @@ Scope: single AFK iteration that worked P003 (husky pre-commit `prettier --write
 **Total: 0 calls**
 
 The day's trend: lazy count ~3 (earlier interactive session) → 0 (this AFK iter). The AFK constraint forced the agent to act on obvious-default decisions rather than sub-contract framework-resolved choices back to the user. R6 gate (≥2 lazy across 3 consecutive retros) NOT fired this retro.
+
+---
+
+## Iteration retro — AFK `/wr-itil:work-problems` (P002 fix)
+
+Scope: single AFK iteration that worked P002 (push:watch's release-trigger heuristic is empty post-push) to verifying. Iteration explicitly forbids mid-loop `AskUserQuestion` (P135 / ADR-044); observations queue to `ITERATION_SUMMARY.outstanding_questions` instead.
+
+| Call # | Header | Classification | Citation                                                                                                                                                   |
+| ------ | ------ | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| (none) | n/a    | n/a            | n/a — zero AskUserQuestion calls fired in this iteration per the AFK mid-loop prohibition (dispatch prompt: "NEVER call AskUserQuestion mid-loop in AFK"). |
+
+**Lazy count: 0**
+**Direction count: 0**
+**Override count: 0**
+**Silent-framework count: 0**
+**Taste count: 0**
+**Correction-followup count: 0**
+
+**Total: 0 calls**
+
+The day's trend across three retros so far: interactive ~3 → P003 AFK iter 0 → P002 AFK iter 0. R6 gate (≥2 lazy across 3 consecutive retros) NOT fired — the two AFK iters have lazy count 0, breaking any potential streak from the earlier interactive session.
+
+### Session Retrospective — P002 iter
+
+#### Briefing Changes
+
+- No new entries added. Existing topic files (`releases-and-ci.md`, `hooks-and-gates.md`) already cover the push:watch wrapper and pre-commit format:check behaviour exercised this iter; nothing new surfaced.
+- Per-entry signal scoring deferred to next interactive retro. Mass per-entry score updates (decay -1 across all entries, +signal updates on cited entries) would dwarf the substantive iter work and provide negligible signal for a non-interactive AFK pass. Cited-this-iter entries (`releases-and-ci.md` lines 11-12 push:watch wrapper, lines 17-18 read-only pre-commit) carry signal evidence — to be applied alongside decay at next interactive retro.
+
+#### Problems Created/Updated
+
+- **P002** — transitioned `.known-error.md` → `.verifying.md` per ADR-022. Fix landed: `scripts/push-watch.sh` now captures `PRE_PUSH_REMOTE=$(git rev-parse @{push})` before push so the release-trigger heuristic uses `${PRE_PUSH_REMOTE}..HEAD`. Vitest contract test added (`test/push-watch.script-contract.test.js`). Commit `b1c2d49`.
+
+#### Verification Candidates
+
+| Ticket | Fix summary                                                                            | In-session citations                                                                                                                                                                                                                                                                                                                                                                                                                                  | Decision                                                                                                                                                                                                                                                                                                                                                                      |
+| ------ | -------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| P003   | Pre-commit hook is read-only — runs `format:check`, aborts with guidance on dirty tree | First `git commit` attempt this iter blocked by pre-commit hook running `prettier --check .` (flagged `docs/problems/README.md` + `test/push-watch.script-contract.test.js`), exited with guidance "Run `npm run format` to fix, then re-stage". After `npm run format` + `git add -u` + re-commit, second `git commit` succeeded clean (SHA `b1c2d49`); post-commit `git status` shows no tracked-file modifications. P003 Verification Trigger met. | **flagged (non-interactive)** — close-candidate per Step 4a evidence; AFK iter declines to delegate to `/wr-itil:transition-problem P003 close` because retro is non-blocking and user-initiated closure surfaces cleaner audit trail. User closes on return: `/wr-itil:transition-problem P003 close`. Recovery path if wrong: `/wr-itil:transition-problem P003 verifying`. |
+
+#### Pipeline Instability
+
+- None detected. No hook TTL expiries, no marker-vs-file deadlocks, no subagent DEFERRED, no `push:watch`/`release:watch` invocations this iter (orchestrator owns release cadence), no repeat-work friction. The pre-commit hook firing on unformatted new files is NOT instability — it's the read-only enforcement working correctly (P003 verification).
+- JTBD currency advisory: not applicable (no `packages/` directory in this adopter-tree project; detector is plugin-suite-scoped).
+
+#### Context Usage (Cheap Layer)
+
+First measurement this project — no prior snapshot. Per ADR-026 `not estimated — no prior data` sentinel applied to the Δ column.
+
+| Bucket             | Bytes   | % of total | Δ vs prior                                           |
+| ------------------ | ------- | ---------- | ---------------------------------------------------- |
+| memory             | 208,469 | 49.9%      | not measured — no prior data                         |
+| decisions          | 147,456 | 35.3%      | not measured — no prior data                         |
+| jtbd               | 34,853  | 8.3%       | not measured — no prior data                         |
+| problems           | 17,614  | 4.2%       | not measured — no prior data                         |
+| briefing           | 14,754  | 3.5%       | not measured — no prior data                         |
+| project-claude-md  | 5,357   | 1.3%       | not measured — no prior data                         |
+| hooks              | 0       | 0.0%       | not measured — no prior data                         |
+| skills             | 0       | 0.0%       | not measured — no prior data                         |
+| framework-injected | n/a     | n/a        | not measured — framework-injected, no on-disk source |
+
+Threshold: 10,240 bytes per bucket (ADR-040 Tier 3 envelope). Top-5 offenders (bytes desc):
+
+1. `memory` — 208,469 bytes (measurement-method: script-emitted from `~/.claude/projects/-Users-tomhoward-Projects-dry-aged-deps/memory/`). 20× threshold.
+2. `decisions` — 147,456 bytes (measurement-method: script-emitted from `docs/decisions/*.md`). 14× threshold.
+3. `jtbd` — 34,853 bytes (measurement-method: script-emitted from `docs/jtbd/**/*.md`). 3× threshold.
+4. `problems` — 17,614 bytes (measurement-method: script-emitted from `docs/problems/*.md`). 1.7× threshold.
+5. `briefing` — 14,754 bytes (measurement-method: script-emitted from `docs/briefing/*.md`). 1.4× threshold.
+
+Per-plugin breakdown available in `/wr-retrospective:analyze-context` (deep layer). Deep analysis recommended on `memory` and `decisions` buckets given their over-budget ratios — invoke `/wr-retrospective:analyze-context`. AFK iter declines to invoke the deep layer; user runs on return if curious.
+
+#### Topic File Rotation Candidates
+
+None this iter — `briefing` bucket is 1.4× threshold (within the 1.0×–2.0× advisory band; defer eligible per Branch B). No `MUST_SPLIT` ratio breached.
+
+#### Codification Candidates
+
+None this iter. The iter was clean: TDD worked smoothly (RED → GREEN), architect + JTBD gates passed first time, pre-commit hook caught format issues exactly as P003 designed, risk gate passed at 2/25 Very Low, no repeat-work or recurring-pattern signals observed.
+
+#### No Action Needed
+
+- TDD workflow on shell scripts via static-content vitest tests is documented in the project's existing pattern (`test/husky-pre-commit.test.js`). The new `test/push-watch.script-contract.test.js` follows the same shape — no codification needed.
+- Pre-commit hook abort + re-stage flow exercised correctly per P003 design — see Verification Candidates section above.
