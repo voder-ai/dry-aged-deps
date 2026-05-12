@@ -1,9 +1,10 @@
 # Problem 001: dry-aged-deps --update skips exact-pinned dependencies
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-05-12
-**Priority**: 3 (Medium) — Impact: 3 x Likelihood: 1 (deferred — re-rate at next /wr-itil:review-problems)
-**Effort**: M (deferred — re-rate at next /wr-itil:review-problems)
+**Priority**: 16 (High) — Impact: Significant (4) x Likelihood: Likely (4)
+**Effort**: M — multiple files (src/update-packages.js, src/build-rows.js), spec clarification needed in prompts/011.0, plus reproduction test
+**WSJF**: 16.0 = (16 × 2.0) / 2
 **Type**: technical
 
 ## Description

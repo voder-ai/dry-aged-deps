@@ -1,9 +1,10 @@
 # Problem 002: push:watch's release-trigger heuristic is empty post-push
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-05-13
-**Priority**: 3 (Medium) — Impact: 2 x Likelihood: 1 (deferred — re-rate at next /wr-itil:review-problems)
-**Effort**: S (deferred — re-rate at next /wr-itil:review-problems)
+**Priority**: 8 (Medium) — Impact: Minor (2) x Likelihood: Likely (4)
+**Effort**: S — single-file patch to scripts/push-watch.sh capturing PRE_PUSH_REMOTE before push, plus bats fixture
+**WSJF**: 16.0 = (8 × 2.0) / 1
 **Type**: technical
 
 ## Description

@@ -1,9 +1,10 @@
 # Problem 003: husky pre-commit `prettier --write` leaves unstaged working-tree deltas
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-05-13
-**Priority**: 3 (Medium) — Impact: 2 x Likelihood: 2 (deferred — re-rate at next /wr-itil:review-problems)
-**Effort**: S (deferred — re-rate at next /wr-itil:review-problems)
+**Priority**: 10 (High) — Impact: Minor (2) x Likelihood: Almost certain (5)
+**Effort**: S — single-file change to .husky/pre-commit (lint-staged or format:check), plus test
+**WSJF**: 20.0 = (10 × 2.0) / 1
 **Type**: technical
 
 ## Description
