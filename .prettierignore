@@ -7,3 +7,11 @@
 
 test/cli.json.skip-outdated.test.js
 scripts/validate-traceability.cjs
+
+# Workspace state / generated artefacts — not owned by the project's
+# formatting policy. Keeps `prettier --check .` (pre-commit per ADR-0013)
+# scoped to source-controlled files only.
+.risk-reports/
+.afk-run-state/
+.claude/
+*.backup

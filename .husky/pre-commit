@@ -1,6 +1,18 @@
 #!/usr/bin/env sh
 
-# Fast pre-commit checks (<10s): auto-format, lint, type-check
-npm run format
+# Fast pre-commit checks (<10s): format verification, lint, type-check.
+#
+# Read-only contract per ADR-0013: this hook MUST NOT mutate the working
+# tree. If `format:check` fails, abort the commit with guidance — the
+# developer runs `npm run format` and re-stages explicitly. Auto-writing
+# from the hook leaves unstaged prettier deltas post-commit (P003).
+
+if ! npm run format:check; then
+  echo ""
+  echo "Pre-commit aborted: prettier formatting check failed." >&2
+  echo "Run \`npm run format\` to fix, then re-stage the changes and commit again." >&2
+  exit 1
+fi
+
 npm run lint
 npm run type-check

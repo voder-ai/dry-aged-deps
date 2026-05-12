@@ -1,10 +1,10 @@
 # Problem 003: husky pre-commit `prettier --write` leaves unstaged working-tree deltas
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-05-13
 **Priority**: 10 (High) — Impact: Minor (2) x Likelihood: Almost certain (5)
 **Effort**: S — single-file change to .husky/pre-commit (lint-staged or format:check), plus test
-**WSJF**: 20.0 = (10 × 2.0) / 1
+**WSJF**: 0 (excluded — Verification Pending per ADR-022)
 **Type**: technical
 
 ## Description
@@ -33,12 +33,22 @@ After each commit, immediately stage and commit the prettier deltas as `style:` 
 
 ## Root Cause Analysis
 
+Git captures the index at the start of `git commit`, then runs the pre-commit hook against the working tree. `.husky/pre-commit` invoked `npm run format` (= `prettier --write .`), which writes its reformatting to the working tree AFTER the index snapshot. The commit ships the un-reformatted content; the prettier deltas remain as unstaged working-tree changes immediately post-commit.
+
+Confirmed by reading `.husky/pre-commit` lines 4-9 and the recurrence pattern across the 14 commits enumerated in the Related section. The root cause is structural: an auto-writing hook cannot re-stage its own writes into the in-flight commit without explicit re-staging logic (which `prettier --write` does not provide).
+
 ### Investigation Tasks
 
-- [ ] Re-rate Priority and Effort at next `/wr-itil:review-problems`
-- [ ] Decide on fix shape: lint-staged (re-stages formatted output) vs format:check (read-only abort)
-- [ ] Implement chosen shape in `.husky/pre-commit` and update CLAUDE.md if conventions change
-- [ ] Add a test that ensures a clean working tree post-commit on a file that prettier would reformat
+- [x] Re-rate Priority and Effort at next `/wr-itil:review-problems` — kept at 10 (High) / S; matches the original assessment.
+- [x] Decide on fix shape: lint-staged (re-stages formatted output) vs format:check (read-only abort) — chose `format:check` abort per ADR-0013 (zero new dependencies, one-line hook change, reversible).
+- [x] Implement chosen shape in `.husky/pre-commit` — hook now runs `npm run format:check` and aborts with guidance on failure. CLAUDE.md required no update (the read-only convention is documented in ADR-0013).
+- [x] Add a test that ensures the hook does not silently mutate the working tree — `test/husky-pre-commit.test.js` asserts the read-only contract by scanning the hook's command-execution lines for forbidden write-mode invocations.
+
+## Fix Released
+
+Implemented in this commit (folded fix + verification-pending transition per ADR-022 / ADR-014 commit-grain). The fix lands as part of the AFK-orchestrator's release cadence (Step 6.5); npm publication follows once the orchestrator drains the changeset queue.
+
+**Verification trigger**: after the next substantive commit lands on this branch, `git status` should show a clean working tree (no unstaged prettier deltas). If `format:check` fails at commit time, the hook should print "Pre-commit aborted: prettier formatting check failed." to stderr and exit non-zero — the user runs `npm run format`, re-stages, and commits.
 
 ## Dependencies
 
