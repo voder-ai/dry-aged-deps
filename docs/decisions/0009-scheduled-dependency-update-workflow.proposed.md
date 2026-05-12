@@ -63,18 +63,16 @@ Chosen option: **Pure scheduled GitHub Actions workflow opening a PR with `gh pr
 | Commit type                 | `chore(deps): update safe dependencies` by default; `fix(deps):` when any included row has a non-`none` `severity` in the `dry-aged-deps --format=json` output | Interacts correctly with semantic-release's commit-analyzer (ADR-0005). Security updates trigger a patch release; routine bumps batch until the next `feat:` or `fix:`. Derivation is mechanical from JSON output (JTBD-105 outcome).                                                   |
 | Commit-type derivation rule | `severity === 'none'` ∀ rows → `chore(deps):`; otherwise → `fix(deps):`                                                                                        | Conservative: any non-`none` severity in any included row promotes the entire commit to `fix(deps):` so the security patch ships at next CI run.                                                                                                                                        |
 | Branch name                 | `auto/deps/YYYY-MM-DD`                                                                                                                                         | Stable, sortable, predictable. One branch per scheduled run; subsequent runs open new branches rather than amending.                                                                                                                                                                    |
-| Bot identity                | `github-actions[bot]` for commits; PR creation uses a fine-grained bot PAT stored as `DEPS_BOT_TOKEN`                                                          | A new repo secret is required because GitHub does not fire `pull_request` event workflows for PRs opened by `GITHUB_TOKEN` (see "Required secrets" below). Commits are still attributed to `github-actions[bot]` so blame is clear (JTBD-104 outcome — bot account, not impersonation). |
-| Permissions                 | `contents: write`, `pull-requests: write` on the scheduled job                                                                                                 | Minimum required to push a branch and open a PR.                                                                                                                                                                                                                                        |
+| Bot identity                | `github-actions[bot]` for commit authorship; API-level actor (push, PR-open, auto-merge enable) is the Claude Code GitHub App installation, authenticated via OIDC token-exchange per ADR-0012 | The API-level actor must NOT be the workflow-scoped `GITHUB_TOKEN`, because GitHub does not fire `pull_request`-event workflows for PRs opened by it (the auto-merge contract depends on `ci-publish.yml` triggering on the bot's PR). Commits are still attributed to `github-actions[bot]` via `git config` so blame is clear (JTBD-104 outcome — bot account, not impersonation). The authentication mechanism choice (PAT vs project-owned App vs OIDC-via-Anthropic) is recorded in ADR-0012. |
+| Permissions                 | `contents: write`, `pull-requests: write`, `id-token: write` on the scheduled job                                                                              | The first two are required to push a branch and open a PR. `id-token: write` is required for the OIDC-exchange mechanism in ADR-0012.                                                                                                                                                                                                                                   |
 
 ### Required secrets
 
-The auto-merge contract in this ADR requires that the PR created by the scheduled workflow trigger `ci-publish.yml`'s `build-and-test` job. GitHub does not run `pull_request`-event workflows for PRs opened by the workflow-scoped `GITHUB_TOKEN` — this is a deliberate platform safety rule to prevent recursive workflow runs.
+Under the authentication mechanism chosen in ADR-0012 (OIDC token-exchange via Anthropic), the auto-update workflow requires **no manually-provisioned secrets**. The Claude Code GitHub App's installation token is minted at runtime by exchanging the workflow's OIDC token against Anthropic's `github-app-token-exchange` endpoint; the resulting short-lived token is used for `git push`, `gh pr create`, and `gh pr merge --auto --squash`.
 
-To satisfy the contract, the project must provision:
+`CLAUDE_CODE_OAUTH_TOKEN` (used by the recovery workflow's AI step per ADR-0010) is auto-provisioned by the Claude Code GitHub App's installation and is not required by this scheduled workflow.
 
-- **`DEPS_BOT_TOKEN`** — a fine-grained personal access token (or a GitHub App installation token) with `contents: write` and `pull-requests: write` scoped to this repository. The token is used by the workflow only for `gh pr create` and `gh pr merge --auto --squash`. Branch pushes use `GITHUB_TOKEN` (the bot identity for commits remains `github-actions[bot]`).
-
-`CLAUDE_CODE_OAUTH_TOKEN` (the Claude Code GitHub App OAuth token used by the recovery workflow) is governed by ADR-0010 and is not required by this ADR.
+If the OIDC-exchange mechanism becomes unavailable, the project reverts to a fine-grained PAT stored as `DEPS_BOT_TOKEN` per the Reversion Plan in ADR-0012.
 
 ### Required branch-protection configuration
 
@@ -98,7 +96,7 @@ The trade-off: required status checks may in some GitHub configurations gate dir
 The workflow file lands on `main` with its `schedule:` trigger commented out, leaving only `workflow_dispatch:`. The schedule is re-enabled in a follow-up commit once all of the following are in place:
 
 1. `DEPS_BOT_TOKEN` is provisioned as a repo secret.
-2. `CLAUDE_CODE_OAUTH_TOKEN` is provisioned (auto-created by installing the Claude Code GitHub App on this repository; governed by ADR-0010 but required for the recovery path the schedule depends on).
+2. The Claude Code GitHub App is installed on this repository (auto-provisions `CLAUDE_CODE_OAUTH_TOKEN` for the recovery workflow's AI step per ADR-0010, AND provides the App installation that ADR-0012's OIDC token-exchange targets for the routine path's authentication).
 3. Branch protection on `main` is configured per "Required branch-protection configuration" above.
 4. A single `workflow_dispatch` invocation has been verified to complete end-to-end (PR opened, build-and-test green, squash-merged, semantic-release behaviour correct).
 
@@ -116,7 +114,7 @@ The schedule re-enable is a one-line commit (`feat(ci):` is appropriate as it ac
 ### Good
 
 - **Autonomous routine hygiene.** Aged-and-safe updates land within a day of crossing the threshold without requiring the maintainer's machine.
-- **Minimal secret surface.** Only one new manually-provisioned secret (`DEPS_BOT_TOKEN`) is introduced; commits still use `GITHUB_TOKEN`. The recovery workflow's `CLAUDE_CODE_OAUTH_TOKEN` (auto-provisioned by the Claude Code GitHub App) is governed separately by ADR-0010.
+- **Zero new manually-provisioned secrets.** Per ADR-0012's chosen mechanism (OIDC token-exchange), the workflow mints a short-lived GitHub App installation token at runtime. The recovery workflow's `CLAUDE_CODE_OAUTH_TOKEN` (auto-provisioned by the Claude Code GitHub App) is governed separately by ADR-0010.
 - **One canonical CI gate.** The PR is validated by the same `ci-publish.yml` build-and-test job that gates human PRs, so there is no second validation surface to keep in lockstep.
 - **Clean release semantics.** `chore(deps):` and `fix(deps):` commits compose correctly with semantic-release: routine bumps accumulate without forcing releases; security bumps trigger patch releases.
 - **Human reviewable.** The PR is visible and squashable on demand for the period between opening and auto-merge.
@@ -130,7 +128,7 @@ The schedule re-enable is a one-line commit (`feat(ci):` is appropriate as it ac
 ### Bad
 
 - **Branch protection coupling.** Native auto-merge requires the `build-and-test` job to be marked required on `main` via branch protection. The project must therefore configure branch protection if it has not already; this is a one-time setup cost and a small ongoing operational dependency. The TBD constraint adds a configuration trap: "Require a pull request before merging" must remain disabled; otherwise the maintainer's direct pushes are blocked.
-- **`DEPS_BOT_TOKEN` rotation.** The fine-grained PAT (or App credential) must be created, stored, and periodically rotated. This is the project's first long-lived credential beyond `NPM_TOKEN` and adds a small ongoing operational cost. Mitigated by scoping the token to this repository and to `contents: write` + `pull-requests: write` only.
+- **Runtime dependency on an undocumented Anthropic endpoint.** The chosen OIDC-exchange mechanism (ADR-0012) calls `api.anthropic.com/api/github/github-app-token-exchange` on every workflow run. This endpoint is not part of any Anthropic public API contract; if Anthropic changes or withdraws it, the workflow fails until the project reverts to a PAT-based fallback (Reversion Plan in ADR-0012). The trade-off — endpoint fragility vs zero rotation burden — is recorded explicitly in ADR-0012 §Considered Options.
 - **One PR per day even on quiet weeks.** When no updates are available, the workflow runs and exits cleanly with no PR — minimal noise. When one or two trivial updates are available daily, the maintainer sees a steady drip of small PRs. This is by design but is a behaviour change from the manual flow.
 - **No major-version safety net beyond CI.** Major bumps that include breaking changes will fail `prepush` or `ci-publish.yml` and leave a failing PR. The recovery path is ADR-0010's escalation; if that is not yet implemented, a maintainer must intervene manually.
 
@@ -138,15 +136,15 @@ The schedule re-enable is a one-line commit (`feat(ci):` is appropriate as it ac
 
 This decision is implemented when all of the following hold:
 
-1. A file `.github/workflows/auto-update.yml` exists, triggers on `schedule: cron '0 6 * * *'` and `workflow_dispatch`, and runs as `github-actions[bot]` with `permissions: contents: write, pull-requests: write` scoped to the job.
+1. A file `.github/workflows/auto-update.yml` exists, triggers on `schedule: cron '0 6 * * *'` and `workflow_dispatch`, has `permissions: contents: write, pull-requests: write, id-token: write` scoped to the relevant job, attributes commits to `github-actions[bot]` via `git config`, and authenticates push / PR-create / auto-merge via the OIDC-minted GitHub App installation token per ADR-0012.
 2. The workflow invokes `node bin/dry-aged-deps.js --check`, short-circuits with exit 0 on no updates, and on exit 1 proceeds to apply updates via `node bin/dry-aged-deps.js --update --yes`.
 3. The workflow runs `npm ci && npm run prepush` before pushing.
 4. On `prepush` success, the workflow pushes an `auto/deps/YYYY-MM-DD` branch and opens a PR titled with `chore(deps):` (or `fix(deps):` when any row's `severity` is non-`none`) and a body summarising the rows produced by `dry-aged-deps`.
 5. The workflow calls `gh pr merge --auto --squash` on the PR.
 6. Branch protection on `main` requires the `Build & Test` status check from `ci-publish.yml` AND does NOT require a pull request before merging (preserves TBD for the maintainer's direct pushes).
 7. Two consecutive successful scheduled runs land their PRs onto `main` without human intervention, with semantic-release publishing a release on the `fix(deps):` case and no release on the `chore(deps):` case.
-8. No `CLAUDE_CODE_OAUTH_TOKEN` or other AI-related secret is required for this workflow to function (such secrets are governed by ADR-0010).
-9. `DEPS_BOT_TOKEN` is configured at the repo level and is referenced by `auto-update.yml` only for `gh pr create` and `gh pr merge --auto --squash`. The token is NOT used for `git push` (which uses `GITHUB_TOKEN`).
+8. No manually-provisioned secret (such as `DEPS_BOT_TOKEN`) is required for this workflow to function. The Claude Code GitHub App's installation is the only operational precondition for the authentication mechanism; see ADR-0012.
+9. The workflow's authentication mechanism conforms to ADR-0012: an OIDC-exchange step mints a short-lived GitHub App installation token at runtime, and that token (not `GITHUB_TOKEN`, not `DEPS_BOT_TOKEN`) is used for `git push`, `gh pr create`, and `gh pr merge --auto --squash`.
 10. No step in the workflow uses `|| echo {}`, `|| true`, or any silent-failure pattern.
 
 ## Pros and Cons of the Options

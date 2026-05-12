@@ -1,21 +1,22 @@
 # Scheduled autonomous dependency-update workflow
 # Implements ADR-0009 (docs/decisions/0009-scheduled-dependency-update-workflow.proposed.md).
 #
-# Required repo secrets:
-#   - DEPS_BOT_TOKEN: fine-grained PAT (or GitHub App token) with `contents: write`
-#     and `pull-requests: write` scoped to this repo. Required because PRs opened by
-#     the workflow-scoped GITHUB_TOKEN do NOT trigger `pull_request` event workflows,
-#     and the auto-merge contract depends on `ci-publish.yml` firing on the bot's PR.
+# Authentication: ADR-0012 (OIDC token-exchange via Anthropic's github-app-token-exchange
+# endpoint). No manually-provisioned secrets are required for this workflow. The
+# Claude Code GitHub App must be installed on this repository (it provisions
+# CLAUDE_CODE_OAUTH_TOKEN, and its installation is what the OIDC exchange targets).
+# If the OIDC endpoint becomes unavailable, follow the Reversion Plan in ADR-0012
+# to switch to a fine-grained PAT (DEPS_BOT_TOKEN).
 
 name: Auto-update Dependencies
 
 on:
   # Schedule is intentionally disabled at landing time (staged rollout per
-  # ADR-0009 §"Staged rollout"). Arming the cron before DEPS_BOT_TOKEN,
-  # CLAUDE_CODE_OAUTH_TOKEN, and branch protection are provisioned would produce
-  # daily loud failures on `main`. Once the preconditions are met and a
-  # workflow_dispatch run has been verified end-to-end, uncomment the
-  # `schedule:` block below in a follow-up commit to arm the daily cron.
+  # ADR-0009 §"Staged rollout"). Arming the cron before branch protection is
+  # configured and a workflow_dispatch run has been verified end-to-end would
+  # produce daily loud failures on `main`. Once the preconditions are met,
+  # uncomment the `schedule:` block below in a follow-up commit to arm the
+  # daily cron.
   #
   # schedule:
   #   - cron: '0 6 * * *'  # Daily at 06:00 UTC. See ADR-0009.
@@ -36,6 +37,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      id-token: write # Required for the OIDC token-exchange per ADR-0012.
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -144,16 +146,53 @@ jobs:
 
           $SUMMARY"
 
+      - name: Mint GitHub App installation token
+        if: steps.check.outputs.has_updates == 'true'
+        id: mint
+        # Per ADR-0012: exchange the workflow's OIDC token for a short-lived
+        # installation access token for the Claude Code GitHub App. The
+        # resulting token has contents/pull_requests/issues: write on this repo.
+        # No || true / silent-failure patterns — endpoint failure must surface.
+        run: |
+          set -e
+          OIDC_TOKEN=$(curl -sSL \
+            -H "Authorization: Bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=claude-code-github-action" \
+            | jq -r .value)
+          if [ -z "$OIDC_TOKEN" ] || [ "$OIDC_TOKEN" = "null" ]; then
+            echo "::error::Failed to obtain OIDC token from GitHub Actions"
+            exit 1
+          fi
+          RESPONSE=$(curl -sSL -X POST \
+            -H "Authorization: Bearer $OIDC_TOKEN" \
+            https://api.anthropic.com/api/github/github-app-token-exchange)
+          APP_TOKEN=$(echo "$RESPONSE" | jq -r '.token // .app_token // empty')
+          if [ -z "$APP_TOKEN" ]; then
+            echo "::error::Anthropic github-app-token-exchange endpoint did not return a token. Response: $RESPONSE"
+            echo "::error::See ADR-0012 §Reversion Plan to switch to PAT-based auth."
+            exit 1
+          fi
+          echo "::add-mask::$APP_TOKEN"
+          echo "token=$APP_TOKEN" >> "$GITHUB_OUTPUT"
+          echo "Successfully minted Claude Code GitHub App installation token."
+
       - name: Push branch
         if: steps.check.outputs.has_updates == 'true'
-        # Push using GITHUB_TOKEN; the bot identity is preserved for blame.
-        run: git push --set-upstream origin "${{ steps.branch.outputs.branch }}"
+        # Push using the OIDC-minted App installation token. Pushing as a
+        # non-GITHUB_TOKEN actor is what lets the resulting PR trigger
+        # ci-publish.yml's pull_request workflows (per ADR-0009 §Required
+        # branch-protection configuration and ADR-0012 §Mechanism).
+        env:
+          APP_TOKEN: ${{ steps.mint.outputs.token }}
+        run: |
+          set -e
+          git -c "http.https://github.com/.extraheader=AUTHORIZATION: bearer $APP_TOKEN" \
+              push --set-upstream origin "${{ steps.branch.outputs.branch }}"
 
       - name: Open pull request
         if: steps.check.outputs.has_updates == 'true'
         env:
-          # PAT, not GITHUB_TOKEN — see ADR-0009 Required secrets section.
-          GH_TOKEN: ${{ secrets.DEPS_BOT_TOKEN }}
+          GH_TOKEN: ${{ steps.mint.outputs.token }}
         run: |
           BODY=$(cat <<EOF
           Automated dependency update produced by \`dry-aged-deps\`.
@@ -173,6 +212,7 @@ jobs:
           ---
 
           Opened by \`.github/workflows/auto-update.yml\` per [ADR-0009](../blob/main/docs/decisions/0009-scheduled-dependency-update-workflow.proposed.md).
+          Authentication per [ADR-0012](../blob/main/docs/decisions/0012-autonomous-workflow-authentication-mechanism.proposed.md).
           If CI fails, [ADR-0010](../blob/main/docs/decisions/0010-ai-agent-ci-trust-boundary.proposed.md)'s recovery workflow will attempt a single autonomous fix.
           Auto-merge is enabled; merge proceeds when \`build-and-test\` passes.
           EOF
@@ -186,5 +226,5 @@ jobs:
       - name: Enable auto-merge (squash)
         if: steps.check.outputs.has_updates == 'true'
         env:
-          GH_TOKEN: ${{ secrets.DEPS_BOT_TOKEN }}
+          GH_TOKEN: ${{ steps.mint.outputs.token }}
         run: gh pr merge --auto --squash "${{ steps.branch.outputs.branch }}"

@@ -5,10 +5,14 @@
 #   - CLAUDE_CODE_OAUTH_TOKEN: OAuth token for anthropics/claude-code-action, auto-
 #     provisioned by the Claude Code GitHub App (install via the Claude CLI command
 #     /install-github-app). Billed against the maintainer's Claude subscription,
-#     NOT a metered Anthropic API account. Referenced ONLY by this workflow per
-#     ADR-0010 §Secret management. This project does NOT use ANTHROPIC_API_KEY.
-#   - DEPS_BOT_TOKEN: same fine-grained PAT used by auto-update.yml. Needed so the
-#     agent's recovery commits trigger ci-publish.yml on re-run.
+#     NOT a metered Anthropic API account. Referenced ONLY by the claude-code-action
+#     step in this workflow. This project does NOT use ANTHROPIC_API_KEY.
+#
+# Authentication for git/gh operations: ADR-0012 (OIDC token-exchange via Anthropic's
+# github-app-token-exchange endpoint). No manually-provisioned secret is required;
+# the workflow mints a short-lived Claude Code GitHub App installation token at
+# runtime. If the OIDC endpoint becomes unavailable, follow the Reversion Plan in
+# ADR-0012 to switch to a fine-grained PAT (DEPS_BOT_TOKEN).
 #
 # IMPORTANT: workflow_run.branches filters by the workflow-file branch (typically
 # main), NOT the head branch of the triggering run. Filtering for auto/deps/* is
@@ -39,16 +43,44 @@ jobs:
       contents: write
       pull-requests: write
       actions: read
+      id-token: write # Required for the OIDC token-exchange per ADR-0012.
     # Single-invocation per failing run (ADR-0010 Confirmation criterion 3).
     concurrency:
       group: auto-deps-recover-${{ github.event.workflow_run.id }}
       cancel-in-progress: false
 
     steps:
+      - name: Mint GitHub App installation token
+        id: mint
+        # Per ADR-0012: exchange the workflow's OIDC token for a short-lived
+        # installation access token for the Claude Code GitHub App. Used for
+        # all subsequent git push / gh CLI operations in this workflow.
+        run: |
+          set -e
+          OIDC_TOKEN=$(curl -sSL \
+            -H "Authorization: Bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=claude-code-github-action" \
+            | jq -r .value)
+          if [ -z "$OIDC_TOKEN" ] || [ "$OIDC_TOKEN" = "null" ]; then
+            echo "::error::Failed to obtain OIDC token from GitHub Actions"
+            exit 1
+          fi
+          RESPONSE=$(curl -sSL -X POST \
+            -H "Authorization: Bearer $OIDC_TOKEN" \
+            https://api.anthropic.com/api/github/github-app-token-exchange)
+          APP_TOKEN=$(echo "$RESPONSE" | jq -r '.token // .app_token // empty')
+          if [ -z "$APP_TOKEN" ]; then
+            echo "::error::Anthropic github-app-token-exchange endpoint did not return a token. Response: $RESPONSE"
+            echo "::error::See ADR-0012 §Reversion Plan to switch to PAT-based auth."
+            exit 1
+          fi
+          echo "::add-mask::$APP_TOKEN"
+          echo "token=$APP_TOKEN" >> "$GITHUB_OUTPUT"
+
       - name: Identify failing PR
         id: pr
         env:
-          GH_TOKEN: ${{ secrets.DEPS_BOT_TOKEN }}
+          GH_TOKEN: ${{ steps.mint.outputs.token }}
         run: |
           set -e
           HEAD_BRANCH="${{ github.event.workflow_run.head_branch }}"
@@ -68,7 +100,7 @@ jobs:
         with:
           ref: ${{ steps.pr.outputs.head_sha }}
           fetch-depth: 0
-          token: ${{ secrets.DEPS_BOT_TOKEN }}
+          token: ${{ steps.mint.outputs.token }}
 
       - name: Capture pre-agent commit SHA
         id: pre
@@ -76,7 +108,7 @@ jobs:
 
       - name: Fetch failing-run logs
         env:
-          GH_TOKEN: ${{ secrets.DEPS_BOT_TOKEN }}
+          GH_TOKEN: ${{ steps.mint.outputs.token }}
         run: |
           set -e
           mkdir -p .recover
@@ -153,7 +185,7 @@ jobs:
       - name: Enforce no-touch list (HARD gate)
         id: enforce
         env:
-          GH_TOKEN: ${{ secrets.DEPS_BOT_TOKEN }}
+          GH_TOKEN: ${{ steps.mint.outputs.token }}
         run: |
           set -e
           PRE_SHA="${{ steps.pre.outputs.sha }}"
@@ -202,7 +234,7 @@ jobs:
       - name: Close PR on violation
         if: steps.enforce.outputs.violation == 'true'
         env:
-          GH_TOKEN: ${{ secrets.DEPS_BOT_TOKEN }}
+          GH_TOKEN: ${{ steps.mint.outputs.token }}
         run: |
           set -e
           gh pr comment "${{ steps.pr.outputs.pr_number }}" --body "Automated recovery aborted: the AI agent modified one or more files on the ADR-0010 no-touch list. Closing this PR. A human can re-run the dep update manually if needed.
@@ -214,6 +246,9 @@ jobs:
 
       - name: Push agent's fix
         if: steps.enforce.outputs.violation == 'false'
+        env:
+          GH_TOKEN: ${{ steps.mint.outputs.token }}
+          APP_TOKEN: ${{ steps.mint.outputs.token }}
         run: |
           set -e
           if [ "$(git rev-parse HEAD)" = "${{ steps.pre.outputs.sha }}" ]; then
@@ -221,16 +256,16 @@ jobs:
             gh pr comment "${{ steps.pr.outputs.pr_number }}" --body "Automated recovery ran but the agent made no commits. The failure is outside the writable-paths scope; a human must intervene."
             exit 0
           fi
-          # The agent's commit is already in HEAD; push to the PR branch.
-          git push origin "HEAD:${{ steps.pr.outputs.head_branch }}"
+          # The agent's commit is already in HEAD; push to the PR branch via the OIDC-minted
+          # App installation token so the push triggers ci-publish.yml re-run.
+          git -c "http.https://github.com/.extraheader=AUTHORIZATION: bearer $APP_TOKEN" \
+              push origin "HEAD:${{ steps.pr.outputs.head_branch }}"
           gh pr comment "${{ steps.pr.outputs.pr_number }}" --body "Automated recovery pushed a fix. CI will re-run; if it passes, auto-merge will proceed."
-        env:
-          GH_TOKEN: ${{ secrets.DEPS_BOT_TOKEN }}
 
       - name: Label needs-human on no-op
         if: steps.enforce.outputs.violation == 'false'
         env:
-          GH_TOKEN: ${{ secrets.DEPS_BOT_TOKEN }}
+          GH_TOKEN: ${{ steps.mint.outputs.token }}
         run: |
           # If we reached here with no agent commits, the previous step already commented.
           # If there were commits, we don't need to label.

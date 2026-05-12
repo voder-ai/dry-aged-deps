@@ -121,14 +121,16 @@ If the label is missing, the recovery workflow fails loudly on the label-add ste
 
 - The recovery workflow authenticates to Claude via `CLAUDE_CODE_OAUTH_TOKEN`, a repo secret auto-provisioned by the Claude Code GitHub App when it was installed on this repository (via `/install-github-app` or equivalent GitHub App installation flow).
 - The token is bound to the maintainer's Claude subscription; billing is against subscription capacity (rate-limit budget and seat usage), not against a metered Anthropic API account. **This project does not have, and will not use, an `ANTHROPIC_API_KEY`.**
-- The secret is exposed only to the failure-handler job, not to the scheduled `auto-update.yml` workflow.
-- Rotation: the OAuth token's lifetime is managed by the Claude Code GitHub App; re-running `/install-github-app` regenerates the secret if it is revoked or expires. No project-specific rotation policy currently exists; a future ADR may add one.
+- `CLAUDE_CODE_OAUTH_TOKEN` itself (the Claude API credential) is referenced only by the recovery workflow's `claude-code-action` step.
+- **GitHub App authority scope:** ADR-0012 chooses OIDC token-exchange against Anthropic's `github-app-token-exchange` endpoint as the authentication mechanism for the *routine* path's `git push` / `gh pr create` / `gh pr merge` operations. This means the Claude Code GitHub App's installation identity now appears as the API-level actor on every routine `chore(deps):` / `fix(deps):` PR, not only on recovery PRs. This is a deliberate trade recorded in ADR-0012 §Bad consequences ("Trust-boundary broadening"). The recovery agent's writable-paths allow-list and no-touch list are not affected by this broadening — those constraints govern what the agent's prompt-driven Claude session is allowed to modify, not what the App's installation identity is allowed to do at the GitHub-API level. The hard no-touch enforcement in the post-step diff still fires regardless of which token authored the agent's commits.
+- Rotation: the OAuth token's lifetime is managed by the Claude Code GitHub App; re-running `/install-github-app` regenerates the secret if it is revoked or expires. The runtime OIDC-minted installation tokens (ADR-0012) have ~1-hour lifetimes and require no rotation. No project-specific rotation policy currently exists; a future ADR may add one.
 
 ### Audit log
 
 - Every agent invocation produces a GitHub Actions run log; this is the audit trail.
 - The agent's commit on the PR branch is co-authored by `claude-code-action[bot]` (or equivalent identifier) so blame is visible.
 - The agent's PR comment lists what it changed and why, providing a human-readable summary at review time.
+- **GitHub-API actor attribution:** under ADR-0012's authentication mechanism, the API-level actor on every PR-touching operation (open, push, label, comment, merge) is the Claude Code GitHub App's installation identity — for BOTH routine path and recovery path. The `git`-level commit author remains `github-actions[bot]` for the scheduled workflow's commits and `claude-code-action[bot]` for the agent's commits. Maintainers reading the PR activity timeline see the Claude Code App identity on most automated events; the commit-author column distinguishes routine vs recovery commits within those PRs.
 
 ### Out of scope for this ADR
 
@@ -166,7 +168,7 @@ This decision is implemented when all of the following hold:
 2. The recovery workflow invokes `anthropics/claude-code-action` with the failing-job logs, the PR diff, and a prompt that lists the writable-paths allow-list and the no-touch list verbatim.
 3. The recovery workflow runs at most once per failing run (no retry loop).
 4. After the agent finishes, a workflow step diffs the agent's commit against the no-touch globs. If any file in the no-touch list was modified, the step closes the PR, comments on it with the offending files, and exits non-zero.
-5. The `CLAUDE_CODE_OAUTH_TOKEN` secret is configured at the repository level (auto-provisioned by the Claude Code GitHub App) and is referenced only by the recovery workflow. No `ANTHROPIC_API_KEY` is configured, provisioned, or referenced anywhere in the repository.
+5. The `CLAUDE_CODE_OAUTH_TOKEN` secret (Claude API credential) is configured at the repository level (auto-provisioned by the Claude Code GitHub App) and is referenced only by the recovery workflow's `claude-code-action` step. No `ANTHROPIC_API_KEY` is configured, provisioned, or referenced anywhere in the repository. The Claude Code GitHub App's installation IS used by both workflows as the GitHub-API actor via the OIDC token-exchange mechanism chosen in ADR-0012; this broadening is acknowledged in §Secret management above.
 6. The agent's commits are co-authored by an identifiable bot account (not impersonating a human).
 7. Two consecutive simulated dep-bump failures with fixable root causes are recovered to green by the agent without any no-touch file being modified.
 8. One simulated failure that requires modifying a no-touch file is correctly refused: the PR ends up closed-with-comment, not merged.
