@@ -208,3 +208,40 @@ None this iter — no Step 3 rotation pass run (no briefing edits beyond observa
 - JTBD gate PASSed first call. The project-maintainer / ci-automation-engineer JTBDs already covered this fix; no new persona or job needed.
 - TDD RED→GREEN cycle worked end-to-end once the file was co-located. All 4 new tests went RED (4/4 failing), then GREEN (4/4 passing) after the minimal applyUpdates change.
 - Full validation suite passed (lint 0 errors / 1 pre-existing warning, type-check clean, format clean, 234 tests pass, coverage 97% lines, duplication 0, audit clean).
+
+---
+
+# Ask Hygiene Trail — 2026-05-13 work-problems + Step 2.5 follow-up + retro (second retro this date)
+
+Session retrospective per ADR-044. This trail covers the long `/wr-itil:work-problems` → Step 2.5 routing → follow-up actions → upstream reports → retro arc that ran late on 2026-05-13. The first half of this file (above the `---`) covers the earlier session.
+
+| Call # | Header                                                                                                                                                          | Classification     | Citation                                                                                                                                                                                                                       |
+| -----: | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+|      1 | "How should I handle the working-tree state before opening iter 1?" (Step 0 dirty-state routing after second /wr-itil:work-problems invocation)                 | direction          | Gap: P003-class prettier deltas in working tree; framework's 4 P109 options (resume/discard/leave-and-lower/halt) don't directly fit "prettier-delta cleanup". User direction needed.                                          |
+|      2 | "Release pipeline is above appetite (8/25 Medium, dominated by P001's CLI semantic shift in --update). How should I proceed?" (Step 6.5 above-appetite routing) | direction          | Gap: ADR-042 above-appetite branch has the auto-apply loop but the scorer's remediations (promote ADR / CHANGELOG / re-type / release-subset) are semantic decisions the agent shouldn't auto-apply. Framework routes to user. |
+|      3 | "Iter 3 created src/update-packages.test.js co-located beside the impl..." (Step 2.5 deviation-approval + test placement direction)                             | deviation-approval | Framework: ADR-044 deviation-candidate shape (existing test/ convention vs TDD hook constraint); user approved one-time exception per Option 3.                                                                                |
+|      4 | "Four workspace-state entries (.afk-run-state/, .claude/, .risk-reports/, package.json.backup) are untracked and not gitignored..." (Step 2.5 direction)        | taste              | Gap: workspace-state gitignore is project-policy choice; user direction unconstrained by existing framework artefact.                                                                                                          |
+|      5 | "P003 was observably verified twice during this session...Close it now on agent-evidence?" (Step 2.5 direction)                                                 | direction          | Framework: ADR-022 sanctions agent-evidence closure; gap was whether the user prefers agent-close or wait-for-user; user-direction-class.                                                                                      |
+|      6 | "wr-voice-tone:agent returns FAIL on every commit because docs/VOICE-AND-TONE.md doesn't exist in this project..." (Step 2.5 silent-framework gap)              | silent-framework   | Gap: no ADR/policy resolves whether voice-tone gate should fail-open vs self-bootstrap vs require explicit opt-in. Genuine new territory.                                                                                      |
+|      7 | "What type of problem is P004 (@windyroad/tdd hook only recognises same-dir or **tests**/ test associations)?" (capture-problem Step 1.5 type classification)   | taste              | Framework: ADR-044 category 5; the type-tag prompt itself is policy-required per capture-problem SKILL.md I2 invariant.                                                                                                        |
+|      8 | "Brand-voice adjectives for docs/VOICE-AND-TONE.md..." (voice-tone update-guide Step 3 framing)                                                                 | taste              | Framework: no ADR/policy prescribes which register (sober vs three-surface vs middle vs defer); authentic taste decision on project voice.                                                                                     |
+
+**Lazy count: 0**
+**Direction count: 3** (calls 1, 2, 5)
+**Deviation-approval count: 1** (call 3)
+**Override count: 0**
+**Silent-framework count: 1** (call 6)
+**Taste count: 3** (calls 4, 7, 8)
+**Correction-followup count: 0**
+
+## Notes
+
+- Call 2 (above-appetite release routing) was the highest-value AskUserQuestion of this run — the user's "re-rate with the scorer" choice unblocked v2.7.1 publish AND surfaced the scorer's first-pass over-conservatism as a learning (new briefing entry in releases-and-ci.md).
+- Call 5 had clear in-session evidence (P003 verified twice). Framework-resolution-boundary-wise, the agent COULD have closed silently per ADR-022 + ADR-044 — surfacing it was conservatism that the user resolved instantly. Borderline taste-vs-lazy classification; counting as direction because the closure decision is genuinely user-authority under the current sanction.
+- Call 7 (capture-problem type classification) is the I2 invariant prompt — mandatory per the skill contract; not lazy.
+- No correction-signal follow-ups in AskUserQuestion form; the user's "when is it going to happen if we don't do it now?" correction signal routed through the P078 capture-offer surface (not AskUserQuestion) and produced P006.
+- No lazy calls: zero sub-contracting of framework-resolvable decisions back to user.
+
+## R6 numeric gate status
+
+This retro's lazy count: **0**. Previous retro (first half of this file) had explicit lazy examples (a handful of cases). Trend is improving. R6 condition (lazy ≥ 2 across 3 consecutive retros) is NOT firing as of this retro. No deviation-candidate auto-queued.

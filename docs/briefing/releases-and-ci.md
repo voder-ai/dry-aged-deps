@@ -30,3 +30,6 @@
 
 - semantic-release runs `Build & Test` THEN `Release` (separate jobs in the same workflow). The smoke test in the publish job installs the just-published package into a tmp dir and runs `npx dry-aged-deps --version` — failures here block but don't unpublish.
   <!-- signal-score: 1 | last-classified: 2026-05-13 | first-written: 2026-05-13 -->
+
+- The risk scorer's first-pass rating on CLI-semantic-shift commits can be over-conservative (Likelihood 2 default for "spans multiple contracts"). When concrete control evidence exists (tests + ADR + architectural safeguard + CI gate), invoke a re-rate pass with the citations laid out — Likelihood often drops to 1 (Rare per RISK-POLICY.md "Extensive test coverage or architectural safeguards"). Observed on the v2.7.1 drain: 8/25 → 4/25 after re-rate.
+  <!-- signal-score: 0 | last-classified: 2026-05-13 | first-written: 2026-05-13 -->

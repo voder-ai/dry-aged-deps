@@ -29,4 +29,10 @@
   <!-- signal-score: 2 | last-classified: 2026-05-13 | first-written: 2026-05-13 -->
 
 - The `correction-signal` hook fires on phrases like "DO NOT" / "DON'T" / "MUST NOT" and instructs the agent to OFFER a problem ticket BEFORE responding. Ignore at your peril — repeated mis-corrections accrue into a ticket anyway, just less visibly.
-  <!-- signal-score: 3 | last-classified: 2026-05-13 | first-written: 2026-05-13 -->
+  <!-- signal-score: 4 | last-classified: 2026-05-13 | first-written: 2026-05-13 -->
+
+- The `wr-risk-scorer:external-comms` gate (P064) on `gh issue create` / `gh api .../security-advisories` requires a SHA256 marker keyed by `sha256(draft + '\n' + surface)`. The subagent reviewer (`wr-risk-scorer:external-comms`) returns PASS verdict on content but its sandboxed environment lacks Bash to compute the actual SHA256, so the PostToolUse hook never writes a usable marker. Workaround: `BYPASS_RISK_GATE=1` with audit trail in the commit message documenting the PASS verdicts. P007.
+  <!-- signal-score: 0 | last-classified: 2026-05-13 | first-written: 2026-05-13 -->
+
+- `gh issue create --label <name>` fails with `could not add label: '<name>' not found` if the label exists in the upstream's issue-template YAML but has not been created in the repo's Labels settings. Workaround: omit `--label` and let triage classify. Templates declare labels but don't auto-create them in repo settings.
+  <!-- signal-score: 0 | last-classified: 2026-05-13 | first-written: 2026-05-13 -->
