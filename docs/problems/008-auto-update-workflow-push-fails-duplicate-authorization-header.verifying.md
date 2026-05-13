@@ -82,7 +82,7 @@ Candidates 2 (`git config --unset-all` before push) and 3 (URL-embedded token) a
 
 ## Fix Released
 
-**Release marker**: pending next `npm publish` from this branch's commit (`fix(workflow): set persist-credentials: false on auto-update checkout`).
+**Release marker**: dry-aged-deps@v2.7.2 (semantic-release publish in CI run 25828401978, 2026-05-14). Commit `c43e402` — `fix(ci): set persist-credentials: false on auto-update checkout (closes P008)`.
 
 **Fix summary**: added `persist-credentials: false` to the `actions/checkout@v4` step's `with:` block in `.github/workflows/auto-update.yml`. This stops checkout from injecting a `GITHUB_TOKEN`-derived `http.https://github.com/.extraheader` into the runner's local git config, so the Push branch step's manually-set App-token Authorization header is the only Authorization header on the push request. Eliminates the HTTP 400 "Duplicate header" rejection.
 
