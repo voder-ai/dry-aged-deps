@@ -55,6 +55,14 @@ Initial estimate: Impact 2 (Minor — gate FAIL is meta-only; content reviews pa
 - `@windyroad/voice-tone` plugin — upstream framework code (the `wr-voice-tone:agent` definition).
 - `/wr-voice-tone:update-guide` — the existing bootstrap path; the upstream improvement is to invoke it (or its content-generation logic) when the guide is missing rather than fail.
 - 6+ observed gate FAILs in the 2026-05-13 work-problems session — empirical evidence of the friction frequency.
-- **Upstream report pending** — external dependency identified; invoke /wr-itil:report-upstream when ready
+- **Reported upstream**: <https://github.com/windyroad/agent-plugins/issues/124> (2026-05-13)
 
 (captured via /wr-itil:capture-problem; expand at next investigation)
+
+## Reported Upstream
+
+- **URL**: <https://github.com/windyroad/agent-plugins/issues/124>
+- **Reported**: 2026-05-13
+- **Template used**: problem-report.yml (problem-shaped, matched per ADR-033 classifier)
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes — upstream issue body includes `voder-ai/dry-aged-deps` cross-reference URL and P005 reference per Step 7 contract

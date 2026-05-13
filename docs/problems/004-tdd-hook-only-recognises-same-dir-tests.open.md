@@ -48,6 +48,14 @@ Initial estimate (per capture invocation): Impact 2 (Minor — dev-tooling frict
 - **ADR-0015** (`docs/decisions/0015-test-placement-co-location-exception-for-tdd-hook.proposed.md`) — the project-side narrow exception this ticket's upstream gap drives.
 - `@windyroad/tdd` plugin — upstream framework code (`tdd_find_test_for_impl()` in `tdd-gate.sh`).
 - `src/update-packages.test.js` — the single co-located test under ADR-0015's exception; relocates to `test/` when this ticket closes upstream.
-- **Upstream report pending** — external dependency identified; invoke /wr-itil:report-upstream when ready
+- **Reported upstream**: <https://github.com/windyroad/agent-plugins/issues/123> (2026-05-13)
 
 (captured via /wr-itil:capture-problem; expand at next investigation)
+
+## Reported Upstream
+
+- **URL**: <https://github.com/windyroad/agent-plugins/issues/123>
+- **Reported**: 2026-05-13
+- **Template used**: problem-report.yml (problem-shaped, matched per ADR-033 classifier)
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes — upstream issue body includes `voder-ai/dry-aged-deps` cross-reference URL and P004 reference per Step 7 contract
