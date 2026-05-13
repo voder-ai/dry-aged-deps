@@ -5,6 +5,7 @@ Archive of displaced `docs/problems/README.md` line 3 "Last reviewed" fragments 
 ## 2026-05-14
 
 - README reconciled — 4 drift entries corrected: P004, P005, P006, P007. Reconciliation contract per P118 + ADR-014 amended ("Reconciliation as preflight robustness layer").
+- P001 closed (verified end-to-end via `auto-update.yml` run 25805539989); P004/P005/P007 auto-transitioned Open → Known Error; P008 captured (auto-update workflow push fails with duplicate `Authorization` header).
 
 ## 2026-05-13
 

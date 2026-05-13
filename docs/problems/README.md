@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-14 — P001 closed (verified end-to-end via `auto-update.yml` run 25805539989); P004/P005/P007 auto-transitioned Open → Known Error; P008 captured (auto-update workflow push fails with duplicate `Authorization` header).
+> Last reviewed: 2026-05-14 — P008 known error — duplicate `Authorization` from `actions/checkout@v4`'s `persist-credentials: true` default conflicting with the manual App-token `-c http.extraheader=...` on push. Architect + JTBD reviews PASS; fix is single-line workflow change.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -9,9 +9,9 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 | WSJF | ID   | Title                                                                                                     | Severity     | Status      | Effort | Reported   |
 | ---- | ---- | --------------------------------------------------------------------------------------------------------- | ------------ | ----------- | ------ | ---------- |
+| 20.0 | P008 | auto-update workflow push fails with duplicate `Authorization` header                                     | 10 (High)    | Known Error | S      | 2026-05-14 |
 | 16.0 | P004 | `@windyroad/tdd` hook only recognises same-dir or `__tests__/` test associations                          | 8 (Medium)   | Known Error | S      | 2026-05-13 |
 | 10.0 | P007 | external-comms gate's sandboxed subagent reviewer cannot compute the SHA256 marker key                    | 10 (High)    | Known Error | M      | 2026-05-13 |
-| 10.0 | P008 | auto-update workflow push fails with duplicate `Authorization` header                                     | 10 (High)    | Open        | S      | 2026-05-14 |
 | 4.0  | P005 | `wr-voice-tone:agent` returns FAIL when `docs/VOICE-AND-TONE.md` is missing                               | 2 (Very Low) | Known Error | S      | 2026-05-13 |
 | 3.0  | P006 | assistant defers actionable items to "next session" instead of acting when the user is observably present | 6 (Medium)   | Open        | M      | 2026-05-13 |
 
