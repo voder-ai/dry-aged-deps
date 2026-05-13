@@ -43,6 +43,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          # Per P008 + ADR-0012 §Confirmation criterion 3: do NOT inject GITHUB_TOKEN
+          # into the local git http.extraheader, so the Push branch step's manually-set
+          # App-token Authorization header is the only Authorization header on the
+          # request. Without this, github.com rejects the push with HTTP 400
+          # "Duplicate header: Authorization".
+          persist-credentials: false
 
       - name: Setup Node.js
         uses: actions/setup-node@v4

@@ -6,6 +6,7 @@ Archive of displaced `docs/problems/README.md` line 3 "Last reviewed" fragments 
 
 - README reconciled — 4 drift entries corrected: P004, P005, P006, P007. Reconciliation contract per P118 + ADR-014 amended ("Reconciliation as preflight robustness layer").
 - P001 closed (verified end-to-end via `auto-update.yml` run 25805539989); P004/P005/P007 auto-transitioned Open → Known Error; P008 captured (auto-update workflow push fails with duplicate `Authorization` header).
+- P008 known error — duplicate `Authorization` from `actions/checkout@v4`'s `persist-credentials: true` default conflicting with the manual App-token `-c http.extraheader=...` on push. Architect + JTBD reviews PASS; fix is single-line workflow change.
 
 ## 2026-05-13
 

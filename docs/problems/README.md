@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-14 — P008 known error — duplicate `Authorization` from `actions/checkout@v4`'s `persist-credentials: true` default conflicting with the manual App-token `-c http.extraheader=...` on push. Architect + JTBD reviews PASS; fix is single-line workflow change.
+> Last reviewed: 2026-05-14 — P008 verification pending — `persist-credentials: false` added to `actions/checkout@v4` in `.github/workflows/auto-update.yml`; awaiting `gh workflow run auto-update.yml` dispatch to confirm `Push branch` succeeds and a PR opens under the App identity (ADR-0009 §Confirmation criterion 4).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -9,7 +9,6 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 | WSJF | ID   | Title                                                                                                     | Severity     | Status      | Effort | Reported   |
 | ---- | ---- | --------------------------------------------------------------------------------------------------------- | ------------ | ----------- | ------ | ---------- |
-| 20.0 | P008 | auto-update workflow push fails with duplicate `Authorization` header                                     | 10 (High)    | Known Error | S      | 2026-05-14 |
 | 16.0 | P004 | `@windyroad/tdd` hook only recognises same-dir or `__tests__/` test associations                          | 8 (Medium)   | Known Error | S      | 2026-05-13 |
 | 10.0 | P007 | external-comms gate's sandboxed subagent reviewer cannot compute the SHA256 marker key                    | 10 (High)    | Known Error | M      | 2026-05-13 |
 | 4.0  | P005 | `wr-voice-tone:agent` returns FAIL when `docs/VOICE-AND-TONE.md` is missing                               | 2 (Very Low) | Known Error | S      | 2026-05-13 |
@@ -19,6 +18,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 Fix released; awaiting user confirmation that the production behaviour matches the fix intent. Excluded from WSJF ranking per ADR-022. Sorted by `Released date ASC` (oldest at row 1; same-day releases tiebreak by ID ASC) per P150 — older entries are the most likely-verified candidates to close first. `Likely verified?` marks tickets ≥14 days old (P048 Candidate 4 default).
 
-| ID   | Title                                                     | Released   | Likely verified? | Verification trigger                                                                                                                                                                                                                                         |
-| ---- | --------------------------------------------------------- | ---------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| P002 | push:watch's release-trigger heuristic is empty post-push | 2026-05-13 | no (1 day)       | Next `npm run push:watch` that includes a `feat:` / `fix:` / `BREAKING CHANGE:` commit prints "Commits include release-triggering types" (not the false miss). _Observed verified during v2.7.1 drain — final confirmation on next release-triggering push._ |
+| ID   | Title                                                                 | Released   | Likely verified? | Verification trigger                                                                                                                                                                                                                                                                                                                                              |
+| ---- | --------------------------------------------------------------------- | ---------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| P002 | push:watch's release-trigger heuristic is empty post-push             | 2026-05-13 | no (1 day)       | Next `npm run push:watch` that includes a `feat:` / `fix:` / `BREAKING CHANGE:` commit prints "Commits include release-triggering types" (not the false miss). _Observed verified during v2.7.1 drain — final confirmation on next release-triggering push._                                                                                                      |
+| P008 | auto-update workflow push fails with duplicate `Authorization` header | 2026-05-14 | no (0 days)      | Single `gh workflow run auto-update.yml` dispatch on a state with at least one safe update: the `Push branch` step succeeds (no HTTP 400 "Duplicate header"), `Open pull request` runs, a PR appears authored by the Claude Code GitHub App identity (not `github-actions[bot]`), and the PR triggers `ci-publish.yml`'s `pull_request` workflows (ADR-0009 §c4). |

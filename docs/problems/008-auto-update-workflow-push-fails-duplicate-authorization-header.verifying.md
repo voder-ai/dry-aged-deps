@@ -1,10 +1,10 @@
 # Problem 008: auto-update workflow push fails with duplicate `Authorization` header
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-05-14
 **Priority**: 10 (High) — Impact: Minor (2) x Likelihood: Almost certain (5) — fires every dispatched run that has a real update to push
 **Effort**: S — single-line workflow change (`persist-credentials: false` on `actions/checkout@v4` is the canonical fix); verification is one workflow_dispatch
-**WSJF**: 20.0 = (10 × 2.0) / 1
+**WSJF**: 0 (Verification Pending; excluded per ADR-022)
 **Type**: technical
 
 ## Description
@@ -79,6 +79,16 @@ Candidates 2 (`git config --unset-all` before push) and 3 (URL-embedded token) a
 - **Blocks**: ADR-0009 §Confirmation criterion 4 (single `workflow_dispatch` opens a PR end-to-end); ADR-0009 §Confirmation criterion 7 (two consecutive successful scheduled runs land their PRs onto `main` without human intervention) — the second criterion compounds on top of this one.
 - **Blocked by**: (none) — P001's fix has already landed, so the workflow now reliably has work to push.
 - **Composes with**: ADR-0012 OIDC mint (now verified end-to-end up to but not including the push handoff).
+
+## Fix Released
+
+**Release marker**: pending next `npm publish` from this branch's commit (`fix(workflow): set persist-credentials: false on auto-update checkout`).
+
+**Fix summary**: added `persist-credentials: false` to the `actions/checkout@v4` step's `with:` block in `.github/workflows/auto-update.yml`. This stops checkout from injecting a `GITHUB_TOKEN`-derived `http.https://github.com/.extraheader` into the runner's local git config, so the Push branch step's manually-set App-token Authorization header is the only Authorization header on the push request. Eliminates the HTTP 400 "Duplicate header" rejection.
+
+**Awaiting user verification**: the published release does not itself exercise the workflow. Verification is a single `gh workflow run auto-update.yml` dispatch on a state with at least one safe update available — confirming (a) the `Push branch` step succeeds, (b) `Open pull request` runs and a PR appears on GitHub, and (c) the PR is authored by the Claude Code GitHub App identity (not `github-actions[bot]`), so the resulting PR triggers `ci-publish.yml`'s `pull_request` workflows per ADR-0009 §"Required branch-protection configuration" + ADR-0012 §"Mechanism".
+
+**In-session evidence**: no in-session exercise possible — the failure surface is the live GitHub Actions runner. The fix is the documented canonical pattern (`actions/checkout` README's "Push a commit using the built-in token" section recommends `persist-credentials: false` for cross-identity push). Confidence is high but cannot be claimed without an end-to-end dispatch.
 
 ## Related
 
