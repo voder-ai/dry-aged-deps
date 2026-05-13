@@ -1,6 +1,5 @@
 {
   "exclude": {
-    "typescript": "Deferring TypeScript 5 → 6 major upgrade pending deliberate compatibility check against the JSDoc + checkJs setup in tsconfig.json (ADR-0006). Re-evaluate when scheduling a dedicated TS6 upgrade commit.",
-    "globals": "Pinned to exact 17.4.0 (no caret) in package.json. dry-aged-deps flags 17.6.0 as available but --update cannot bump an exact pin. Excluding until the pin is intentionally relaxed."
+    "typescript": "Deferring TypeScript 5 → 6 major upgrade pending deliberate compatibility check against the JSDoc + checkJs setup in tsconfig.json (ADR-0006). Re-evaluate when scheduling a dedicated TS6 upgrade commit."
   }
 }
