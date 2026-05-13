@@ -1,13 +1,18 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-13 — P003 closed on agent-evidence (read-only `format:check` hook held clean across iter 2's commit cycle AND the v2.7.1 drain push; ADR-022 agent-evidence closure sanctioned by user via /wr-itil:work-problems Step 2.5 routing). Dev-work queue empty; 2 tickets (P001, P002) remain in Verification Queue.
+> Last reviewed: 2026-05-14 **README reconciled** — 4 drift entries corrected: P004, P005, P006, P007. Reconciliation contract per P118 + ADR-014 amended ("Reconciliation as preflight robustness layer").
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
 
 Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) and Parked (`.parked.md`, multiplier 0) tickets are excluded per ADR-022 — surfaced in their own sections below. Rows sort by `(WSJF desc, Known-Error-first, Effort-divisor asc, Reported-date asc, ID asc)` so top-to-bottom order matches `/wr-itil:work-problems` Step 3 tie-break selection 1:1 (P138). The `Reported` column MUST appear.
 
-_No open or known-error tickets._
+| WSJF | ID   | Title                                                                                                     | Severity   | Status | Effort | Reported   |
+| ---- | ---- | --------------------------------------------------------------------------------------------------------- | ---------- | ------ | ------ | ---------- |
+| 1.5  | P004 | `@windyroad/tdd` hook only recognises same-dir or `__tests__/` test associations                          | 3 (Medium) | Open   | M      | 2026-05-13 |
+| 1.5  | P005 | `wr-voice-tone:agent` returns FAIL when `docs/VOICE-AND-TONE.md` is missing                               | 3 (Medium) | Open   | M      | 2026-05-13 |
+| 1.5  | P006 | assistant defers actionable items to "next session" instead of acting when the user is observably present | 3 (Medium) | Open   | M      | 2026-05-13 |
+| 1.5  | P007 | external-comms gate's sandboxed subagent reviewer cannot compute the SHA256 marker key                    | 3 (Medium) | Open   | M      | 2026-05-13 |
 
 ## Verification Queue
 
