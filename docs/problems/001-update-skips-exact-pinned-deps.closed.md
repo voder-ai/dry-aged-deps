@@ -1,8 +1,9 @@
 # Problem 001: dry-aged-deps --update skips exact-pinned dependencies
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-05-12
 **Released**: 2026-05-13
+**Closed**: 2026-05-14 — verified end-to-end via `.github/workflows/auto-update.yml` run 25805539989 (`Apply updates` step bumped `globals 17.4.0 → 17.6.0`, exactly matching the Verification trigger criterion).
 **Priority**: 16 (High) — Impact: Significant (4) x Likelihood: Likely (4)
 **Effort**: M — multiple files (src/update-packages.js, src/build-rows.js), spec clarification needed in prompts/011.0, plus reproduction test
 **WSJF**: 16.0 = (16 × 2.0) / 2

@@ -2,8 +2,9 @@
 
 **Status**: Open
 **Reported**: 2026-05-14
-**Priority**: 3 (Medium) — Impact: 3 x Likelihood: 1 (deferred — re-rate at next /wr-itil:review-problems)
-**Effort**: M (deferred — re-rate at next /wr-itil:review-problems)
+**Priority**: 10 (High) — Impact: Minor (2) x Likelihood: Almost certain (5) — fires every dispatched run that has a real update to push
+**Effort**: S — single-line workflow change (`persist-credentials: false` on `actions/checkout@v4` is the canonical fix); verification is one workflow_dispatch
+**WSJF**: 10.0 = (10 × 1.0) / 1
 **Type**: technical
 
 ## Description

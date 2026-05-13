@@ -1,9 +1,10 @@
 # Problem 007: external-comms gate's sandboxed subagent reviewer cannot compute the SHA256 marker key
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-05-13
-**Priority**: 3 (Medium) — Impact: 3 x Likelihood: 1 (deferred — re-rate at next /wr-itil:review-problems)
-**Effort**: M (deferred — re-rate at next /wr-itil:review-problems)
+**Priority**: 10 (High) — Impact: Minor (2) x Likelihood: Almost certain (5)
+**Effort**: M — choice between Option 1 (hook computes key) vs Option 2 (grant Bash to subagent), then upstream implementation
+**WSJF**: 10.0 = (10 × 2.0) / 2
 **Type**: technical
 
 ## Description

@@ -2,6 +2,10 @@
 
 Archive of displaced `docs/problems/README.md` line 3 "Last reviewed" fragments per P134 (the line 3 accumulator-doc carve-out). Newest fragments append at the bottom under date headings; earlier fragments stay above for grep+tail browsing.
 
+## 2026-05-14
+
+- README reconciled — 4 drift entries corrected: P004, P005, P006, P007. Reconciliation contract per P118 + ADR-014 amended ("Reconciliation as preflight robustness layer").
+
 ## 2026-05-13
 
 - P003 transitioned Known Error → Verification Pending (fix landed: `.husky/pre-commit` now runs `format:check` per ADR-0013; awaiting user verification of clean post-commit working tree).

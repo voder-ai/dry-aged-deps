@@ -1,9 +1,10 @@
 # Problem 004: `@windyroad/tdd` hook only recognises same-dir or `__tests__/` test associations
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-05-13
-**Priority**: 3 (Medium) — Impact: 3 x Likelihood: 1 (deferred — re-rate at next /wr-itil:review-problems)
-**Effort**: M (deferred — re-rate at next /wr-itil:review-problems)
+**Priority**: 8 (Medium) — Impact: Minor (2) x Likelihood: Likely (4)
+**Effort**: S — project-side issue already filed upstream (#123); local follow-up is verification + relocating `src/update-packages.test.js` when upstream lands
+**WSJF**: 16.0 = (8 × 2.0) / 1
 **Type**: technical
 
 ## Description

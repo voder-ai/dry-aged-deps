@@ -1,9 +1,10 @@
 # Problem 005: `wr-voice-tone:agent` returns FAIL when `docs/VOICE-AND-TONE.md` is missing
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-05-13
-**Priority**: 3 (Medium) — Impact: 3 x Likelihood: 1 (deferred — re-rate at next /wr-itil:review-problems)
-**Effort**: M (deferred — re-rate at next /wr-itil:review-problems)
+**Priority**: 2 (Very Low) — Impact: Minor (2) x Likelihood: Rare (1) — for THIS project, likelihood drops to Rare because docs/VOICE-AND-TONE.md was bootstrapped in 47143c4; the upstream concern (other adopter projects) is the remaining work
+**Effort**: S — upstream already reported (#124); local follow-up is verification when upstream lands
+**WSJF**: 4.0 = (2 × 2.0) / 1
 **Type**: technical
 
 ## Description
