@@ -1,10 +1,10 @@
 # Problem 008: auto-update workflow push fails with duplicate `Authorization` header
 
-**Status**: Verification Pending
+**Status**: Known Error
 **Reported**: 2026-05-14
 **Priority**: 10 (High) — Impact: Minor (2) x Likelihood: Almost certain (5) — fires every dispatched run that has a real update to push
-**Effort**: S — single-line workflow change (`persist-credentials: false` on `actions/checkout@v4` is the canonical fix); verification is one workflow_dispatch
-**WSJF**: 0 (Verification Pending; excluded per ADR-022)
+**Effort**: S — single-line workflow change in the Push branch step (swap `git -c http.extraheader=bearer` for URL-embedded `x-access-token` basic auth); verification is one workflow_dispatch
+**WSJF**: 20.0 = (10 × 2.0) / 1
 **Type**: technical
 
 ## Description
@@ -51,28 +51,59 @@ Manual dependency updates via local `npm run start` + a hand-opened PR. The auto
 
 ## Root Cause Analysis
 
-**Confirmed mechanism**: `actions/checkout@v4` defaults to `persist-credentials: true`, which writes a `GITHUB_TOKEN`-derived `http.https://github.com/.extraheader=AUTHORIZATION: basic <base64>` entry into the runner's local git config. The `Push branch` step then runs `git -c "http.https://github.com/.extraheader=AUTHORIZATION: bearer $APP_TOKEN" push ...`, which **adds** a second `Authorization` header to the request rather than replacing the first (the `-c` flag appends a config value of the same key; it does not unset prior values). github.com rejects requests carrying two `Authorization` headers with HTTP 400 and `Duplicate header: "Authorization"`.
+**Two-layer bug. Layer 1 was masking layer 2.**
 
-**Fix decision**: candidate 1 — set `persist-credentials: false` on the `actions/checkout@v4` step. Rationale:
+### Layer 1 (the surface symptom — fixed in v2.7.2; insufficient)
 
-- Canonical pattern documented by `actions/checkout` for "push as a different identity than the checkout actor".
-- Removes the source of the conflict at its origin rather than working around it downstream.
-- Brings the implementation into stricter conformance with ADR-0012 §Confirmation criterion 3 ("the minted App token, not `GITHUB_TOKEN`, is used for git push"). Today both are present; the fix leaves only the App token.
-- Strengthens JTBD-104's "PR is authored by an identifiable bot account, not impersonating a human" outcome (the App identity is the only push identity remaining).
-- Architect review (2026-05-14): PASS, no new ADR required — mechanical implementation of existing ADR-0012 intent.
-- JTBD review (2026-05-14): PASS — serves JTBD-103, JTBD-104, JTBD-106 cleanly.
+`actions/checkout@v4` defaults to `persist-credentials: true`, which writes a `GITHUB_TOKEN`-derived `http.https://github.com/.extraheader=AUTHORIZATION: basic <base64>` entry into the runner's local git config. The `Push branch` step then runs `git -c "http.https://github.com/.extraheader=AUTHORIZATION: bearer $APP_TOKEN" push ...`, which **adds** a second `Authorization` header rather than replacing the first. github.com rejects requests carrying two `Authorization` headers with HTTP 400 and `Duplicate header: "Authorization"`.
 
-Candidates 2 (`git config --unset-all` before push) and 3 (URL-embedded token) are mechanical workarounds; both work but neither is the canonical pattern.
+This is the layer captured in the original ticket. v2.7.2 (commit `c43e402`) added `persist-credentials: false` to the Checkout step. That eliminated the duplicate header.
 
-**Reproduction**: dispatch the workflow via `gh workflow run auto-update.yml` on a state where `npm outdated` reports at least one safe update. The `Push branch` step exits 128 with `Duplicate header: "Authorization"`. No test fixture is required — workflow run `25805539989` is the in-history reproduction artefact.
+### Layer 2 (uncovered by the v2.7.2 fix)
+
+Once the duplicate-header rejection was gone, the next dispatched run (workflow run `25905430469`, 2026-05-15) failed at Push branch with a different error:
+
+```
+fatal: could not read Username for 'https://github.com': No such device or address
+##[error]Process completed with exit code 128.
+```
+
+The auth scheme `AUTHORIZATION: bearer $APP_TOKEN` is wrong for git transport. **Bearer auth works for the GitHub API but NOT for git push** of GitHub App installation tokens. Per GitHub's documentation, App installation tokens for git transport must use HTTP Basic auth with username `x-access-token` and the token as password (the same pattern `actions/checkout` itself uses with `basic <base64(x-access-token:TOKEN)>`).
+
+The duplicate-header rejection in layer 1 was returning HTTP 400 BEFORE the auth scheme could be evaluated, so the bearer-vs-basic bug stayed masked. With layer 1 cleared, the request now reaches the auth-evaluation stage where git, finding the `bearer` scheme unusable for transport, falls back to prompting for a username — which fails non-interactively.
+
+**Fix decision (amended 2026-05-15)**: candidate 3 from the original analysis — URL-embedded basic auth.
+
+```yaml
+git push --set-upstream "https://x-access-token:${APP_TOKEN}@github.com/${{ github.repository }}.git" \
+"${{ steps.branch.outputs.branch }}"
+```
+
+Rationale:
+
+- Uses the documented, App-token-supported auth scheme (HTTP Basic with `x-access-token` username).
+- Keeps the App identity at push time — JTBD-104's "PR is authored by an identifiable bot account" outcome is preserved (`x-access-token` IS the App identity for git).
+- More cleanly satisfies ADR-0012 §Confirmation criterion 3 than candidate 1 — the App token is positively the auth credential, not just "the only one left after removing the GITHUB_TOKEN extraheader".
+- v2.7.2's `persist-credentials: false` setting stays in place — it's still the right thing for the Checkout step regardless of the auth scheme used at push.
+- Architect review (2026-05-15): PASS, no new ADR required — mechanical implementation correction within ADR-0012's intent.
+- JTBD review (2026-05-15): PASS — preserves App identity at push.
+
+**Why candidate 1 was the wrong original pick**: it treated the symptom (duplicate header) without verifying the underlying auth scheme worked. Lesson: when fixing a "request rejected at HTTP 400" bug, the request had to be both well-formed AND well-authenticated to succeed; fixing only the former leaves the latter untested.
+
+**Reproduction**:
+
+- Layer 1: workflow run `25805539989` (2026-05-13) — `Duplicate header: "Authorization"`, HTTP 400.
+- Layer 2: workflow run `25905430469` (2026-05-15, post-v2.7.2) — `fatal: could not read Username for 'https://github.com'`, exit 128.
 
 ### Investigation Tasks
 
-- [x] Confirm `actions/checkout@v4` is injecting `http.https://github.com/.extraheader` in this repo — confirmed via `actions/checkout` documentation; `persist-credentials: true` is the documented default behaviour. Workflow run `25805539989` is the empirical reproduction.
-- [x] Choose between fix candidates 1/2/3 above; document the choice — candidate 1 selected, rationale documented above.
-- [ ] Apply the chosen fix to `.github/workflows/auto-update.yml` — pending in this session.
-- [ ] Re-dispatch the workflow and confirm `Push branch` succeeds + a PR is opened with the App-token identity (so the PR triggers `pull_request` workflows, per ADR-0009 §Required branch-protection configuration and ADR-0012 §Mechanism) — user verification step post-release.
-- [ ] Close out ADR-0009 §Confirmation criterion 4 once a PR has been opened end-to-end — depends on the verification dispatch.
+- [x] Confirm `actions/checkout@v4` is injecting `http.https://github.com/.extraheader` in this repo — confirmed.
+- [x] Choose between fix candidates 1/2/3 — candidate 1 chosen 2026-05-14, then revised to candidate 3 on 2026-05-15 after layer-1-only fix exposed layer 2.
+- [x] Apply candidate 1 fix (v2.7.2, c43e402) — landed.
+- [x] Re-dispatch and observe layer-2 failure — workflow run 25905430469.
+- [ ] Apply candidate 3 fix to `.github/workflows/auto-update.yml` — in this session.
+- [ ] Re-dispatch the workflow and confirm `Push branch` succeeds + a PR is opened with the App-token identity — user verification step post-release.
+- [ ] Close out ADR-0009 §Confirmation criterion 4 once a PR has been opened end-to-end.
 
 ## Dependencies
 
@@ -80,15 +111,11 @@ Candidates 2 (`git config --unset-all` before push) and 3 (URL-embedded token) a
 - **Blocked by**: (none) — P001's fix has already landed, so the workflow now reliably has work to push.
 - **Composes with**: ADR-0012 OIDC mint (now verified end-to-end up to but not including the push handoff).
 
-## Fix Released
+## Prior fix attempt (insufficient)
 
-**Release marker**: dry-aged-deps@v2.7.2 (semantic-release publish in CI run 25828401978, 2026-05-14). Commit `c43e402` — `fix(ci): set persist-credentials: false on auto-update checkout (closes P008)`.
+**v2.7.2 (c43e402, 2026-05-14)** — applied candidate 1 (`persist-credentials: false` on the Checkout step). Fixed layer 1 (duplicate Authorization header) but exposed the previously-masked layer 2 (bearer-vs-basic auth scheme mismatch for git transport). Workflow run 25905430469 (2026-05-15) failed at Push branch with `fatal: could not read Username`. Ticket flipped Verification Pending → Known Error to land the layer-2 fix.
 
-**Fix summary**: added `persist-credentials: false` to the `actions/checkout@v4` step's `with:` block in `.github/workflows/auto-update.yml`. This stops checkout from injecting a `GITHUB_TOKEN`-derived `http.https://github.com/.extraheader` into the runner's local git config, so the Push branch step's manually-set App-token Authorization header is the only Authorization header on the push request. Eliminates the HTTP 400 "Duplicate header" rejection.
-
-**Awaiting user verification**: the published release does not itself exercise the workflow. Verification is a single `gh workflow run auto-update.yml` dispatch on a state with at least one safe update available — confirming (a) the `Push branch` step succeeds, (b) `Open pull request` runs and a PR appears on GitHub, and (c) the PR is authored by the Claude Code GitHub App identity (not `github-actions[bot]`), so the resulting PR triggers `ci-publish.yml`'s `pull_request` workflows per ADR-0009 §"Required branch-protection configuration" + ADR-0012 §"Mechanism".
-
-**In-session evidence**: no in-session exercise possible — the failure surface is the live GitHub Actions runner. The fix is the documented canonical pattern (`actions/checkout` README's "Push a commit using the built-in token" section recommends `persist-credentials: false` for cross-identity push). Confidence is high but cannot be claimed without an end-to-end dispatch.
+`persist-credentials: false` remains in the workflow regardless — it's still the right thing for the Checkout step. Candidate 3's URL-embedded basic auth replaces only the Push branch step's command.
 
 ## Related
 
