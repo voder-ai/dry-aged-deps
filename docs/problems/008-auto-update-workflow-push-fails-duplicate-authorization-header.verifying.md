@@ -1,10 +1,10 @@
 # Problem 008: auto-update workflow push fails with duplicate `Authorization` header
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-05-14
 **Priority**: 10 (High) — Impact: Minor (2) x Likelihood: Almost certain (5) — fires every dispatched run that has a real update to push
 **Effort**: S — single-line workflow change in the Push branch step (swap `git -c http.extraheader=bearer` for URL-embedded `x-access-token` basic auth); verification is one workflow_dispatch
-**WSJF**: 20.0 = (10 × 2.0) / 1
+**WSJF**: 0 (Verification Pending; excluded per ADR-022)
 **Type**: technical
 
 ## Description
@@ -101,7 +101,7 @@ Rationale:
 - [x] Choose between fix candidates 1/2/3 — candidate 1 chosen 2026-05-14, then revised to candidate 3 on 2026-05-15 after layer-1-only fix exposed layer 2.
 - [x] Apply candidate 1 fix (v2.7.2, c43e402) — landed.
 - [x] Re-dispatch and observe layer-2 failure — workflow run 25905430469.
-- [ ] Apply candidate 3 fix to `.github/workflows/auto-update.yml` — in this session.
+- [x] Apply candidate 3 fix to `.github/workflows/auto-update.yml` — landed in this session.
 - [ ] Re-dispatch the workflow and confirm `Push branch` succeeds + a PR is opened with the App-token identity — user verification step post-release.
 - [ ] Close out ADR-0009 §Confirmation criterion 4 once a PR has been opened end-to-end.
 
@@ -116,6 +116,16 @@ Rationale:
 **v2.7.2 (c43e402, 2026-05-14)** — applied candidate 1 (`persist-credentials: false` on the Checkout step). Fixed layer 1 (duplicate Authorization header) but exposed the previously-masked layer 2 (bearer-vs-basic auth scheme mismatch for git transport). Workflow run 25905430469 (2026-05-15) failed at Push branch with `fatal: could not read Username`. Ticket flipped Verification Pending → Known Error to land the layer-2 fix.
 
 `persist-credentials: false` remains in the workflow regardless — it's still the right thing for the Checkout step. Candidate 3's URL-embedded basic auth replaces only the Push branch step's command.
+
+## Fix Released
+
+**Release marker**: pending — layer-2 fix landing in this commit; release marker will be filled in once the subsequent `npm run push:watch` triggers semantic-release.
+
+**Fix summary** (layer 2): replaced the Push branch step's `git -c http.extraheader=AUTHORIZATION: bearer $APP_TOKEN push origin ...` with URL-embedded basic auth: `git push --set-upstream https://x-access-token:${APP_TOKEN}@github.com/${{ github.repository }}.git "$BRANCH"`. Uses the GitHub-documented auth scheme for App installation tokens over git transport (Basic auth with `x-access-token` username). Combined with v2.7.2's `persist-credentials: false` on the Checkout step, both layer-1 and layer-2 bugs are now addressed.
+
+**Awaiting user verification**: a single `gh workflow run auto-update.yml` dispatch on a state with at least one safe update available — confirming (a) the `Push branch` step succeeds with no auth error, (b) `Open pull request` runs and a PR appears on GitHub, and (c) the PR is authored by the Claude Code GitHub App identity (not `github-actions[bot]`), so it triggers `ci-publish.yml`'s `pull_request` workflows per ADR-0009 §"Required branch-protection configuration" + ADR-0012 §"Mechanism".
+
+**In-session evidence**: no in-session exercise possible — the failure surface is the live GitHub Actions runner. The fix uses the documented `x-access-token` HTTP Basic pattern that GitHub explicitly recommends for App installation tokens with git transport. Confidence is higher than for the v2.7.2 attempt because the auth scheme is now correct rather than just unconflicted; the layer-2 bug is the proximate cause of the post-v2.7.2 failure, so closing it should unblock the verification path.
 
 ## Related
 

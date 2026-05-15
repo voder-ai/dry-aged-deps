@@ -11,7 +11,7 @@ Archive of displaced `docs/problems/README.md` line 3 "Last reviewed" fragments 
 
 ## 2026-05-15
 
-(empty placeholder — fragments rotate here as new "Last reviewed" lines displace old ones)
+- P008 flipped Verification Pending → Known Error. v2.7.2's candidate-1 fix (persist-credentials: false) cleared the duplicate-header surface symptom but exposed the previously-masked bearer-vs-basic auth-scheme bug for git transport (workflow run 25905430469 failed with "fatal: could not read Username"). Layer-2 fix in flight: switch Push branch to URL-embedded `x-access-token` basic auth (P008 candidate 3).
 
 ## 2026-05-13
 

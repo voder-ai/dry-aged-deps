@@ -184,16 +184,20 @@ jobs:
 
       - name: Push branch
         if: steps.check.outputs.has_updates == 'true'
-        # Push using the OIDC-minted App installation token. Pushing as a
-        # non-GITHUB_TOKEN actor is what lets the resulting PR trigger
-        # ci-publish.yml's pull_request workflows (per ADR-0009 §Required
-        # branch-protection configuration and ADR-0012 §Mechanism).
+        # Push using the OIDC-minted App installation token via URL-embedded
+        # basic auth. App installation tokens require HTTP Basic with username
+        # `x-access-token` for git transport (per GitHub docs); bearer auth
+        # works for the API but NOT for git push (see P008 layer 2). This
+        # form keeps the App identity at push time so the resulting PR
+        # triggers ci-publish.yml's pull_request workflows (per ADR-0009
+        # §Required branch-protection configuration and ADR-0012 §Mechanism).
         env:
           APP_TOKEN: ${{ steps.mint.outputs.token }}
         run: |
           set -e
-          git -c "http.https://github.com/.extraheader=AUTHORIZATION: bearer $APP_TOKEN" \
-              push --set-upstream origin "${{ steps.branch.outputs.branch }}"
+          git push --set-upstream \
+              "https://x-access-token:${APP_TOKEN}@github.com/${{ github.repository }}.git" \
+              "${{ steps.branch.outputs.branch }}"
 
       - name: Open pull request
         if: steps.check.outputs.has_updates == 'true'
