@@ -16,8 +16,8 @@
 
 ## What Will Surprise You
 
-- Verify-before-assert is a recurring agent failure mode. Three flip-flops on branch-protection behaviour in one session were directly caused by asserting from training data without checking GitHub's actual docs. Default to verification (fetch action source, read docs, test) when the answer is platform-specific.
-  <!-- signal-score: 4 | last-classified: 2026-05-13 | first-written: 2026-05-13 -->
+- Verify-before-assert is a recurring agent failure mode. Three flip-flops on branch-protection behaviour in one session were directly caused by asserting from training data without checking GitHub's actual docs. Default to verification (fetch action source, read docs, test) when the answer is platform-specific. **Re-confirmed by P008's v2.7.2 → v2.7.3 layered fix**: candidate 1 was picked from training-data assumption that bearer auth works for git transport. It does not. Architect / JTBD reviews would not have caught this — both PASS'd candidate 1 because the failure surface is empirical (live runner) and not in any local file the agents can read. The lesson: for auth-scheme decisions involving non-test-runnable surfaces, EITHER write a dry-run probe before shipping OR pick the most-documented option (candidate 3's URL-embedded basic auth is GitHub's own published recommendation; candidate 1 was a workaround for the duplicate-header symptom that ignored the underlying auth scheme).
+  <!-- signal-score: 5 | last-classified: 2026-05-16 | first-written: 2026-05-13 -->
 
 - Memory files (e.g. `feedback_claude_subscription_only.md`) load into context at session start but only help if the agent actually applies them. Loading is not application.
   <!-- signal-score: 2 | last-classified: 2026-05-13 | first-written: 2026-05-13 -->

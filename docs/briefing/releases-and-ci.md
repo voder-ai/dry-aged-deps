@@ -32,4 +32,10 @@
   <!-- signal-score: 1 | last-classified: 2026-05-13 | first-written: 2026-05-13 -->
 
 - The risk scorer's first-pass rating on CLI-semantic-shift commits can be over-conservative (Likelihood 2 default for "spans multiple contracts"). When concrete control evidence exists (tests + ADR + architectural safeguard + CI gate), invoke a re-rate pass with the citations laid out — Likelihood often drops to 1 (Rare per RISK-POLICY.md "Extensive test coverage or architectural safeguards"). Observed on the v2.7.1 drain: 8/25 → 4/25 after re-rate.
-  <!-- signal-score: 0 | last-classified: 2026-05-13 | first-written: 2026-05-13 -->
+  <!-- signal-score: -1 | last-classified: 2026-05-16 | first-written: 2026-05-13 -->
+
+- **`push:watch`'s `dry-aged-deps --check` precheck reads from `node_modules/`, NOT from `package-lock.json`.** After editing `package.json` + running `npm install --ignore-scripts --package-lock-only` to refresh the lockfile only, `npm outdated` still reports the OLD installed version because `node_modules/<pkg>/package.json` hasn't changed. Result: `push:watch` keeps reporting the same stale dep until you run a full `npm install` (or `npm ci`) to sync `node_modules/`. Cost ~2 minutes per misdiagnosed loop. Observed on the v2.7.3 P008 verification work — downgrading globals via `--update --yes` left node_modules at the new version even after a `--package-lock-only` reset.
+  <!-- signal-score: 3 | last-classified: 2026-05-16 | first-written: 2026-05-16 -->
+
+- **`gh run watch --exit-status` can return non-zero on transient API connectivity errors even when the CI run itself succeeded.** Observed once mid-session: `error connecting to api.github.com / check your internet connection` immediately followed by `Pipeline failed`, but `gh run view <RUN_ID> --json status,conclusion` reported `"status":"completed","conclusion":"success"` with every job green. Verify with `gh run view` before assuming a watch failure means a CI failure.
+  <!-- signal-score: 2 | last-classified: 2026-05-16 | first-written: 2026-05-16 -->
