@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-16 — P009 captured (Edit-tool markdown writes skip prettier; pre-commit format:check fails — observed ≥5 times in this retro's parent session). Captured at deferred Priority/Effort placeholders; re-rate at next `/wr-itil:review-problems`. Dev-work queue top: P004 (WSJF 16.0). Verification Queue empty.
+> Last reviewed: 2026-05-16 — P004 parked (`upstream-blocked` on windyroad/agent-plugins#123, filed 2026-05-13). Local work complete: upstream issue filed + ADR-0015 narrow exception keeps the project unblocked. Un-park trigger: upstream issue closes. Dev-work queue top now P007 (WSJF 10.0). Verification Queue empty. Parked: 1 (P004).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -9,7 +9,6 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 | WSJF | ID   | Title                                                                                                     | Severity     | Status      | Effort | Reported   |
 | ---- | ---- | --------------------------------------------------------------------------------------------------------- | ------------ | ----------- | ------ | ---------- |
-| 16.0 | P004 | `@windyroad/tdd` hook only recognises same-dir or `__tests__/` test associations                          | 8 (Medium)   | Known Error | S      | 2026-05-13 |
 | 10.0 | P007 | external-comms gate's sandboxed subagent reviewer cannot compute the SHA256 marker key                    | 10 (High)    | Known Error | M      | 2026-05-13 |
 | 4.0  | P005 | `wr-voice-tone:agent` returns FAIL when `docs/VOICE-AND-TONE.md` is missing                               | 2 (Very Low) | Known Error | S      | 2026-05-13 |
 | 3.0  | P006 | assistant defers actionable items to "next session" instead of acting when the user is observably present | 6 (Medium)   | Open        | M      | 2026-05-13 |
@@ -20,3 +19,11 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 Fix released; awaiting user confirmation that the production behaviour matches the fix intent. Excluded from WSJF ranking per ADR-022. Sorted by `Released date ASC` (oldest at row 1; same-day releases tiebreak by ID ASC) per P150 — older entries are the most likely-verified candidates to close first. `Likely verified?` marks tickets ≥14 days old (P048 Candidate 4 default).
 
 _Verification Queue is empty._
+
+## Parked
+
+Excluded from WSJF ranking per the Parked policy in `/wr-itil:manage-problem` SKILL.md (multiplier 0). To un-park, `git mv` back to `.open.md` or `.known-error.md` once the un-park trigger fires.
+
+| ID   | Title                                                                            | Reason           | Parked since |
+| ---- | -------------------------------------------------------------------------------- | ---------------- | ------------ |
+| P004 | `@windyroad/tdd` hook only recognises same-dir or `__tests__/` test associations | upstream-blocked | 2026-05-16   |

@@ -18,6 +18,7 @@ Archive of displaced `docs/problems/README.md` line 3 "Last reviewed" fragments 
 
 - P008 **closed**. Verified end-to-end via workflow run 25953546547: Push branch succeeded, PR #8 opened by `app/claude`, auto-merge enabled, `Build & Test` passed, PR auto-merged to main (commit `d8d80b9`). ADR-0009 §Confirmation criterion 4 satisfied. Autonomous loop is now load-bearing — daily cron can be armed in a follow-up.
 - P002 **closed** (release-trigger heuristic verified by v2.7.3 drain's "Commits include release-triggering types" line). Verification Queue is empty. Dev-work queue top: P004 (WSJF 16.0). Autonomous-loop verification complete (P008 closed earlier this session); daily cron can be armed in a follow-up.
+- P009 captured (Edit-tool markdown writes skip prettier; pre-commit format:check fails — observed ≥5 times in this retro's parent session). Captured at deferred Priority/Effort placeholders; re-rate at next `/wr-itil:review-problems`. Dev-work queue top: P004 (WSJF 16.0). Verification Queue empty.
 
 ## 2026-05-13
 

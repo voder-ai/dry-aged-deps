@@ -1,6 +1,6 @@
 # Problem 004: `@windyroad/tdd` hook only recognises same-dir or `__tests__/` test associations
 
-**Status**: Known Error
+**Status**: Parked
 **Reported**: 2026-05-13
 **Priority**: 8 (Medium) — Impact: Minor (2) x Likelihood: Likely (4)
 **Effort**: S — project-side issue already filed upstream (#123); local follow-up is verification + relocating `src/update-packages.test.js` when upstream lands
@@ -35,7 +35,7 @@ Initial estimate (per capture invocation): Impact 2 (Minor — dev-tooling frict
 ### Investigation Tasks
 
 - [ ] Re-rate Priority and Effort at next /wr-itil:review-problems
-- [ ] File the upstream report against `@windyroad/tdd` via `/wr-itil:report-upstream P004`. Suggested framing: add a configurable test-mapping override (e.g. `WR_TDD_TEST_MIRROR=test`) so adopter projects can declare their convention without forking the hook.
+- [x] File the upstream report against `@windyroad/tdd` via `/wr-itil:report-upstream P004`. Suggested framing: add a configurable test-mapping override (e.g. `WR_TDD_TEST_MIRROR=test`) so adopter projects can declare their convention without forking the hook. — filed 2026-05-13 as windyroad/agent-plugins#123 (see `## Reported Upstream` section).
 - [ ] When upstream lands the fix: relocate `src/update-packages.test.js` → `test/update-packages.test.js`, supersede ADR-0015, transition P004 to `.verifying.md` per ADR-022, then `.closed.md` after a real upstream-fix-exercise.
 
 ## Dependencies
@@ -60,3 +60,10 @@ Initial estimate (per capture invocation): Impact 2 (Minor — dev-tooling frict
 - **Template used**: problem-report.yml (problem-shaped, matched per ADR-033 classifier)
 - **Disclosure path**: public issue
 - **Cross-reference confirmed**: yes — upstream issue body includes `voder-ai/dry-aged-deps` cross-reference URL and P004 reference per Step 7 contract
+
+## Parked
+
+- **Reason**: `upstream-blocked` — the remaining local work (relocate `src/update-packages.test.js` → `test/update-packages.test.js`, supersede ADR-0015, transition to `.verifying.md`) is conditional on upstream `@windyroad/tdd` shipping the test-mapping fix. All project-side work this ticket can drive is complete: upstream issue filed (windyroad/agent-plugins#123, 2026-05-13) and ADR-0015 records the narrow co-location exception keeping the project unblocked in the meantime.
+- **Un-park trigger**: upstream issue windyroad/agent-plugins#123 closes (or upstream ships an equivalent fix via a different mechanism). On un-park: `git mv` to `.known-error.md` (root cause remains confirmed), execute the third investigation task, then transition to `.verifying.md`.
+- **Parked since**: 2026-05-16
+- **External-root-cause detection (P063)**: already-noted check passed — the `## Reported Upstream` section above is the audit-trail anchor; the parking-path detection did not re-fire the prompt.
