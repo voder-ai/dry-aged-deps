@@ -1,10 +1,11 @@
 # Problem 008: auto-update workflow push fails with duplicate `Authorization` header
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-05-14
+**Closed**: 2026-05-16 — verified end-to-end via workflow run 25953546547 and auto-merged PR #8 (merge commit `d8d80b9`, 2026-05-16T05:14:58Z)
 **Priority**: 10 (High) — Impact: Minor (2) x Likelihood: Almost certain (5) — fires every dispatched run that has a real update to push
 **Effort**: S — single-line workflow change in the Push branch step (swap `git -c http.extraheader=bearer` for URL-embedded `x-access-token` basic auth); verification is one workflow_dispatch
-**WSJF**: 0 (Verification Pending; excluded per ADR-022)
+**WSJF**: 0 (Closed; excluded per ADR-022)
 **Type**: technical
 
 ## Description
@@ -101,9 +102,9 @@ Rationale:
 - [x] Choose between fix candidates 1/2/3 — candidate 1 chosen 2026-05-14, then revised to candidate 3 on 2026-05-15 after layer-1-only fix exposed layer 2.
 - [x] Apply candidate 1 fix (v2.7.2, c43e402) — landed.
 - [x] Re-dispatch and observe layer-2 failure — workflow run 25905430469.
-- [x] Apply candidate 3 fix to `.github/workflows/auto-update.yml` — landed in this session.
-- [ ] Re-dispatch the workflow and confirm `Push branch` succeeds + a PR is opened with the App-token identity — user verification step post-release.
-- [ ] Close out ADR-0009 §Confirmation criterion 4 once a PR has been opened end-to-end.
+- [x] Apply candidate 3 fix to `.github/workflows/auto-update.yml` — landed in v2.7.3 (commit `6e77c59`).
+- [x] Re-dispatch the workflow and confirm `Push branch` succeeds + a PR is opened with the App-token identity — workflow run 25953546547 (2026-05-16): every step green, including `Push branch`, `Open pull request`, and `Enable auto-merge (squash)`. PR #8 authored by `app/claude`.
+- [x] Close out ADR-0009 §Confirmation criterion 4 — verified by PR #8 (merge commit `d8d80b9`, 2026-05-16T05:14:58Z). PR opened end-to-end + auto-merged after `Build & Test` passed. ADR-0009 §c7 (autonomous scheduled runs landing PRs without human intervention) also exercised on this dispatch — same auto-merge surface.
 
 ## Dependencies
 
@@ -119,11 +120,27 @@ Rationale:
 
 ## Fix Released
 
-**Release marker**: pending — layer-2 fix landing in this commit; release marker will be filled in once the subsequent `npm run push:watch` triggers semantic-release.
+**Release marker (layer 1)**: dry-aged-deps@v2.7.2 (semantic-release publish in CI run 25828401978, 2026-05-14). Commit `c43e402` — `fix(ci): set persist-credentials: false on auto-update checkout (closes P008)`. Cleared the duplicate-Authorization-header surface symptom but left layer 2 unaddressed.
 
-**Fix summary** (layer 2): replaced the Push branch step's `git -c http.extraheader=AUTHORIZATION: bearer $APP_TOKEN push origin ...` with URL-embedded basic auth: `git push --set-upstream https://x-access-token:${APP_TOKEN}@github.com/${{ github.repository }}.git "$BRANCH"`. Uses the GitHub-documented auth scheme for App installation tokens over git transport (Basic auth with `x-access-token` username). Combined with v2.7.2's `persist-credentials: false` on the Checkout step, both layer-1 and layer-2 bugs are now addressed.
+**Release marker (layer 2)**: dry-aged-deps@v2.7.3 (semantic-release publish triggered by commit `6e77c59` on 2026-05-15). Commit message: `fix(ci): use URL-embedded x-access-token basic auth for auto-update push (closes P008)`.
 
-**Awaiting user verification**: a single `gh workflow run auto-update.yml` dispatch on a state with at least one safe update available — confirming (a) the `Push branch` step succeeds with no auth error, (b) `Open pull request` runs and a PR appears on GitHub, and (c) the PR is authored by the Claude Code GitHub App identity (not `github-actions[bot]`), so it triggers `ci-publish.yml`'s `pull_request` workflows per ADR-0009 §"Required branch-protection configuration" + ADR-0012 §"Mechanism".
+**Fix summary** (combined): the v2.7.2 fix added `persist-credentials: false` to the `actions/checkout@v4` step (eliminating the duplicate `Authorization` header). The v2.7.3 fix replaced the Push branch step's `git -c http.extraheader=AUTHORIZATION: bearer $APP_TOKEN push origin ...` with URL-embedded basic auth: `git push --set-upstream https://x-access-token:${APP_TOKEN}@github.com/${{ github.repository }}.git "$BRANCH"`. Both changes are needed — `persist-credentials: false` clears the conflicting GITHUB_TOKEN extraheader; `x-access-token` basic auth uses the documented git-transport auth scheme for App installation tokens.
+
+## Verification
+
+**Workflow run 25953546547** (2026-05-16, post-v2.7.3 dispatch) — every step green:
+
+- ✓ Check for safe updates — found `globals` 17.4.0 → 17.6.0
+- ✓ Apply updates + Commit
+- ✓ Mint GitHub App installation token
+- ✓ **Push branch** — no duplicate-header rejection, no auth error
+- ✓ **Open pull request** — PR #8 opened, authored by `app/claude` (the Claude Code GitHub App identity)
+- ✓ **Enable auto-merge (squash)** — enabled at 2026-05-16T05:12:53Z by `app/claude`
+- ✓ `ci-publish.yml` `pull_request` workflows triggered on PR #8 (CodeQL Analysis, Build & Test, CodeQL — all SUCCESS)
+- ✓ Auto-merge fired — PR #8 merged to main at 2026-05-16T05:14:58Z, merge commit `d8d80b9`
+
+ADR-0009 §Confirmation criterion 4 (single `workflow_dispatch` opens a PR end-to-end) **verified**.
+ADR-0009 §Confirmation criterion 7 (consecutive runs land PRs without human intervention) — the auto-merge mechanism is now proven; arming the daily cron remains a follow-up unblocked by this closure.
 
 **In-session evidence**: no in-session exercise possible — the failure surface is the live GitHub Actions runner. The fix uses the documented `x-access-token` HTTP Basic pattern that GitHub explicitly recommends for App installation tokens with git transport. Confidence is higher than for the v2.7.2 attempt because the auth scheme is now correct rather than just unconflicted; the layer-2 bug is the proximate cause of the post-v2.7.2 failure, so closing it should unblock the verification path.
 
