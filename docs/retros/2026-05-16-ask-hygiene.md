@@ -181,3 +181,95 @@ Per-plugin breakdown available in `/wr-retrospective:analyze-context` (deep laye
 - Risk gate: commit/push/release scored 1/1/0 (Very Low) per `wr-risk-scorer:pipeline`. Within appetite (≤4/25). Commit gate satisfied first attempt.
 - Line-3 budget: new fragment 552 bytes (P007 park summary), well under 1024-byte soft cap (P134).
 - Iter-1 carry-forward: lowercase-verb commit-subject discipline (iter-1 lesson) held cleanly — `docs(problems): park P007 — …` accepted on first commitlint pass.
+
+---
+
+## Iteration retro — AFK `/wr-itil:work-problems` (P005 park)
+
+Scope: iter 3 of the 2026-05-16 AFK loop. Worked P005 (`wr-voice-tone:agent` returns FAIL when `docs/VOICE-AND-TONE.md` is missing). Parked as `upstream-blocked` — upstream issue windyroad/agent-plugins#124 was already filed 2026-05-13 and the ticket already carried a complete `## Reported Upstream` section. Local docs/VOICE-AND-TONE.md was bootstrapped in commit 47143c4 so the gate works in this adopter; the upstream improvement (self-bootstrap or fail-open-with-prompt) benefits other adopter projects. Same AFK constraints as iters 1 + 2: no mid-loop `AskUserQuestion`; observations queue to `ITERATION_SUMMARY.outstanding_questions`.
+
+| Call # | Header | Classification | Citation                                                                                                                                                   |
+| ------ | ------ | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| (none) | n/a    | n/a            | n/a — zero AskUserQuestion calls fired in this iteration per the AFK mid-loop prohibition (dispatch prompt: "NEVER call AskUserQuestion mid-loop in AFK"). |
+
+**Lazy count: 0**
+**Direction count: 0**
+**Override count: 0**
+**Silent-framework count: 0**
+**Taste count: 0**
+**Correction-followup count: 0**
+
+**Total: 0 calls**
+
+Cross-session trend: iter 1 (P004 park) lazy=0; iter 2 (P007 park) lazy=0; this iter lazy=0. R6 gate (≥2 lazy across 3 consecutive retros) NOT fired — seven consecutive AFK iters with lazy=0.
+
+### Session Retrospective — P005 iter
+
+#### Briefing Changes
+
+- No new entries added. The pattern this iter exercised is the same three-step manage-problem Step 7 Open/Known Error → Parked transition with P063 already-noted carve-out, P062 README refresh, and P134 line-3 rotation that iters 1 + 2 covered. Existing topic files already capture the pattern; nothing new surfaced. The "already-noted check passed via `## Reported Upstream` section" path was exercised for the second consecutive iter (iter 2 hit it via `- **Upstream report pending** —` marker; this iter hit it via the canonical `## Reported Upstream` appendage from `/wr-itil:report-upstream`).
+- Per-entry signal scoring deferred to next interactive retro for the same rationale as iters 1 + 2 (cited entries already carry signal evidence; decay + cited-this-iter updates batch better in interactive mode).
+
+#### Problems Created/Updated
+
+- **P005** — transitioned `.known-error.md` → `.parked.md` per the Parked lifecycle entry (reason `upstream-blocked`). Status field updated to "Parked". `## Parked` section appended before the pre-existing `## Reported Upstream` section with reason / un-park trigger (upstream issue windyroad/agent-plugins#124 closes, signal: agent returns PASS-with-warning OR auto-bootstraps successfully) / parked-since date. External-root-cause detection (P063) already-noted check passed via the pre-existing `## Reported Upstream` section (set by `/wr-itil:report-upstream P005` on 2026-05-13, upstream URL <https://github.com/windyroad/agent-plugins/issues/124>) — no prompt re-fire needed. README refresh per P062 removed P005 from WSJF Rankings (new dev-work queue top: P006 at WSJF 3.0); inserted P005 row into Parked section between P004 and P007 (ID-ordered); line 3 rotated per P134 single-fragment discipline. Prior line-3 fragment (P007 park summary from iter 2) appended to `docs/problems/README-history.md` under 2026-05-16 heading. Commit `5346d81`. Risk scored 1/1/1 per `/wr-risk-scorer:pipeline` first attempt (well within appetite ≤4/25).
+
+#### Tickets Deferred
+
+(None — Stage 1 ticketing was not invoked because the iter produced no new codify-worthy observations.)
+
+#### Verification Candidates
+
+(None this iter — no `.verifying.md` files exist in the corpus.)
+
+#### Pipeline Instability
+
+| Signal                                                                                                                                                                                                                                                                                                                                                                                                    | Category                  | Citations                                                                                                                                                                                                                                                                                      | Decision                                                                                                                                                                 |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Iter 1's commitlint-subject-case lesson (`<verb> P<NNN>` not `P<NNN> <verb>`) carried forward cleanly for the third consecutive iter — work commit `5346d81` (`docs(problems): park P005 — …`) accepted on first commitlint pass with no rewording. The SKILL.md upstream issue queued at iter 1's `outstanding_questions` remains the open follow-up; no new evidence to add this iter.                  | Skill-contract violations | Work commit `5346d81`: subject `docs(problems): park P005 — upstream-blocked on @windyroad/voice-tone` → commitlint accepted; pre-commit format:check + lint + type-check + tests all passed. No retry needed.                                                                                 | flagged (non-interactive) — existing outstanding_question from iter 1 covers this; no new ticket creation. Third consecutive confirmation of the SKILL example mismatch. |
+| P009 (Edit-tool markdown writes skip prettier; pre-commit `format:check` fails) — did NOT fire on the work commit this iter. The four files staged (P005 rename + ticket edit + README.md + README-history.md) all formatted cleanly on first attempt. Persistent class-of-behaviour from iters 1 + 2 was bypassed by writing markdown tables with column-alignment already in the prettier-target shape. | Hook-protocol friction    | Work commit `5346d81` first attempt: pre-commit format:check exit 0, no `[warn]` lines. Contrast with iter 1 (P009 fired on README.md trailing whitespace) and iter 2 (P009 fired on retro file). This iter's tables were trimmed by hand before staging so prettier had nothing to re-format. | recorded in retro only — no new ticket evidence to add (existing P009 ticket already covers the symptom). One miss this iter; the class-of-behaviour ticket stays open.  |
+| JTBD currency advisory: clean — no `packages/` directory in this adopter-tree project (detector is plugin-suite-scoped; emits no output for adopter trees).                                                                                                                                                                                                                                               | n/a                       | `wr-retrospective-check-readme-jtbd-currency` exit 0, empty stdout.                                                                                                                                                                                                                            | n/a — detector not applicable to this surface.                                                                                                                           |
+
+#### Context Usage (Cheap Layer)
+
+| Bucket             | Bytes   | % of total | Δ vs prior                                           |
+| ------------------ | ------- | ---------- | ---------------------------------------------------- |
+| memory             | 217,269 | 41.0%      | 0 (unchanged from iter 2)                            |
+| decisions          | 174,722 | 33.0%      | 0 (unchanged from iter 2)                            |
+| problems           | 68,429  | 12.9%      | +1,633 vs iter 2 (66,796 → 68,429 — P005 body grew)  |
+| jtbd               | 34,853  | 6.6%       | 0 (unchanged)                                        |
+| briefing           | 21,387  | 4.0%       | 0 (unchanged from iter 2)                            |
+| project-claude-md  | 5,786   | 1.1%       | 0 (unchanged)                                        |
+| hooks              | 0       | 0.0%       | unchanged                                            |
+| skills             | 0       | 0.0%       | unchanged                                            |
+| framework-injected | n/a     | n/a        | not measured — framework-injected, no on-disk source |
+
+Threshold: 10,240 bytes per bucket (ADR-040 Tier 3 envelope). Top-5 offenders (bytes desc):
+
+1. `memory` — 217,269 bytes. 21× threshold. Unchanged this iter.
+2. `decisions` — 174,722 bytes. 17× threshold. Unchanged this iter.
+3. `problems` — 68,429 bytes. 6.7× threshold. +2.4% this iter (P005 body grew with the parking section). Well below the +20% delta threshold; no deep-analysis trigger.
+4. `jtbd` — 34,853 bytes. 3× threshold. Unchanged.
+5. `briefing` — 21,387 bytes. 2× threshold. Unchanged.
+
+Per-plugin breakdown available in `/wr-retrospective:analyze-context` (deep layer). Deep analysis NOT triggered this iter — all bucket deltas under +20%. Cumulative across the day's three AFK iters: problems +289% (17,614 base → 68,429); the deep-layer recommendation from iter 1's retro still stands for a future interactive session.
+
+#### Topic File Rotation Candidates
+
+| Topic file                                | Bytes | Threshold | Proposed rotation                                                                                                                           | Decision              |
+| ----------------------------------------- | ----- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
+| `docs/briefing/autonomous-dep-updates.md` | 5,629 | 5,120     | leave-as-is (Branch B, ratio 1.10× — same defer as iters 1 + 2 same-day retros; well under 2.0× MUST_SPLIT trigger; no sub-topic boundary). | applied (leave-as-is) |
+
+#### Codification Candidates
+
+(None this iter — the iter was a clean replay of an established pattern. No new shape/skill/hook surfaced. The same three repeat-park-iters this session is itself signal that the `upstream-blocked` parking workflow is well-codified; nothing else to extract.)
+
+#### No Action Needed
+
+- TDD state IDLE: no implementation files touched this iter (docs-only). TDD gate did not block — markdown writes are unrestricted.
+- Architect / JTBD / voice-tone / style-guide gates: P005 ticket file and `docs/problems/README.md` + `docs/problems/README-history.md` are all under the explicit `Does NOT apply to:` carve-outs for the four upstream gate hooks. The retro file itself (`docs/retros/2026-05-16-ask-hygiene.md`) is NOT in the carve-out; architect + JTBD subagents were invoked on the retro edit and both returned PASS.
+- Reconciliation preflight (`wr-itil-reconcile-readme docs/problems`): exit 0, no drift. README was kept consistent through iters 1 + 2's inline P062 refreshes; this iter found a clean slate.
+- Risk gate: commit/push/release scored 1/1/1 (Very Low) per `wr-risk-scorer:pipeline`. Within appetite (≤4/25). Commit gate satisfied first attempt.
+- Line-3 budget: new fragment 522 bytes (P005 park summary including upstream URL), well under 1024-byte soft cap (P134).
+- Iter-1 + Iter-2 carry-forward: lowercase-verb commit-subject discipline held for the third consecutive iter.
+- Already-noted P063 check: passed via canonical `## Reported Upstream` section (set 2026-05-13). Confirms the iter-2 lesson that the AFK-default `- **Upstream report pending** —` marker and the canonical `## Reported Upstream` appendage are both accepted by the detection block's "already-noted" check.
