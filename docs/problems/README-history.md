@@ -20,6 +20,7 @@ Archive of displaced `docs/problems/README.md` line 3 "Last reviewed" fragments 
 - P002 **closed** (release-trigger heuristic verified by v2.7.3 drain's "Commits include release-triggering types" line). Verification Queue is empty. Dev-work queue top: P004 (WSJF 16.0). Autonomous-loop verification complete (P008 closed earlier this session); daily cron can be armed in a follow-up.
 - P009 captured (Edit-tool markdown writes skip prettier; pre-commit format:check fails — observed ≥5 times in this retro's parent session). Captured at deferred Priority/Effort placeholders; re-rate at next `/wr-itil:review-problems`. Dev-work queue top: P004 (WSJF 16.0). Verification Queue empty.
 - P004 parked (`upstream-blocked` on windyroad/agent-plugins#123, filed 2026-05-13). Local work complete: upstream issue filed + ADR-0015 narrow exception keeps the project unblocked. Un-park trigger: upstream issue closes. Dev-work queue top now P007 (WSJF 10.0). Verification Queue empty. Parked: 1 (P004).
+- P007 parked (`upstream-blocked` on `@windyroad/risk-scorer`). Both fix paths land upstream: Option 2 (grant Bash to `wr-risk-scorer:external-comms` subagent for `shasum`) recommended as the smaller change; Option 1 (hook recomputes key from draft + surface) preserved as the cleaner follow-up refactor. Un-park trigger: upstream ships either path. Dev-work queue top now P005 (WSJF 4.0). Verification Queue empty. Parked: 2 (P004, P007).
 
 ## 2026-05-13
 

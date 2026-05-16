@@ -1,6 +1,6 @@
 # Problem 005: `wr-voice-tone:agent` returns FAIL when `docs/VOICE-AND-TONE.md` is missing
 
-**Status**: Known Error
+**Status**: Parked
 **Reported**: 2026-05-13
 **Priority**: 2 (Very Low) — Impact: Minor (2) x Likelihood: Rare (1) — for THIS project, likelihood drops to Rare because docs/VOICE-AND-TONE.md was bootstrapped in 47143c4; the upstream concern (other adopter projects) is the remaining work
 **Effort**: S — upstream already reported (#124); local follow-up is verification when upstream lands
@@ -59,6 +59,13 @@ Initial estimate: Impact 2 (Minor — gate FAIL is meta-only; content reviews pa
 - **Reported upstream**: <https://github.com/windyroad/agent-plugins/issues/124> (2026-05-13)
 
 (captured via /wr-itil:capture-problem; expand at next investigation)
+
+## Parked
+
+- **Reason**: `upstream-blocked` — the fix path lands in upstream `@windyroad/voice-tone` (self-bootstrap on first run, or fail-open-with-prompt — see Description for both options). Local docs/VOICE-AND-TONE.md was bootstrapped in commit 47143c4 so this project is unblocked; the upstream improvement benefits other adopter projects that haven't opted in to voice-tone.
+- **Un-park trigger**: upstream issue [windyroad/agent-plugins#124](https://github.com/windyroad/agent-plugins/issues/124) closes (upstream `@windyroad/voice-tone` ships either self-bootstrap or fail-open-with-prompt). On un-park: `git mv` back to `.known-error.md`, verify in this project that the agent returns PASS-with-warning (option b) OR auto-bootstrapped successfully (option a), then transition to `.verifying.md` per ADR-022.
+- **Parked since**: 2026-05-16
+- **External-root-cause detection (P063)**: already-noted check passed — the `## Reported Upstream` section (set during `/wr-itil:report-upstream P005` on 2026-05-13, upstream URL <https://github.com/windyroad/agent-plugins/issues/124>) is the audit-trail anchor; the parking-path detection did not re-fire the prompt.
 
 ## Reported Upstream
 
