@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-16 — P008 **closed**. Verified end-to-end via workflow run 25953546547: Push branch succeeded, PR #8 opened by `app/claude`, auto-merge enabled, `Build & Test` passed, PR auto-merged to main (commit `d8d80b9`). ADR-0009 §Confirmation criterion 4 satisfied. Autonomous loop is now load-bearing — daily cron can be armed in a follow-up.
+> Last reviewed: 2026-05-16 — P002 **closed** (release-trigger heuristic verified by v2.7.3 drain's "Commits include release-triggering types" line). Verification Queue is empty. Dev-work queue top: P004 (WSJF 16.0). Autonomous-loop verification complete (P008 closed earlier this session); daily cron can be armed in a follow-up.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -18,6 +18,4 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 Fix released; awaiting user confirmation that the production behaviour matches the fix intent. Excluded from WSJF ranking per ADR-022. Sorted by `Released date ASC` (oldest at row 1; same-day releases tiebreak by ID ASC) per P150 — older entries are the most likely-verified candidates to close first. `Likely verified?` marks tickets ≥14 days old (P048 Candidate 4 default).
 
-| ID   | Title                                                     | Released   | Likely verified? | Verification trigger                                                                                                                                                                                                                                         |
-| ---- | --------------------------------------------------------- | ---------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| P002 | push:watch's release-trigger heuristic is empty post-push | 2026-05-13 | no (3 days)      | Next `npm run push:watch` that includes a `feat:` / `fix:` / `BREAKING CHANGE:` commit prints "Commits include release-triggering types" (not the false miss). _Observed verified during v2.7.1 drain — final confirmation on next release-triggering push._ |
+_Verification Queue is empty._

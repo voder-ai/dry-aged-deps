@@ -1,10 +1,11 @@
 # Problem 002: push:watch's release-trigger heuristic is empty post-push
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-05-13
+**Closed**: 2026-05-16 — verified by the v2.7.3 release-driving push (commit `6e77c59`, fix(ci):) which printed "Commits include release-triggering types — expect a new release version above" as the heuristic's expected success path. Third successful release-triggering push since the fix shipped in v2.7.1.
 **Priority**: 8 (Medium) — Impact: Minor (2) x Likelihood: Likely (4)
 **Effort**: S — single-file patch to scripts/push-watch.sh capturing PRE_PUSH_REMOTE before push, plus vitest contract test
-**WSJF**: 16.0 = (8 × 2.0) / 1
+**WSJF**: 0 (Closed; excluded per ADR-022)
 **Type**: technical
 
 ## Description

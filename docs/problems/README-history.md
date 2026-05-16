@@ -16,7 +16,7 @@ Archive of displaced `docs/problems/README.md` line 3 "Last reviewed" fragments 
 
 ## 2026-05-16
 
-(empty placeholder — fragments rotate here as new "Last reviewed" lines displace old ones)
+- P008 **closed**. Verified end-to-end via workflow run 25953546547: Push branch succeeded, PR #8 opened by `app/claude`, auto-merge enabled, `Build & Test` passed, PR auto-merged to main (commit `d8d80b9`). ADR-0009 §Confirmation criterion 4 satisfied. Autonomous loop is now load-bearing — daily cron can be armed in a follow-up.
 
 ## 2026-05-13
 
