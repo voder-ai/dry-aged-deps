@@ -1,6 +1,6 @@
 # Problem 007: external-comms gate's sandboxed subagent reviewer cannot compute the SHA256 marker key
 
-**Status**: Known Error
+**Status**: Parked
 **Reported**: 2026-05-13
 **Priority**: 10 (High) — Impact: Minor (2) x Likelihood: Almost certain (5)
 **Effort**: M — choice between Option 1 (hook computes key) vs Option 2 (grant Bash to subagent), then upstream implementation
@@ -59,13 +59,28 @@ Two possible fix paths:
 
 Option 1 is structurally cleaner (separation of concerns: subagent judges; hook computes mechanical key). Option 2 is the smaller code change.
 
+### Initial decision (recommended path for upstream report)
+
+Investigation confirmed both fix paths land in upstream `@windyroad/risk-scorer`:
+
+- `~/.claude/plugins/marketplaces/windyroad/packages/risk-scorer/agents/external-comms.md` declares `tools: Read, Glob, Grep` (lines 4–7). The reviewer is structurally unable to invoke `shasum`.
+- `~/.claude/plugins/marketplaces/windyroad/packages/risk-scorer/hooks/risk-score-mark.sh` lines 214–227 read `EXTERNAL_COMMS_RISK_KEY` directly from `AGENT_OUTPUT` and validate it against the regex `^[0-9a-f]{64}$`. The hook never recomputes; a non-hex placeholder fails validation silently and no marker is written.
+
+**Recommended path: Option 2 (grant the subagent Bash, scoped to `shasum -a 256`).** Rationale:
+
+- **Smaller blast radius for the upstream change.** A `tools:` list addition in `external-comms.md` (single-line frontmatter edit) is reviewable in isolation. Option 1 requires the PostToolUse hook to recover the original `gh issue create --body ...` draft body and the surface name — neither is in `AGENT_OUTPUT`. The hook would need a sidecar marker written at gate time (PreToolUse on the gated tool) that the PostToolUse:Agent hook reads back, plus a new contract for keying that sidecar to the agent invocation. That's a multi-file architectural change, not a tool-list tweak.
+- **Privilege expansion is narrow and audit-trail-friendly.** The subagent's prompt explicitly instructs it to compute `printf '%s\n%s' "<draft>" "<surface>" | shasum -a 256 | cut -d' ' -f1`. Granting Bash widens its theoretical surface but the agent definition can be tightened with a Bash-permissions allow-list at the plugin level (`allowed-tools`) restricting invocations to `shasum`. Even un-narrowed, the agent is read-only on the user filesystem in the sense that matters (no Write/Edit).
+- **Option 1 is preserved as the structurally-cleaner follow-up.** When upstream wants to migrate "reviewer judges; hook computes mechanical key" as a doctrine across all gate subagents (not just external-comms), Option 1 is the right shape — but that's a larger refactor justified by a wider problem, not by this one ticket.
+
+Defer the final call to the upstream maintainer when `/wr-itil:report-upstream` runs against `windyroad/agent-plugins`. This local recommendation is informational, not authoritative.
+
 ### Investigation Tasks
 
 - [ ] Re-rate Priority and Effort at next /wr-itil:review-problems
-- [ ] Read `~/.claude/plugins/marketplaces/windyroad/packages/risk-scorer/hooks/risk-score-mark.sh` to confirm the marker-write mechanism
-- [ ] Read `~/.claude/plugins/marketplaces/windyroad/packages/risk-scorer/agents/external-comms.md` to confirm the subagent's tool surface
-- [ ] Decide on fix path (Option 1 hook-computes-key vs Option 2 grant-bash-to-subagent)
-- [ ] File upstream report against `windyroad/agent-plugins` once fix path is chosen
+- [x] Read `~/.claude/plugins/marketplaces/windyroad/packages/risk-scorer/hooks/risk-score-mark.sh` to confirm the marker-write mechanism — confirmed; lines 214–227 trust the agent's emitted key with sha256 hex validation only.
+- [x] Read `~/.claude/plugins/marketplaces/windyroad/packages/risk-scorer/agents/external-comms.md` to confirm the subagent's tool surface — confirmed; `tools: Read, Glob, Grep` (lines 4–7).
+- [x] Decide on fix path (Option 1 hook-computes-key vs Option 2 grant-bash-to-subagent) — Option 2 recommended (see "Initial decision" above); upstream maintainer holds final call.
+- [ ] File upstream report against `windyroad/agent-plugins` once parking lifts — invoke `/wr-itil:report-upstream` in an interactive session (Step 6 security-path branch is interactive per ADR-024 Consequences; cannot run under the AFK orchestrator).
 
 ## Dependencies
 
@@ -82,3 +97,10 @@ Option 1 is structurally cleaner (separation of concerns: subagent judges; hook 
 - **Upstream report pending** — external dependency identified; invoke /wr-itil:report-upstream when ready
 
 (captured via /wr-itil:capture-problem during /wr-retrospective:run-retro Step 2b pipeline-instability scan; expand at next investigation)
+
+## Parked
+
+- **Reason**: `upstream-blocked` — both fix paths land in upstream `@windyroad/risk-scorer` (the subagent's `tools:` frontmatter or the PostToolUse hook's key-handling block in `risk-score-mark.sh`). No local-only path remediates the capability gap: the gate's marker contract is fixed by upstream and bypass-via-`BYPASS_RISK_GATE=1` is the documented workaround until upstream lands the fix.
+- **Un-park trigger**: upstream `@windyroad/risk-scorer` ships a fix that lets the subagent emit a valid sha256 key (Option 2 — grant Bash) OR moves key-computation to the hook (Option 1 — hook recomputes from draft + surface). Detection signal: marker file under `${RDIR}/external-comms-risk-reviewed-<sha256hex>` appears after a `wr-risk-scorer:external-comms` invocation without `BYPASS_RISK_GATE=1`. On un-park: `git mv` to `.known-error.md` (root cause remains confirmed), exercise the gate end-to-end through a real `gh issue create`, then transition to `.verifying.md` per ADR-022.
+- **Parked since**: 2026-05-16
+- **External-root-cause detection (P063)**: already-noted check passed — the `- **Upstream report pending** —` marker in the `## Related` section (set during capture on 2026-05-13) is the audit-trail anchor; the parking-path detection did not re-fire the prompt.
