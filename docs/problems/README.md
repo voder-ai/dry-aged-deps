@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-16 — P002 **closed** (release-trigger heuristic verified by v2.7.3 drain's "Commits include release-triggering types" line). Verification Queue is empty. Dev-work queue top: P004 (WSJF 16.0). Autonomous-loop verification complete (P008 closed earlier this session); daily cron can be armed in a follow-up.
+> Last reviewed: 2026-05-16 — P009 captured (Edit-tool markdown writes skip prettier; pre-commit format:check fails — observed ≥5 times in this retro's parent session). Captured at deferred Priority/Effort placeholders; re-rate at next `/wr-itil:review-problems`. Dev-work queue top: P004 (WSJF 16.0). Verification Queue empty.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -13,6 +13,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 10.0 | P007 | external-comms gate's sandboxed subagent reviewer cannot compute the SHA256 marker key                    | 10 (High)    | Known Error | M      | 2026-05-13 |
 | 4.0  | P005 | `wr-voice-tone:agent` returns FAIL when `docs/VOICE-AND-TONE.md` is missing                               | 2 (Very Low) | Known Error | S      | 2026-05-13 |
 | 3.0  | P006 | assistant defers actionable items to "next session" instead of acting when the user is observably present | 6 (Medium)   | Open        | M      | 2026-05-13 |
+| 1.5  | P009 | Edit-tool markdown writes skip prettier; pre-commit format:check fails                                    | 3 (Low)      | Open        | M      | 2026-05-16 |
 
 ## Verification Queue
 
