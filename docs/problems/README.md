@@ -1,17 +1,18 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-17 — Retro captured P011 (P165 README-refresh PreCommit hook overrides `/wr-itil:capture-problem`'s deferred-README contract — observed on P010 capture earlier this session). Captured at deferred Priority/Effort placeholders; re-rate at next `/wr-itil:review-problems`. Upstream report pending. P010 + P006 upstream reports filed earlier this session (`windyroad/agent-plugins#137` + `#138`). v2.8.0 released. Dev-work queue top: P006 (WSJF 3.0). Verification Queue: 1 (P009). Parked: 3 (P004, P005, P007).
+> Last reviewed: 2026-05-17 — Retro captured P012 (`@windyroad/itil`'s `migrate-problems-layout.sh` helper uses bashisms but `/wr-itil:work-problems` Step 0a SKILL.md doesn't specify bash — sourcing fails under zsh; observed on the Step 0a auto-migration first-fire in this session, recovered via `bash -c` wrap). Captured at deferred Priority/Effort placeholders; re-rate at next `/wr-itil:review-problems`. Upstream report pending. Earlier this session: Step 0a auto-migrated 11 tickets from flat to per-state subdir layout (commit `f44c661`). Earlier today: P011 captured + P010 + P006 upstream reports filed (`windyroad/agent-plugins#137` + `#138`); v2.8.0 released. Dev-work queue top: P006 (WSJF 3.0). Verification Queue: 1 (P009). Parked: 3 (P004, P005, P007).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
 
 Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) and Parked (`.parked.md`, multiplier 0) tickets are excluded per ADR-022 — surfaced in their own sections below. Rows sort by `(WSJF desc, Known-Error-first, Effort-divisor asc, Reported-date asc, ID asc)` so top-to-bottom order matches `/wr-itil:work-problems` Step 3 tie-break selection 1:1 (P138). The `Reported` column MUST appear.
 
-| WSJF | ID   | Title                                                                                                     | Severity   | Status | Effort | Reported   |
-| ---- | ---- | --------------------------------------------------------------------------------------------------------- | ---------- | ------ | ------ | ---------- |
-| 3.0  | P006 | assistant defers actionable items to "next session" instead of acting when the user is observably present | 6 (Medium) | Open   | M      | 2026-05-13 |
-| 1.5  | P010 | manage-problem SKILL.md commit-message convention fails @commitlint/config-conventional subject-case rule | 3 (Low)    | Open   | M      | 2026-05-17 |
-| 1.5  | P011 | P165 README-refresh PreCommit hook overrides /wr-itil:capture-problem's deferred-README contract          | 3 (Low)    | Open   | M      | 2026-05-17 |
+| WSJF | ID   | Title                                                                                                                                       | Severity   | Status | Effort | Reported   |
+| ---- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ------ | ------ | ---------- |
+| 3.0  | P006 | assistant defers actionable items to "next session" instead of acting when the user is observably present                                   | 6 (Medium) | Open   | M      | 2026-05-13 |
+| 1.5  | P010 | manage-problem SKILL.md commit-message convention fails @commitlint/config-conventional subject-case rule                                   | 3 (Low)    | Open   | M      | 2026-05-17 |
+| 1.5  | P011 | P165 README-refresh PreCommit hook overrides /wr-itil:capture-problem's deferred-README contract                                            | 3 (Low)    | Open   | M      | 2026-05-17 |
+| 1.5  | P012 | migrate-problems-layout.sh helper uses bashisms but /wr-itil:work-problems Step 0a SKILL.md doesn't specify bash — sourcing fails under zsh | 3 (Low)    | Open   | M      | 2026-05-17 |
 
 ## Verification Queue
 
