@@ -57,10 +57,19 @@ The SKILL.md examples were authored against a commitlint config that disabled or
 
 ## Related
 
-- **Upstream report pending** — external dependency identified; invoke /wr-itil:report-upstream when ready
+- **Reported upstream**: [windyroad/agent-plugins#137](https://github.com/windyroad/agent-plugins/issues/137) (2026-05-17)
 - **P004**, **P007**, **P005** — the three same-day park commits whose retry/no-retry sequences confirmed the `<verb> P<NNN>` working shape.
 - **/wr-itil:manage-problem** SKILL.md lines 858-865 — the examples block to be amended.
 - **`@commitlint/config-conventional`** — [github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional](https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional) — defines the default `subject-case` rule with `[2, 'never', ['sentence-case', 'start-case', 'pascal-case', 'upper-case']]` shape.
 - Session log: 2026-05-17 `/wr-itil:work-problems` deviation-approval AskUserQuestion. User answer: "Approve + amend upstream SKILL".
 
 (captured via /wr-itil:capture-problem during /wr-itil:work-problems Step 2.5 surfacing; expand at next investigation)
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/137
+- **Reported**: 2026-05-17
+- **Template used**: problem-report.yml (problem-first shape)
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes — upstream issue body includes `Downstream tracking: dry-aged-deps problem ticket P010 ... at commit b63b536` and the adopter repo URL.
+- **Gate audit trail**: `wr-voice-tone:external-comms` PASS verdict (no voice/tone violation); `wr-risk-scorer:external-comms` PASS verdict (no Confidential Information class matched; one factual-accuracy advisory `Cocoa/dry-aged-deps` → `voder-ai/dry-aged-deps` applied before submission). `gh issue create` invoked with `BYPASS_RISK_GATE=1` per P007's documented workaround — the subagent sandbox lacks Bash to compute the canonical SHA256 marker key, so the PostToolUse hook's marker filename never matched the gate's recomputed key. Both subagent PASS verdicts pre-dated the bypass and are recorded here for retro inspection.
