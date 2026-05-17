@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-17 — P010 captured (manage-problem SKILL.md commit-message convention `docs(problems): P<NNN> <verb> — ...` fails `@commitlint/config-conventional` subject-case rule; working shape is `<verb> P<NNN>` confirmed 3x in today's AFK loop). Captured at deferred Priority/Effort placeholders; re-rate at next `/wr-itil:review-problems`. Upstream report pending. Dev-work queue top: P006 (WSJF 3.0). Verification Queue: 1 (P009). Parked: 3 (P004, P005, P007).
+> Last reviewed: 2026-05-17 — Retro captured P011 (P165 README-refresh PreCommit hook overrides `/wr-itil:capture-problem`'s deferred-README contract — observed on P010 capture earlier this session). Captured at deferred Priority/Effort placeholders; re-rate at next `/wr-itil:review-problems`. Upstream report pending. P010 + P006 upstream reports filed earlier this session (`windyroad/agent-plugins#137` + `#138`). v2.8.0 released. Dev-work queue top: P006 (WSJF 3.0). Verification Queue: 1 (P009). Parked: 3 (P004, P005, P007).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -11,6 +11,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | ---- | ---- | --------------------------------------------------------------------------------------------------------- | ---------- | ------ | ------ | ---------- |
 | 3.0  | P006 | assistant defers actionable items to "next session" instead of acting when the user is observably present | 6 (Medium) | Open   | M      | 2026-05-13 |
 | 1.5  | P010 | manage-problem SKILL.md commit-message convention fails @commitlint/config-conventional subject-case rule | 3 (Low)    | Open   | M      | 2026-05-17 |
+| 1.5  | P011 | P165 README-refresh PreCommit hook overrides /wr-itil:capture-problem's deferred-README contract          | 3 (Low)    | Open   | M      | 2026-05-17 |
 
 ## Verification Queue
 

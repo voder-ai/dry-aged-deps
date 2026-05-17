@@ -26,6 +26,9 @@ Archive of displaced `docs/problems/README.md` line 3 "Last reviewed" fragments 
 ## 2026-05-17
 
 - P009 fix released. ADR-0013 (`pre-commit hook read-only policy`) superseded by **ADR-0016** (`pre-commit hook auto-write and re-stage policy`). The `.husky/pre-commit` hook now formats staged files via `prettier --write --ignore-unknown` and re-stages via `git add` BEFORE the commit completes, so the formatted output lands IN the commit and the working tree stays clean post-commit. The existing read-only contract test was rewritten to `REQ-PRECOMMIT-AUTO-WRITE-RESTAGE` under ADR-0016. P009 → Verification Pending; close trigger: ≥ 3 consecutive markdown-touching commits land cleanly without manual `npm run format` retry. Dev-work queue top: P006 (WSJF 3.0). Verification Queue: 1 (P009). Parked: 3 (P004, P005, P007).
+- P010 captured (manage-problem SKILL.md commit-message convention `docs(problems): P<NNN> <verb> — ...` fails `@commitlint/config-conventional` subject-case rule; working shape is `<verb> P<NNN>` confirmed 3x in this session's AFK loop). Reported upstream as [windyroad/agent-plugins#137](https://github.com/windyroad/agent-plugins/issues/137). Captured at deferred Priority/Effort placeholders.
+- P006 reported upstream as [windyroad/agent-plugins#138](https://github.com/windyroad/agent-plugins/issues/138) (assistant defers actionable items to "next session" when user is observably present — behavioural-pattern fix; three candidate structural fix shapes left for upstream maintainer judgement).
+- v2.8.0 published to npm. semantic-release triggered by `feat: implement ADR-0016 — pre-commit auto-write+restage hook (P009 fix)` commit; minor bump from v2.7.3. Pipeline run [25990912860](https://github.com/voder-ai/dry-aged-deps/actions/runs/25990912860).
 
 ## 2026-05-13
 
