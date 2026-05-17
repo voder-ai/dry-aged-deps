@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-16 — P005 parked (`upstream-blocked` on `@windyroad/voice-tone`). Upstream issue [windyroad/agent-plugins#124](https://github.com/windyroad/agent-plugins/issues/124) already filed 2026-05-13; this project's `docs/VOICE-AND-TONE.md` was bootstrapped in commit 47143c4 so the gate works locally — the upstream improvement (self-bootstrap or fail-open-with-prompt) benefits other adopter projects. Un-park trigger: upstream issue #124 closes. Dev-work queue top now P006 (WSJF 3.0). Verification Queue empty. Parked: 3 (P004, P005, P007).
+> Last reviewed: 2026-05-17 — P009 fix released. ADR-0013 (`pre-commit hook read-only policy`) superseded by **ADR-0016** (`pre-commit hook auto-write and re-stage policy`). The `.husky/pre-commit` hook now formats staged files via `prettier --write --ignore-unknown` and re-stages via `git add` BEFORE the commit completes, so the formatted output lands IN the commit and the working tree stays clean post-commit. The existing read-only contract test was rewritten to `REQ-PRECOMMIT-AUTO-WRITE-RESTAGE` under ADR-0016. P009 → Verification Pending; close trigger: ≥ 3 consecutive markdown-touching commits land cleanly without manual `npm run format` retry. Dev-work queue top: P006 (WSJF 3.0). Verification Queue: 1 (P009). Parked: 3 (P004, P005, P007).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -10,13 +10,14 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | WSJF | ID   | Title                                                                                                     | Severity   | Status | Effort | Reported   |
 | ---- | ---- | --------------------------------------------------------------------------------------------------------- | ---------- | ------ | ------ | ---------- |
 | 3.0  | P006 | assistant defers actionable items to "next session" instead of acting when the user is observably present | 6 (Medium) | Open   | M      | 2026-05-13 |
-| 1.5  | P009 | Edit-tool markdown writes skip prettier; pre-commit format:check fails                                    | 3 (Low)    | Open   | M      | 2026-05-16 |
 
 ## Verification Queue
 
 Fix released; awaiting user confirmation that the production behaviour matches the fix intent. Excluded from WSJF ranking per ADR-022. Sorted by `Released date ASC` (oldest at row 1; same-day releases tiebreak by ID ASC) per P150 — older entries are the most likely-verified candidates to close first. `Likely verified?` marks tickets ≥14 days old (P048 Candidate 4 default).
 
-_Verification Queue is empty._
+| ID   | Title                                                                  | Released   | Likely verified? |
+| ---- | ---------------------------------------------------------------------- | ---------- | ---------------- |
+| P009 | Edit-tool markdown writes skip prettier; pre-commit format:check fails | 2026-05-17 | no               |
 
 ## Parked
 
