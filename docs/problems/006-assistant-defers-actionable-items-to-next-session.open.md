@@ -66,5 +66,15 @@ Possible structural fixes:
 - **P130** — "treat the user as transient" (AFK rule); inverse case applies in interactive context.
 - **ADR-044** — framework-resolution boundary; lazy deferral is a category-3 failure (sub-contracting framework-resolvable actions back to a hypothetical future session).
 - User pushback on 2026-05-13: "when is it going to happen if we don't do it now?" — the originating correction signal that triggered this capture.
+- **Reported upstream**: [windyroad/agent-plugins#138](https://github.com/windyroad/agent-plugins/issues/138) (2026-05-17)
 
 (captured via /wr-itil:capture-problem during /wr-itil:work-problems Step 2.5 follow-up work; expand at next investigation)
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/138
+- **Reported**: 2026-05-17
+- **Template used**: problem-report.yml (problem-first shape)
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes — upstream issue body includes `Downstream tracking: dry-aged-deps problem ticket P006 ... at commit 1eb7e98` and the adopter repo URL.
+- **Gate audit trail**: `wr-voice-tone:external-comms` PASS (Surface-3 register match, no banned terms, sober register); `wr-risk-scorer:external-comms` PASS (no Confidential Information class matched). `gh issue create` invoked with `BYPASS_RISK_GATE=1` per P007's documented workaround (subagent sandbox lacks Bash to compute canonical SHA256 marker key). Both subagent PASS verdicts pre-dated the bypass.
