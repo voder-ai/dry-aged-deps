@@ -65,7 +65,7 @@ Option 1 preserves capture-problem's "capture-and-continue" performance promise 
 
 ## Related
 
-- **Upstream report pending** — external dependency identified; invoke /wr-itil:report-upstream when ready
+- **Reported upstream**: [windyroad/agent-plugins#126 (comment)](https://github.com/windyroad/agent-plugins/issues/126#issuecomment-4472457775) (2026-05-18)
 - **P165** — the hook's upstream ticket (in `@windyroad/itil`'s problem ledger).
 - **P155** — drove the original `/wr-itil:capture-problem` skill design with the deferred-README contract as a load-bearing distinction.
 - **P010** — the same-day adjacent capture commit (this session) where the conflict was observed.
@@ -81,3 +81,13 @@ Option 1 preserves capture-problem's "capture-and-continue" performance promise 
 - **Observed flaw** — hook fires on every problem-ticket commit, including `capture` verb commits where capture-problem's SKILL.md Step 6 says README refresh is deferred.
 - **Edit summary** — detect the `capture` verb in the commit message (`docs(problems): capture P<NNN>`) and skip the README-refresh requirement for that commit class. Preserves capture-problem's capture-time-speed promise.
 - **Evidence** — P010 capture commit `b63b536` this session: capture-problem Step 6 explicitly says "Do NOT stage README"; commit blocked by P165 demanding README refresh; agent updated README inline to satisfy hook. Documented contract violation.
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/126#issuecomment-4472457775
+- **Reported**: 2026-05-18
+- **Template used**: comment on existing issue (no new issue created)
+- **Disclosure path**: commented-on-existing-issue (Step 5c, P070)
+- **Dedup match**: `windyroad/agent-plugins#126` — Stage 2 inline-LLM verdict `uncertain` (same deferred-README-refresh seam in capture-problem but distinct layer: #126 = next-skill Step 0 reconcile halt; P011 = P165 PreCommit hook blocking capture-problem's own commit). User direction: "Comment on #126 with P011's evidence" (2026-05-18 AskUserQuestion).
+- **Cross-reference confirmed**: yes — comment body includes `Seeing this from https://github.com/voder-ai/dry-aged-deps/blob/main/docs/problems/open/011-p165-hook-overrides-capture-problem-deferred-readme-contract.md` and `tracked locally as P011`.
+- **Gate audit trail**: `wr-voice-tone:external-comms` PASS verdict (no voice/tone violation; Surface 3 register match, no banned terms, sober register, trade-offs named). `wr-risk-scorer:external-comms` PASS verdict (no Confidential Information class matched; package names + public file paths are within publishable scope per RISK-POLICY.md line 19). `gh issue comment` invoked with `BYPASS_RISK_GATE=1` per P007's documented workaround — subagent sandbox lacks Bash to compute canonical SHA256 marker key, so the PostToolUse hook's marker filename never matches the gate's recomputed key. Both subagent PASS verdicts pre-dated the bypass.
