@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-17 — P009 fix released. ADR-0013 (`pre-commit hook read-only policy`) superseded by **ADR-0016** (`pre-commit hook auto-write and re-stage policy`). The `.husky/pre-commit` hook now formats staged files via `prettier --write --ignore-unknown` and re-stages via `git add` BEFORE the commit completes, so the formatted output lands IN the commit and the working tree stays clean post-commit. The existing read-only contract test was rewritten to `REQ-PRECOMMIT-AUTO-WRITE-RESTAGE` under ADR-0016. P009 → Verification Pending; close trigger: ≥ 3 consecutive markdown-touching commits land cleanly without manual `npm run format` retry. Dev-work queue top: P006 (WSJF 3.0). Verification Queue: 1 (P009). Parked: 3 (P004, P005, P007).
+> Last reviewed: 2026-05-17 — P010 captured (manage-problem SKILL.md commit-message convention `docs(problems): P<NNN> <verb> — ...` fails `@commitlint/config-conventional` subject-case rule; working shape is `<verb> P<NNN>` confirmed 3x in today's AFK loop). Captured at deferred Priority/Effort placeholders; re-rate at next `/wr-itil:review-problems`. Upstream report pending. Dev-work queue top: P006 (WSJF 3.0). Verification Queue: 1 (P009). Parked: 3 (P004, P005, P007).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -10,6 +10,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | WSJF | ID   | Title                                                                                                     | Severity   | Status | Effort | Reported   |
 | ---- | ---- | --------------------------------------------------------------------------------------------------------- | ---------- | ------ | ------ | ---------- |
 | 3.0  | P006 | assistant defers actionable items to "next session" instead of acting when the user is observably present | 6 (Medium) | Open   | M      | 2026-05-13 |
+| 1.5  | P010 | manage-problem SKILL.md commit-message convention fails @commitlint/config-conventional subject-case rule | 3 (Low)    | Open   | M      | 2026-05-17 |
 
 ## Verification Queue
 

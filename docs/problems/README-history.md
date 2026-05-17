@@ -23,6 +23,10 @@ Archive of displaced `docs/problems/README.md` line 3 "Last reviewed" fragments 
 - P007 parked (`upstream-blocked` on `@windyroad/risk-scorer`). Both fix paths land upstream: Option 2 (grant Bash to `wr-risk-scorer:external-comms` subagent for `shasum`) recommended as the smaller change; Option 1 (hook recomputes key from draft + surface) preserved as the cleaner follow-up refactor. Un-park trigger: upstream ships either path. Dev-work queue top now P005 (WSJF 4.0). Verification Queue empty. Parked: 2 (P004, P007).
 - P005 parked (`upstream-blocked` on `@windyroad/voice-tone`). Upstream issue [windyroad/agent-plugins#124](https://github.com/windyroad/agent-plugins/issues/124) already filed 2026-05-13; this project's `docs/VOICE-AND-TONE.md` was bootstrapped in commit 47143c4 so the gate works locally — the upstream improvement (self-bootstrap or fail-open-with-prompt) benefits other adopter projects. Un-park trigger: upstream issue #124 closes. Dev-work queue top now P006 (WSJF 3.0). Verification Queue empty. Parked: 3 (P004, P005, P007).
 
+## 2026-05-17
+
+- P009 fix released. ADR-0013 (`pre-commit hook read-only policy`) superseded by **ADR-0016** (`pre-commit hook auto-write and re-stage policy`). The `.husky/pre-commit` hook now formats staged files via `prettier --write --ignore-unknown` and re-stages via `git add` BEFORE the commit completes, so the formatted output lands IN the commit and the working tree stays clean post-commit. The existing read-only contract test was rewritten to `REQ-PRECOMMIT-AUTO-WRITE-RESTAGE` under ADR-0016. P009 → Verification Pending; close trigger: ≥ 3 consecutive markdown-touching commits land cleanly without manual `npm run format` retry. Dev-work queue top: P006 (WSJF 3.0). Verification Queue: 1 (P009). Parked: 3 (P004, P005, P007).
+
 ## 2026-05-13
 
 - P003 transitioned Known Error → Verification Pending (fix landed: `.husky/pre-commit` now runs `format:check` per ADR-0013; awaiting user verification of clean post-commit working tree).
