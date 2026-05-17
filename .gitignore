@@ -139,5 +139,6 @@ docs/generated/
 # .afk-run-state/; stray `package.json.backup` files from `--update` runs
 # (per src/update-packages.js createBackup) match the *.backup pattern.
 .afk-run-state/
+.claude/
 .risk-reports/
 *.backup
