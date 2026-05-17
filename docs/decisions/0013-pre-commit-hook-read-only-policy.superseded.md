@@ -1,13 +1,16 @@
 ---
-status: 'accepted'
+status: 'superseded'
 date: 2026-05-13
 decision-makers: ['Tom Howard']
 consulted: []
 informed: []
 reassessment-date: 2027-05-13
+superseded-by: 0016-pre-commit-hook-auto-write-restage
 ---
 
 # 0013. Pre-commit hook read-only policy
+
+> **Superseded by ADR-0016** (`docs/decisions/0016-pre-commit-hook-auto-write-restage.proposed.md`) on 2026-05-17. Reassessment criterion #1 of this ADR fired (≥ 2 sessions of `format:check` abort friction): P009 documents 5+ hits in P008 verification plus 6 more in a single AFK loop. ADR-0016 adopts the deferred Option 2 (`lint-staged`-style write + re-stage) using a plain-shell implementation; the user's narrowing design constraint ("if the fix lands in the commit, the silent-mutation concern is satisfied") is recorded as the load-bearing decision driver in ADR-0016.
 
 ## Context and Problem Statement
 
