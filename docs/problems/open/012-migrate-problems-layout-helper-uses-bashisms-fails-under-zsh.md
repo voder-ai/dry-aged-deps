@@ -84,7 +84,7 @@ Option 1 is the smallest delta. Option 2 is the most architecturally clean. Opti
 
 ## Related
 
-- **Upstream report pending** — external dependency identified; invoke /wr-itil:report-upstream when ready
+- **Reported upstream**: [windyroad/agent-plugins#139](https://github.com/windyroad/agent-plugins/issues/139) (2026-05-18)
 - **P010** — sibling upstream-SKILL.md issue (commit-message convention).
 - **P011** — sibling upstream-hook-vs-SKILL contract issue (P165 README-refresh override).
 - **P006** — sibling upstream-behavioural issue (assistant defer pattern).
@@ -93,3 +93,13 @@ Option 1 is the smallest delta. Option 2 is the most architecturally clean. Opti
 - `packages/itil/lib/migrate-problems-layout.sh` — the helper containing the `shopt` bashisms.
 
 (captured via /wr-itil:capture-problem during /wr-retrospective:run-retro Step 4b Stage 1; expand at next investigation)
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/139
+- **Reported**: 2026-05-18
+- **Template used**: problem-report.yml (problem-first shape) — body filed as structured-default problem-shaped per ADR-033, mapped against the upstream template's field set.
+- **Disclosure path**: public issue
+- **Dedup check**: gh-search pre-filter returned zero matches across `shopt zsh bash migrate`, `migrate-problems-layout`, `Step 0a auto-migrate zsh`, `shopt bashism` queries; no Stage 2 inline-LLM verdict required.
+- **Cross-reference confirmed**: yes — issue body's `## Cross-reference` section includes `https://github.com/voder-ai/dry-aged-deps/blob/main/docs/problems/open/012-migrate-problems-layout-helper-uses-bashisms-fails-under-zsh.md` and `tracked locally as P012`.
+- **Gate audit trail**: `wr-voice-tone:external-comms` PASS verdict (Surface 3 register match, no banned terms, trade-offs explicitly enumerated, no AI-tell closers). `wr-risk-scorer:external-comms` PASS verdict (no Confidential Information class matched; package names + public file paths + commit SHAs + runtime/OS fingerprints are within publishable scope per RISK-POLICY.md line 19). `gh issue create` invoked with `BYPASS_RISK_GATE=1` per P007's documented workaround — subagent sandbox lacks Bash to compute canonical SHA256 marker key, so the PostToolUse hook's marker filename never matches the gate's recomputed key. Both subagent PASS verdicts pre-dated the bypass. Template's default `labels: ["problem", "needs-triage"]` not applied via CLI (upstream repo's label set lacks these — they are template-form-only labels applied via the web UI; triage will re-label).
