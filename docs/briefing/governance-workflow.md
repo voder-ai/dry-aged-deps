@@ -12,7 +12,10 @@
   <!-- signal-score: 4 | last-classified: 2026-05-13 | first-written: 2026-05-13 -->
 
 - Capture-problem skill is the lightweight aside-invocation path. Use `/wr-itil:capture-problem <description>` (or pass `--no-prompt --type=technical` for non-interactive). The heavyweight `/wr-itil:manage-problem` is for full intake with WSJF placement.
-  <!-- signal-score: 3 | last-classified: 2026-05-13 | first-written: 2026-05-13 -->
+  <!-- signal-score: 4 | last-classified: 2026-05-17 | first-written: 2026-05-13 -->
+
+- **ADR-0011 supersession lifecycle is a 4-step dance per ADR-0011 lines 73-77.** Proposed → Accepted: split into two commits (`git mv` + frontmatter status edit) so `git log --follow` preserves rename detection. Accepted → Superseded: same split (`git mv` + frontmatter `superseded-by:` + "Superseded by" body note). New superseding ADR adds `supersedes:` in its own frontmatter and lives at `docs/decisions/<NNN>-<title>.proposed.md`. Five commits total when going `proposed → accepted → superseded` and adding the new ADR (rename-x2, frontmatter-x2, new ADR add). Implementation commit (e.g. `.husky/pre-commit` change) is its own commit (commit 6 in the sequence). Worked example: ADR-0013 → ADR-0016 supersession this session (commits 6a081bc / a2eec5b / 4c50c64 / 7a945b5 / 0c82d50 / ed5c0e4).
+  <!-- signal-score: 3 | last-classified: 2026-05-17 | first-written: 2026-05-17 -->
 
 ## What Will Surprise You
 
