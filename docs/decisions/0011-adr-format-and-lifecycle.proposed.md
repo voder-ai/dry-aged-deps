@@ -47,10 +47,12 @@ decision-makers: [list of names]
 consulted: [list of names, or empty]
 informed: [list of names, or empty]
 reassessment-date: YYYY-MM-DD
-supersedes: NNNN-decision-title  # optional, only on superseding ADRs
-superseded-by: NNNN-decision-title  # optional, only on superseded ADRs
+supersedes: NNNN-decision-title         # optional; string OR list of strings on superseding ADRs
+superseded-by: NNNN-decision-title      # optional; string OR list of strings on superseded ADRs
 ---
 ```
+
+Both `supersedes` and `superseded-by` accept either a single string (one predecessor / successor) or a YAML list of strings (multiple predecessors or successors). The list form is the right choice when a single new ADR replaces two or more existing decisions that were previously split across files — for example a consolidation that lifts content out of one ADR into the body of another. When in doubt, use the string form; promote to a list only when the relationship is genuinely many-to-one.
 
 Followed by these sections in this order:
 
