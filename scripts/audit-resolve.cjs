@@ -16,8 +16,12 @@ try {
   process.exit(1);
 }
 const ids = data.exclusions.map((e) => e.id).join(',');
-// Run better-npm-audit with the specified exclusions
-const cmd = `npx better-npm-audit audit --level high --exclude ${ids}`;
+// Run better-npm-audit with the specified exclusions. Omit the --exclude flag
+// entirely when the list is empty — commander rejects an empty argument value
+// with "option '-x, --exclude <ids>' argument missing".
+const cmd = ids
+  ? `npx better-npm-audit audit --level high --exclude ${ids}`
+  : `npx better-npm-audit audit --level high`;
 console.log(`Running: ${cmd}`);
 try {
   execSync(cmd, { stdio: 'inherit' });
