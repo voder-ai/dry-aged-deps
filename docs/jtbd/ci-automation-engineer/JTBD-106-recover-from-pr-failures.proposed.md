@@ -18,15 +18,18 @@ When the scheduled dependency-update PR fails CI because of test, lint, or type 
 
 - The failure context (logs, diff, failing test names) is available to an automated fixer.
 - The fixer operates within an explicit writable-paths allow-list and never modifies security-sensitive files.
-- Recovery is attempted at most once per failure; persistent failures escalate to humans rather than thrashing.
-- The recovery path is governed by a documented trust boundary (ADR-0010).
+- Recovery is bounded — a documented attempt budget caps the work spent on any one failure so the runner does not thrash indefinitely.
+- When the budget is exhausted, the failed state is discoverable via the PR itself (auto-merge disabled, failure context attached) — not silently dropped, not requeued blindly into the next scheduled run.
+- No human escalation channel is assumed; this is an autonomous-operation repo and "leave for a human" is not a terminal state. Persistent failures surface as failing, inspectable PRs that the next scheduled run will not auto-overwrite.
+- The recovery path is governed by a documented trust boundary (ADR-0010 and its successor).
 
 ## Persona Constraints
 
 - Any AI or external service introduced for recovery must justify its trust and cost.
 - Must not introduce silent overrides of security gates (ADR-0008).
+- Must not assume a human review pool — this is an autonomous-operation repo.
 
 ## Current Solutions
 
-- Leave failed PRs open until a maintainer notices and intervenes manually.
+- Leave failed PRs open until a maintainer notices and intervenes manually (does not apply here — no maintainer pool to notice).
 - Disable the scheduled workflow entirely after a few failed runs.
