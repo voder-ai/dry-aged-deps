@@ -1,13 +1,16 @@
 ---
-status: 'proposed'
+status: 'superseded'
 date: 2026-05-11
 decision-makers: ['Tom Howard']
 consulted: []
 informed: []
 reassessment-date: 2026-08-11
+superseded-by: 0017-single-workflow-inline-loop-for-autonomous-dependency-updates
 ---
 
 # 0009. Scheduled Autonomous Dependency-Update Workflow
+
+> **Superseded by ADR-0017** (`docs/decisions/0017-single-workflow-inline-loop-for-autonomous-dependency-updates.proposed.md`) on 2026-05-18. The maintainer's confirmed design intent is a single inline-loop workflow rather than the primary + `workflow_run`-triggered recovery split this ADR specified. ADR-0017 collapses `auto-update.yml` and `auto-update-recover.yml` into one workflow with a bounded inline retry loop; the conventional-commit-type derivation rule (`chore(deps):` vs `fix(deps):` from severity) is preserved verbatim into ADR-0017's Decision Outcome.
 
 ## Context and Problem Statement
 

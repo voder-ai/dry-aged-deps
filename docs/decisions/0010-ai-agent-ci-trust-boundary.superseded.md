@@ -1,13 +1,16 @@
 ---
-status: 'proposed'
+status: 'superseded'
 date: 2026-05-12
 decision-makers: ['Tom Howard']
 consulted: []
 informed: []
 reassessment-date: 2026-08-12
+superseded-by: 0017-single-workflow-inline-loop-for-autonomous-dependency-updates
 ---
 
 # 0010. AI Agent CI Trust Boundary for Dependency-Update Recovery
+
+> **Superseded by ADR-0017** (`docs/decisions/0017-single-workflow-inline-loop-for-autonomous-dependency-updates.proposed.md`) on 2026-05-18. The trust-boundary content of this ADR (writable-paths allow-list, no-touch list, post-diff audit, OAuth-only auth, bot co-authorship, agent PR comment) is lifted verbatim into ADR-0017's Decision Outcome. Three policy elements are explicitly broken: Confirmation criterion #3 (once-per-failure cap, replaced by a bounded retry loop), the `needs-human` label (removed; no human dev pool to escalate to), and Reassessment criterion #3 (25% recovery-firing threshold, replaced by a budget-exhaustion-rate metric).
 
 > **Amendment 2026-05-12:** funding model corrected. The recovery agent authenticates via the Claude Code GitHub App's `CLAUDE_CODE_OAUTH_TOKEN` and is billed against the maintainer's Claude subscription. The previous draft assumed a metered Anthropic API account (`ANTHROPIC_API_KEY`), which does not exist for this project. The underlying trust boundary, writable-paths allow-list, no-touch list, and single-retry policy are unchanged.
 
