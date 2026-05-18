@@ -150,6 +150,12 @@ jobs:
         # ADR-0017 Confirmation #7. If an open auto/deps/* PR carries the
         # current bump-set fingerprint, exit cleanly without applying, committing,
         # or opening a new PR. Sets `proceed=false` to gate all subsequent steps.
+        #
+        # `gh pr list --head` is a LITERAL match, not a glob — passing
+        # `auto/deps/*` as the head filter would return no rows because it
+        # searches for the literal asterisk. Instead we list all open PRs
+        # and prefix-match the head ref in jq, which is the correct way to
+        # filter a branch family.
         if: steps.check.outputs.has_updates == 'true'
         id: skip
         env:
@@ -157,8 +163,8 @@ jobs:
         run: |
           set -e
           FINGERPRINT="${{ steps.fingerprint.outputs.fingerprint }}"
-          MATCH=$(gh pr list --head 'auto/deps/*' --state open --json body --jq \
-            '[.[] | select(.body | contains("bumpset-fingerprint: '"$FINGERPRINT"'"))] | length')
+          MATCH=$(gh pr list --state open --json body,headRefName --jq \
+            '[.[] | select(.headRefName | startswith("auto/deps/")) | select(.body | contains("bumpset-fingerprint: '"$FINGERPRINT"'"))] | length')
           if [ "$MATCH" -gt 0 ]; then
             echo "proceed=false" >> "$GITHUB_OUTPUT"
             echo "Skip: $MATCH open PR(s) already carry bump-set fingerprint $FINGERPRINT."
