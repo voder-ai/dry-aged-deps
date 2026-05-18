@@ -1,14 +1,3 @@
 {
-  "exclusions": [
-    {
-      "id": 1113545,
-      "expires": "2026-06-03",
-      "reason": "minimatch ReDoS in npm's own dependency chain (npm>minimatch); not exploitable in this project's usage"
-    },
-    {
-      "id": 1113553,
-      "expires": "2026-06-03",
-      "reason": "minimatch ReDoS in npm's own dependency chain (npm>minimatch); not exploitable in this project's usage"
-    }
-  ]
+  "exclusions": []
 }
