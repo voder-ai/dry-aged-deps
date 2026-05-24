@@ -3,6 +3,7 @@ import { jsonFormatter } from './json-formatter.js';
 import { xmlFormatter } from './xml-formatter.js';
 import { prepareJsonItems } from './output-utils.js';
 import { getTimestamp } from './print-utils.js';
+import { severityRank } from './find-unfixable-vulns.js';
 
 /**
  * @typedef {Object} FilterSummary
@@ -63,9 +64,54 @@ export function handleXmlOutput({
 }
 
 /**
+ * Group per-advisory unfixable rows into one row per package: advisories are
+ * joined, severity is the highest across the package's advisories, reason is
+ * shared. Removes the visual duplication of repeating name/severity/reason
+ * across a package's multiple advisories.
+ * @param {Array<{ name: string, severity: string, advisory: string, reason: string }>} unfixable
+ * @returns {Array<[string, string, string, string]>} [name, severity, advisories, reason] rows
+ */
+function groupUnfixableByPackage(unfixable) {
+  /** @type {Map<string, { severity: string, advisories: string[], reason: string }>} */
+  const byPackage = new Map();
+  for (const { name, severity, advisory, reason } of unfixable) {
+    const existing = byPackage.get(name);
+    if (existing) {
+      existing.advisories.push(advisory);
+      if (severityRank(severity) > severityRank(existing.severity)) existing.severity = severity;
+    } else {
+      byPackage.set(name, { severity, advisories: [advisory], reason });
+    }
+  }
+  return [...byPackage.entries()].map(([name, p]) => [name, p.severity, p.advisories.join(', '), p.reason]);
+}
+
+/**
+ * Render rows as a space-padded, column-aligned table (npm-outdated style,
+ * JTBD-005) rather than tab-joined, so columns line up regardless of width.
+ * @param {string[]} header
+ * @param {Array<string[]>} rows
+ * @returns {void}
+ */
+function printAlignedTable(header, rows) {
+  // `.at(i)` (method call) rather than `[i]` (computed member) so the
+  // security/detect-object-injection rule does not false-positive on the
+  // numeric array indexing.
+  const widths = header.map((h, i) => Math.max(h.length, ...rows.map((r) => String(r.at(i)).length)));
+  const fmt = (/** @type {string[]} */ cols) =>
+    cols
+      .map((c, i) => c.padEnd(widths.at(i) ?? 0))
+      .join('  ')
+      .trimEnd();
+  console.log(fmt(header));
+  for (const row of rows) console.log(fmt(row));
+}
+
+/**
  * Print the "Known vulnerabilities without safe fix" section, if any.
  * Appears after the outdated table (JTBD-005: existing columns unchanged;
- * the surface is a separate appended section, never a new column).
+ * the surface is a separate appended section, never a new column). Grouped
+ * by package and column-aligned for readability.
  * @param {Array<{ name: string, severity: string, advisory: string, reason: string }>} unfixable
  * @returns {void}
  * @supports prompts/016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES.md REQ-UNFIXABLE-TABLE
@@ -74,10 +120,7 @@ export function printUnfixableSection(unfixable) {
   if (!unfixable || unfixable.length === 0) return;
   console.log('');
   console.log('Known vulnerabilities without safe fix:');
-  console.log(['Name', 'Severity', 'Advisory', 'Reason'].join('\t'));
-  for (const { name, severity, advisory, reason } of unfixable) {
-    console.log([name, severity, advisory, reason].join('\t'));
-  }
+  printAlignedTable(['Name', 'Severity', 'Advisory', 'Reason'], groupUnfixableByPackage(unfixable));
 }
 
 /**

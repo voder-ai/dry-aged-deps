@@ -72,7 +72,7 @@ beforeAll(async () => {
     const cols = line.split('	');
     return parseInt(cols[4], 10);
   });
-}, 60000); // Increase timeout to 60 seconds for npm install
+}, 180000); // npm install of the fixture can exceed 60s on a slow/cold network; allow 3 min
 
 afterAll(async () => {
   // Restore environment variable

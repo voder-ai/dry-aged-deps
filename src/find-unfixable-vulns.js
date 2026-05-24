@@ -20,10 +20,12 @@ const SEVERITY_RANK = new Map([
 
 /**
  * Rank a severity string, defaulting unknown severities to the floor (0).
+ * Exported so the table renderer can pick the max severity when grouping
+ * a package's advisories without duplicating the ordering.
  * @param {string|undefined} severity
  * @returns {number}
  */
-function severityRank(severity) {
+export function severityRank(severity) {
   return SEVERITY_RANK.get(severity ?? '') ?? 0;
 }
 
