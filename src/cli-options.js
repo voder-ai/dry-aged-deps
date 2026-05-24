@@ -8,7 +8,26 @@ import {
   parseDevMinAgeFlag,
   parseProdSeverityFlag,
   parseDevSeverityFlag,
+  parseUnfixableLevelFlag,
 } from './cli-options-helpers.js';
+
+/** Valid severity floors for the unfixable surface. */
+const VALID_UNFIXABLE_LEVELS = ['low', 'moderate', 'high', 'critical'];
+
+/**
+ * Derive the unfixable-surface options from CLI args + config.
+ * Extracted to keep parseOptions within the complexity limit.
+ * @param {string[]} args - CLI arguments.
+ * @param {Record<string, any>} config - Loaded config file object.
+ * @returns {{ unfixable: boolean, unfixableLevel: string }}
+ * @supports prompts/016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES.md REQ-UNFIXABLE-DEFAULT-ON REQ-UNFIXABLE-SEVERITY-FLOOR
+ */
+function parseUnfixableOptions(args, config) {
+  // On by default; config `unfixable: false` or `--no-unfixable` disables.
+  const unfixable = config.unfixable !== false && !args.includes('--no-unfixable');
+  const unfixableLevel = parseUnfixableLevelFlag(args, config['unfixable-level'] ?? 'low', VALID_UNFIXABLE_LEVELS);
+  return { unfixable, unfixableLevel };
+}
 
 /**
  * Options derived from CLI arguments and config file.
@@ -23,6 +42,8 @@ import {
  * @property {boolean} skipConfirmation - Whether to skip confirmation prompts.
  * @property {boolean} returnSummary - If true, return summary instead of printing (check mode).
  * @property {object|undefined} exclude - Packages to exclude from analysis (name -> reason).
+ * @property {boolean} unfixable - Whether to surface known-vulnerable-but-unfixable packages.
+ * @property {string} unfixableLevel - Minimum severity floor for the unfixable surface.
  */
 
 /**
@@ -61,6 +82,8 @@ export function parseOptions(argv) {
     '--severity',
     '--prod-severity',
     '--dev-severity',
+    '--no-unfixable',
+    '--unfixable-level',
     '--help',
     '-h',
     '--version',
@@ -120,6 +143,8 @@ export function parseOptions(argv) {
   const prodMinSeverity = parseProdSeverityFlag(args, defaultProdMinSeverity, validSeverities);
   const devMinSeverity = parseDevSeverityFlag(args, defaultDevMinSeverity, validSeverities);
 
+  const { unfixable, unfixableLevel } = parseUnfixableOptions(args, config);
+
   return {
     format,
     prodMinAge,
@@ -130,5 +155,7 @@ export function parseOptions(argv) {
     skipConfirmation,
     returnSummary: checkMode,
     exclude: config.exclude,
+    unfixable,
+    unfixableLevel,
   };
 }

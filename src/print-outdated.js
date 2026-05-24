@@ -7,6 +7,8 @@ import { loadPackageJson } from './load-package-json.js';
 import { buildRows } from './build-rows.js';
 import { applyFilters } from './apply-filters.js';
 import { handleJsonOutput, handleXmlOutput, handleTableOutput } from './print-outdated-handlers.js';
+import { printUnfixableSection } from './print-outdated-utils.js';
+import { computeUnfixable } from './compute-unfixable.js';
 import { updatePackages } from './update-packages.js';
 import { getThresholds } from './print-utils.js';
 
@@ -16,10 +18,12 @@ import { getThresholds } from './print-utils.js';
  * @param {boolean} returnSummary - Whether to return summary object.
  * @param {{prod:{minAge:number,minSeverity:string},dev:{minAge:number,minSeverity:string}}} thresholds - Thresholds configuration.
  * @param {Record<string, string>} [excludeMap] - Excluded packages map.
+ * @param {Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>} [unfixable] - Known-vulnerable-but-unfixable rows.
  * @returns {Object|undefined} summary for xml mode or if returnSummary is true
  * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
+ * @supports prompts/016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES.md REQ-UNFIXABLE-DETECT
  */
-export function handleNoOutdated(format, returnSummary, thresholds, excludeMap = {}) {
+export function handleNoOutdated(format, returnSummary, thresholds, excludeMap = {}, unfixable = []) {
   const summary = {
     totalOutdated: 0,
     safeUpdates: 0,
@@ -35,6 +39,7 @@ export function handleNoOutdated(format, returnSummary, thresholds, excludeMap =
       vulnMap: new Map(),
       filterReasonMap: new Map(),
       excludeMap,
+      unfixable,
     });
   }
   // @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-CLI-FLAG
@@ -46,6 +51,7 @@ export function handleNoOutdated(format, returnSummary, thresholds, excludeMap =
       vulnMap: new Map(),
       filterReasonMap: new Map(),
       excludeMap,
+      unfixable,
     });
   }
   console.log('All dependencies are up to date.');
@@ -54,6 +60,8 @@ export function handleNoOutdated(format, returnSummary, thresholds, excludeMap =
   if (excludedCount > 0) {
     console.log(`${excludedCount} package(s) excluded from analysis (see .dry-aged-deps.json)`);
   }
+  // @supports prompts/016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES.md REQ-UNFIXABLE-TABLE
+  printUnfixableSection(unfixable);
   // @supports prompts/013.0-DEV-CHECK-MODE.md REQ-CHECK-FLAG
   if (returnSummary) return summary;
   return;
@@ -73,9 +81,31 @@ function applyExclusions(data, excludeMap) {
 }
 
 /**
+ * Resolve the unfixable-vulnerability rows from the relevant CLI/config options.
+ * Extracted from printOutdated to keep that function within the complexity limit.
+ * @param {Set<string>} safePackages - names dry-aged-deps will recommend a safe update for
+ * @param {{ unfixable?: boolean, unfixableLevel?: string, runProjectAudit?: () => Promise<Array<object>> }} options
+ * @param {boolean} [updateMode] - true in --update mode, where there is no output surface to skip the audit cost
+ * @returns {Promise<Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>>}
+ * @supports prompts/016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES.md REQ-UNFIXABLE-DEFAULT-ON REQ-UNFIXABLE-SEVERITY-FLOOR
+ */
+function resolveUnfixable(safePackages, options, updateMode = false) {
+  return computeUnfixable({
+    safePackages,
+    // Explicit opt-in: the user-facing "on by default" lives in parseOptions
+    // (which passes unfixable:true unless --no-unfixable). Defaulting the
+    // programmatic API to off keeps embedders — and the existing unit tests —
+    // from unexpectedly shelling out to `npm audit`.
+    enabled: options.unfixable === true && !updateMode,
+    severityFloor: options.unfixableLevel, // undefined → 'low' (surface all) inside computeUnfixable
+    runProjectAudit: options.runProjectAudit, // injectable; defaults inside computeUnfixable
+  });
+}
+
+/**
  * Print outdated dependencies information with age
  * @param {Record<string, { current: string; wanted: string; latest: string }>} data
- * @param {{ fetchVersionTimes?: function, calculateAgeInDays?: function, checkVulnerabilities?: function, format?: string, prodMinAge?: number, devMinAge?: number, prodMinSeverity?: string, devMinSeverity?: string, returnSummary?: boolean, updateMode?: boolean, skipConfirmation?: boolean, exclude?: Record<string, string> }} [options]
+ * @param {{ fetchVersionTimes?: function, calculateAgeInDays?: function, checkVulnerabilities?: function, format?: string, prodMinAge?: number, devMinAge?: number, prodMinSeverity?: string, devMinSeverity?: string, returnSummary?: boolean, updateMode?: boolean, skipConfirmation?: boolean, exclude?: Record<string, string>, unfixable?: boolean, unfixableLevel?: string, runProjectAudit?: () => Promise<Array<object>> }} [options]
  * @param {object} [options] - Options object containing CLI and function overrides.
  * @returns {Promise<Object|undefined>} summary for xml mode or if returnSummary is true
  * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND
@@ -116,7 +146,10 @@ export async function printOutdated(data, options = {}) {
   // No outdated dependencies
   // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
   if (entries.length === 0) {
-    return handleNoOutdated(format, returnSummary, thresholds, excludeMap);
+    // Transitive vulns can exist even with zero outdated direct deps, so the
+    // unfixable surface still runs here (safe-update set is empty).
+    const unfixable = await resolveUnfixable(new Set(), options);
+    return handleNoOutdated(format, returnSummary, thresholds, excludeMap, unfixable);
   }
 
   // Build rows
@@ -137,9 +170,14 @@ export async function printOutdated(data, options = {}) {
     format,
   });
 
+  // @supports prompts/016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES.md REQ-UNFIXABLE-DETECT
+  // The absence of a package from safeRows is the unfixable signal (ADR-0018).
+  // resolveUnfixable returns [] (and skips the audit) in update mode.
+  const unfixable = await resolveUnfixable(new Set(safeRows.map((row) => row[0])), options, updateMode);
+
   // @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-CLI-FLAG
   if (format === 'json') {
-    return handleJsonOutput({ rows: safeRows, summary, thresholds, vulnMap, filterReasonMap, excludeMap });
+    return handleJsonOutput({ rows: safeRows, summary, thresholds, vulnMap, filterReasonMap, excludeMap, unfixable });
   }
 
   // @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-UPDATE-FLAG
@@ -150,8 +188,17 @@ export async function printOutdated(data, options = {}) {
 
   // @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-CLI-FLAG
   if (format === 'xml') {
-    return handleXmlOutput({ rows, summary, thresholds, vulnMap, filterReasonMap, excludeMap });
+    return handleXmlOutput({ rows, summary, thresholds, vulnMap, filterReasonMap, excludeMap, unfixable });
   }
 
-  return handleTableOutput({ safeRows, matureRows, summary, prodMinAge, devMinAge, returnSummary, excludeMap });
+  return handleTableOutput({
+    safeRows,
+    matureRows,
+    summary,
+    prodMinAge,
+    devMinAge,
+    returnSummary,
+    excludeMap,
+    unfixable,
+  });
 }

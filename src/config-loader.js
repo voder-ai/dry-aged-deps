@@ -116,11 +116,21 @@ export function loadConfigFile(configFileName, configFileArg, validSeverities, v
     }
 
     ensureObject(config, configFileName);
-    validateKeys(config, ['minAge', 'severity', 'prod', 'dev', 'format', 'exclude'], '');
+    validateKeys(
+      config,
+      ['minAge', 'severity', 'prod', 'dev', 'format', 'exclude', 'unfixable', 'unfixable-level'],
+      ''
+    );
 
     validateRangeInt(config.minAge, 'minAge');
     validateAgainstList(config.severity, validSeverities, 'severity');
     validateAgainstList(config.format, validFormats, 'format');
+
+    // @supports prompts/016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES.md REQ-UNFIXABLE-DEFAULT-ON REQ-UNFIXABLE-SEVERITY-FLOOR
+    if (config.unfixable !== undefined) {
+      assert(typeof config.unfixable === 'boolean', `Invalid config value for unfixable: must be true or false`);
+    }
+    validateAgainstList(config['unfixable-level'], ['low', 'moderate', 'high', 'critical'], 'unfixable-level');
 
     // @supports prompts/007.0-DEV-SEPARATE-PROD-DEV-THRESHOLDS.md REQ-CONFIG-SCHEMA
     if (config.prod !== undefined) {

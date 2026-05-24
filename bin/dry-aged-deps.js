@@ -193,6 +193,8 @@ async function main() {
     skipConfirmation,
     returnSummary: checkMode,
     exclude,
+    unfixable,
+    unfixableLevel,
   } = options;
 
   let data, fetchVersionTimesOverride, checkVulnerabilitiesOverride;
@@ -219,6 +221,8 @@ async function main() {
         skipConfirmation,
         returnSummary: true,
         exclude,
+        unfixable,
+        unfixableLevel,
       })
     );
 

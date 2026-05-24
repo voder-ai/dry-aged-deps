@@ -1,7 +1,13 @@
 // @ts-check
 import { generateStringFlagParsers, generateIntegerFlagParsers } from './cli-parser-utils.js';
 
-const stringParsers = generateStringFlagParsers(['format', 'severity', 'prod-severity', 'dev-severity']);
+const stringParsers = generateStringFlagParsers([
+  'format',
+  'severity',
+  'prod-severity',
+  'dev-severity',
+  'unfixable-level',
+]);
 const integerParsers = generateIntegerFlagParsers([
   ['min-age', 1, 365],
   ['prod-min-age', 1],
@@ -50,3 +56,9 @@ export const parseProdMinAgeFlag = integerParsers.parseProdMinAgeFlag;
  * @supports prompts/005.0-DEV-CONFIGURABLE-AGE-THRESHOLD.md REQ-CLI-FLAG
  */
 export const parseDevMinAgeFlag = integerParsers.parseDevMinAgeFlag;
+
+/**
+ * Parse the --unfixable-level flag (low | moderate | high | critical).
+ * @supports prompts/016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES.md REQ-UNFIXABLE-SEVERITY-FLOOR
+ */
+export const parseUnfixableLevelFlag = stringParsers.parseUnfixableLevelFlag;

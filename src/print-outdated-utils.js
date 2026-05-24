@@ -21,35 +21,69 @@ import { getTimestamp } from './print-utils.js';
 /**
  * Output JSON formatted results.
  * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-CLI-FLAG
- * @param {{ rows: Array<[string, string, string, string, number|string, string]>, summary: FilterSummary, thresholds: Thresholds, vulnMap: Map<string, object>, filterReasonMap: Map<string, string>, excludeMap?: Record<string, string> }} options
+ * @param {{ rows: Array<[string, string, string, string, number|string, string]>, summary: FilterSummary, thresholds: Thresholds, vulnMap: Map<string, object>, filterReasonMap: Map<string, string>, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }> }} options
  * @returns {FilterSummary} Summary object returned from filtering.
  */
-export function handleJsonOutput({ rows, summary, thresholds, vulnMap, filterReasonMap, excludeMap = {} }) {
+export function handleJsonOutput({
+  rows,
+  summary,
+  thresholds,
+  vulnMap,
+  filterReasonMap,
+  excludeMap = {},
+  unfixable = [],
+}) {
   const timestamp = getTimestamp();
   const items = prepareJsonItems(rows, thresholds, vulnMap, filterReasonMap);
   const excluded = Object.entries(excludeMap).map(([name, reason]) => ({ name, reason }));
-  console.log(jsonFormatter({ rows: items, summary, thresholds, timestamp, excluded }));
+  console.log(jsonFormatter({ rows: items, summary, thresholds, timestamp, excluded, unfixable }));
   return summary;
 }
 
 /**
  * Output XML formatted results.
  * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-CLI-FLAG
- * @param {{ rows: Array<[string, string, string, string, number|string, string]>, summary: FilterSummary, thresholds: Thresholds, vulnMap: Map<string, object>, filterReasonMap: Map<string, string>, excludeMap?: Record<string, string> }} options
+ * @param {{ rows: Array<[string, string, string, string, number|string, string]>, summary: FilterSummary, thresholds: Thresholds, vulnMap: Map<string, object>, filterReasonMap: Map<string, string>, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }> }} options
  * @returns {FilterSummary} Summary object returned from filtering.
  */
-export function handleXmlOutput({ rows, summary, thresholds, vulnMap, filterReasonMap, excludeMap = {} }) {
+export function handleXmlOutput({
+  rows,
+  summary,
+  thresholds,
+  vulnMap,
+  filterReasonMap,
+  excludeMap = {},
+  unfixable = [],
+}) {
   const timestamp = getTimestamp();
   const items = prepareJsonItems(rows, thresholds, vulnMap, filterReasonMap);
   const excluded = Object.entries(excludeMap).map(([name, reason]) => ({ name, reason }));
-  console.log(xmlFormatter({ rows: items, summary, thresholds, timestamp, excluded }));
+  console.log(xmlFormatter({ rows: items, summary, thresholds, timestamp, excluded, unfixable }));
   return summary;
+}
+
+/**
+ * Print the "Known vulnerabilities without safe fix" section, if any.
+ * Appears after the outdated table (JTBD-005: existing columns unchanged;
+ * the surface is a separate appended section, never a new column).
+ * @param {Array<{ name: string, severity: string, advisory: string, reason: string }>} unfixable
+ * @returns {void}
+ * @supports prompts/016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES.md REQ-UNFIXABLE-TABLE
+ */
+export function printUnfixableSection(unfixable) {
+  if (!unfixable || unfixable.length === 0) return;
+  console.log('');
+  console.log('Known vulnerabilities without safe fix:');
+  console.log(['Name', 'Severity', 'Advisory', 'Reason'].join('\t'));
+  for (const { name, severity, advisory, reason } of unfixable) {
+    console.log([name, severity, advisory, reason].join('\t'));
+  }
 }
 
 /**
  * Output table formatted results.
  * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
- * @param {{ safeRows: Array<Array>, matureRows: Array<Array>, summary: FilterSummary, prodMinAge: number, devMinAge: number, returnSummary: boolean, excludeMap?: Record<string, string> }} options
+ * @param {{ safeRows: Array<Array>, matureRows: Array<Array>, summary: FilterSummary, prodMinAge: number, devMinAge: number, returnSummary: boolean, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string }> }} options
  * @returns {FilterSummary|undefined} Summary when returnSummary is true or undefined otherwise.
  */
 export function handleTableOutput({
@@ -60,6 +94,7 @@ export function handleTableOutput({
   devMinAge,
   returnSummary,
   excludeMap = {},
+  unfixable = [],
 }) {
   // @supports prompts/015.0-DEV-EXCLUDE-PACKAGES.md REQ-EXCLUDE-OUTPUT
   const excludedCount = Object.keys(excludeMap).length;
@@ -75,6 +110,7 @@ export function handleTableOutput({
     if (excludedCount > 0) {
       console.log(`${excludedCount} package(s) excluded from analysis (see .dry-aged-deps.json)`);
     }
+    printUnfixableSection(unfixable);
     // @supports prompts/013.0-DEV-CHECK-MODE.md REQ-CHECK-FLAG
     if (returnSummary) return summary; // returns {FilterSummary} when returnSummary is true
     return undefined; // returns undefined when returnSummary is false
@@ -88,6 +124,7 @@ export function handleTableOutput({
     if (excludedCount > 0) {
       console.log(`${excludedCount} package(s) excluded from analysis (see .dry-aged-deps.json)`);
     }
+    printUnfixableSection(unfixable);
     // @supports prompts/013.0-DEV-CHECK-MODE.md REQ-CHECK-FLAG
     if (returnSummary) return summary; // returns {FilterSummary} when returnSummary is true
     return undefined; // returns undefined when returnSummary is false
@@ -100,6 +137,7 @@ export function handleTableOutput({
   if (excludedCount > 0) {
     console.log(`${excludedCount} package(s) excluded from analysis (see .dry-aged-deps.json)`);
   }
+  printUnfixableSection(unfixable);
   // @supports prompts/013.0-DEV-CHECK-MODE.md REQ-CHECK-FLAG
   if (returnSummary) return summary; // returns {FilterSummary} when returnSummary is true
   return undefined; // returns undefined when returnSummary is false

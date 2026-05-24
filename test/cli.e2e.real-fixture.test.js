@@ -53,8 +53,11 @@ beforeAll(async () => {
   originalMock = process.env.DRY_AGED_DEPS_MOCK;
   process.env.DRY_AGED_DEPS_MOCK = '1';
 
-  // Execute CLI against the fixture copy
-  result = await execa('node', [cliPath], {
+  // Execute CLI against the fixture copy. --no-unfixable keeps the output to
+  // the outdated table this test parses (the unfixable surface is covered by
+  // its own unit tests; here it would add non-table rows that break the
+  // age-integer assertions).
+  result = await execa('node', [cliPath, '--no-unfixable'], {
     cwd: tempDir,
     reject: false,
   });

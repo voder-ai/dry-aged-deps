@@ -36,6 +36,12 @@ export interface CliOptions {
 
   /** Packages to exclude from analysis (name -> reason) */
   exclude?: Record<string, string>;
+
+  /** Whether to surface known-vulnerable-but-unfixable packages (on by default; --no-unfixable disables) */
+  unfixable: boolean;
+
+  /** Minimum severity floor for the unfixable surface (default 'low' = surface all) */
+  unfixableLevel: string;
 }
 
 /**
