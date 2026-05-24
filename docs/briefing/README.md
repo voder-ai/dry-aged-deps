@@ -4,7 +4,9 @@ Per-topic briefing index. Each topic file holds short, durable observations acro
 
 ## Critical Points
 
-- **Release model is non-standard.** `package.json` version is stale (per ADR-0005). semantic-release reads commit types from git, ignores the repo's `version` field, and publishes to npm on push to `main` when commits map to a bump. Current published version: `dry-aged-deps@2.7.1`. The repo file still shows `0.1.3`.
+- **Release model is non-standard.** `package.json` version is stale (per ADR-0005). semantic-release reads commit types from git, ignores the repo's `version` field, and publishes to npm on push to `main` when commits map to a bump. Current published version: `dry-aged-deps@2.10.1`. The repo file still shows `0.1.3`.
+- **Releases are gated on no-pending-safe-deps.** `ci-publish.yml`'s Build & Test runs `dry-aged-deps --check`, which exits 1 (fails the job, skips the release) while any safe dep update is pending. A `feat:`/`fix:` won't publish until the deps land in a `chore(deps):` commit. `push:watch` enforces the same gate. Use `ci:`/`chore:` (not `feat(ci):`) for internal-tooling/workflow changes or a stray `feat:` triggers an unwanted minor release.
+- **Auto-update is one workflow now (ADR-0017, supersedes 0009+0010).** `auto-update.yml` is a single inline loop (detect→apply→bounded prepush+claude-fix retry→PR+auto-merge); `auto-update-recover.yml` was deleted; the `needs-human` path is gone. Only DIRECT deps are tracked — transitive security fixes (npm-bundled deps, npm via `@semantic-release/npm`) never land via the scheduled flow (P013).
 - **TBD with admin-bypass branch protection.** Branch protection on `main` requires the `Build & Test` status check AND leaves "Do not allow bypassing" UNCHECKED. The repo owner is admin, so direct pushes bypass the rule; the bot's PR (non-admin) is gated. Do not enable "Require a pull request before merging" — it would block TBD.
 - **`dry-aged-deps --update` writes the `latest`-safe version per ADR-0014 (P001 verifying, shipped in v2.7.1).** `applyUpdates()` destructures the 4th tuple element (post-filter / post-smart-search safe target), not the 3rd (`wanted`). Exact-pinned packages bump cleanly. Cross-major bumps are reachable; consumer-side breakage caught by `prepush` + `ci-publish.yml`. ADR-0009 §Confirmation criteria 2+7 now satisfiable.
 - **CLAUDE_CODE_OAUTH_TOKEN is for Claude API auth only.** GitHub-API operations in workflows use a runtime-minted GitHub App installation token via OIDC exchange against `api.anthropic.com/api/github/github-app-token-exchange` (per ADR-0012). No `ANTHROPIC_API_KEY`. No `DEPS_BOT_TOKEN` (deferred fallback per ADR-0012 Reversion Plan).
@@ -15,9 +17,9 @@ Per-topic briefing index. Each topic file holds short, durable observations acro
 
 ## Topic Index
 
-| Topic                  | File                                                     | Scope                                                                             |
-| ---------------------- | -------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| Releases & CI          | [`releases-and-ci.md`](releases-and-ci.md)               | semantic-release, ci-publish.yml, version handling, push:watch                    |
-| Hooks & gates          | [`hooks-and-gates.md`](hooks-and-gates.md)               | architect/JTBD/TDD/ITIL gates, husky hooks, marker files                          |
-| Governance workflow    | [`governance-workflow.md`](governance-workflow.md)       | ADR / risk-policy / JTBD review cadence, capture-on-correction                    |
-| Autonomous dep updates | [`autonomous-dep-updates.md`](autonomous-dep-updates.md) | auto-update.yml + auto-update-recover.yml, OIDC token-exchange, branch protection |
+| Topic                  | File                                                     | Scope                                                                                                                     |
+| ---------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Releases & CI          | [`releases-and-ci.md`](releases-and-ci.md)               | semantic-release, ci-publish.yml, version handling, push:watch                                                            |
+| Hooks & gates          | [`hooks-and-gates.md`](hooks-and-gates.md)               | architect/JTBD/TDD/ITIL gates, husky hooks, marker files                                                                  |
+| Governance workflow    | [`governance-workflow.md`](governance-workflow.md)       | ADR / risk-policy / JTBD review cadence, capture-on-correction                                                            |
+| Autonomous dep updates | [`autonomous-dep-updates.md`](autonomous-dep-updates.md) | single-workflow inline-loop auto-update.yml (ADR-0017), OIDC token-exchange, branch protection, transitive-dep blind spot |

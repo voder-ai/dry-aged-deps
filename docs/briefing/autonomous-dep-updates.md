@@ -2,40 +2,34 @@
 
 ## What You Need to Know
 
-- Workflow lives at `.github/workflows/auto-update.yml` (scheduled; schedule disabled until first manual `workflow_dispatch` verification) and `.github/workflows/auto-update-recover.yml` (failure-only AI recovery). ADRs: 0009, 0010, 0011, 0012.
-  <!-- signal-score: 2 | last-classified: 2026-05-17 | first-written: 2026-05-13 -->
+- **Single workflow** `.github/workflows/auto-update.yml` (ADR-0017, supersedes ADR-0009 + ADR-0010; shipped 2026-05-18). One inline loop: detect → skip-if-same-bump-already-open → apply → commit → bounded retry loop (`MAX_RETRIES=3`: prepush → if red, `claude-code-action` → per-iteration post-diff hard gate) → push → open PR (auto-merge on green; auto-merge **disabled** + failure context in body on budget exhaustion). `auto-update-recover.yml` was **deleted** — recovery is now the in-loop mechanism, not a separate `workflow_run`-triggered fallback. The `needs-human` label path is gone (no human dev pool; failures surface as inspectable failing PRs).
+  <!-- signal-score: 2 | last-classified: 2026-05-25 | first-written: 2026-05-25 -->
 
-- Authentication mechanism (ADR-0012): runtime OIDC exchange against `https://api.anthropic.com/api/github/github-app-token-exchange` with audience `claude-code-github-action`. Returns a short-lived GitHub App installation token with `contents/pull_requests/issues: write` on this repo. No `DEPS_BOT_TOKEN` secret required.
-  <!-- signal-score: 2 | last-classified: 2026-05-17 | first-written: 2026-05-13 -->
+- Authentication (ADR-0012, carried forward verbatim): runtime OIDC exchange against `https://api.anthropic.com/api/github/github-app-token-exchange` (audience `claude-code-github-action`) mints a short-lived GitHub App installation token (`contents/pull_requests/issues: write`). No `DEPS_BOT_TOKEN`. Reversion plan: provision a fine-grained PAT and supersede ADR-0012 if the endpoint withdraws.
+  <!-- signal-score: 2 | last-classified: 2026-05-25 | first-written: 2026-05-13 -->
 
-- Reversion plan (ADR-0012 §Reversion Plan): if the Anthropic endpoint changes/withdraws, provision a fine-grained PAT (`DEPS_BOT_TOKEN`, `contents/pull_requests: write` on this repo), `gh secret set DEPS_BOT_TOKEN`, supersede ADR-0012 with PAT-based auth, swap the workflows' `${{ steps.mint.outputs.token }}` references to `${{ secrets.DEPS_BOT_TOKEN }}`.
-  <!-- signal-score: 1 | last-classified: 2026-05-17 | first-written: 2026-05-13 -->
+- Trust boundary (carried verbatim from superseded ADR-0010 into ADR-0017): writable-paths allow-list (`src/**`, `bin/**`, `test/**`, deps sections of `package.json`, `package-lock.json`) + 16-entry no-touch list (`.nsprc`, `docs/decisions/`, `docs/jtbd/`, `prompts/`, `.husky/`, `.github/workflows/`, config files, `CLAUDE.md`, `CHANGELOG.md`, `.voder/`, package.json non-deps fields) + post-diff hard gate, run **per loop iteration**. OAuth-only (`CLAUDE_CODE_OAUTH_TOKEN`); `ANTHROPIC_API_KEY` never used.
+  <!-- signal-score: 2 | last-classified: 2026-05-25 | first-written: 2026-05-25 -->
 
-- Branch protection setup (ADR-0009): required status check `Build & Test`; "Require a pull request before merging" DISABLED; "Do not allow bypassing" DISABLED. Admin-bypass-by-default is the mechanism that preserves TBD for the maintainer's direct pushes while gating the bot's PR.
-  <!-- signal-score: 2 | last-classified: 2026-05-17 | first-written: 2026-05-13 -->
+- Branch protection (ADR-0009 setup, still in force): required status check `Build & Test`; "Require a pull request before merging" DISABLED; "Do not allow bypassing" DISABLED. Admin-bypass-by-default preserves TBD for the maintainer's direct pushes while gating the bot's PR. "Allow auto-merge" must be enabled in repo Settings → Pull Requests for `gh pr merge --auto`.
+  <!-- signal-score: 1 | last-classified: 2026-05-25 | first-written: 2026-05-13 -->
 
-- `needs-human` label must exist on the repo (`gh label create needs-human ...`). The recovery workflow adds it loudly on no-op outcomes; missing label = workflow fails (no silent swallow per ADR-0010).
-  <!-- signal-score: 0 | last-classified: 2026-05-17 | first-written: 2026-05-13 -->
-
-- AI recovery is failure-only (ADR-0010). No-touch list defends `.nsprc`, `.releaserc.json`, `docs/decisions/`, `docs/jtbd/`, `prompts/`, `.husky/`, `.github/workflows/`, commitlint/eslint/tsconfig, `.dry-aged-deps.json`, `package.json#version`, `CLAUDE.md`. Hard-enforced by post-step diff (close-PR-with-comment on violation).
-  <!-- signal-score: 1 | last-classified: 2026-05-17 | first-written: 2026-05-13 -->
+- Verified end-to-end 2026-05-18: a real `workflow_dispatch` run bumped TypeScript 5→6, prepush passed first try (no agent recovery needed), PR opened + auto-merged. The schedule cron remains commented (staged rollout) until arming in a follow-up.
+  <!-- signal-score: 2 | last-classified: 2026-05-25 | first-written: 2026-05-25 -->
 
 ## What Will Surprise You
 
-- Workflow short-circuits on no-updates: `dry-aged-deps --check` exit 0 → workflow exits cleanly with no PR. Almost every scheduled run on this repo will short-circuit because `dry-aged-deps --update` can't bump exact pins (P001). The OIDC mint step is currently unreachable for the same reason.
-  <!-- signal-score: 3 | last-classified: 2026-05-17 | first-written: 2026-05-13 -->
+- **`ci-publish.yml`'s Build & Test runs `dry-aged-deps --check` as a release gate.** `--check` exits 1 while safe dep updates are pending, which fails the job and **skips the release**. So a `feat:`/`fix:` will NOT publish while any safe dep update is pending — apply the deps (a `chore(deps):` commit) first. The local `push:watch` wrapper enforces the same gate before push. Two layers of the same dogfood gate.
+  <!-- signal-score: 3 | last-classified: 2026-05-25 | first-written: 2026-05-25 -->
 
-- PRs opened by the workflow-scoped `GITHUB_TOKEN` do NOT trigger downstream `pull_request` workflows. This is why the auto-update workflow needs a non-GITHUB_TOKEN actor (OIDC-minted App token, or fallback PAT) — without it the auto-merge contract has no `Build & Test` run to wait on.
-  <!-- signal-score: 2 | last-classified: 2026-05-17 | first-written: 2026-05-13 -->
+- PRs opened by the workflow-scoped `GITHUB_TOKEN` do NOT trigger downstream `pull_request` workflows. That is why the workflow needs a non-`GITHUB_TOKEN` actor (the OIDC-minted App token) — without it the auto-merge contract has no `Build & Test` run to wait on.
+  <!-- signal-score: 2 | last-classified: 2026-05-25 | first-written: 2026-05-13 -->
 
-- The Anthropic OIDC endpoint is not part of any public API contract. Discovered by reading `src/github/token.ts` in `anthropics/claude-code-action`. If Anthropic changes it, the workflow fails and the ADR-0012 Reversion Plan kicks in.
-  <!-- signal-score: 0 | last-classified: 2026-05-17 | first-written: 2026-05-16 -->
+- **GitHub App installation tokens require HTTP Basic auth (`x-access-token` username), NOT bearer, for git push.** Bearer works for the GitHub API (the natural first guess) but git transport needs Basic with the literal username `x-access-token`. Shapes that work: URL-embedded `git push "https://x-access-token:$APP_TOKEN@github.com/owner/repo.git"`, or `git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $(printf 'x-access-token:%s' "$APP_TOKEN" | base64 -w0)"`. Bearer-as-extraheader fails with `fatal: could not read Username` (not HTTP 401) — easy to misread. P008.
+  <!-- signal-score: 1 | last-classified: 2026-05-25 | first-written: 2026-05-16 -->
 
-- **GitHub App installation tokens require HTTP Basic auth (`x-access-token` username), NOT bearer, for git push.** Bearer auth works for the GitHub API and was the natural first guess, but git transport falls back to credential prompts when it sees `Authorization: bearer <token>` because GitHub's git endpoint requires Basic auth with the literal username `x-access-token`. Two equivalent shapes work for the workflow: URL-embedded `git push "https://x-access-token:$APP_TOKEN@github.com/owner/repo.git"` (P008 candidate 3, what shipped in v2.7.3) or `git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $(printf 'x-access-token:%s' "$APP_TOKEN" | base64 -w0)"`. Bearer-as-extraheader produces `fatal: could not read Username for 'https://github.com'`, not an HTTP 401 — easy to misread as a different bug. P008.
-  <!-- signal-score: 3 | last-classified: 2026-05-17 | first-written: 2026-05-16 -->
+- **The skip-if-same-bump check needs jq-side prefix matching, not `gh pr list --head`.** `gh pr list --head 'auto/deps/*'` is a literal match (the `*` is treated literally), so it returns zero rows — the check is dead. Use `gh pr list --state open --json body,headRefName --jq '... | select(.headRefName | startswith("auto/deps/")) ...'`. Shipped this way after the initial glob bug.
+  <!-- signal-score: 1 | last-classified: 2026-05-25 | first-written: 2026-05-25 -->
 
-- **Fixing a surface bug can reveal — not hide — a deeper one.** P008's original capture flagged a duplicate-`Authorization`-header rejection at HTTP 400. The first fix (`persist-credentials: false` on `actions/checkout`, v2.7.2) eliminated the duplicate header… and the next dispatch failed with a different error because the bearer-vs-basic auth scheme had been masked by the HTTP 400. When triaging a multi-layer auth failure, plan for the possibility that the visible rejection is the OUTER layer and a successful "fix" may expose an inner failure. The candidate-3 fix (URL-embedded basic auth, v2.7.3) addressed both layers in one move.
-  <!-- signal-score: 1 | last-classified: 2026-05-17 | first-written: 2026-05-16 -->
-
-- **The PR-level `gh pr merge --auto` GraphQL fails when the repo's "Allow auto-merge" setting is disabled.** Error text: `GraphQL: Auto merge is not allowed for this repository (enablePullRequestAutoMerge)`. Enable in repo Settings → General → Pull Requests. Until enabled, `Enable auto-merge` step in `auto-update.yml` will fail even when Push branch + Open pull request succeed. ADR-0009 §c7 (autonomous landing without intervention) depends on this setting.
-  <!-- signal-score: 2 | last-classified: 2026-05-17 | first-written: 2026-05-16 -->
+- **The auto-update workflow only tracks DIRECT deps, so transitive security updates never land via it.** A vuln fixed only by bumping a transitive (e.g. npm's bundled brace-expansion, or npm itself via `@semantic-release/npm`) won't be surfaced or applied by the scheduled flow — it sits until a manual lockfile refresh or an upstream parent bump. P013 (overrides/transitive blindness) captures the gap.
+  <!-- signal-score: 1 | last-classified: 2026-05-25 | first-written: 2026-05-25 -->
