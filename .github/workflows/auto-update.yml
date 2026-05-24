@@ -623,6 +623,23 @@ jobs:
               | join("\n")
             ' updates.json)
 
+          # ADR-0018 / JTBD-009: surface known-vulnerable-but-unfixable packages
+          # in the PR body so the maintainer sees them on every auto-update PR
+          # (the durable inspection surface, not just workflow logs).
+          UNFIXABLE_ROWS=$(jq -r '(.unfixable // []) | map("- **\(.name)** (\(.severity)) — `\(.advisory)`: \(.reason)") | join("\n")' updates.json)
+          UNFIXABLE_BLOCK=""
+          if [ -n "$UNFIXABLE_ROWS" ]; then
+            UNFIXABLE_BLOCK=$(cat <<UNFIXEOF
+
+          ## Known vulnerabilities without safe fix
+
+          These advisories have no safe, mature fix \`dry-aged-deps\` can apply (transitive dependencies, or no patched version). They are informational — they do not block this PR. See [ADR-0018](../blob/main/docs/decisions/0018-surface-known-vulnerable-but-unfixable-packages.proposed.md).
+
+          $UNFIXABLE_ROWS
+          UNFIXEOF
+          )
+          fi
+
           if [ "$GREEN" = "true" ]; then
             STATUS_HEADER="✅ Prepush green after $(test -n "${{ steps.agent_1.outcome }}" && echo "agent recovery" || echo "initial validation")."
             FAILURE_BLOCK=""
@@ -658,6 +675,7 @@ jobs:
           ## Updates
 
           $BUMP_LIST
+          $UNFIXABLE_BLOCK
           $FAILURE_BLOCK
 
           ---
