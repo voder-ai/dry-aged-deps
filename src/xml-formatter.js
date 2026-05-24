@@ -7,6 +7,7 @@ import {
   buildSummarySection,
   buildThresholdsSection,
   buildExcludedSection,
+  buildUnfixableSection,
   buildRootEnd,
 } from './xml-formatter-utils.js';
 
@@ -19,9 +20,11 @@ import {
  * @param {string} [params.timestamp]
  * @param {Error} [params.error]
  * @param {Array<{ name: string, reason: string }>} [params.excluded]
+ * @param {Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>} [params.unfixable]
  * @returns {string} XML string
  * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-XML-SCHEMA REQ-COMPLETE-DATA REQ-SUMMARY-STATS REQ-XML-DECLARATION
  * @supports prompts/015.0-DEV-EXCLUDE-PACKAGES.md REQ-EXCLUDE-OUTPUT
+ * @supports prompts/016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES.md REQ-UNFIXABLE-XML REQ-UNFIXABLE-SCHEMA-COMPAT
  */
 export function xmlFormatter({
   rows = [],
@@ -30,6 +33,7 @@ export function xmlFormatter({
   timestamp = '',
   error = null,
   excluded = [],
+  unfixable = [],
 } = {}) {
   let xml = buildXmlDeclaration();
   xml += buildRootStart(timestamp);
@@ -53,6 +57,11 @@ export function xmlFormatter({
   // @supports prompts/015.0-DEV-EXCLUDE-PACKAGES.md REQ-EXCLUDE-OUTPUT
   if (excluded.length > 0) {
     xml += buildExcludedSection(excluded);
+  }
+
+  // @supports prompts/016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES.md REQ-UNFIXABLE-XML
+  if (unfixable.length > 0) {
+    xml += buildUnfixableSection(unfixable);
   }
 
   xml += buildRootEnd();

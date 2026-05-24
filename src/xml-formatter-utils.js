@@ -222,3 +222,24 @@ export function buildExcludedSection(excluded) {
   xml += '  </excluded>\n';
   return xml;
 }
+
+/**
+ * Build XML for the known-vulnerable-but-unfixable section.
+ * @param {Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>} unfixable
+ * @returns {string}
+ * @supports prompts/016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES.md REQ-UNFIXABLE-XML
+ */
+export function buildUnfixableSection(unfixable) {
+  let xml = '  <unfixable>\n';
+  for (const { name, severity, advisory, reason, via } of unfixable) {
+    xml += `    <vulnerability name="${escapeXml(name)}" severity="${escapeXml(severity)}" advisory="${escapeXml(advisory)}" reason="${escapeXml(reason)}">\n`;
+    xml += '      <via>\n';
+    for (const step of via || []) {
+      xml += `        <step>${escapeXml(step)}</step>\n`;
+    }
+    xml += '      </via>\n';
+    xml += '    </vulnerability>\n';
+  }
+  xml += '  </unfixable>\n';
+  return xml;
+}
