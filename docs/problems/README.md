@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-30 — Re-rated 7 open + 1 verifying ticket per RISK-POLICY.md. Auto-transitioned P010 + P011 + P012 + P015 Open → Known Error (root cause + workaround documented per Step 2 transition rule). Deferred-score tickets P013 + P014 + P015 now scored: P013/P014 = 9 (Medium) Effort L; P015 = 4 (Low) Effort S. P012 priority drop 3 → 2 (Very Low) reflects local migration already complete — value-remaining is upstream-shipping for other adopters. Dev-work queue top: P015 (WSJF 8.0, Known Error, S). Verification Queue: 1 (P009 — `Likely verified?` `no — not observed`). Parked: 3 (P004, P005, P007).
+> Last reviewed: 2026-05-30 — P015 fix released → Verification Pending (`npm test` + `npm run test:cli` now wrapped with a 300s wall-clock bound via `scripts/run-with-timeout.mjs`; hung runners exit 124 instead of running unbounded). Dev-work queue top: P010 (WSJF 6.0, Known Error, M). Verification Queue: 2 (P009, P015 — both `no — not observed`). Parked: 3 (P004, P005, P007).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -9,7 +9,6 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 | WSJF | ID   | Title                                                                                                                                       | Severity     | Status      | Effort | Reported   |
 | ---- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | ----------- | ------ | ---------- |
-| 8.0  | P015 | test script has no wall-clock timeout — hung runner runs unbounded                                                                          | 4 (Low)      | Known Error | S      | 2026-05-25 |
 | 6.0  | P010 | manage-problem SKILL.md commit-message convention fails @commitlint/config-conventional subject-case rule                                   | 6 (Medium)   | Known Error | M      | 2026-05-17 |
 | 6.0  | P011 | P165 README-refresh PreCommit hook overrides /wr-itil:capture-problem's deferred-README contract                                            | 6 (Medium)   | Known Error | M      | 2026-05-17 |
 | 4.0  | P012 | migrate-problems-layout.sh helper uses bashisms but /wr-itil:work-problems Step 0a SKILL.md doesn't specify bash — sourcing fails under zsh | 2 (Very Low) | Known Error | S      | 2026-05-17 |
@@ -24,6 +23,7 @@ Fix released; awaiting user confirmation that the production behaviour matches t
 | ID   | Title                                                                  | Released   | Likely verified?  |
 | ---- | ---------------------------------------------------------------------- | ---------- | ----------------- |
 | P009 | Edit-tool markdown writes skip prettier; pre-commit format:check fails | 2026-05-17 | no — not observed |
+| P015 | test script has no wall-clock timeout — hung runner runs unbounded     | 2026-05-30 | no — not observed |
 
 ## Parked
 

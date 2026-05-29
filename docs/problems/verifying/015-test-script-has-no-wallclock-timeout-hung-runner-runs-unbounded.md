@@ -1,11 +1,19 @@
 # Problem 015: the `test` script has no wall-clock timeout — a hung test runner runs unbounded (silent zombie instead of loud failure)
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-05-25
 **Priority**: 4 (Low) — Impact: Minor (2) x Likelihood: Unlikely (2)
 **Effort**: S — wrap `test` script with `timeout 180 vitest run --coverage` (or equivalent vitest config wall-clock bound)
-**WSJF**: 8.0 = (4 × 2.0) / 1
+**WSJF**: 0 (excluded — verification pending per ADR-022)
 **Type**: technical
+
+## Fix Released
+
+Released in the next dry-aged-deps semver-release. `npm test` and `npm run test:cli` are now wrapped with a 300-second wall-clock bound via `node scripts/run-with-timeout.mjs 300 -- vitest run …`. A hung test runner now exits 124 (GNU `timeout` convention) instead of running unbounded; SIGTERM is sent first, then SIGKILL after a 5-second grace window. `npm run prepush` inherits the bound transitively (it invokes `npm test` and `npm run test:cli`).
+
+Exercise evidence in the releasing session: `test/run-with-timeout.test.js` (5 / 5 passing) covers both the pass-through path (child exits 7 → wrapper exits 7; child exits 0 → wrapper exits 0) and the timeout path (child sleeps 30 s with a 1 s budget → wrapper exits 124 with `timed out` on stderr). Full vitest suite runs through the wrapper without regression (coverage 90.84 %, above the 80 % threshold).
+
+Awaiting user verification — the persistent transferable guard (any future hang in vitest setup / teardown, e2e network stalls, env-file blocks) now converts to a bounded loud failure instead of a silent zombie.
 
 ## Description
 

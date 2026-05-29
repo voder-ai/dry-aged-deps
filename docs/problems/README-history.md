@@ -38,3 +38,7 @@ Archive of displaced `docs/problems/README.md` line 3 "Last reviewed" fragments 
 
 - P003 transitioned Known Error → Verification Pending (fix landed: `.husky/pre-commit` now runs `format:check` per ADR-0013; awaiting user verification of clean post-commit working tree).
 - P003 closed on agent-evidence (read-only `format:check` hook held clean across iter 2's commit cycle AND the v2.7.1 drain push; ADR-022 agent-evidence closure sanctioned by user via /wr-itil:work-problems Step 2.5 routing). Dev-work queue empty; 2 tickets (P001, P002) remain in Verification Queue.
+
+## 2026-05-30
+
+- Re-rated 7 open + 1 verifying ticket per RISK-POLICY.md. Auto-transitioned P010 + P011 + P012 + P015 Open → Known Error (root cause + workaround documented per Step 2 transition rule). Deferred-score tickets P013 + P014 + P015 now scored: P013/P014 = 9 (Medium) Effort L; P015 = 4 (Low) Effort S. P012 priority drop 3 → 2 (Very Low) reflects local migration already complete — value-remaining is upstream-shipping for other adopters. Dev-work queue top: P015 (WSJF 8.0, Known Error, S). Verification Queue: 1 (P009 — `Likely verified?` `no — not observed`). Parked: 3 (P004, P005, P007).
