@@ -64,6 +64,14 @@ Candidate fix shapes (for a future RFC):
 - [ ] Confirm the `fixAvailable` field is reliably present in `npm audit --json` across npm versions before keying behaviour off it.
 - [ ] Validate against this repo's live case: bumping `overrides.brace-expansion` `^4.0.1` → `^5.0.6` should drop our copy from the audit, and the tool should both (a) have flagged the stale override and (b) not have called it unfixable.
 
+## Fix Strategy
+
+**Direction selected** (AFK loop 2026-05-30 — Option 3 "Both, full scope"): combine both candidate shapes — (1) add a new `overrides-hygiene` module that reads the `overrides` block, ages each pin, and surfaces stale/vulnerable override pins, AND (2) sharpen the "unfixable" reason logic to be `fixAvailable`-aware so override-fixable vulns aren't mislabelled as "vulnerable transitive dependency".
+
+Implementation needs a new RFC (per Investigation Task above) that defines the `overrides-hygiene` module's contract AND amends ADR-0018 to incorporate the `fixAvailable`-aware reason logic. Largest scope of the three candidates.
+
+Next AFK iter should invoke `/wr-itil:capture-rfc` (or `/wr-itil:manage-rfc`) with a problem-trace to P013 to formalise the product-shape spec before implementation begins. This satisfies ADR-074 substance-confirm-before-build.
+
 ## Dependencies
 
 - **Composes with**: ADR-0018 (unfixable-vuln surface) — gap #2 is a refinement of that feature; gap #1 is adjacent new capability.

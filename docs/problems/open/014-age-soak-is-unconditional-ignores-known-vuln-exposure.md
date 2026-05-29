@@ -59,6 +59,18 @@ Requires: a reliable read of the _current_ version's vulnerabilities (npm audit 
 - [ ] Define the severity→soak policy (what does "critical" buy you — 0 days? — and is it configurable?).
 - [ ] Confirm npm audit reliably reports the _current_ installed version's vulns (vs only candidate versions) for the affected package.
 
+## Fix Strategy
+
+**Direction selected** (AFK loop 2026-05-30 — Option 1 "Exposure-aware severity-scaled soak, opinionated default"): auto-relax the age threshold when current exposure severity warrants. The soak becomes a function of current-exposure severity, not a flat wall-clock minimum.
+
+Implementation needs:
+
+- A severity→soak-modifier policy (Investigation Task above) — concrete shape via RFC (e.g., critical exposure ⇒ 0-day floor; high ⇒ ½ default soak; moderate/low/none ⇒ default).
+- Confirmation that `npm audit` reliably surfaces the installed-version's vulns (Investigation Task above) — data dependency for the policy.
+- A new RFC defining the severity→soak policy. The RFC is the substance ADR-074 requires before further iters build on it.
+
+Next AFK iter should invoke `/wr-itil:capture-rfc` (or `/wr-itil:manage-rfc`) with a problem-trace to P014 to formalise the product-shape spec before implementation begins.
+
 ## Dependencies
 
 - **Composes with**: ADR-0018 (unfixable surface — same npm-audit current-exposure data), P013 (overrides/transitive blindness — both are "the tool's risk model is narrower than the real decision"), prompts/005 (configurable age threshold), prompts/006 (configurable security threshold).
