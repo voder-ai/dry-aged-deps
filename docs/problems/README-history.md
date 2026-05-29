@@ -30,6 +30,10 @@ Archive of displaced `docs/problems/README.md` line 3 "Last reviewed" fragments 
 - P006 reported upstream as [windyroad/agent-plugins#138](https://github.com/windyroad/agent-plugins/issues/138) (assistant defers actionable items to "next session" when user is observably present — behavioural-pattern fix; three candidate structural fix shapes left for upstream maintainer judgement).
 - v2.8.0 published to npm. semantic-release triggered by `feat: implement ADR-0016 — pre-commit auto-write+restage hook (P009 fix)` commit; minor bump from v2.7.3. Pipeline run [25990912860](https://github.com/voder-ai/dry-aged-deps/actions/runs/25990912860).
 
+## 2026-05-18
+
+- P012 upstream report filed as `windyroad/agent-plugins#139` (Step 5 problem-shaped, no dedup matches). P011 upstream report filed as comment on `windyroad/agent-plugins#126` (Step 5c dedup match — uncertain verdict on same deferred-README seam, different layer; user direction: comment with hook-layer evidence). Earlier (2026-05-17): retro captured P012 (`@windyroad/itil`'s `migrate-problems-layout.sh` helper uses bashisms but `/wr-itil:work-problems` Step 0a SKILL.md doesn't specify bash — sourcing fails under zsh; recovered via `bash -c` wrap). Step 0a auto-migrated 11 tickets from flat to per-state subdir layout (commit `f44c661`). P011 captured + P010 + P006 upstream reports filed (`windyroad/agent-plugins#137` + `#138`); v2.8.0 released. Dev-work queue top: P006 (WSJF 3.0). Verification Queue: 1 (P009). Parked: 3 (P004, P005, P007).
+
 ## 2026-05-13
 
 - P003 transitioned Known Error → Verification Pending (fix landed: `.husky/pre-commit` now runs `format:check` per ADR-0013; awaiting user verification of clean post-commit working tree).

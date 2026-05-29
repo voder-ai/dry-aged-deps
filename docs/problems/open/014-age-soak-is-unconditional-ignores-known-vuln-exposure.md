@@ -2,8 +2,9 @@
 
 **Status**: Open
 **Reported**: 2026-05-25
-**Priority**: 3 (Medium) — Impact: 3 x Likelihood: 3 (deferred — re-rate at next /wr-itil:review-problems)
-**Effort**: L (deferred — re-rate at next /wr-itil:review-problems)
+**Priority**: 9 (Medium) — Impact: Moderate (3) x Likelihood: Possible (3)
+**Effort**: L — product-shape RFC (severity→soak policy decision) + new logic combining npm audit current-exposure data with age-gate semantics
+**WSJF**: 2.25 = (9 × 1.0) / 4
 **Type**: technical (design / product)
 
 ## Description
@@ -53,7 +54,7 @@ Requires: a reliable read of the _current_ version's vulnerabilities (npm audit 
 
 ### Investigation Tasks
 
-- [ ] Re-rate Priority and Effort at next /wr-itil:review-problems.
+- [x] Re-rate Priority and Effort at next /wr-itil:review-problems (2026-05-30: Impact 3 × Likelihood 3 = 9 (Medium), Effort L, kept Open — product-shape RFC required before fix direction is selected)
 - [ ] Decide direction (1 / 2 / 3 or combination) via RFC; this is a product-shape decision, not just an implementation detail.
 - [ ] Define the severity→soak policy (what does "critical" buy you — 0 days? — and is it configurable?).
 - [ ] Confirm npm audit reliably reports the _current_ installed version's vulns (vs only candidate versions) for the affected package.

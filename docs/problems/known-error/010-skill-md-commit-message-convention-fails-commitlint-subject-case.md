@@ -1,9 +1,10 @@
 # Problem 010: manage-problem SKILL.md commit-message convention fails `@commitlint/config-conventional` subject-case rule
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-05-17
-**Priority**: 3 (Medium) — Impact: 3 x Likelihood: 1 (deferred — re-rate at next /wr-itil:review-problems)
-**Effort**: M (deferred — re-rate at next /wr-itil:review-problems)
+**Priority**: 6 (Medium) — Impact: Minor (2) x Likelihood: Possible (3)
+**Effort**: M — upstream `@windyroad/itil` SKILL.md examples + possibly commitlint config amendment
+**WSJF**: 6.0 = (6 × 2.0) / 2
 **Type**: technical
 
 ## Description
@@ -45,7 +46,7 @@ The SKILL.md examples were authored against a commitlint config that disabled or
 
 ### Investigation Tasks
 
-- [ ] Re-rate Priority and Effort at next /wr-itil:review-problems
+- [x] Re-rate Priority and Effort at next /wr-itil:review-problems (2026-05-30: Impact 2 × Likelihood 3 = 6, Effort M, auto-transitioned Open → Known Error per root-cause+workaround documented)
 - [ ] Confirm root cause: inspect `@windyroad/itil`'s own commitlint config; check whether `subject-case` is disabled or set to `[2, 'always', 'lower-case']` upstream
 - [ ] Decide upstream fix scope: amend SKILL.md examples ONLY, OR also amend the wr-itil monorepo's commitlint config to match the documented shape
 - [ ] File upstream report via `/wr-itil:report-upstream P010` (already user-approved direction)

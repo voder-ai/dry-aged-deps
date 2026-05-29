@@ -1,26 +1,29 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-18 — P012 upstream report filed as `windyroad/agent-plugins#139` (Step 5 problem-shaped, no dedup matches). P011 upstream report filed as comment on `windyroad/agent-plugins#126` (Step 5c dedup match — uncertain verdict on same deferred-README seam, different layer; user direction: comment with hook-layer evidence). Earlier (2026-05-17): retro captured P012 (`@windyroad/itil`'s `migrate-problems-layout.sh` helper uses bashisms but `/wr-itil:work-problems` Step 0a SKILL.md doesn't specify bash — sourcing fails under zsh; recovered via `bash -c` wrap). Step 0a auto-migrated 11 tickets from flat to per-state subdir layout (commit `f44c661`). P011 captured + P010 + P006 upstream reports filed (`windyroad/agent-plugins#137` + `#138`); v2.8.0 released. Dev-work queue top: P006 (WSJF 3.0). Verification Queue: 1 (P009). Parked: 3 (P004, P005, P007).
+> Last reviewed: 2026-05-30 — Re-rated 7 open + 1 verifying ticket per RISK-POLICY.md. Auto-transitioned P010 + P011 + P012 + P015 Open → Known Error (root cause + workaround documented per Step 2 transition rule). Deferred-score tickets P013 + P014 + P015 now scored: P013/P014 = 9 (Medium) Effort L; P015 = 4 (Low) Effort S. P012 priority drop 3 → 2 (Very Low) reflects local migration already complete — value-remaining is upstream-shipping for other adopters. Dev-work queue top: P015 (WSJF 8.0, Known Error, S). Verification Queue: 1 (P009 — `Likely verified?` `no — not observed`). Parked: 3 (P004, P005, P007).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
 
 Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) and Parked (`.parked.md`, multiplier 0) tickets are excluded per ADR-022 — surfaced in their own sections below. Rows sort by `(WSJF desc, Known-Error-first, Effort-divisor asc, Reported-date asc, ID asc)` so top-to-bottom order matches `/wr-itil:work-problems` Step 3 tie-break selection 1:1 (P138). The `Reported` column MUST appear.
 
-| WSJF | ID   | Title                                                                                                                                       | Severity   | Status | Effort | Reported   |
-| ---- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ------ | ------ | ---------- |
-| 3.0  | P006 | assistant defers actionable items to "next session" instead of acting when the user is observably present                                   | 6 (Medium) | Open   | M      | 2026-05-13 |
-| 1.5  | P010 | manage-problem SKILL.md commit-message convention fails @commitlint/config-conventional subject-case rule                                   | 3 (Low)    | Open   | M      | 2026-05-17 |
-| 1.5  | P011 | P165 README-refresh PreCommit hook overrides /wr-itil:capture-problem's deferred-README contract                                            | 3 (Low)    | Open   | M      | 2026-05-17 |
-| 1.5  | P012 | migrate-problems-layout.sh helper uses bashisms but /wr-itil:work-problems Step 0a SKILL.md doesn't specify bash — sourcing fails under zsh | 3 (Low)    | Open   | M      | 2026-05-17 |
+| WSJF | ID   | Title                                                                                                                                       | Severity     | Status      | Effort | Reported   |
+| ---- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | ----------- | ------ | ---------- |
+| 8.0  | P015 | test script has no wall-clock timeout — hung runner runs unbounded                                                                          | 4 (Low)      | Known Error | S      | 2026-05-25 |
+| 6.0  | P010 | manage-problem SKILL.md commit-message convention fails @commitlint/config-conventional subject-case rule                                   | 6 (Medium)   | Known Error | M      | 2026-05-17 |
+| 6.0  | P011 | P165 README-refresh PreCommit hook overrides /wr-itil:capture-problem's deferred-README contract                                            | 6 (Medium)   | Known Error | M      | 2026-05-17 |
+| 4.0  | P012 | migrate-problems-layout.sh helper uses bashisms but /wr-itil:work-problems Step 0a SKILL.md doesn't specify bash — sourcing fails under zsh | 2 (Very Low) | Known Error | S      | 2026-05-17 |
+| 3.0  | P006 | assistant defers actionable items to "next session" instead of acting when the user is observably present                                   | 6 (Medium)   | Open        | M      | 2026-05-13 |
+| 2.25 | P013 | dry-aged-deps ignores the package.json overrides block — stale/vulnerable pins go undetected, override-fixable vulns mislabeled "unfixable" | 9 (Medium)   | Open        | L      | 2026-05-25 |
+| 2.25 | P014 | the age soak is unconditional — it ignores the severity of the vulnerability the project is currently exposed to                            | 9 (Medium)   | Open        | L      | 2026-05-25 |
 
 ## Verification Queue
 
-Fix released; awaiting user confirmation that the production behaviour matches the fix intent. Excluded from WSJF ranking per ADR-022. Sorted by `Released date ASC` (oldest at row 1; same-day releases tiebreak by ID ASC) per P150 — older entries are the most likely-verified candidates to close first. `Likely verified?` marks tickets ≥14 days old (P048 Candidate 4 default).
+Fix released; awaiting user confirmation that the production behaviour matches the fix intent. Excluded from WSJF ranking per ADR-022. Sorted by `Released date ASC` (oldest at row 1; same-day releases tiebreak by ID ASC) per P150 — older entries are the most likely-verified candidates to close first. `Likely verified?` carries the evidence-first cell per P186 (`yes — observed: <evidence>` / `no — not observed` / `no — observed regression`).
 
-| ID   | Title                                                                  | Released   | Likely verified? |
-| ---- | ---------------------------------------------------------------------- | ---------- | ---------------- |
-| P009 | Edit-tool markdown writes skip prettier; pre-commit format:check fails | 2026-05-17 | no               |
+| ID   | Title                                                                  | Released   | Likely verified?  |
+| ---- | ---------------------------------------------------------------------- | ---------- | ----------------- |
+| P009 | Edit-tool markdown writes skip prettier; pre-commit format:check fails | 2026-05-17 | no — not observed |
 
 ## Parked
 

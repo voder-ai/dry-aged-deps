@@ -1,9 +1,10 @@
 # Problem 011: P165 README-refresh PreCommit hook overrides `/wr-itil:capture-problem`'s deferred-README contract
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-05-17
-**Priority**: 3 (Medium) — Impact: 3 x Likelihood: 1 (deferred — re-rate at next /wr-itil:review-problems)
-**Effort**: M (deferred — re-rate at next /wr-itil:review-problems)
+**Priority**: 6 (Medium) — Impact: Minor (2) x Likelihood: Possible (3)
+**Effort**: M — upstream `@windyroad/itil` hook amend (Option 1) OR capture-problem SKILL refactor (Option 2)
+**WSJF**: 6.0 = (6 × 2.0) / 2
 **Type**: technical
 
 ## Description
@@ -52,7 +53,7 @@ Option 1 preserves capture-problem's "capture-and-continue" performance promise 
 
 ### Investigation Tasks
 
-- [ ] Re-rate Priority and Effort at next /wr-itil:review-problems
+- [x] Re-rate Priority and Effort at next /wr-itil:review-problems (2026-05-30: Impact 2 × Likelihood 3 = 6, Effort M, auto-transitioned Open → Known Error — Fix Strategy section already documents the hook-amend path)
 - [ ] Confirm P165 hook source location in `@windyroad/itil` (likely `packages/itil/hooks/itil-readme-refresh-precommit.sh` or similar) and read its current contract.
 - [ ] Read capture-problem SKILL.md Step 6 verbatim to confirm the "Do NOT stage README" intent vs the hook's "Must stage README" requirement.
 - [ ] Decide on fix path (Option 1 hook-skips-capture-commits vs Option 2 capture-stages-README).

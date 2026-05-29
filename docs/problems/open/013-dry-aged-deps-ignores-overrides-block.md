@@ -2,8 +2,9 @@
 
 **Status**: Open
 **Reported**: 2026-05-25
-**Priority**: 3 (Medium) — Impact: 3 x Likelihood: 3 (deferred — re-rate at next /wr-itil:review-problems)
-**Effort**: M (deferred — re-rate at next /wr-itil:review-problems)
+**Priority**: 9 (Medium) — Impact: Moderate (3) x Likelihood: Possible (3)
+**Effort**: L — new module (overrides parser + advisory-range cross-reference) + new prompt/ADR (RFC scope: overrides hygiene surface plus `fixAvailable`-aware unfixable reason)
+**WSJF**: 2.25 = (9 × 1.0) / 4
 **Type**: technical
 
 ## Description
@@ -58,7 +59,7 @@ Candidate fix shapes (for a future RFC):
 
 ### Investigation Tasks
 
-- [ ] Re-rate Priority and Effort at next /wr-itil:review-problems.
+- [x] Re-rate Priority and Effort at next /wr-itil:review-problems (2026-05-30: Impact 3 × Likelihood 3 = 9 (Medium), Effort L, kept Open — root cause hypothesised but fix direction needs RFC; candidate shapes are mutually exclusive product decisions)
 - [ ] Decide whether overrides-hygiene is a new RFC/story or an extension of the unfixable feature (ADR-0018).
 - [ ] Confirm the `fixAvailable` field is reliably present in `npm audit --json` across npm versions before keying behaviour off it.
 - [ ] Validate against this repo's live case: bumping `overrides.brace-expansion` `^4.0.1` → `^5.0.6` should drop our copy from the audit, and the tool should both (a) have flagged the stale override and (b) not have called it unfixable.

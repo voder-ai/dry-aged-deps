@@ -1,9 +1,10 @@
 # Problem 012: `migrate-problems-layout.sh` helper uses bashisms but `/wr-itil:work-problems` Step 0a SKILL.md doesn't specify bash — sourcing fails under zsh
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-05-17
-**Priority**: 3 (Medium) — Impact: 3 x Likelihood: 1 (deferred — re-rate at next /wr-itil:review-problems)
-**Effort**: M (deferred — re-rate at next /wr-itil:review-problems)
+**Priority**: 2 (Very Low) — Impact: Minor (2) x Likelihood: Rare (1) — migration already complete in this repo (commit `f44c661`); future likelihood is the upstream-shipping path for other adopters
+**Effort**: S — smallest delta is `bash -c '...'` wrap in upstream SKILL.md Step 0a (Option 1 of three documented fix shapes)
+**WSJF**: 4.0 = (2 × 2.0) / 1
 **Type**: technical
 
 ## Description
@@ -71,7 +72,7 @@ Option 1 is the smallest delta. Option 2 is the most architecturally clean. Opti
 
 ### Investigation Tasks
 
-- [ ] Re-rate Priority and Effort at next /wr-itil:review-problems
+- [x] Re-rate Priority and Effort at next /wr-itil:review-problems (2026-05-30: Impact 2 × Likelihood 1 = 2, Effort S, auto-transitioned Open → Known Error — migration is done in this repo so local likelihood drops to Rare; value-remaining is upstream-shipping for other adopters)
 - [ ] Confirm the exact bashisms in `packages/itil/lib/migrate-problems-layout.sh` (likely `shopt -s nullglob` and `shopt -s extglob`).
 - [ ] Decide on fix shape (Option 1 / 2 / 3) per upstream `@windyroad/itil` architecture review.
 - [ ] File upstream report via `/wr-itil:report-upstream P012`.

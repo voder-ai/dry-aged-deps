@@ -1,9 +1,10 @@
 # Problem 015: the `test` script has no wall-clock timeout — a hung test runner runs unbounded (silent zombie instead of loud failure)
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-05-25
-**Priority**: 3 (Medium) — Impact: 2 x Likelihood: 2 (deferred — re-rate at next /wr-itil:review-problems)
-**Effort**: S (deferred — re-rate at next /wr-itil:review-problems)
+**Priority**: 4 (Low) — Impact: Minor (2) x Likelihood: Unlikely (2)
+**Effort**: S — wrap `test` script with `timeout 180 vitest run --coverage` (or equivalent vitest config wall-clock bound)
+**WSJF**: 8.0 = (4 × 2.0) / 1
 **Type**: technical
 
 ## Description
@@ -45,7 +46,7 @@ Candidate fix shapes (Stage 2 — Option 3, script/CI):
 
 ### Investigation Tasks
 
-- [ ] Re-rate Priority and Effort at next /wr-itil:review-problems
+- [x] Re-rate Priority and Effort at next /wr-itil:review-problems (2026-05-30: Impact 2 × Likelihood 2 = 4 (Low), Effort S, auto-transitioned Open → Known Error — root cause + workaround documented, candidate fix shapes enumerated)
 - [ ] Decide between `timeout`-wrap (shell, not cross-platform — `timeout` is GNU/coreutils; macOS needs `gtimeout` or a node wrapper) vs a node-based runner for portability
 - [ ] Confirm CI (`ci-publish.yml` on ubuntu) has `timeout` available (it does — GNU coreutils)
 

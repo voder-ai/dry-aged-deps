@@ -2,7 +2,7 @@
 
 > ISO 31000-aligned risk policy for `dry-aged-deps`. This file is the single source of truth for impact levels, likelihood levels, the risk matrix, and the risk appetite that the risk-scorer agent and problem-management process consume when assessing pipeline actions (commit, push, release) and problem severity.
 
-**Last reviewed:** 2026-05-12
+**Last reviewed:** 2026-05-30
 
 ## Business Context
 
