@@ -159,3 +159,73 @@ Scope: `/wr-itil:work-problems` Step 2.5 ALL_DONE → user-directed continuation
 **Combined session totals (AFK iters 1-4 + this main turn)**: lazy=1, direction=3.
 
 Recovery action taken: memory entry [[pick-one-dont-ask-when-order-doesnt-matter]] extended with second-correction signal (don't tee up natural-continuation work as "next moves"). Future sessions: when two valid paths both need doing and neither has a stated sequencing reason, pick one and proceed.
+
+---
+
+## 2026-05-30 — Subsequent `/wr-itil:work-problems` iter 4 (P013 RFC-001 T1 spec authoring)
+
+Scope: one additional `/wr-itil:work-problems` AFK iter dispatched after the trail above; worked P013 by authoring `prompts/017.0-DEV-OVERRIDES-HYGIENE.md` (RFC-001 task T1). No AskUserQuestion calls fired.
+
+| Call # | Header | Classification | Citation                                  |
+| ------ | ------ | -------------- | ----------------------------------------- |
+| (none) | —      | —              | No AskUserQuestion invocations this iter. |
+
+**Lazy count: 0**
+**Direction count: 0**
+**Override count: 0**
+**Silent-framework count: 0**
+**Taste count: 0**
+**Correction-followup count: 0**
+
+Notes: every decision this iter was framework-resolved.
+
+- Selection of P013 over P014 — same orchestrator directive as iter 3 (tie-break rung 5 ID asc; both Tier 2 Internal WSJF 2.25 L). Orchestrator-supplied.
+- Work-unit picked as RFC-001 T1 — atomic-RFC fallback per manage-problem "Working a Problem" Phase 2 working-the-problem traversal (RFC-001 carries `stories: []`, so read RFC body Tasks section, first unticked task). T1 was the obvious next.
+- Architect gate PASS-WITH-NOTES on the proposed spec — folded all 4 advisory notes (REQ-OVERRIDES-\* IDs, audit-resolve.json exclusion symmetry, reason-taxonomy vocabulary, sibling-spec precedent) into the spec body. Standard gate-satisfaction loop, not direction-setting.
+- JTBD gate ISSUES-FOUND first pass → PASS-WITH-NOTES on revised spec — folded 3 substantive notes (non-breaking call-out, exit-code preservation AC, JSON/XML audit-artefact integration AC) plus 2 architect-derived notes (reason-taxonomy, exception-respect symmetry). On the unratified-JTBD blocking flag: adopted RFC-001 §Related precedent (descriptive cites, accepted risk inline) — matches the documented capture-time PASS-WITH-NOTES posture for the same JTBD set. Wider JTBD ratification queued for next interactive session per ADR-013 Rule 6 + ADR-074 (this iter did NOT build load-bearing dependence on unconfirmed JTBD substance — spec body's descriptive-cite paragraph documents the accepted-risk posture explicitly).
+- Write-hook gate fired between first JTBD agent verdict and the Write — second JTBD agent invocation re-affirmed PASS-WITH-NOTES on revised spec (the gate's contract working as designed; not friction).
+- Commit subject form `docs(rfcs): author RFC-001 T1 spec at prompts/017.0-DEV-OVERRIDES-HYGIENE.md` — recovered from first-try `docs(rfcs): RFC-001 T1 — ...` commitlint subject-case rejection by leading with lowercase verb per P010 commitlint subject-case lesson (now observed on this skill's fourth iter — pattern stable; this is the codification candidate for a hook that pre-emits a subject-case warning, but NOT codifying this retro since it's already a known captured class).
+- Refs: RFC-001 trailer per ADR-060 single-trailer vocabulary.
+
+No framework-resolvable decision was sub-contracted back to the user. The architect/JTBD/risk-scorer delegations are gate-satisfaction, NOT lazy.
+
+Outstanding-question queue for orchestrator Step 2.5: JTBD ratification (JTBD-001 / JTBD-006 / JTBD-204 / project-maintainer + tech-lead personas) — direction-category, surfaced as deferred substance-confirm-before-build target so dependent RFC-001 work (T2 onward) can build on ratified jobs.
+
+### Context Usage (Cheap Layer, P101)
+
+| Bucket             | Bytes  | % of total | Δ vs prior                       |
+| ------------------ | ------ | ---------- | -------------------------------- |
+| memory             | 361246 | 41.9%      | +4712 (+1.3%) vs iter 3          |
+| decisions          | 254414 | 29.5%      | +20599 (+8.8%) vs iter 3         |
+| problems           | 156997 | 18.2%      | +1477 (+0.9%) vs iter 3          |
+| jtbd               | 40956  | 4.7%       | 0 (no change) vs iter 3          |
+| briefing           | 28179  | 3.3%       | +3570 (+14.5%) vs iter 3         |
+| project-claude-md  | 5786   | 0.7%       | 0 (no change) vs iter 3          |
+| hooks              | 0      | 0.0%       | not measured — n/a               |
+| skills             | 0      | 0.0%       | not measured — n/a               |
+| framework-injected | —      | —          | not measured — no on-disk source |
+
+THRESHOLD bytes=10240 — six of eight measured buckets exceed (memory, decisions, problems, jtbd, briefing, project-claude-md). decisions delta +20599 bytes flagged via the +20% rule (8.8% < 20% — under threshold; no auto-trigger this iter). Per-plugin breakdown available in /wr-retrospective:analyze-context (deep layer). Deep analysis still recommended (six over-threshold buckets, ongoing growth across iters). Non-blocking advisory.
+
+### Pipeline Instability
+
+- None material this iter. The write-hook double-invocation pattern on JTBD revisions is the gate's contract working as designed — re-verifying revised spec state after agent advice. Not a friction signal.
+
+### Topic File Rotation Candidates (Tier 3 budget — P099)
+
+`check-briefing-budgets.sh` threshold: 5120 bytes.
+
+| Topic file                             | Bytes | Threshold | Ratio | Proposed rotation                                         | Decision                                                                                      |
+| -------------------------------------- | ----- | --------- | ----- | --------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `docs/briefing/governance-workflow.md` | 7891  | 5120      | 1.54× | split-by-date (Branch B safe-default; no MUST_SPLIT line) | deferred — retro-on-exit context per P086; surface to canonical `/wr-retrospective:run-retro` |
+| `docs/briefing/README.md`              | 5543  | 5120      | 1.08× | split-by-date (Branch B safe-default)                     | deferred — retro-on-exit context per P086; surface to canonical `/wr-retrospective:run-retro` |
+
+Defer cause: retro-on-exit subprocess (P086) intentionally proceeds non-blocking and matches iter-3's precedent (same defer for the same files). This is the documented retro-on-exit posture, not the canonical-retro defer pattern P145 warns against. The canonical `/wr-retrospective:run-retro` should perform the rotation in interactive mode where the agent has full scope to commit the briefing reshape.
+
+### Verification Candidates (Step 4a)
+
+None. The three `.verifying.md` tickets (P015 / P016 / P018) all carry `no — not observed` in the README Verification Queue, and this iter did NOT exercise any of those fixes (spec authoring touched only `prompts/` and `docs/rfcs/`). No close-on-evidence candidates. Step 4a sub-step 9 prior-session evidence drain: zero rows match `yes — observed:` prefix; nothing to drain.
+
+### Codification Candidates (Step 4b)
+
+None this iter. The single recurring friction signal (lowercase-first-token commit-subject recovery, observed for the fourth iter in a row) is already classed as a captured class via the prior iters' notes and would otherwise route through a new ticket on next codification pass. No new ticket created from this iter to preserve commit-grain discipline within the AFK loop.
