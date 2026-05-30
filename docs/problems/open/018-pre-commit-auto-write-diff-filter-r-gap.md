@@ -2,9 +2,10 @@
 
 **Status**: Open
 **Reported**: 2026-05-30
-**Priority**: 3 (Medium) — Impact: 3 x Likelihood: 1 (deferred — re-rate at next /wr-itil:review-problems)
+**Priority**: 6 (Medium) — Impact: Minor (2) x Likelihood: Possible (3)
 **Origin**: internal
-**Effort**: M (deferred — re-rate at next /wr-itil:review-problems)
+**Effort**: S — one-character diff-filter change (ACM → ACMR) in `.husky/pre-commit` + REQ-PRECOMMIT-AUTO-WRITE-RESTAGE rename-with-edit test
+**WSJF**: 6.0 = (6 × 1.0) / 1
 **Type**: technical
 
 ## Description
@@ -36,7 +37,7 @@ Fix shape: change diff-filter to `ACMR` so renames pass through. Also extend the
 
 ### Investigation Tasks
 
-- [ ] Re-rate Priority and Effort at next /wr-itil:review-problems
+- [x] Re-rate Priority and Effort at next /wr-itil:review-problems (2026-05-30: Impact 2 × Likelihood 3 = 6 (Medium), Effort S — one-character diff-filter change + test fixture extension; root cause + fix shape already documented, kept Open pending implementation)
 - [ ] Investigate root cause
 - [ ] Create reproduction test
 

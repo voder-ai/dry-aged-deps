@@ -2,9 +2,10 @@
 
 **Status**: Open
 **Reported**: 2026-05-30
-**Priority**: 3 (Medium) — Impact: 3 x Likelihood: 1 (deferred — re-rate at next /wr-itil:review-problems)
+**Priority**: 6 (Medium) — Impact: Minor (2) x Likelihood: Possible (3)
 **Origin**: internal
-**Effort**: M (deferred — re-rate at next /wr-itil:review-problems)
+**Effort**: S — single shell-script edit at `scripts/push-watch.sh` (network-flake fallback to `gh run view`) + bounded-retry block + test
+**WSJF**: 6.0 = (6 × 1.0) / 1
 **Type**: technical
 
 ## Description
@@ -34,7 +35,7 @@ Evidence: this session's iter 5 — push:watch reported "Pipeline failed" with `
 
 ### Investigation Tasks
 
-- [ ] Re-rate Priority and Effort at next /wr-itil:review-problems
+- [x] Re-rate Priority and Effort at next /wr-itil:review-problems (2026-05-30: Impact 2 × Likelihood 3 = 6 (Medium), Effort S — single shell-script edit + bounded-retry block + test; root cause + fix shape already documented in Fix Strategy, kept Open pending implementation)
 - [ ] Investigate root cause
 - [ ] Create reproduction test
 

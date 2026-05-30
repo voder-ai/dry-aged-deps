@@ -2,9 +2,10 @@
 
 **Status**: Open
 **Reported**: 2026-05-30
-**Priority**: 3 (Medium) — Impact: 3 x Likelihood: 1 (deferred — re-rate at next /wr-itil:review-problems)
+**Priority**: 6 (Medium) — Impact: Minor (2) x Likelihood: Possible (3)
 **Origin**: external (`@windyroad/itil`)
-**Effort**: M (deferred — re-rate at next /wr-itil:review-problems)
+**Effort**: M — upstream `@windyroad/itil` skill spec change (classify-readme-drift new exit class + Step 0 routing) + upstream report
+**WSJF**: 3.0 = (6 × 1.0) / 2
 **Type**: technical
 
 ## Description
@@ -36,7 +37,7 @@ Fix shape: extend the SKILL contract or classify-readme-drift script to detect "
 
 ### Investigation Tasks
 
-- [ ] Re-rate Priority and Effort at next /wr-itil:review-problems
+- [x] Re-rate Priority and Effort at next /wr-itil:review-problems (2026-05-30: Impact 2 × Likelihood 3 = 6 (Medium), Effort M — upstream report + skill spec change; kept Open pending upstream-shipping of new HALT_ROUTE_REVIEW exit class)
 - [ ] Investigate root cause
 - [ ] Create reproduction test
 

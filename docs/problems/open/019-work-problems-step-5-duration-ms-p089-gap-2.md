@@ -2,9 +2,10 @@
 
 **Status**: Open
 **Reported**: 2026-05-30
-**Priority**: 3 (Medium) — Impact: 3 x Likelihood: 1 (deferred — re-rate at next /wr-itil:review-problems)
+**Priority**: 4 (Low) — Impact: Minor (2) x Likelihood: Unlikely (2)
 **Origin**: external (`@windyroad/itil`)
-**Effort**: M (deferred — re-rate at next /wr-itil:review-problems)
+**Effort**: M — upstream `@windyroad/itil` SKILL.md Step 5 Authority hierarchy paragraph amend + upstream report
+**WSJF**: 2.0 = (4 × 1.0) / 2
 **Type**: technical
 
 ## Description
@@ -36,7 +37,7 @@ Fix shape: extend the Authority hierarchy paragraph to name `duration_ms` alongs
 
 ### Investigation Tasks
 
-- [ ] Re-rate Priority and Effort at next /wr-itil:review-problems
+- [x] Re-rate Priority and Effort at next /wr-itil:review-problems (2026-05-30: Impact 2 × Likelihood 2 = 4 (Low), Effort M — upstream report + skill spec amend; Likelihood lower than sibling P017 because the exit-mode shape that triggers the undercount is narrower)
 - [ ] Investigate root cause
 - [ ] Create reproduction test
 
