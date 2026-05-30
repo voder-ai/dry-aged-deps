@@ -64,3 +64,34 @@ Notes: every decision in this iter was framework-resolved.
 - README column shape preserved (no Origin column added) — ADR-076 is upstream-only; the project hasn't adopted it locally; matched existing precedent rather than introducing structural change.
 
 The architect + JTBD reviews returned PASS without ISSUES — both delegations were the standard gate-satisfaction loop, not direction-setting.
+
+---
+
+## 2026-05-30 — Subsequent `/wr-itil:work-problems` iter 2 (P018 fix, single iteration)
+
+Scope: one additional `/wr-itil:work-problems` AFK iter dispatched after the trail above; worked P018 (pre-commit diff-filter R gap). No AskUserQuestion calls fired.
+
+| Call # | Header | Classification | Citation                                  |
+| ------ | ------ | -------------- | ----------------------------------------- |
+| (none) | —      | —              | No AskUserQuestion invocations this iter. |
+
+**Lazy count: 0**
+**Direction count: 0**
+**Override count: 0**
+**Silent-framework count: 0**
+**Taste count: 0**
+**Correction-followup count: 0**
+
+Notes: every decision this iter was framework-resolved.
+
+- Selection of P018 over P010 / P011 (all WSJF 6.0) — orchestrator's "skip upstream-blocked tickets with `## Reported Upstream`" directive applied mechanically; P018 then won within-tier by tie-break rung 3 (Effort S < M).
+- Architect + JTBD gate reviews delegated via Agent tool — standard gate-satisfaction loop, both PASS, no direction-setting.
+- TDD-RED → GREEN flow: failing test added first, hook fix committed second — standard project TDD discipline.
+- Risk-scorer flagged commit 1 at 6/25 (above appetite) due to staged RED test; auto-applied R3 (split commit — defer test to fix commit). Re-scored to 1/25. Per ADR-042 Rule 2 auto-apply (silent agent action when scorer surfaces a concrete remediation).
+- Commit subject form `docs(problems): known error P018 — ...` then `fix(husky): widen ...` — lowercase first token per P010 commitlint subject-case lesson (recovered from first-try sentence-case rejection by re-emitting verb-first).
+- Open → Known Error → Verification Pending transition in two commits (`779ab10` + `a45ede6`) — ADR-022 + ADR-014 single-commit grain; P062 README refresh in both transitions; P134 line-3 discipline applied with displaced fragment rotation to README-history.
+- P062 README render — chose to keep existing structure without ADR-076 Origin column (matched iter 1's precedent — adopter project hasn't adopted Origin tier locally).
+- ADR-0016 Confirmation criterion #2 literal updated (ACM → ACMR with P018 citation) — architect-recommended doc-hygiene edit, applied silently.
+- Same-session evidence observation: commit `a45ede6` itself was a rename-with-edit (the verifying/018-\*.md file). The new hook ran for that commit and listed the renamed file in its auto-write log — the exact failure mode P018 describes did NOT recur. Same-session verifying excluded from Step 4a close-on-evidence per the documented exclusion; recorded here for cross-session reference.
+
+No framework-resolvable decision was sub-contracted back to the user. The architect/JTBD/risk-scorer delegations are gate-satisfaction, NOT lazy.
