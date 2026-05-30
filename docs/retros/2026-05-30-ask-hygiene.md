@@ -307,3 +307,98 @@ Carried forward from iter 1 (no new questions added by this iter):
 
 - JTBD ratification (JTBD-001 / JTBD-006 / JTBD-204 / project-maintainer + tech-lead personas) — direction-category; orchestrator's `/wr-jtbd:confirm-jobs-and-personas` route. Substance-confirm-before-build target so dependent RFC-001 work (T3 implementation onward) can build on ratified jobs.
 - Intake scaffold (`.github/ISSUE_TEMPLATE/config.yml`, `problem-report.yml`, `SUPPORT.md`, `CONTRIBUTING.md`) — pending; AFK fail-safe per ADR-036 / P065. User catches up next interactive session.
+
+---
+
+## 2026-05-30 — Subsequent `/wr-itil:work-problems` iter 3 (P013 RFC-001 T3 implementation, single iteration)
+
+Scope: one additional `/wr-itil:work-problems` AFK iter dispatched after the trail above; worked P013 by implementing `src/overrides-hygiene.js` minimum-to-pass for RFC-001 task T3, bundling an in-flight ADR-0015 Option (a) amendment + `git mv` test relocation in a single commit (`45340db`). No AskUserQuestion calls fired.
+
+| Call # | Header | Classification | Citation                                  |
+| ------ | ------ | -------------- | ----------------------------------------- |
+| (none) | —      | —              | No AskUserQuestion invocations this iter. |
+
+**Lazy count: 0**
+**Direction count: 0**
+**Override count: 0**
+**Silent-framework count: 0**
+**Taste count: 0**
+**Correction-followup count: 0**
+
+Notes: every decision this iter was framework-resolved.
+
+- Selection of P013 — orchestrator-supplied (RFC-001 mid-cycle continuation; T3 is the natural next work-unit after iter 2 landed T2). Mechanical.
+- Work-unit picked as RFC-001 T3 — orchestrator brief explicit. Strict T3 scope (module only; no T4 pipeline wire, no T5 formatter, no T6 exit-code, no T7 regression).
+- ADR-0015 mid-iter amendment via Option (a) — the second narrow exception path that §Reassessment criterion 2 anticipates verbatim. Architect review confirmed: Option (a) honours "don't silently expand the narrow scope" because the second file is enumerated by path + the audit check + drift-prevention guard refresh to "no THIRD" preserves the narrow-scope mechanic. Option (b) broadening to general permission is the substance call; correctly queued for loop-end outstanding_questions rather than picked silently. Framework-resolved (Option (a) is the strict-conservative default that matches existing pattern shape).
+- Architect gate PASS-WITH-NOTES on T3 substance; PASS-WITH-NOTES on ADR-0015 amendment. Notes folded inline: kept ADR filename unchanged (Note 1), retained the "no implicit precedent" drift guard verbatim (Note 3). Note 2 (unverifiable "ADR-014 single-commit grain" cite is an upstream framework reference not local) flagged in `notes` for documentation-hygiene follow-up but not a T3 correctness gate.
+- JTBD gate PASS for ADR-0015 amendment (purely structural test-placement bookkeeping; zero `@jtbd` / `persona:` tokens). PASS-WITH-NOTES for T3 substance — reviewer's own note acknowledges T3 is "a pure data-transformation seam that does not encode user-facing copy, default-policy substance, or exit-code semantics" — does NOT load-bear on the unratified JTBD substance per RFC-001 §Related descriptive-cite posture. Matches the iter-1 / iter-2 framing.
+- TDD gate state transition: hook reported IDLE (not RED as orchestrator brief expected) because iter 2's test placed at `test/overrides-hygiene.test.js` is not seen by `@windyroad/tdd tdd_find_test_for_impl()` (same-dir / `__tests__/` only — P004 upstream gap). The TDD-state vs vitest-RED disagreement is the structural P004 surface ADR-0015 already documents. Iter unblocked by `git mv` test/ → src/ alongside the ADR amendment (test files are always writable regardless of gate state; impl file then transitioned IDLE→RED→GREEN after the move + impl write).
+- Risk-scorer pipeline: commit=2/25, push=1/25, release=1/25 (all Very Low). Layered scoring reflected the dormant-scaffolding nature of the impl (not yet wired into any CLI surface; user-visible behaviour unchanged). Standard gate-satisfaction.
+- Commit subject `chore(overrides-hygiene): implement runOverridesHygiene module for RFC-001 T3` — chose `chore` not `feat` per CLAUDE.md commit-type guidance + MEMORY.md `commit-types-for-internal-tooling` (module not yet user-callable until T4 wires it; `feat:` would trigger an unwanted minor release). Lowercase first token (recovered first-try; pattern stable across six consecutive iters).
+- `Refs: RFC-001` trailer per ADR-060 single-trailer vocabulary.
+- Pre-commit hooks (format:check / lint / type-check) all PASS. Lint clean on new code (initially 2 `security/detect-object-injection` false-positives flagged; refactored to use Map idiom matching `find-unfixable-vulns.js` precedent; 1 pre-existing test-file warning unchanged).
+- T3 commit grain: bundled ADR-0015 amendment + CLAUDE.md pointer + test relocation (`git mv`) + new impl + RFC T3 tick. Architect explicitly approved the bundle ("the ADR amendment IS the load-bearing enabler for the T3 impl write; atomicity well-motivated").
+
+### Context Usage (Cheap Layer, P101)
+
+| Bucket             | Bytes  | % of total | Δ vs iter 2 (T2)                 |
+| ------------------ | ------ | ---------- | -------------------------------- |
+| memory             | 369517 | 42.2%      | +3544 (+1.0%)                    |
+| decisions          | 256174 | 29.3%      | +1760 (+0.7%)                    |
+| problems           | 156997 | 17.9%      | 0 (no change)                    |
+| jtbd               | 40956  | 4.7%       | 0 (no change)                    |
+| briefing           | 28179  | 3.2%       | 0 (no change)                    |
+| project-claude-md  | 5885   | 0.7%       | +99 (+1.7%)                      |
+| hooks              | 0      | 0.0%       | not measured — n/a               |
+| skills             | 0      | 0.0%       | not measured — n/a               |
+| framework-injected | —      | —          | not measured — no on-disk source |
+
+THRESHOLD bytes=10240 — six of eight measured buckets still exceed. memory + decisions + project-claude-md show small positive drift this iter (ADR-0015 amendment + CLAUDE.md pointer refresh + briefing untouched). No bucket exceeds +20% delta this iter. Per-plugin breakdown available via `/wr-retrospective:analyze-context`. Non-blocking advisory.
+
+### Pipeline Instability
+
+- **TDD-state vs vitest-RED disagreement on new src/ modules (second observation, P004 class)**: this iter is the second observation of the `@windyroad/tdd tdd_find_test_for_impl()` same-dir-only limitation forcing mid-iter test relocation. First observation was iter 3 of the 2026-05-13 work-problems session (drove ADR-0015 itself; `src/update-packages.test.js`). Second observation today (RFC-001 T3; `src/overrides-hygiene.test.js`). Not yet a Repeat-work friction signal (threshold ≥3 in one session); recorded as carried-pattern. Surfaced via ADR-0015 §Reassessment criterion 2 mechanism working as designed. If a THIRD trigger arrives, escalate to Step 4b Stage 1 ticketing for broadening ADR-0015 to Option 2 (general permission) — per the amended §Bad consequence "the narrow-exception pattern by design imposes ADR-cycle friction on the third trigger" forcing-function clause.
+- **ADR-0015 mid-iter amendment vs strict T3 scope tension (first observation, working-as-designed)**: the orchestrator brief specified "Strict T3 scope only — do NOT bleed into T4...". The TDD gap forced an in-flight ADR amendment + CLAUDE.md edit + test `git mv` as enabler. The bundled-commit shape was architect-approved (atomicity well-motivated), but the iter's effective grain expanded beyond pure T3 substance. Documentation: the iter delivered T3 + the ADR-0015 amendment that authorizes the relocation that enabled T3. This is the documented Reassessment criterion 2 path; recorded as carried observation, not friction. No ticket.
+- README inventory currency: not run this iter (no skills/packages directory in this project — the script targets adopter `packages/*/README.md` which this project doesn't have). N/A signal.
+- No hook TTL expiries. No marker-vs-file deadlocks. No `push:watch` / `release:watch` invocations (out of scope per orchestrator). No subagent DEFERRED returns. No repeat-workaround pattern beyond the documented ADR-0015 carried observation above. No session-wrap silent drops.
+
+### Topic File Rotation Candidates (Tier 3 budget — P099)
+
+`check-briefing-budgets.sh` threshold: 5120 bytes.
+
+| Topic file                             | Bytes | Threshold | Ratio | Proposed rotation                                         | Decision                                                                                      |
+| -------------------------------------- | ----- | --------- | ----- | --------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `docs/briefing/governance-workflow.md` | 7891  | 5120      | 1.54× | split-by-date (Branch B safe-default; no MUST_SPLIT line) | deferred — retro-on-exit context per P086; surface to canonical `/wr-retrospective:run-retro` |
+
+Defer cause: retro-on-exit subprocess (P086) non-blocking posture; matches iter-3, iter-4, and iter-2 (T2) precedent. The README.md briefing file is now under threshold (5543→below; not flagged this run); only `governance-workflow.md` remains over. Canonical `/wr-retrospective:run-retro` should perform the rotation in interactive mode.
+
+### Verification Candidates (Step 4a)
+
+None. The three `.verifying.md` tickets (P015 / P016 / P018) carry `no — not observed` in the README Verification Queue per prior iters. This iter touched `src/` (new module + relocated test), `docs/decisions/` (ADR-0015 amendment), `docs/rfcs/` (T3 tick), and `CLAUDE.md` (pointer refresh) — none of those paths exercise a `.verifying.md` fix. Step 4a sub-step 9 prior-session evidence drain: zero rows match `yes — observed:` prefix; nothing to drain.
+
+### Codification Candidates (Step 4b)
+
+Stage 1 (ticket every codify-worthy observation): one candidate identified this iter; surfaced as **deferred** to canonical interactive session per AFK orchestrator carve-out (`capture-*` background skills forbidden; `manage-problem` invocation would bleed iter scope past T3-only brief). Cause: `skill_unavailable` (capture-problem orchestrator-gated per ADR-032 AFK carve-out; manage-problem full lifecycle exceeds strict T3 commit-grain budget).
+
+| Observation                                                                                                                                                                                                                                                                                                                                                                                                 | Cause               | Citation                                                                                                    |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `calculateAgeInDays` should accept an injectable `now` parameter so future modules (overrides-hygiene this iter; potentially RFC-002 soak work later) don't have to inline the `Math.floor((now - publishMs) / MS_PER_DAY)` arithmetic. Architect note 1 surfaced this; T3 inlined the math under explicit divergence comment. Improvement-shape: target `src/age-calculator.js`; swap call sites in T4/T5. | `skill_unavailable` | architect verdict (T3 review) note 1; inline JSDoc divergence comment at top of `src/overrides-hygiene.js`. |
+
+Stage 2 shape (recorded inline above): improve — internal code (`src/age-calculator.js`) — out-of-Skill target so does not fit Stage 2 Option 1/2 templates; falls under Option 3 (other codification shape) with shape=internal-code. Routing target: standard `/wr-itil:manage-problem` in interactive session.
+
+No other recurring-pattern signal beyond classes already captured by prior iters. The ADR-0015 carried observation is recorded under Pipeline Instability per the §Reassessment-2 working-as-designed framing.
+
+### Outstanding Questions (queued for orchestrator Step 2.5)
+
+Carried forward from iter 1 (no resolution this iter):
+
+- **JTBD ratification** (JTBD-001 / JTBD-006 / JTBD-204 / project-maintainer + tech-lead personas) — direction-category; orchestrator's `/wr-jtbd:confirm-jobs-and-personas` route. Build-upon guard fired on JTBD gate for T3 substance but reviewer's own note confirmed T3 does not load-bear on unratified JTBD substance; proceed-under-descriptive-cite posture matches iter-1 / iter-2.
+- **Intake scaffold** (`.github/ISSUE_TEMPLATE/config.yml`, `problem-report.yml`, `SUPPORT.md`, `CONTRIBUTING.md`) — pending; AFK fail-safe per ADR-036 / P065.
+
+Added by this iter:
+
+- **ADR-0015 broaden vs continue-narrow** (one-time-override / direction class) — Option (a) second narrow exception landed this iter is the strict-conservative default. The substance question of whether to broaden to Option 2 (any `src/` test may colocate while P004 is open) is unresolved. Trigger to revisit per amended §Reassessment 2: a THIRD trigger arrives → escalate to Option 2 broadening rather than accumulate a third narrow exception. Until then, narrow-exception mechanic stands.
+- **Deferred Step 6.5 drain confirmation** (one-time-override) — carried from iter 2 (T2 RED commit could not pass local `npm run prepush` so push was deferred). T3 commit landed GREEN this iter, so the deferred-drain queue should be evaluable now at loop-end.
+- **`calculateAgeInDays` injectable `now`** (direction / improve-shape codification candidate) — see Codification Candidates section above. Stage 1 deferred to interactive session per AFK skill_unavailable cause.
+- **Commit-type vs release-trigger taxonomy** (direction) — the orchestrator brief noted `feat:` is release-triggering and recommended `chore:` fallback; this iter took `chore:` per MEMORY.md `commit-types-for-internal-tooling` precedent. The brief also recommended queuing a direction entry noting the decision. Recorded here: T3-T6 scaffolding commits should follow `chore:`; T7 live-case regression test should follow `test:`; the user-facing release-eligible `feat:` should ride the final commit that wires T4+T5+T6 into the CLI surface (or a separate commit that flips the default-on flag).
+- **RFC-001 T8 "ADR-014 single-commit-per-iter grain" cite** (direction / doc-hygiene) — architect verdict note 2 flagged that the local ADR-0014 is about `--update` writing `latest`, not commit grain. The "ADR-014" cite likely refers to upstream `@windyroad/itil`'s framework ADR-014. Either capture a local ADR mirroring the upstream contract, or edit RFC-001 T8 to qualify the cite (e.g. `per @windyroad/itil ADR-014`). Deferred to interactive session.
