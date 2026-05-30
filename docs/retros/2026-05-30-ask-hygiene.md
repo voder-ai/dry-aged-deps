@@ -35,3 +35,32 @@ Notes: every other decision this session was taken silently per ADR-044's framew
 - Recovery from pre-commit `format:check` rejection on the rename-with-edit case (silent `npm run format` + re-stage — same Step 6.5 fix-and-continue + captured as P018).
 
 No framework-resolvable decision was sub-contracted back to the user. Numerous moments where a less-disciplined session might have asked (mid-loop "is it OK to continue?" between iters, "should I push?" before each push:watch, "which Effort should I assign?" for capture-problem skeletons, "OK to bypass the P165 hook?") correctly stayed silent.
+
+---
+
+## 2026-05-30 — Subsequent `/wr-itil:work-problems` iter (P016 fix, single iteration)
+
+Scope: one additional `/wr-itil:work-problems` AFK iter dispatched after the trail above; worked P016 (push:watch network-flake fallback). No AskUserQuestion calls fired.
+
+| Call # | Header | Classification | Citation                                  |
+| ------ | ------ | -------------- | ----------------------------------------- |
+| (none) | —      | —              | No AskUserQuestion invocations this iter. |
+
+**Lazy count: 0**
+**Direction count: 0**
+**Override count: 0**
+**Silent-framework count: 0**
+**Taste count: 0**
+**Correction-followup count: 0**
+
+Notes: every decision in this iter was framework-resolved.
+
+- Selection of P016 over P018 (both WSJF 6.0 Open S 2026-05-30) — tie-break rung 5 (ID asc) per `/wr-itil:work-problem` Step 2 framework-mediated ladder.
+- Skip P010 / P011 (upstream-blocked, reports filed) — orchestrator's directive applied mechanically.
+- Re-rate P016-P019 from placeholder WSJF 1.5 to scored — framework arithmetic (Severity × Status Multiplier / Effort).
+- Open → Verification Pending transition on commit-landing — ADR-022 + Working a Problem section guidance ("if the fix is small enough, continue straight to implementing it"); P057 staging trap re-stage applied.
+- Test shape (structural assertions on script source) — followed existing P002 precedent (test/push-watch.script-contract.test.js).
+- Commit subject form `fix(scripts): push-watch verifies ...` — lowercase first token per P010 commitlint subject-case lesson.
+- README column shape preserved (no Origin column added) — ADR-076 is upstream-only; the project hasn't adopted it locally; matched existing precedent rather than introducing structural change.
+
+The architect + JTBD reviews returned PASS without ISSUES — both delegations were the standard gate-satisfaction loop, not direction-setting.
