@@ -30,6 +30,19 @@ function parseUnfixableOptions(args, config) {
 }
 
 /**
+ * Derive the overrides-hygiene surface enable flag from CLI args + config.
+ * Mirrors parseUnfixableOptions for the RFC-001 surface.
+ * @param {string[]} args - CLI arguments.
+ * @param {Record<string, any>} config - Loaded config file object.
+ * @returns {boolean}
+ * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-DEFAULT-ON
+ */
+function parseOverridesHygieneOption(args, config) {
+  // On by default; config `overrides-hygiene: false` or `--no-overrides-hygiene` disables.
+  return config['overrides-hygiene'] !== false && !args.includes('--no-overrides-hygiene');
+}
+
+/**
  * Options derived from CLI arguments and config file.
  *
  * @typedef {Object} CliOptions
@@ -44,6 +57,7 @@ function parseUnfixableOptions(args, config) {
  * @property {object|undefined} exclude - Packages to exclude from analysis (name -> reason).
  * @property {boolean} unfixable - Whether to surface known-vulnerable-but-unfixable packages.
  * @property {string} unfixableLevel - Minimum severity floor for the unfixable surface.
+ * @property {boolean} overridesHygiene - Whether to surface stale or vulnerable package.json `overrides` pins.
  */
 
 /**
@@ -84,6 +98,7 @@ export function parseOptions(argv) {
     '--dev-severity',
     '--no-unfixable',
     '--unfixable-level',
+    '--no-overrides-hygiene',
     '--help',
     '-h',
     '--version',
@@ -144,6 +159,7 @@ export function parseOptions(argv) {
   const devMinSeverity = parseDevSeverityFlag(args, defaultDevMinSeverity, validSeverities);
 
   const { unfixable, unfixableLevel } = parseUnfixableOptions(args, config);
+  const overridesHygiene = parseOverridesHygieneOption(args, config);
 
   return {
     format,
@@ -157,5 +173,6 @@ export function parseOptions(argv) {
     exclude: config.exclude,
     unfixable,
     unfixableLevel,
+    overridesHygiene,
   };
 }

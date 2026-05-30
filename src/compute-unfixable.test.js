@@ -17,7 +17,10 @@ describe('Story 016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES: computeUnfixable', 
       { source: 1119088, url: 'https://github.com/advisories/GHSA-jxxr-4gwj-5jf2', severity: 'moderate' },
     ],
   };
-  const auditStub = async () => [braceExpansion];
+  // Audit payload shape refactored under RFC-001 T4 so the same fetch can drive
+  // both the unfixable surface and the overrides-hygiene surface — see
+  // run-project-audit.js docstring.
+  const auditStub = async () => ({ vulnerabilities: { 'brace-expansion': braceExpansion } });
 
   it('[REQ-UNFIXABLE-DEFAULT-ON] returns [] without running audit when disabled', async () => {
     let called = false;
@@ -26,7 +29,7 @@ describe('Story 016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES: computeUnfixable', 
       enabled: false,
       runProjectAudit: async () => {
         called = true;
-        return [braceExpansion];
+        return { vulnerabilities: { 'brace-expansion': braceExpansion } };
       },
     });
     expect(rows).toEqual([]);

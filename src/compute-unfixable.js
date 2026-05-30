@@ -37,20 +37,24 @@ function loadAuditExclusions() {
  * @param {Set<string>} params.safePackages - names dry-aged-deps will recommend a safe update for
  * @param {boolean} [params.enabled] - false when `--no-unfixable` is set (default true)
  * @param {string} [params.severityFloor] - minimum severity to surface (default 'low')
- * @param {() => Promise<Array<object>>} [params.runProjectAudit] - injectable audit runner
+ * @param {() => Promise<{ vulnerabilities: Record<string, object> }>} [params.runProjectAudit] - injectable audit runner (raw payload shape)
+ * @param {{ vulnerabilities: Record<string, object> }} [params.auditData] - pre-fetched audit payload, when shared with the overrides-hygiene surface
  * @param {Array<string|number>} [params.exclusions] - injectable exclusions (defaults to audit-resolve.json)
  * @returns {Promise<Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>>}
  * @supports prompts/016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES.md REQ-UNFIXABLE-DETECT REQ-UNFIXABLE-DEFAULT-ON REQ-UNFIXABLE-EXCEPTION-RESPECT
+ * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-AUDIT-XREF
  */
 export async function computeUnfixable({
   safePackages,
   enabled = true,
   severityFloor = 'low',
   runProjectAudit = defaultRunProjectAudit,
+  auditData,
   exclusions,
 }) {
   if (!enabled) return [];
-  const vulnerabilities = await runProjectAudit();
+  const audit = auditData ?? (await runProjectAudit());
+  const vulnerabilities = Object.values(audit?.vulnerabilities ?? {});
   const resolvedExclusions = exclusions ?? loadAuditExclusions();
   return findUnfixableVulns({ vulnerabilities, safePackages, exclusions: resolvedExclusions, severityFloor });
 }

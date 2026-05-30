@@ -40,6 +40,7 @@ function printHelp() {
   console.log(
     '  --config-file=<file>    Path to JSON config file (default: .dry-aged-deps.json). CLI flags override config file values'
   );
+  console.log('  --no-overrides-hygiene  Disable the package.json overrides hygiene surface (default: on)');
   console.log('');
   console.log('Examples of invalid option error messages:');
   console.log('  $ dry-aged-deps --json');
@@ -195,6 +196,7 @@ async function main() {
     exclude,
     unfixable,
     unfixableLevel,
+    overridesHygiene,
   } = options;
 
   let data, fetchVersionTimesOverride, checkVulnerabilitiesOverride;
@@ -223,6 +225,7 @@ async function main() {
         exclude,
         unfixable,
         unfixableLevel,
+        overridesHygiene,
       })
     );
 

@@ -42,6 +42,9 @@ export interface CliOptions {
 
   /** Minimum severity floor for the unfixable surface (default 'low' = surface all) */
   unfixableLevel: string;
+
+  /** Whether to surface stale or vulnerable package.json `overrides` pins (on by default; --no-overrides-hygiene disables) */
+  overridesHygiene: boolean;
 }
 
 /**

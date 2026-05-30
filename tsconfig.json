@@ -23,5 +23,5 @@
     "types": ["node"]
   },
   "include": ["src/**/*", "bin/**/*"],
-  "exclude": ["node_modules", "coverage", "test", "src/**/*.test.js"]
+  "exclude": ["node_modules", "coverage", "test", "src/**/*.test.js", "bin/**/*.test.js"]
 }
