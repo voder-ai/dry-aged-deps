@@ -62,4 +62,9 @@ describe('ADR-0016: husky pre-commit hook auto-writes and re-stages staged files
     const hookText = await readFile(HOOK_PATH, 'utf8');
     expect(hookText).toMatch(/npm\s+run\s+format:check/);
   });
+
+  it('[REQ-PRECOMMIT-AUTO-WRITE-RESTAGE] diff-filter includes R so rename-with-edit commits pass through auto-write (P018)', async () => {
+    const hookText = await readFile(HOOK_PATH, 'utf8');
+    expect(hookText).toMatch(/--diff-filter=[ACMR]*R[ACMR]*/);
+  });
 });

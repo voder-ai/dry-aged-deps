@@ -1,6 +1,6 @@
 # Problem 018: .husky/pre-commit auto-write hook's `--diff-filter=ACM` excludes R (renamed)
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-05-30
 **Priority**: 6 (Medium) — Impact: Minor (2) x Likelihood: Possible (3)
 **Origin**: internal
@@ -59,6 +59,10 @@ Manually run `npm run format && git add <renamed-file>` after the format:check r
 - This session commit `c0dfae8` (run-retro session-wrap closing P009 + briefing refresh) was REJECTED on first try by `format:check` after auto-write skipped the renamed `docs/problems/closed/009-...md` (renamed-with-edit from `verifying/009-...md`).
 - Recovery: manual `npm run format && git add ...` then retry — exactly the friction P009 was supposed to eliminate, but for the rename shape.
 - The hook output explicitly listed only the README files (`docs/problems/README-history.md 12ms (unchanged)`, `docs/problems/README.md 9ms (unchanged)`) — the renamed file was NOT in the auto-write log, confirming the diff-filter ACM excludes R.
+
+## Fix Released
+
+Committed 2026-05-30. `.husky/pre-commit` line 18 now uses `--diff-filter=ACMR` instead of `ACM`; renamed-with-edit files pass through the auto-write block and the subsequent `format:check` succeeds on first try. ADR-0016 Confirmation criterion #2 updated to lock the new literal. REQ-PRECOMMIT-AUTO-WRITE-RESTAGE test suite extended with the new diff-filter-includes-R assertion — 5 / 5 passing GREEN. Awaiting user verification on the next rename-with-edit commit that the auto-write block no longer skips the renamed file.
 
 ## Dependencies
 

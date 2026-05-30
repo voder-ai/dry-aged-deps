@@ -69,7 +69,7 @@ ADR-0010 gate integrity is preserved: the hook strengthens the auto-formatting c
 This decision is implemented when:
 
 1. `.husky/pre-commit` runs `npx prettier --write` (or `npm run format` against staged files) BEFORE `npm run format:check`, AND runs `git add` on the formatted output, AND the subsequent `format:check` therefore passes for any input that prettier can fix.
-2. `.husky/pre-commit` operates on the staged file set only — it MUST NOT format files outside `git diff --cached --name-only --diff-filter=ACM`.
+2. `.husky/pre-commit` operates on the staged file set only — it MUST NOT format files outside `git diff --cached --name-only --diff-filter=ACMR`. The diff-filter MUST include `R` (renamed) so rename-with-edit commits pass through auto-write; the original `ACM` literal omitted `R`, causing renamed-with-edit files to bypass the hook and `format:check` to reject (P018, fixed 2026-05-30).
 3. A test under `test/` asserts the new contract: the hook writes formatted output to staged paths and `git add`s them. The test SHOULD additionally assert that unstaged files are NOT touched.
 4. Running `git commit` against a tree whose markdown is unformatted produces a clean working tree afterward (no unstaged prettier deltas), and the resulting commit's diff includes the formatted content.
 5. `npm run prepush` and CI continue to pass `format:check` after the hook change (the CI gate is unaffected by the change in the local hook policy).

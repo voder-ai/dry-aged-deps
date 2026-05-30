@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-30 — P018 Open → Known Error (`.husky/pre-commit` `--diff-filter=ACM` excludes R; fix is ACMR widening; reproduction test added to `test/husky-pre-commit.test.js`). Dev-work queue top non-upstream-blocked: P018 (WSJF 6.0, Known Error, S — same ticket, lifecycle progressed; effort drops it ahead of P010/P011). Verification Queue: 2 (P015, P016 — both `no — not observed`). Parked: 3 (P004, P005, P007).
+> Last reviewed: 2026-05-30 — P018 fix released → Verification Pending (`.husky/pre-commit` `--diff-filter` widened from `ACM` to `ACMR`; renamed-with-edit files now pass through auto-write; ADR-0016 Confirmation criterion #2 updated to lock new literal; 5 / 5 REQ-PRECOMMIT-AUTO-WRITE-RESTAGE tests passing GREEN). Dev-work queue top non-upstream-blocked: P012 (WSJF 4.0, Known Error, S — zsh migrate-problems-layout bashism). Verification Queue: 3 (P015, P016, P018 — all `no — not observed`). Parked: 3 (P004, P005, P007).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -9,7 +9,6 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 | WSJF | ID   | Title                                                                                                                                       | Severity     | Status      | Effort | Reported   |
 | ---- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | ----------- | ------ | ---------- |
-| 6.0  | P018 | .husky/pre-commit auto-write hook's `--diff-filter=ACM` excludes R (renamed)                                                                | 6 (Medium)   | Known Error | S      | 2026-05-30 |
 | 6.0  | P010 | manage-problem SKILL.md commit-message convention fails @commitlint/config-conventional subject-case rule                                   | 6 (Medium)   | Known Error | M      | 2026-05-17 |
 | 6.0  | P011 | P165 README-refresh PreCommit hook overrides /wr-itil:capture-problem's deferred-README contract                                            | 6 (Medium)   | Known Error | M      | 2026-05-17 |
 | 4.0  | P012 | migrate-problems-layout.sh helper uses bashisms but /wr-itil:work-problems Step 0a SKILL.md doesn't specify bash — sourcing fails under zsh | 2 (Very Low) | Known Error | S      | 2026-05-17 |
@@ -27,6 +26,7 @@ Fix released; awaiting user confirmation that the production behaviour matches t
 | ---- | ---------------------------------------------------------------------------------- | ---------- | ----------------- |
 | P015 | test script has no wall-clock timeout — hung runner runs unbounded                 | 2026-05-30 | no — not observed |
 | P016 | push:watch declares CI failure on network timeout — should verify with gh run view | 2026-05-30 | no — not observed |
+| P018 | .husky/pre-commit auto-write hook's `--diff-filter=ACM` excludes R (renamed)       | 2026-05-30 | no — not observed |
 
 ## Parked
 

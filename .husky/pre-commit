@@ -15,7 +15,7 @@
 # files in .prettierignore are silently skipped by prettier's default
 # ignore-file handling.
 
-staged=$(git diff --cached --name-only --diff-filter=ACM)
+staged=$(git diff --cached --name-only --diff-filter=ACMR)
 if [ -n "$staged" ]; then
   echo "$staged" | xargs npx prettier --write --ignore-unknown
   echo "$staged" | xargs git add
