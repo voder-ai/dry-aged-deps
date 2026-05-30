@@ -229,3 +229,81 @@ None. The three `.verifying.md` tickets (P015 / P016 / P018) all carry `no — n
 ### Codification Candidates (Step 4b)
 
 None this iter. The single recurring friction signal (lowercase-first-token commit-subject recovery, observed for the fourth iter in a row) is already classed as a captured class via the prior iters' notes and would otherwise route through a new ticket on next codification pass. No new ticket created from this iter to preserve commit-grain discipline within the AFK loop.
+
+---
+
+## 2026-05-30 — Subsequent `/wr-itil:work-problems` iter 2 (P013 RFC-001 T2 failing-test write, single iteration)
+
+Scope: one additional `/wr-itil:work-problems` AFK iter dispatched after the trail above; worked P013 by writing the failing TDD-red test `test/overrides-hygiene.test.js` for RFC-001 task T2, and transitioning RFC-001 accepted → in-progress per T8 (single commit `037d33b`). No AskUserQuestion calls fired.
+
+| Call # | Header | Classification | Citation                                  |
+| ------ | ------ | -------------- | ----------------------------------------- |
+| (none) | —      | —              | No AskUserQuestion invocations this iter. |
+
+**Lazy count: 0**
+**Direction count: 0**
+**Override count: 0**
+**Silent-framework count: 0**
+**Taste count: 0**
+**Correction-followup count: 0**
+
+Notes: every decision this iter was framework-resolved.
+
+- Selection of P013 — orchestrator-supplied (same Tier 2 Internal WSJF 2.25 L; ID-asc tie-break vs P014). Mechanical.
+- Work-unit picked as RFC-001 T2 — atomic-RFC fallback per manage-problem "Working a Problem" Phase 2 traversal (RFC-001 has `stories: []`; read RFC body `## Tasks` section; T1 ticked, T2 next unticked). Framework-resolved.
+- Test surface chosen at the module's public-API contract (single `runOverridesHygiene` export) — mirrors `test/find-unfixable-vulns.test.js` precedent (inline fixtures, single describe block keyed by story name + REQ-OVERRIDES-\* IDs in `it` titles). Project ADR-0015 test/-mirror discipline observed (no co-location).
+- ADR-074 substance-confirm-before-build correctly NOT fired — T2 asserts the spec contract authored in T1 (now landed in `prompts/017.0-DEV-OVERRIDES-HYGIENE.md`). The cited ADRs (ADR-0002/ADR-0003/ADR-0004/ADR-0018/ADR-0019) are referenced for boundary-setting only; the unratified-JTBD posture (JTBD-001 / JTBD-006 / JTBD-204) is structural and accepted per RFC-001 §Related precedent. Orchestrator brief confirmed this explicitly.
+- Architect gate PASS / JTBD gate PASS-WITH-NOTES — JTBD notes were advisory (`@jtbd` annotation tag could be added belt-and-braces; not required by ADR-0015 convention). Standard gate-satisfaction loop, not direction-setting.
+- TDD discipline: state IDLE → wrote failing test → confirmed RED via `npx vitest run test/overrides-hygiene.test.js` (fails on missing `../src/overrides-hygiene.js` import). Iter stops at RED per the orchestrator's strict T2 scope brief.
+- P013 NOT transitioned Open → Known Error this iter — pre-flight criteria for transition (root cause documented + reproduction test exists + workaround documented) all met after this iter's work, but the orchestrator brief was strict T2 scope. Transition will fire on next review pass or T3 pre-flight check. Single-commit-grain discipline preserved (test + RFC transition only).
+- RFC-001 `accepted` → `in-progress` transition rode the same commit per ADR-014 single-ticket-unit-of-work grain — `git mv` rename + frontmatter + Status line + T2/T8 checkbox tick + RFC-001 trailer all in `037d33b`. P057 staging trap observed (`git add` after Edit, post-`git mv`).
+- Commit subject `test(overrides-hygiene): add failing test for runOverridesHygiene (RFC-001 T2)` — lowercase first token (recovered first-try; pattern stable across now five consecutive iters).
+- `Refs: P013` + `Refs: RFC-001` trailers per ADR-060 single-trailer vocabulary (twin Refs lines acceptable when a commit advances both a problem and an RFC simultaneously).
+- Risk-scorer pipeline: commit=2/25, push=1/25, release=1/25 (all Very Low). Standard gate-satisfaction.
+- Pre-commit hooks (format:check / lint / type-check) all PASS.
+
+### Context Usage (Cheap Layer, P101)
+
+| Bucket             | Bytes  | % of total | Δ vs iter 1 (T1)                 |
+| ------------------ | ------ | ---------- | -------------------------------- |
+| memory             | 365973 | 41.9%      | +4727 (+1.3%)                    |
+| decisions          | 254414 | 29.1%      | 0 (no change)                    |
+| problems           | 156997 | 18.0%      | 0 (no change)                    |
+| jtbd               | 40956  | 4.7%       | 0 (no change)                    |
+| briefing           | 28179  | 3.2%       | 0 (no change)                    |
+| project-claude-md  | 5786   | 0.7%       | 0 (no change)                    |
+| hooks              | 0      | 0.0%       | not measured — n/a               |
+| skills             | 0      | 0.0%       | not measured — n/a               |
+| framework-injected | —      | —          | not measured — no on-disk source |
+
+THRESHOLD bytes=10240 — six of eight measured buckets still exceed. memory continues a small consistent positive drift across iters (today's deep-layer recommendation still standing). Per-plugin breakdown available via `/wr-retrospective:analyze-context`. Non-blocking advisory.
+
+### Pipeline Instability
+
+- None this iter. README inventory currency: clean. No hook TTL expiries, no marker-vs-file deadlocks, no `push:watch` / `release:watch` invocations (out of scope per orchestrator), no subagent DEFERRED returns, no repeat-workaround pattern, no session-wrap silent drops.
+
+### Topic File Rotation Candidates (Tier 3 budget — P099)
+
+`check-briefing-budgets.sh` threshold: 5120 bytes.
+
+| Topic file                             | Bytes | Threshold | Ratio | Proposed rotation                                         | Decision                                                                                      |
+| -------------------------------------- | ----- | --------- | ----- | --------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `docs/briefing/governance-workflow.md` | 7891  | 5120      | 1.54× | split-by-date (Branch B safe-default; no MUST_SPLIT line) | deferred — retro-on-exit context per P086; surface to canonical `/wr-retrospective:run-retro` |
+| `docs/briefing/README.md`              | 5543  | 5120      | 1.08× | split-by-date (Branch B safe-default)                     | deferred — retro-on-exit context per P086; surface to canonical `/wr-retrospective:run-retro` |
+
+Defer cause: retro-on-exit subprocess (P086) non-blocking posture; matches iter-3 and iter-4 precedent. Canonical `/wr-retrospective:run-retro` should perform the rotation in interactive mode.
+
+### Verification Candidates (Step 4a)
+
+None. The three `.verifying.md` tickets (P015 / P016 / P018) carry `no — not observed` in the README Verification Queue. This iter touched only `test/` and `docs/rfcs/` — no `.verifying.md` fix was exercised. Step 4a sub-step 9 prior-session evidence drain: zero rows match `yes — observed:` prefix; nothing to drain.
+
+### Codification Candidates (Step 4b)
+
+None this iter. No new recurring-pattern signal observed beyond classes already captured by prior iters. Single-iter T2 scope minimal surface.
+
+### Outstanding Questions (queued for orchestrator Step 2.5)
+
+Carried forward from iter 1 (no new questions added by this iter):
+
+- JTBD ratification (JTBD-001 / JTBD-006 / JTBD-204 / project-maintainer + tech-lead personas) — direction-category; orchestrator's `/wr-jtbd:confirm-jobs-and-personas` route. Substance-confirm-before-build target so dependent RFC-001 work (T3 implementation onward) can build on ratified jobs.
+- Intake scaffold (`.github/ISSUE_TEMPLATE/config.yml`, `problem-report.yml`, `SUPPORT.md`, `CONTRIBUTING.md`) — pending; AFK fail-safe per ADR-036 / P065. User catches up next interactive session.
