@@ -60,9 +60,16 @@ Candidate fix shapes (for a future RFC):
 ### Investigation Tasks
 
 - [x] Re-rate Priority and Effort at next /wr-itil:review-problems (2026-05-30: Impact 3 × Likelihood 3 = 9 (Medium), Effort L, kept Open — root cause hypothesised but fix direction needs RFC; candidate shapes are mutually exclusive product decisions)
-- [ ] Decide whether overrides-hygiene is a new RFC/story or an extension of the unfixable feature (ADR-0018).
-- [ ] Confirm the `fixAvailable` field is reliably present in `npm audit --json` across npm versions before keying behaviour off it.
-- [ ] Validate against this repo's live case: bumping `overrides.brace-expansion` `^4.0.1` → `^5.0.6` should drop our copy from the audit, and the tool should both (a) have flagged the stale override and (b) not have called it unfixable.
+- [ ] Decide whether overrides-hygiene is a new RFC/story or an extension of the unfixable feature (ADR-0018). **Direction-setting; queued for next interactive session.**
+- [x] Confirm the `fixAvailable` field is reliably present in `npm audit --json` across npm versions before keying behaviour off it. (2026-05-30: observed `fixAvailable: true` on the brace-expansion entry in this repo's current `npm audit --json` output under npm 11.x; field is present on the `vulnerabilities.<name>` object. RFC should still cite a minimum npm version baseline rather than assume universal presence.)
+- [x] Validate against this repo's live case: bumping `overrides.brace-expansion` `^4.0.1` → `^5.0.6` should drop our copy from the audit, and the tool should both (a) have flagged the stale override and (b) not have called it unfixable. (2026-05-30: override has since been bumped to `^5.0.6` in `package.json`. Live `dry-aged-deps --check` STILL reports `brace-expansion` with reason `vulnerable transitive dependency` while `npm audit` reports `fixAvailable: true`. The residual advisory (GHSA-jxxr-4gwj-5jf2) hits the `node_modules/npm/node_modules/brace-expansion` bundled-in-npm copy, which `overrides` cannot reach — gap #2 mislabel confirmed observable; the override-staleness flag from gap #1 was not exercised because the override was already current.)
+
+### Findings (2026-05-30 AFK iter)
+
+- **`fixAvailable` reliability**: present on the live `npm audit --json` output under npm 11.x for the transitive brace-expansion vuln. Safe to key reason logic off it, subject to documented npm-version floor in the eventual RFC.
+- **Live mislabel confirmed**: `dry-aged-deps --check` reports `brace-expansion` as "vulnerable transitive dependency" (i.e. unfixable) while `npm audit` reports `fixAvailable: true` — exactly the contradictory guidance the ticket Symptoms section calls out.
+- **`fixAvailable: true` semantics are nuanced**: in the brace-expansion case it means "fix available via npm parent bump" — overrides cannot reach `node_modules/npm/node_modules/brace-expansion` because npm bundles its own dependencies. A sharpened reason logic will likely need to distinguish at least three classes: (a) fix-via-parent-bump (npm itself can be upgraded), (b) fix-via-overrides-edit (root project can pin), (c) genuinely-unfixable (bundled by an un-upgradeable parent, or no satisfying version exists). The RFC should specify this taxonomy.
+- **Override bump bypassed gap #1 surfacing**: because the live `^5.0.6` override is already current, this iter could not validate the "stale override surfaces" path against a real stale pin. The eventual reproduction test should mock a stale override to exercise that path directly rather than relying on the live tree.
 
 ## Fix Strategy
 
