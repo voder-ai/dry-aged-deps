@@ -9,7 +9,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { runOverridesHygiene } from '../src/overrides-hygiene.js';
+import { runOverridesHygiene } from './overrides-hygiene.js';
 
 describe('Story 017.0-DEV-OVERRIDES-HYGIENE: runOverridesHygiene', () => {
   // P013-originating live case: brace-expansion was pinned ^4.0.1 as a

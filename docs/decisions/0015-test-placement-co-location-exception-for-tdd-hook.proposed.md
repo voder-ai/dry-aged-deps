@@ -1,6 +1,6 @@
 ---
 status: 'proposed'
-date: 2026-05-13
+date: 2026-05-30
 decision-makers: ['Tom Howard']
 consulted: []
 informed: []
@@ -16,6 +16,10 @@ The project's test convention places most test files (~70) under `test/` mirrori
 P004 (`docs/problems/004-tdd-hook-only-recognises-same-dir-tests.open.md`) captures the upstream gap for future `/wr-itil:report-upstream` invocation against `@windyroad/tdd`. This ADR records the project-side accommodation while P004 is open.
 
 The decision: how to handle the existing co-located file, and what rule applies to future new tests for `src/` modules?
+
+### 2026-05-30 amendment trigger
+
+Iter 3 of the 2026-05-30 `/wr-itil:work-problems` session began RFC-001 T3 — implement `src/overrides-hygiene.js` per the T2 failing test in `test/overrides-hygiene.test.js`. The TDD hook re-hit the same `tdd_find_test_for_impl()` gap, reporting `IDLE` for the new src/ module despite a vitest-RED failing test in `test/`. This is §Reassessment 2's second trigger: a new `src/` module gaining a new test that requires the same workaround. Per §Reassessment 2, this amendment records a second narrow exception via Option (a) rather than silently broadening the rule. The substance question of whether to broaden the rule to Option 2 (any `src/` test may colocate while P004 is open) is deliberately deferred to interactive session — Option (a) is taken here because it matches the existing exception's shape verbatim and preserves the narrow-scope guard against accumulation.
 
 ## Decision Drivers
 
@@ -33,14 +37,16 @@ The decision: how to handle the existing co-located file, and what rule applies 
 
 ## Decision Outcome
 
-Chosen: **Option 1 (narrow exception)** in combination with P004 (Option 4's report-upstream path). The single existing co-located test stays where it is; future tests for `src/` modules require a fresh ADR (or amendment of this one) rather than implicit permission. When P004 closes upstream — i.e. `@windyroad/tdd` gains mirror-directory mapping — the co-located file relocates to `test/update-packages.test.js` and this ADR is superseded.
+Chosen: **Option 1 (narrow exception)** in combination with P004 (Option 4's report-upstream path). Co-located tests for `src/` modules stay where they are; future new tests for `src/` modules require a fresh ADR (or amendment of this one) rather than implicit permission. When P004 closes upstream — i.e. `@windyroad/tdd` gains mirror-directory mapping — co-located files relocate back to `test/` and this ADR is superseded.
 
-### Behaviour after this decision
+### Behaviour after this decision (post-2026-05-30 amendment)
 
-- `src/update-packages.test.js` remains in place. No other `src/**/*.test.js` files exist; their absence is itself the confirmation that the narrow scope holds.
+- `src/update-packages.test.js` remains in place (original 2026-05-13 narrow exception).
+- `src/overrides-hygiene.test.js` is the second narrow exception (2026-05-30 amendment for RFC-001 T3), relocated from `test/overrides-hygiene.test.js` to `src/overrides-hygiene.test.js` via `git mv` to preserve history.
+- No other `src/**/*.test.js` files exist; the enumerated set of exactly two is itself the confirmation that the narrow scope holds.
 - CLAUDE.md "Test Conventions" gets a short pointer to this ADR for the exception's scope; the section's existing bullets ("Framework: Vitest", "Coverage: 80%", "Traceability", "Mocks") continue to govern test authoring.
-- Future PR reviewers who see a new `src/**/*.test.js` should request an amendment or new ADR before approving.
-- P004 remains open until upstream lands the fix; closing P004 is the trigger to relocate the co-located file and supersede this ADR.
+- Future PR reviewers who see a third `src/**/*.test.js` should request an amendment or new ADR before approving.
+- P004 remains open until upstream lands the fix; closing P004 is the trigger to relocate both co-located files and supersede this ADR.
 
 ## Consequences
 
@@ -58,8 +64,9 @@ Chosen: **Option 1 (narrow exception)** in combination with P004 (Option 4's rep
 
 ### Bad
 
-- One file lives outside the convention until P004 closes upstream OR a future contributor opens an ADR-0015-supersede.
-- A future contributor unaware of this ADR could read `src/update-packages.test.js` as precedent for general co-location and accidentally broaden the pattern; the Confirmation criteria below (specifically the "no other `src/**/*.test.js`" check) plus CLAUDE.md's pointer to this ADR are the controls against that drift.
+- Two files now live outside the convention until P004 closes upstream OR a future contributor opens an ADR-0015-supersede.
+- A future contributor unaware of this ADR could read `src/update-packages.test.js` + `src/overrides-hygiene.test.js` as precedent for general co-location and accidentally broaden the pattern; the Confirmation criteria below (specifically the "no THIRD `src/**/*.test.js`" check) plus CLAUDE.md's pointer to this ADR are the controls against that drift.
+- The narrow-exception pattern by design imposes ADR-cycle friction on the third trigger — that friction is itself a forcing function to revisit Option 2 (broaden to general permission) rather than accumulate exceptions indefinitely.
 
 ## Confirmation
 
@@ -67,7 +74,7 @@ This decision is implemented when:
 
 1. `docs/problems/004-tdd-hook-only-recognises-same-dir-tests.open.md` exists and is linked from this ADR's References.
 2. CLAUDE.md "Test Conventions" section contains a short pointer to this ADR for the exception's scope (e.g. "Test placement — see ADR-0015 for the co-location exception").
-3. `src/update-packages.test.js` exists and is the only `src/**/*.test.js` file in the repository. A future audit can verify the narrow scope by `find src -name '*.test.js' | wc -l` returning 1.
+3. `src/update-packages.test.js` and `src/overrides-hygiene.test.js` exist and are the only `src/**/*.test.js` files in the repository. A future audit can verify the narrow scope by `find src -name '*.test.js' | wc -l` returning 2.
 4. The exception's reversibility path is preserved: P004 remains open and references this ADR; closing P004 triggers a relocate + supersede pass.
 
 ## Pros and Cons of the Options
@@ -125,7 +132,9 @@ Reassess this decision when:
 ## References
 
 - `docs/problems/004-tdd-hook-only-recognises-same-dir-tests.open.md` — the upstream report ticket capturing the TDD-hook gap.
-- `src/update-packages.test.js` — the single approved co-located test.
+- `src/update-packages.test.js` — the original 2026-05-13 narrow exception.
+- `src/overrides-hygiene.test.js` — the 2026-05-30 amendment's second narrow exception (RFC-001 T3 trigger).
+- `docs/rfcs/RFC-001-overrides-hygiene-module.in-progress.md` — the in-flight RFC whose T3 task drove the amendment.
 - `CLAUDE.md` Test Conventions section — gets a short pointer to this ADR.
 - `@windyroad/tdd` plugin's `tdd_find_test_for_impl()` function — the upstream code whose mapping limitation drives this exception.
 - `vitest.config.js` — Vitest's test-discovery globs (cover both `test/**` and `src/**`; no change required by this ADR).

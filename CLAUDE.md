@@ -65,7 +65,7 @@ bin/dry-aged-deps.js → parseOptions() → npm outdated --json → printOutdate
 - **Coverage:** 80% threshold for lines, statements, functions, branches
 - **Traceability:** Tests must reference user stories via JSDoc `@supports prompts/NNN.N-...md REQ-ID` and describe blocks must include the story name. This is enforced by `eslint-plugin-traceability`
 - **Mocks:** `test/helpers/` contains CLI helpers and mock data; `test/fixtures/` has fixture projects
-- **Test placement:** tests live in `test/` mirroring the `src/` layout. One approved exception per **ADR-0015**: `src/update-packages.test.js` is co-located beside its impl because `@windyroad/tdd`'s test-association hook recognises only same-dir / `__tests__/` mappings (upstream gap tracked as P004). Future new tests for `src/` modules require a fresh ADR or amendment of ADR-0015 — do not co-locate by implicit precedent.
+- **Test placement:** tests live in `test/` mirroring the `src/` layout. Two approved exceptions per **ADR-0015** (one original 2026-05-13; one added via 2026-05-30 amendment for RFC-001 T3): `src/update-packages.test.js` and `src/overrides-hygiene.test.js` are co-located beside their impls because `@windyroad/tdd`'s test-association hook recognises only same-dir / `__tests__/` mappings (upstream gap tracked as P004). A THIRD co-location requires a fresh ADR or further amendment — do not co-locate by implicit precedent.
 
 ## Commit Messages
 
