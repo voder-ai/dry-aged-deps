@@ -23,14 +23,17 @@
 name: Auto-update Dependencies
 
 on:
-  # Schedule is intentionally disabled at landing time (staged rollout per ADR-0009
-  # §"Staged rollout", preserved by ADR-0017). Arming the cron before branch protection
-  # is configured and a workflow_dispatch run has been verified end-to-end would produce
-  # daily loud failures on `main`. Once preconditions are met, uncomment the schedule
-  # block below in a follow-up commit.
-  #
-  # schedule:
-  #   - cron: '0 6 * * *'  # Daily at 06:00 UTC. See ADR-0017.
+  # Cron armed 2026-05-30 — staged-rollout preconditions verified per ADR-0009
+  # §"Staged rollout" (preserved by ADR-0017):
+  #   - Branch protection on `main` active (Build & Test required status check;
+  #     force-push + deletion blocked) — verified via
+  #     `gh api repos/voder-ai/dry-aged-deps/branches/main/protection`.
+  #   - workflow_dispatch end-to-end runs succeeded on 2026-05-16 + 2026-05-18
+  #     (last two of 7 total dispatches).
+  # Authentication via CLAUDE_CODE_OAUTH_TOKEN (OIDC token-exchange per ADR-0012);
+  # no manually-provisioned secrets required.
+  schedule:
+    - cron: '0 6 * * *'  # Daily at 06:00 UTC. See ADR-0017.
   workflow_dispatch:
 
 concurrency:
