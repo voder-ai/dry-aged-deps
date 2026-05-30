@@ -2,8 +2,8 @@
 
 ## What You Need to Know
 
-- Every UserPromptSubmit fires four mandatory gates: architect, JTBD, TDD, ITIL. Skip any of them and Write/Edit on project files is denied. The gates expire (TTL); plan to re-delegate on long sessions.
-  <!-- signal-score: 5 | last-classified: 2026-05-17 | first-written: 2026-05-13 -->
+- Every UserPromptSubmit fires four mandatory gates: architect, JTBD, TDD, ITIL. Skip any of them and Write/Edit on project files is denied. The gates expire (TTL); plan to re-delegate on long sessions. Cited every turn of the 2026-05-30 AFK loop (30+ turns); commit gates satisfied via Agent delegations (architect / JTBD / risk-scorer:pipeline) on iters 1-4 + main-turn direction-record commit.
+  <!-- signal-score: 6 | last-classified: 2026-05-30 | first-written: 2026-05-13 -->
 
 - `docs/jtbd/` MUST exist or the JTBD gate blocks every project file edit. Run `/wr-jtbd:update-guide` to bootstrap if absent.
   <!-- signal-score: 1 | last-classified: 2026-05-17 | first-written: 2026-05-13 -->
@@ -39,6 +39,3 @@
 
 - **P165 README-refresh hook overrides `/wr-itil:capture-problem`'s deferred-README contract.** capture-problem SKILL.md Step 6 says "Do NOT stage `docs/problems/README.md`" — defer the regenerate+stage cycle to next `/wr-itil:review-problems`. The project's P165 PreCommit hook says the opposite: "P<NNN> needs docs/problems/README.md refresh. Run: git add docs/problems/README.md." The hook wins; capture-problem's deferred-README contract is locally overridden. Hit this session on P010 capture. Fix path is upstream (P011 — to be filed against `@windyroad/itil`).
   <!-- signal-score: 4 | last-classified: 2026-05-17 | first-written: 2026-05-17 -->
-
-- `gh issue create --label <name>` fails with `could not add label: '<name>' not found` if the label exists in the upstream's issue-template YAML but has not been created in the repo's Labels settings. Workaround: omit `--label` and let triage classify. Templates declare labels but don't auto-create them in repo settings.
-  <!-- signal-score: -2 | last-classified: 2026-05-17 | first-written: 2026-05-13 -->

@@ -1,6 +1,6 @@
 # Problem 009: Edit-tool markdown writes skip prettier; pre-commit format:check fails
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-05-16
 **Priority**: 3 (Medium) — Impact: 3 x Likelihood: 1 (deferred — re-rate at next /wr-itil:review-problems)
 **Effort**: M (deferred — re-rate at next /wr-itil:review-problems)
@@ -71,6 +71,10 @@ The existing read-only contract test (`test/husky-pre-commit.test.js`) was rewri
 ### Verification trigger
 
 Verification is complete when ≥ 3 consecutive markdown-touching commits land cleanly in a single session WITHOUT requiring a manual `npm run format` + `git add` retry cycle, AND the post-commit working tree is clean across the run. The user closes P009 via `/wr-itil:transition-problem P009 close` once they have observed the clean run.
+
+### Verification observed (2026-05-30, run-retro Step 4a)
+
+Verified across 4 markdown-touching commits in a single `/wr-itil:work-problems` AFK loop session: `527c026` (review-problems re-rank + many docs/problems/_.md transitions), `1d8b306` (chore-deps), `50a2eda` (P015 fix + docs/problems/open/015 → verifying/015 rename), and `2d737f3` (orchestrator main-turn direction-record — Edit on docs/problems/open/013-_.md and 014-_.md). All four landed with pre-commit hook auto-writing prettier + re-staging in the SAME commit; no manual `npm run format` + `git add` retry needed; `format:check` passed; post-commit `git status --porcelain` clean across the run. On the 4th commit a system-reminder explicitly named the linter-modified content on `docs/problems/open/014-_.md`, confirming the auto-write hook fired and the change rode the commit. ADR-0016's fix contract held under every shape of markdown edit this session exercised.
 
 ### Resolution sequence (this session, 2026-05-17)
 
