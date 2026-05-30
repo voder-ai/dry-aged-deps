@@ -402,3 +402,66 @@ Added by this iter:
 - **`calculateAgeInDays` injectable `now`** (direction / improve-shape codification candidate) — see Codification Candidates section above. Stage 1 deferred to interactive session per AFK skill_unavailable cause.
 - **Commit-type vs release-trigger taxonomy** (direction) — the orchestrator brief noted `feat:` is release-triggering and recommended `chore:` fallback; this iter took `chore:` per MEMORY.md `commit-types-for-internal-tooling` precedent. The brief also recommended queuing a direction entry noting the decision. Recorded here: T3-T6 scaffolding commits should follow `chore:`; T7 live-case regression test should follow `test:`; the user-facing release-eligible `feat:` should ride the final commit that wires T4+T5+T6 into the CLI surface (or a separate commit that flips the default-on flag).
 - **RFC-001 T8 "ADR-014 single-commit-per-iter grain" cite** (direction / doc-hygiene) — architect verdict note 2 flagged that the local ADR-0014 is about `--update` writing `latest`, not commit grain. The "ADR-014" cite likely refers to upstream `@windyroad/itil`'s framework ADR-014. Either capture a local ADR mirroring the upstream contract, or edit RFC-001 T8 to qualify the cite (e.g. `per @windyroad/itil ADR-014`). Deferred to interactive session.
+
+---
+
+## Iter 4 — RFC-001 T4 attempt: SKIPPED on TDD hook block (third P004 trigger)
+
+**Outcome**: `action: skipped`, `skip_reason_category: user-answerable`. T4 (pipeline wire + `--no-overrides-hygiene` flag) cannot proceed without resolving the queued ADR-0015 narrow-vs-broaden direction question (item 1 in iter-3 outstanding queue). The substance-confirm-before-build guard (ADR-074) does NOT itself fire for T4 — all five referenced ADRs (ADR-0002, ADR-0003, ADR-0004, ADR-0018, ADR-0019) are descriptive-cite-tolerant per the iter brief and RFC-001 §Related accepted-risk record — but the implementation mechanism is blocked: the TDD hook denies edits to `src/cli-options.js` and `src/print-outdated.js` with "TDD state is IDLE; no tests written for this file yet". Editing those is load-bearing on T4 scope.
+
+**Empirical trace (ADR-026 grounding)**:
+
+- Wrote failing tests at `test/cli-options.overrides-hygiene.test.js` + `test/print-outdated.overrides.test.js` (RED — 4 failures via `npx vitest run` against those two files).
+- Attempted Edit on `src/cli-options.js` (`parseOverridesHygieneOptions` helper insertion) — hook returned `BLOCKED: Cannot edit 'cli-options.js' -- no tests written for this file yet. TDD state is IDLE.`
+- Attempted Edit on `src/print-outdated.js` (no-op comment marker probe) — hook returned the same block with `src/print-outdated.test.js` as the suggested co-location target.
+- Both blocks confirm the P004 mapping gap: `@windyroad/tdd`'s `tdd_find_test_for_impl()` recognises only same-dir / `__tests__/` mappings; `test/` mirror placements (which CLAUDE.md mandates) are invisible. ADR-0015 captures this as the framework-vs-project boundary.
+- Removed both uncommitted failing test files to keep the working tree clean (so the orchestrator's next iter has zero workdir noise). Tree clean per `git status` at iter end.
+
+**Third trigger to ADR-0015 §Reassessment 2**: iter 3 was the second trigger (`src/overrides-hygiene.test.js` narrow exception via amendment). Iter 4 is the third trigger — and T4 needs THREE new src/-targeted impl edits (cli-options.js, load-package-json.js, print-outdated.js), each of which would individually require a narrow exception by Option (a). Per the §Reassessment 2 text _"a THIRD trigger arrives → escalate to Option 2 broadening rather than accumulate a third narrow exception"_ (already encoded in iter-3's outstanding-questions entry, this file above), the broaden direction is now the load-bearing decision. AFK iter cannot make this user-answerable call per the brief: _"do NOT broaden to new tests in this iter — broadening is the queued one-time-override decision pending user direction."_
+
+**Context budget (Step 2c — cheap layer per ADR-043)**:
+
+`wr-retrospective-measure-context-budget` output:
+
+| Bucket             | Bytes  | % of measured | Δ vs prior                                               |
+| ------------------ | ------ | ------------- | -------------------------------------------------------- |
+| memory             | 369517 | 42%           | not estimated — no prior snapshot this session           |
+| decisions          | 256174 | 29%           | not estimated — no prior snapshot this session           |
+| problems           | 156997 | 18%           | not estimated — no prior snapshot this session           |
+| jtbd               | 40956  | 5%            | not estimated — no prior snapshot this session           |
+| briefing           | 28179  | 3%            | not estimated — no prior snapshot this session           |
+| project-claude-md  | 5885   | < 1%          | not estimated — no prior snapshot this session           |
+| hooks              | 0      | 0%            | not measured                                             |
+| skills             | 0      | 0%            | not measured                                             |
+| framework-injected | n/a    | n/a           | not-measured reason=framework-injected-no-on-disk-source |
+
+THRESHOLD bytes=10240. `memory` / `decisions` / `problems` / `jtbd` / `briefing` all exceed the 10240-byte cheap-layer ceiling. Top-5 offenders cite memory (369517B) + decisions (256174B) + problems (156997B) + jtbd (40956B) + briefing (28179B). No prior snapshot to delta against in this subprocess — first measurement. Deep analysis (`/wr-retrospective:analyze-context`) recommended at next interactive session to attribute per-plugin sources.
+
+**Pipeline Instability (Step 2b)**:
+
+| Signal                                                 | Category               | Citations                                                                                                                                                                              | Decision                                                                                                                               |
+| ------------------------------------------------------ | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| TDD hook block on `src/cli-options.js` Edit attempt    | Hook-protocol friction | `BLOCKED: Cannot edit 'cli-options.js' -- no tests written for this file yet. TDD state is IDLE.` — hook output observed mid-iter when wiring helper was attempted.                    | matches **P004** (`docs/problems/parked/004-tdd-hook-only-recognises-same-dir-tests.md`) — already-parked upstream gap; no new ticket. |
+| TDD hook block on `src/print-outdated.js` Edit attempt | Hook-protocol friction | `BLOCKED: Cannot edit 'print-outdated.js' -- no tests written for this file yet. TDD state is IDLE.` — hook output observed when probing alternative src/ file to confirm block-scope. | matches **P004** — same gap.                                                                                                           |
+| README inventory currency (advisory, Step 2b)          | n/a                    | `wr-retrospective-check-readme-jtbd-currency` invoked; no `packages/` directory in this project so detector emitted empty output.                                                      | clean (no skill-inventory drift — detector scope is package-bundle plugins which this project does not author).                        |
+
+**Verification Candidates (Step 4a)**: None. This iter wrote zero impl code (all edits were blocked); no `.verifying.md` ticket's fix was exercised. Step 4a sub-step 9 prior-session evidence drain: README Verification Queue rows for P015 / P016 / P018 all carry `no — not observed`; nothing to drain.
+
+**Codification Candidates (Step 4b)**: No new codification candidates this iter. The P004 / ADR-0015 friction is already codified (P004 ticket + ADR-0015 narrow-exception mechanism). The carried `calculateAgeInDays` injectable-`now` candidate from iter 3 remains queued.
+
+**Ask Hygiene Pass (Step 2d)**:
+
+| Call # | Header | Classification | Citation                                                                                                                                                                           |
+| ------ | ------ | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| (none) | n/a    | n/a            | Zero `AskUserQuestion` calls fired in this iter — AFK iter, no decisions surfaced; the ADR-0015 broaden question was correctly queued per the brief rather than surfaced mid-loop. |
+
+**Lazy count: 0** — clean.
+**Direction count: 0**
+**Override count: 0**
+**Silent-framework count: 0**
+**Taste count: 0**
+**Correction-followup count: 0**
+
+**Outstanding questions carried forward**: all seven from iter-3's queue persist (JTBD ratification, intake scaffold, ADR-0015 broaden, Step 6.5 drain confirmation, `calculateAgeInDays` injectable-`now`, commit-type taxonomy, RFC-001 T8 ADR-014 cite hygiene). Item 3 (ADR-0015 broaden) is now the load-bearing block for any RFC-001 T4-onward iter.
+
+**No new outstanding questions added this iter** — the trigger evidence and the §Reassessment 2 escalation directive were already captured by iter-3's entry; iter 4 confirms the trigger fired empirically without adding new decision surface.
