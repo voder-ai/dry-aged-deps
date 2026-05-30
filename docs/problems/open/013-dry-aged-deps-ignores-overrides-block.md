@@ -94,3 +94,9 @@ Next AFK iter should invoke `/wr-itil:capture-rfc` (or `/wr-itil:manage-rfc`) wi
 - Session log: 2026-05-25 — discovered while reviewing brace-expansion advisories GHSA-f886-m6hf-6m8v / GHSA-jxxr-4gwj-5jf2 immediately after shipping the unfixable surface (v2.10.0 / v2.10.1).
 
 (captured manually in the /wr-itil:capture-problem lightweight format — the wr-itil skill was unavailable in this session; expand at next investigation. README.md refresh deferred to /wr-itil:review-problems per the capture contract.)
+
+## RFCs
+
+| RFC     | Status   | Title                    |
+| ------- | -------- | ------------------------ |
+| RFC-001 | proposed | Overrides Hygiene Module |
