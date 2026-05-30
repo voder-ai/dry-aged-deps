@@ -86,3 +86,9 @@ Next AFK iter should invoke `/wr-itil:capture-rfc` (or `/wr-itil:manage-rfc`) wi
 - Session log: 2026-05-25 — surfaced reasoning through the brace-expansion / npm@11.15.0 wait-vs-adopt decision (fix bundled in a 4-day-old npm, under the 7-day soak; waiting correct here _because_ the known vuln is moderate/dev-only — but the decision visibly depends on the known vuln's profile).
 
 (captured manually in the /wr-itil:capture-problem lightweight format — the wr-itil skill was unavailable in this session; expand at next investigation. README.md refresh deferred to /wr-itil:review-problems per the capture contract.)
+
+## RFCs
+
+| RFC     | Status   | Title                                   |
+| ------- | -------- | --------------------------------------- |
+| RFC-002 | proposed | Exposure-Aware Severity-Scaled Age Soak |
