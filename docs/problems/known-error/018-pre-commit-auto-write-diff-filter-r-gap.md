@@ -1,6 +1,6 @@
 # Problem 018: .husky/pre-commit auto-write hook's `--diff-filter=ACM` excludes R (renamed)
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-05-30
 **Priority**: 6 (Medium) — Impact: Minor (2) x Likelihood: Possible (3)
 **Origin**: internal
@@ -20,26 +20,29 @@ Fix shape: change diff-filter to `ACMR` so renames pass through. Also extend the
 
 ## Symptoms
 
-(deferred to investigation)
+- A rename-with-edit staged commit (e.g. `git mv old new` + Edit-tool change to the renamed file) bypasses the auto-write block.
+- `format:check` rejects the commit on first try because the renamed file is unformatted.
+- The hook's auto-write log lists only A/C/M files; the renamed file is absent.
+- Recovery requires manual `npm run format && git add <renamed>` then re-commit.
 
 ## Workaround
 
-(deferred to investigation)
+Manually run `npm run format && git add <renamed-file>` after the format:check rejection, then retry the commit. The auto-write skip is silent — the user must notice the renamed file is missing from the auto-write log to know what to re-stage.
 
 ## Impact Assessment
 
-- **Who is affected**: (deferred to investigation)
-- **Frequency**: (deferred to investigation)
-- **Severity**: (deferred to investigation)
-- **Analytics**: (deferred to investigation)
+- **Who is affected**: this project's maintainer (rename-with-edit commits are common in ITIL ticket transitions: `git mv open/NNN-*.md known-error/NNN-*.md` + Edit-tool Status field update).
+- **Frequency**: every rename-with-edit commit (P016 verifying transition exercised this earlier the same day; P009 closure cited it explicitly).
+- **Severity**: Medium — non-fatal but reintroduces exactly the friction P009 was meant to eliminate, for the rename shape.
+- **Analytics**: N/A (local dev workflow; no telemetry).
 
 ## Root Cause Analysis
 
 ### Investigation Tasks
 
 - [x] Re-rate Priority and Effort at next /wr-itil:review-problems (2026-05-30: Impact 2 × Likelihood 3 = 6 (Medium), Effort S — one-character diff-filter change + test fixture extension; root cause + fix shape already documented, kept Open pending implementation)
-- [ ] Investigate root cause
-- [ ] Create reproduction test
+- [x] Investigate root cause (`.husky/pre-commit` line 18: `git diff --cached --name-only --diff-filter=ACM` — the diff-filter literal excludes `R` per git diff-filter semantics; renamed files have status `R` and so are filtered out before prettier --write sees them)
+- [x] Create reproduction test (`test/husky-pre-commit.test.js` — `[REQ-PRECOMMIT-AUTO-WRITE-RESTAGE] diff-filter includes R so rename-with-edit commits pass through auto-write (P018)` asserts `--diff-filter` literal contains `R`; fails RED on ACM, passes GREEN on ACMR)
 
 ## Fix Strategy
 

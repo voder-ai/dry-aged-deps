@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-30 — P016 fix released → Verification Pending (`scripts/push-watch.sh` step 5 now verifies CI status via `gh run view --json status,conclusion` with bounded retry on watch failure; 3 / 3 structural-contract tests passing). Dev-work queue top non-upstream-blocked: P018 (WSJF 6.0, Open, S — pre-commit diff-filter R gap). Verification Queue: 2 (P015, P016 — both `no — not observed`). Parked: 3 (P004, P005, P007).
+> Last reviewed: 2026-05-30 — P018 Open → Known Error (`.husky/pre-commit` `--diff-filter=ACM` excludes R; fix is ACMR widening; reproduction test added to `test/husky-pre-commit.test.js`). Dev-work queue top non-upstream-blocked: P018 (WSJF 6.0, Known Error, S — same ticket, lifecycle progressed; effort drops it ahead of P010/P011). Verification Queue: 2 (P015, P016 — both `no — not observed`). Parked: 3 (P004, P005, P007).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -9,9 +9,9 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 | WSJF | ID   | Title                                                                                                                                       | Severity     | Status      | Effort | Reported   |
 | ---- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | ----------- | ------ | ---------- |
+| 6.0  | P018 | .husky/pre-commit auto-write hook's `--diff-filter=ACM` excludes R (renamed)                                                                | 6 (Medium)   | Known Error | S      | 2026-05-30 |
 | 6.0  | P010 | manage-problem SKILL.md commit-message convention fails @commitlint/config-conventional subject-case rule                                   | 6 (Medium)   | Known Error | M      | 2026-05-17 |
 | 6.0  | P011 | P165 README-refresh PreCommit hook overrides /wr-itil:capture-problem's deferred-README contract                                            | 6 (Medium)   | Known Error | M      | 2026-05-17 |
-| 6.0  | P018 | .husky/pre-commit auto-write hook's `--diff-filter=ACM` excludes R (renamed)                                                                | 6 (Medium)   | Open        | S      | 2026-05-30 |
 | 4.0  | P012 | migrate-problems-layout.sh helper uses bashisms but /wr-itil:work-problems Step 0a SKILL.md doesn't specify bash — sourcing fails under zsh | 2 (Very Low) | Known Error | S      | 2026-05-17 |
 | 3.0  | P006 | assistant defers actionable items to "next session" instead of acting when the user is observably present                                   | 6 (Medium)   | Open        | M      | 2026-05-13 |
 | 3.0  | P017 | work-problems Step 0 reconcile-readme halt-route can't handle unscored-ticket MISSING drift                                                 | 6 (Medium)   | Open        | M      | 2026-05-30 |
