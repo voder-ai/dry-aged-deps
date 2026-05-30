@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-30 — re-rated P016 / P017 / P018 / P019 from placeholder WSJF 1.5 to scored. P016 (push:watch network-flake fallback) and P018 (pre-commit diff-filter R gap) now WSJF 6.0 Effort S — both local fixes. P017 (Step 0 reconcile unscored-ticket route) WSJF 3.0; P019 (Step 5 duration_ms) WSJF 2.0 — both upstream-blocked at `@windyroad/itil`. Dev-work queue top non-upstream-blocked: P016 (WSJF 6.0, Open, S). Verification Queue: 1 (P015 — `no — not observed`). Parked: 3 (P004, P005, P007).
+> Last reviewed: 2026-05-30 — P016 fix released → Verification Pending (`scripts/push-watch.sh` step 5 now verifies CI status via `gh run view --json status,conclusion` with bounded retry on watch failure; 3 / 3 structural-contract tests passing). Dev-work queue top non-upstream-blocked: P018 (WSJF 6.0, Open, S — pre-commit diff-filter R gap). Verification Queue: 2 (P015, P016 — both `no — not observed`). Parked: 3 (P004, P005, P007).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -11,7 +11,6 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | ---- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | ----------- | ------ | ---------- |
 | 6.0  | P010 | manage-problem SKILL.md commit-message convention fails @commitlint/config-conventional subject-case rule                                   | 6 (Medium)   | Known Error | M      | 2026-05-17 |
 | 6.0  | P011 | P165 README-refresh PreCommit hook overrides /wr-itil:capture-problem's deferred-README contract                                            | 6 (Medium)   | Known Error | M      | 2026-05-17 |
-| 6.0  | P016 | push:watch declares CI failure on network timeout — should verify with gh run view                                                          | 6 (Medium)   | Open        | S      | 2026-05-30 |
 | 6.0  | P018 | .husky/pre-commit auto-write hook's `--diff-filter=ACM` excludes R (renamed)                                                                | 6 (Medium)   | Open        | S      | 2026-05-30 |
 | 4.0  | P012 | migrate-problems-layout.sh helper uses bashisms but /wr-itil:work-problems Step 0a SKILL.md doesn't specify bash — sourcing fails under zsh | 2 (Very Low) | Known Error | S      | 2026-05-17 |
 | 3.0  | P006 | assistant defers actionable items to "next session" instead of acting when the user is observably present                                   | 6 (Medium)   | Open        | M      | 2026-05-13 |
@@ -24,9 +23,10 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 Fix released; awaiting user confirmation that the production behaviour matches the fix intent. Excluded from WSJF ranking per ADR-022. Sorted by `Released date ASC` (oldest at row 1; same-day releases tiebreak by ID ASC) per P150 — older entries are the most likely-verified candidates to close first. `Likely verified?` carries the evidence-first cell per P186 (`yes — observed: <evidence>` / `no — not observed` / `no — observed regression`).
 
-| ID   | Title                                                              | Released   | Likely verified?  |
-| ---- | ------------------------------------------------------------------ | ---------- | ----------------- |
-| P015 | test script has no wall-clock timeout — hung runner runs unbounded | 2026-05-30 | no — not observed |
+| ID   | Title                                                                              | Released   | Likely verified?  |
+| ---- | ---------------------------------------------------------------------------------- | ---------- | ----------------- |
+| P015 | test script has no wall-clock timeout — hung runner runs unbounded                 | 2026-05-30 | no — not observed |
+| P016 | push:watch declares CI failure on network timeout — should verify with gh run view | 2026-05-30 | no — not observed |
 
 ## Parked
 

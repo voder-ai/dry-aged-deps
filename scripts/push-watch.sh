@@ -105,12 +105,42 @@ echo "Pipeline: $RUN_URL"
 echo ""
 
 # ── 5. Watch the run ─────────────────────────────────────────────────────────
-if ! gh run watch "$RUN_ID" --exit-status; then
-  echo ""
-  echo "✗ Pipeline failed — $RUN_URL"
-  show_failure_guidance "$RUN_ID" "$RUN_URL"
-  exit 1
-fi
+# `gh run watch` can fail on transient network errors (api.github.com read
+# timeout, connection-refused) even when the underlying CI run is healthy.
+# When watch returns non-zero, verify actual run state via `gh run view
+# --json status,conclusion` before declaring failure. Only `status=completed
+# AND conclusion=failure` is a real CI failure; anything else is a network
+# flake and warrants a bounded retry. P016.
+WATCH_ATTEMPTS=3
+WATCH_BACKOFF=30
+watch_attempt=1
+while [ "$watch_attempt" -le "$WATCH_ATTEMPTS" ]; do
+  if gh run watch "$RUN_ID" --exit-status; then
+    break
+  fi
+  STATUS=$(gh run view "$RUN_ID" --json status --jq '.status' 2>/dev/null || echo "")
+  CONCLUSION=$(gh run view "$RUN_ID" --json conclusion --jq '.conclusion' 2>/dev/null || echo "")
+  if [ "$STATUS" = "completed" ] && [ "$CONCLUSION" = "failure" ]; then
+    echo ""
+    echo "✗ Pipeline failed — $RUN_URL"
+    show_failure_guidance "$RUN_ID" "$RUN_URL"
+    exit 1
+  fi
+  if [ "$STATUS" = "completed" ] && [ "$CONCLUSION" = "success" ]; then
+    break
+  fi
+  if [ "$watch_attempt" -lt "$WATCH_ATTEMPTS" ]; then
+    echo ""
+    echo "⚠ gh run watch failed (status=${STATUS:-unknown} conclusion=${CONCLUSION:-unknown}); retrying in ${WATCH_BACKOFF}s (attempt $((watch_attempt + 1))/$WATCH_ATTEMPTS)..."
+    sleep "$WATCH_BACKOFF"
+  else
+    echo ""
+    echo "✗ Pipeline state unverifiable after $WATCH_ATTEMPTS attempts (last: status=${STATUS:-unknown} conclusion=${CONCLUSION:-unknown}) — $RUN_URL"
+    show_failure_guidance "$RUN_ID" "$RUN_URL"
+    exit 1
+  fi
+  watch_attempt=$((watch_attempt + 1))
+done
 
 echo ""
 echo "✓ Pipeline succeeded — $RUN_URL"
