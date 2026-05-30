@@ -40,6 +40,22 @@ Fix shape: change diff-filter to `ACMR` so renames pass through. Also extend the
 - [ ] Investigate root cause
 - [ ] Create reproduction test
 
+## Fix Strategy
+
+**Kind**: improve. **Shape**: shell script + test fixture.
+
+**Target file**: `.husky/pre-commit` (the auto-write block) + `test/husky-pre-commit.test.js` (REQ-PRECOMMIT-AUTO-WRITE-RESTAGE assertions).
+
+**Observed flaw**: `git diff --cached --name-only --diff-filter=ACM` excludes `R` (renamed). When a commit stages a rename-with-edit (e.g. `git mv old new` + Edit-tool change to the renamed file), the auto-write block skips the renamed file and `format:check` rejects the commit. P009's fix contract held for plain Modify shapes but not for rename-with-edit — a related-but-distinct gap.
+
+**Edit summary**: change the diff-filter from `ACM` to `ACMR` so renames-with-edits pass through the auto-write step. Also extend `REQ-PRECOMMIT-AUTO-WRITE-RESTAGE` (`test/husky-pre-commit.test.js`) with an assertion covering the rename-with-edit case (stage a rename + post-rename Edit; commit; assert no format:check rejection AND the formatted content lands IN the commit). Routing target: this project's own `.husky/pre-commit` (local shell-script edit) + REQ-PRECOMMIT-AUTO-WRITE-RESTAGE test fixture.
+
+**Evidence**:
+
+- This session commit `c0dfae8` (run-retro session-wrap closing P009 + briefing refresh) was REJECTED on first try by `format:check` after auto-write skipped the renamed `docs/problems/closed/009-...md` (renamed-with-edit from `verifying/009-...md`).
+- Recovery: manual `npm run format && git add ...` then retry — exactly the friction P009 was supposed to eliminate, but for the rename shape.
+- The hook output explicitly listed only the README files (`docs/problems/README-history.md 12ms (unchanged)`, `docs/problems/README.md 9ms (unchanged)`) — the renamed file was NOT in the auto-write log, confirming the diff-filter ACM excludes R.
+
 ## Dependencies
 
 - **Blocks**: (none)

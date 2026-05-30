@@ -40,6 +40,22 @@ Fix shape: extend the Authority hierarchy paragraph to name `duration_ms` alongs
 - [ ] Investigate root cause
 - [ ] Create reproduction test
 
+## Fix Strategy
+
+**Kind**: improve. **Shape**: skill.
+
+**Target file**: upstream `@windyroad/itil` — `packages/itil/skills/work-problems/SKILL.md` Step 5 "Authority hierarchy (P089 Gap 2)" paragraph.
+
+**Observed flaw**: the SKILL documents `usage.*` tokens as best-effort under the "subprocess exits via background-task completion-notification ack" caveat, but does not name `duration_ms` even though it exhibits identical behaviour. An orchestrator that aggregates duration_ms believing it cumulative under-counts wall-clock by orders of magnitude when an iter's exit path is the background-task ack shape.
+
+**Edit summary**: extend the Authority hierarchy paragraph in work-problems SKILL.md Step 5 to name `duration_ms` alongside `usage.*` as best-effort under the same exit-mode caveat. Cost (`total_cost_usd`) remains authoritative; wall-time should be measured from the Bash wrapper's own timer (already documented as the SIGTERM-decision signal). Routing target: `/wr-itil:report-upstream` (`@windyroad/itil` repo); local marker via `## Related` section already appended below.
+
+**Evidence**:
+
+- This session iter 3 (manage-problem on P015): `duration_ms: 13445` (13.4 s) and `num_turns: 1` with `stop_reason: end_turn` in the `claude -p --output-format json` envelope.
+- Orchestrator's Bash wall-clock timer showed `wall=2105s` (~35 min). Total cost authoritative (`total_cost_usd: 5.003`).
+- The same exit-mode shape that P089 Gap 2 documents for tokens also produced the duration_ms undercount — the asymmetry is real but the SKILL only names tokens.
+
 ## Dependencies
 
 - **Blocks**: (none)
