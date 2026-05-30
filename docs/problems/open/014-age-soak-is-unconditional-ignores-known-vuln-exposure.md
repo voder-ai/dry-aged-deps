@@ -69,6 +69,8 @@ Implementation needs:
 - Confirmation that `npm audit` reliably surfaces the installed-version's vulns (Investigation Task above) — data dependency for the policy.
 - A new RFC defining the severity→soak policy. The RFC is the substance ADR-074 requires before further iters build on it.
 
+**Severity→soak policy confirmed** (AFK loop 2026-05-30 Step 2.5 surfacing — user direction): adopt the sketched shape — **Critical exposure ⇒ 0-day soak floor; High ⇒ ½ default soak; Moderate / Low / None ⇒ default soak**. The two policy points the RFC must lock are (1) `critical → 0` (no soak when a critical is currently exposed) and (2) `high → 0.5 × default` (halved soak under high exposure). Moderate/low/none preserve the current default unchanged. The RFC may extend this shape with additional bands but MUST NOT regress these two locked points without an explicit policy-change ADR.
+
 Next AFK iter should invoke `/wr-itil:capture-rfc` (or `/wr-itil:manage-rfc`) with a problem-trace to P014 to formalise the product-shape spec before implementation begins.
 
 ## Dependencies

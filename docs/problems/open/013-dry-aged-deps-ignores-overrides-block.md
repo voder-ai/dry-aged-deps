@@ -77,6 +77,8 @@ Candidate fix shapes (for a future RFC):
 
 Implementation needs a new RFC (per Investigation Task above) that defines the `overrides-hygiene` module's contract AND amends ADR-0018 to incorporate the `fixAvailable`-aware reason logic. Largest scope of the three candidates.
 
+**RFC scope confirmed** (AFK loop 2026-05-30 Step 2.5 surfacing — user direction): the overrides-hygiene module is a **new RFC/story** (standalone surface with its own RFC, story map, and acceptance criteria) — NOT an extension of ADR-0018. ADR-0018 is the unfixable-surface decision; the overrides-hygiene module is an adjacent new capability with its own product-shape. The `fixAvailable`-aware reason sharpening (gap #2) IS an amendment of ADR-0018 and rides its own confirmation criterion.
+
 Next AFK iter should invoke `/wr-itil:capture-rfc` (or `/wr-itil:manage-rfc`) with a problem-trace to P013 to formalise the product-shape spec before implementation begins. This satisfies ADR-074 substance-confirm-before-build.
 
 ## Dependencies
