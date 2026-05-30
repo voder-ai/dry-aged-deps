@@ -143,3 +143,19 @@ The P013 substantive fix path (RFC creation) remains genuinely blocked by the AF
 THRESHOLD bytes=10240 — six of eight measured buckets exceed (memory, decisions, problems, jtbd, briefing, project-claude-md). Per-plugin breakdown available in /wr-retrospective:analyze-context (deep layer). No prior snapshot file under `docs/retros/*-context-analysis.md` — first measurement; deltas marked as `no prior snapshot — first measurement this project` per ADR-026.
 
 Deep analysis recommended — invoke /wr-retrospective:analyze-context (six over-threshold buckets, no prior snapshot to confirm trend). Non-blocking advisory.
+
+## Addendum — orchestrator main-turn after AFK loop ended (post-retro Step 2d)
+
+Scope: `/wr-itil:work-problems` Step 2.5 ALL_DONE → user-directed continuation (capture ADRs/RFCs).
+
+| Call # | Header                                                                | Classification | Citation                                                                                                                                                                                                                                                                                                                                                                                                           |
+| ------ | --------------------------------------------------------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 3      | P013 scope / P014 policy (batched 2-question call)                    | direction      | Gap: same ADR-074 substance-confirm-before-build trigger as calls 1-2 — both questions surface genuine ≥2-option direction-setting at framework-prescribed Step 2.5 halt point. NOT lazy.                                                                                                                                                                                                                          |
+| 4      | Verification vs RFCs ordering ("Which would you like to start with?") | **lazy**       | Framework: ADR-044 + this session's [[pick-one-dont-ask-when-order-doesnt-matter]] memory entry. Both paths were valid; neither had a sequencing reason; user had stated "do the adr and rfcs" with no order preference. Asking sub-contracted a framework-resolved decision back to the user. User correction verbatim: _"Do the adr and rfcs. Next time don't ask, do"_. Confirmed lazy by authentic-correction. |
+
+**Lazy count: 1 (orchestrator main turn after AFK ended)**
+**Direction count: 1 (the P013/P014 batched call)**
+
+**Combined session totals (AFK iters 1-4 + this main turn)**: lazy=1, direction=3.
+
+Recovery action taken: memory entry [[pick-one-dont-ask-when-order-doesnt-matter]] extended with second-correction signal (don't tee up natural-continuation work as "next moves"). Future sessions: when two valid paths both need doing and neither has a stated sequencing reason, pick one and proceed.
