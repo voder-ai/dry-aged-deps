@@ -1,6 +1,6 @@
 # Problem 015: the `test` script has no wall-clock timeout — a hung test runner runs unbounded (silent zombie instead of loud failure)
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-05-25
 **Priority**: 4 (Low) — Impact: Minor (2) x Likelihood: Unlikely (2)
 **Effort**: S — wrap `test` script with `timeout 180 vitest run --coverage` (or equivalent vitest config wall-clock bound)

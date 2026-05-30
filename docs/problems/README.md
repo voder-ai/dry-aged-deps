@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-30 — P018 fix released → Verification Pending (`.husky/pre-commit` `--diff-filter` widened from `ACM` to `ACMR`; renamed-with-edit files now pass through auto-write; ADR-0016 Confirmation criterion #2 updated to lock new literal; 5 / 5 REQ-PRECOMMIT-AUTO-WRITE-RESTAGE tests passing GREEN). Dev-work queue top non-upstream-blocked: P012 (WSJF 4.0, Known Error, S — zsh migrate-problems-layout bashism). Verification Queue: 3 (P015, P016, P018 — all `no — not observed`). Parked: 3 (P004, P005, P007).
+> Last reviewed: 2026-05-30 — P015 + P018 closed (in-session evidence: P015 wallclock timeout wrapper exercised via `scripts/run-with-timeout.mjs 300 -- vitest run test/cli.e2e.real-fixture.test.js` in prepush — completed within budget; P018 `--diff-filter=ACMR` auto-write contract exercised via commit `a34aebe` staging 55 git mv renames — format:check passed post-commit). Dev-work queue top non-upstream-blocked: P012 (WSJF 4.0, Known Error, S — zsh migrate-problems-layout bashism). Verification Queue: 1 (P016 — `no — not observed`, failure-path not exercised this session). Parked: 3 (P004, P005, P007).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -24,9 +24,7 @@ Fix released; awaiting user confirmation that the production behaviour matches t
 
 | ID   | Title                                                                              | Released   | Likely verified?  |
 | ---- | ---------------------------------------------------------------------------------- | ---------- | ----------------- |
-| P015 | test script has no wall-clock timeout — hung runner runs unbounded                 | 2026-05-30 | no — not observed |
 | P016 | push:watch declares CI failure on network timeout — should verify with gh run view | 2026-05-30 | no — not observed |
-| P018 | .husky/pre-commit auto-write hook's `--diff-filter=ACM` excludes R (renamed)       | 2026-05-30 | no — not observed |
 
 ## Parked
 

@@ -1,6 +1,6 @@
 # Problem 018: .husky/pre-commit auto-write hook's `--diff-filter=ACM` excludes R (renamed)
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-05-30
 **Priority**: 6 (Medium) — Impact: Minor (2) x Likelihood: Possible (3)
 **Origin**: internal
