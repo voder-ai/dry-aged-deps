@@ -1,6 +1,8 @@
 ---
 name: ci-automation-engineer
 description: An engineer who integrates dry-aged-deps into CI/CD pipelines and scheduled automation so dependency hygiene happens without manual intervention.
+human-oversight: confirmed
+oversight-date: 2026-05-30
 ---
 
 # CI/Automation Engineer

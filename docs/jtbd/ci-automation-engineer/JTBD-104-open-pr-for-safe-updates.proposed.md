@@ -3,6 +3,8 @@ status: proposed
 job-id: open-pr-for-safe-updates
 persona: ci-automation-engineer
 date-created: 2026-05-11
+human-oversight: confirmed
+oversight-date: 2026-05-30
 screens:
   - GitHub: pull request
   - GitHub Actions: auto-update.yml

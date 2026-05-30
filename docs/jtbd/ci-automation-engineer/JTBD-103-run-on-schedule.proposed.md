@@ -3,6 +3,8 @@ status: proposed
 job-id: run-on-schedule
 persona: ci-automation-engineer
 date-created: 2026-05-11
+human-oversight: confirmed
+oversight-date: 2026-05-30
 screens:
   - GitHub Actions workflow: .github/workflows/auto-update.yml
 ---
