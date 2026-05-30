@@ -99,4 +99,4 @@ Next AFK iter should invoke `/wr-itil:capture-rfc` (or `/wr-itil:manage-rfc`) wi
 
 | RFC     | Status   | Title                    |
 | ------- | -------- | ------------------------ |
-| RFC-001 | proposed | Overrides Hygiene Module |
+| RFC-001 | accepted | Overrides Hygiene Module |
