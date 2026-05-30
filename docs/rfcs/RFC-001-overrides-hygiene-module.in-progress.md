@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: in-progress
 rfc-id: overrides-hygiene-module
 reported: 2026-05-30
 decision-makers: [Tom Howard]
@@ -11,7 +11,7 @@ stories: []
 
 # RFC-001: Overrides Hygiene Module
 
-**Status**: accepted
+**Status**: in-progress
 **Reported**: 2026-05-30
 **Problems**: P013
 **ADRs**: ADR-0002, ADR-0003, ADR-0004, ADR-0018, ADR-0019
@@ -53,13 +53,13 @@ Direction confirmed by user during the `/wr-itil:work-problems` AFK loop on 2026
 Ordered execution sequence. The `accepted → in-progress` transition fires on the first task commit (T2 or T3) carrying a `Refs: RFC-001` trailer. The `in-progress → verifying` transition fires on the final task commit (post-T7) with `## Verification` section drafted.
 
 - [x] **T1**: Spec the module's contract via prompt/user-story at `prompts/017.0-DEV-OVERRIDES-HYGIENE.md` — input shape (package.json overrides + npm audit + npm outdated data); output shape (structured findings list with severity tags + safe-upgrade-target field); CLI flag interaction with `--check` per ADR-0003 + ADR-0004. (2026-05-30: AFK iter — architect PASS-WITH-NOTES; jtbd PASS-WITH-NOTES on revised spec; descriptive-cite/accepted-risk posture for unratified JTBDs matches RFC-001 §Related precedent; JTBD ratification queued for next interactive session.)
-- [ ] **T2**: Write failing test for `src/overrides-hygiene.js` (TDD red). Input fixture: package.json with a stale override + a vulnerable override pin within a current advisory range. Expected output: structured finding list with severity + safe-upgrade-target.
+- [x] **T2**: Write failing test for `src/overrides-hygiene.js` (TDD red). Input fixture: package.json with a stale override + a vulnerable override pin within a current advisory range. Expected output: structured finding list with severity + safe-upgrade-target. (2026-05-30: AFK iter 2 — `test/overrides-hygiene.test.js` lands with 8 failing assertions covering parse / age / audit-xref / outdated-xref / reason-taxonomy / exception-respect / malformed-entries / no-overrides paths. RED confirmed via `npx vitest run test/overrides-hygiene.test.js` — fails on missing `src/overrides-hygiene.js` import.)
 - [ ] **T3**: Implement `src/overrides-hygiene.js` minimum-to-pass per the spec. Parses overrides from a passed-in `package.json`; ages each pin via existing `fetchVersionTimes()` / `calculateAgeInDays()`; cross-references with passed-in `npm audit` + `npm outdated` data.
 - [ ] **T4**: Wire the module into the pipeline at `src/print-outdated.js` (after `applyFilters`, before output formatting). Add CLI flag `--no-overrides-hygiene` to opt out; default on.
 - [ ] **T5**: Extend the table / JSON / XML output formatters to render the new findings section per existing ADR-0002 (JSON/XML) + ADR-0003 (exit codes) + ADR-0004 (check mode) contracts. Add formatter fixtures + assertions.
 - [ ] **T6**: Update exit-code logic — exit 1 when ≥ 1 override pin has a safe upgrade target available (per Scope item 7 narrowed contract). Preserve existing safe-update exit-code semantics. Document the narrow contract in README + prompts.
 - [ ] **T7**: Live-case regression test — exercise the original brace-expansion mislabel scenario from P013. A current advisory-range-hit override pin should surface as a finding (new RFC-001 surface). The same data should NOT mislabel itself as "unfixable transitive" — that's gap #2's surface; the test should pin the boundary.
-- [ ] **T8**: First task commit (T2 or T3) carries `Refs: RFC-001` trailer and triggers `accepted → in-progress` transition.
+- [x] **T8**: First task commit (T2 or T3) carries `Refs: RFC-001` trailer and triggers `accepted → in-progress` transition. (2026-05-30: AFK iter 2 — T2 commit carries the trailer; `git mv` to `.in-progress.md` rides the same commit per ADR-014 single-commit grain.)
 - [ ] **T9**: On the final task commit (post-T7), transition `in-progress → verifying` with `## Verification` section drafted: release marker; user-side check that `dry-aged-deps --check` no longer reports the brace-expansion-style mislabel for an override-fixable vuln in their own projects.
 
 ## Commits
