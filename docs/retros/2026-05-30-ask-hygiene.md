@@ -95,3 +95,51 @@ Notes: every decision this iter was framework-resolved.
 - Same-session evidence observation: commit `a45ede6` itself was a rename-with-edit (the verifying/018-\*.md file). The new hook ran for that commit and listed the renamed file in its auto-write log — the exact failure mode P018 describes did NOT recur. Same-session verifying excluded from Step 4a close-on-evidence per the documented exclusion; recorded here for cross-session reference.
 
 No framework-resolvable decision was sub-contracted back to the user. The architect/JTBD/risk-scorer delegations are gate-satisfaction, NOT lazy.
+
+---
+
+## 2026-05-30 — Subsequent `/wr-itil:work-problems` iter 3 (P013 investigation knock-off, single iteration)
+
+Scope: one additional `/wr-itil:work-problems` AFK iter dispatched after the trail above; worked P013 (overrides-blindness) via docs-only investigation knock-off — checked off two of three remaining investigation tasks (`fixAvailable` reliability research; live-case validation of the mislabel gap). No AskUserQuestion calls fired.
+
+| Call # | Header | Classification | Citation                                  |
+| ------ | ------ | -------------- | ----------------------------------------- |
+| (none) | —      | —              | No AskUserQuestion invocations this iter. |
+
+**Lazy count: 0**
+**Direction count: 0**
+**Override count: 0**
+**Silent-framework count: 0**
+**Taste count: 0**
+**Correction-followup count: 0**
+
+Notes: every decision this iter was framework-resolved.
+
+- Selection of P013 over P006 / P017 / P019 — orchestrator's "skip upstream-blocked" directive applied mechanically to P010/P011/P012/P017/P019; P006 skipped because three structural-fix shapes are genuinely undecided (ADR-044 category-1 direction-setting) AND target upstream @windyroad/itil SKILL.md. Within remaining locally-fixable candidates, P013 beat P014 on tie-break rung 5 (ID asc; both WSJF 2.25, both L, both 2026-05-25).
+- Refusal to invoke `/wr-itil:capture-rfc` or `/wr-itil:manage-rfc` for the P013 substantive fix path — manage-rfc delegates to capture-rfc for new RFC creation; capture-\* is orchestrator-forbidden, and either path would fire AskUserQuestion mid-loop (P135 violation). Direction-setting deferred; substantive RFC creation queued for next interactive session via outstanding_questions. ADR-074 substance-confirm-before-build correctly NOT fired this iter because no implementation work was about to be built — the fix-direction decision the iter explicitly avoided is itself the substance.
+- Scope chosen as docs-only investigation: knocked off `fixAvailable` reliability research (observed `fixAvailable: true` on live npm 11.x audit) AND live-case validation (confirmed `dry-aged-deps --check` still mislabels brace-expansion as unfixable despite `fixAvailable: true`). Both are concrete RFC inputs that don't pre-empt the RFC's API design.
+- Commit subject form `docs(problems): investigation findings on P013 — fixAvailable + live-case` — lowercase first token. First attempt failed commitlint with subject `docs(problems): P013 investigation — ...` (uppercase first word "P013"). Recovered by re-emitting with lowercase first token per P010 commitlint subject-case lesson (now observed on this skill's third iter — pattern stable).
+- README refresh skipped — Step 6 P094 conditional refresh only fires when Priority / Effort / WSJF lines change; this update only touched Investigation Tasks + added a Findings subsection. Framework-resolved (matched documented trigger rule mechanically).
+- Risk-scorer pipeline verdict: commit=2/25, push=1/25, release=1/25 (all within Very Low appetite). Standard gate-satisfaction loop, not direction-setting.
+- JTBD review of THIS retro append PASS with scope correction — this project's JTBD-001 is "See which dependencies have safe updates available" (CLI flow); my initial framing conflated it with the upstream `/wr-itil:work-problems` orchestrator's JTBDs. Retro trail files correctly do NOT map to any documented user-facing JTBD here; they serve the autonomous-workflow tooling layer (ADR-044 / P135). Out-of-JTBD-scope is the correct verdict; no `docs/jtbd/` update required.
+- Architect review of THIS retro append PASS — append is documentation of an executed session under `docs/retros/`, not a code change; consistent with local ADR-0010 through ADR-0022 (no conflicts) and with upstream framework concepts (ADR-044, ADR-074, P135, P094, P101, ADR-043) the project treats as referenced concepts. No new local ADR required.
+
+The P013 substantive fix path (RFC creation) remains genuinely blocked by the AFK constraints — that's a structural property of the orchestrator's loop, not a lazy-deferral failure. The decision to defer is framework-resolved (ADR-044: framework-mediated zone when capture-\* / AskUserQuestion are gated out → record the gap, surface in outstanding_questions, move on).
+
+### Context Usage (Cheap Layer, P101)
+
+| Bucket             | Bytes  | % of total | Δ vs prior                       |
+| ------------------ | ------ | ---------- | -------------------------------- |
+| memory             | 356534 | 43.9%      | no prior snapshot                |
+| decisions          | 233815 | 28.8%      | no prior snapshot                |
+| problems           | 155520 | 19.2%      | no prior snapshot                |
+| jtbd               | 40956  | 5.0%       | no prior snapshot                |
+| briefing           | 24609  | 3.0%       | no prior snapshot                |
+| project-claude-md  | 5786   | 0.7%       | no prior snapshot                |
+| hooks              | 0      | 0.0%       | not measured — n/a               |
+| skills             | 0      | 0.0%       | not measured — n/a               |
+| framework-injected | —      | —          | not measured — no on-disk source |
+
+THRESHOLD bytes=10240 — six of eight measured buckets exceed (memory, decisions, problems, jtbd, briefing, project-claude-md). Per-plugin breakdown available in /wr-retrospective:analyze-context (deep layer). No prior snapshot file under `docs/retros/*-context-analysis.md` — first measurement; deltas marked as `no prior snapshot — first measurement this project` per ADR-026.
+
+Deep analysis recommended — invoke /wr-retrospective:analyze-context (six over-threshold buckets, no prior snapshot to confirm trend). Non-blocking advisory.
