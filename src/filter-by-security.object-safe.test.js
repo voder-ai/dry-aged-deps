@@ -1,0 +1,34 @@
+/**
+ * Tests for object-based vulnerability safe-case in filterBySecurity
+ * @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK REQ-SAFE-ONLY
+ * @supports prompts/006.0-DEV-CONFIGURABLE-SECURITY-THRESHOLD.md REQ-FILTERING-LOGIC
+ */
+
+import { describe, it, expect } from 'vitest';
+import { filterBySecurity } from './filter-by-security.js';
+
+// Row data for testing
+const rows = [['pkgSafe', '1.0.0', '1.2.0', '1.2.0', 5, 'prod']];
+// Set high production severity threshold so moderate and low are safe
+const thresholds = { prodMinSeverity: 'high', devMinSeverity: 'none' };
+
+describe('Story 004.0-DEV-FILTER-VULNERABLE-VERSIONS: filterBySecurity object result safe case', () => {
+  it('[REQ-AUDIT-CHECK] [REQ-SAFE-ONLY] [REQ-FILTERING-LOGIC] includes package when object result has no vulnerabilities above threshold', async () => {
+    const details = [
+      { id: 'VULN-1', title: 'Moderate vulnerability', severity: 'moderate', cvssScore: 5, url: 'http://example.com' },
+      { id: 'VULN-2', title: 'Low vulnerability', severity: 'low', cvssScore: 2, url: 'http://example.com' },
+    ];
+    // Stub returns object result
+    /** @story prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md */
+    const stubCheckVuln = async (name, version) => ({ count: details.length, details });
+
+    const { safeRows, vulnMap, filterReasonMap } = await filterBySecurity(rows, stubCheckVuln, thresholds, 'table');
+
+    // Should include the row
+    expect(safeRows).toEqual(rows);
+    // vulnMap should reflect details and highest severity 'moderate'
+    expect(vulnMap.get('pkgSafe')).toEqual({ count: 2, maxSeverity: 'moderate', details });
+    // No filterReason set
+    expect(filterReasonMap.has('pkgSafe')).toBe(false);
+  });
+});

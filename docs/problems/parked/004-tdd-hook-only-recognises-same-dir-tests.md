@@ -63,7 +63,8 @@ Initial estimate (per capture invocation): Impact 2 (Minor — dev-tooling frict
 
 ## Parked
 
-- **Reason**: `upstream-blocked` — the remaining local work (relocate `src/update-packages.test.js` → `test/update-packages.test.js`, supersede ADR-0015, transition to `.verifying.md`) is conditional on upstream `@windyroad/tdd` shipping the test-mapping fix. All project-side work this ticket can drive is complete: upstream issue filed (windyroad/agent-plugins#123, 2026-05-13) and ADR-0015 records the narrow co-location exception keeping the project unblocked in the meantime.
-- **Un-park trigger**: upstream issue windyroad/agent-plugins#123 closes (or upstream ships an equivalent fix via a different mechanism). On un-park: `git mv` to `.known-error.md` (root cause remains confirmed), execute the third investigation task, then transition to `.verifying.md`.
-- **Parked since**: 2026-05-16
+- **Reason**: `upstream-blocked` — the original local follow-up (relocate `src/update-packages.test.js` → `test/update-packages.test.js`, supersede ADR-0015) is now **moot** under ADR-0020 (universal co-location, 2026-05-30). The project no longer needs the test-mapping fix to unblock its own work; ADR-0020 adopts the upstream tool's preferred shape directly. This ticket remains open as an upstream report because the gap still affects other adopter projects that prefer a `test/`-mirror convention.
+- **Un-park trigger (revised 2026-05-30)**: upstream issue windyroad/agent-plugins#123 closes — the project-side follow-up is now informational only (verify the upstream fix's shape against the configurable-test-mapping framing suggested in the original report).
+- **Parked since**: 2026-05-16 (disposition revised 2026-05-30)
 - **External-root-cause detection (P063)**: already-noted check passed — the `## Reported Upstream` section above is the audit-trail anchor; the parking-path detection did not re-fire the prompt.
+- **ADR-0020 disposition note (2026-05-30)**: under ADR-0020, all 55 paired tests relocated from `test/` to `src/` to align with the TDD hook's same-directory mapping. The project's test layout now matches the upstream tool's expectation by convention rather than workaround. P004 is preserved as the upstream report because other adopter projects may want the configurable-mapping fix; this project no longer requires it.

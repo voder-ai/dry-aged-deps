@@ -11,7 +11,7 @@ Compact rendered index of every ADR's chosen option, confirmation criteria, and 
 
 For deep-dive — creating, evolving, ratifying, or contesting a decision — open the per-ADR file directly. `/wr-architect:create-adr`, `/wr-architect:capture-adr`, and `/wr-architect:review-decisions` all keep the full body in scope. Decision Drivers, Considered Options bodies, Pros and Cons, Consequences narrative, and Reassessment Criteria are intentionally NOT in this routine view — they live in the per-ADR body.
 
-**Total ADRs:** 19 (16 in-force, 3 historical)
+**Total ADRs:** 20 (16 in-force, 4 historical)
 
 ---
 
@@ -22,17 +22,17 @@ _16 ADRs. These are the current rules. The architect agent reads this section fi
 ### ADR-0001 — 0001. Use ES Modules for All Code
 
 **Status:** accepted
-**Chosen:** Chosen option: **ES Modules throughout the entire codebase**, because users install and run the CLI rather than importing it as a library, modern tooling (vitest, ESLint, bundlers) works best with ES modules, and all supported Node.js LTS v…
+**Chosen:** Chosen option: **ES Modules throughout the entire codebase**, because users install and run the CLI rather than importing it as a library, modern tooling (vitest, ESLint, bundlers) works best with ES modules, and all supported Node.js LTS v...
 
 ### ADR-0002 — 0002. Support JSON and XML Output Formats
 
 **Status:** accepted
-**Chosen:** Chosen option: **JSON and XML output formats alongside the existing table format**, because the CLI must serve both modern automation (JSON) and environments where XML is still the consumed format, while preserving the existing human-readab…
+**Chosen:** Chosen option: **JSON and XML output formats alongside the existing table format**, because the CLI must serve both modern automation (JSON) and environments where XML is still the consumed format, while preserving the existing human-readab...
 
 ### ADR-0003 — 0003. Standardize CLI Exit Codes
 
 **Status:** accepted
-**Chosen:** Chosen option: **three-code scheme**, because it gives automation a single deterministic contract that survives the introduction of new modes and aligns with the principle that exit code `2` is reserved for tool errors (mirroring `getopt` a…
+**Chosen:** Chosen option: **three-code scheme**, because it gives automation a single deterministic contract that survives the introduction of new modes and aligns with the principle that exit code `2` is reserved for tool errors (mirroring `getopt` a...
 
 ### ADR-0004 — 0004. Add Check Mode for CI/CD Enforcement
 
@@ -42,7 +42,7 @@ _16 ADRs. These are the current rules. The architect agent reads this section fi
 ### ADR-0005 — 0005. Semantic Release Version Management
 
 **Status:** accepted
-**Chosen:** Chosen option: **Version bumps and `package.json` updates are managed exclusively by semantic-release in the CI/CD pipeline and are NOT committed back to the repository**, because git tags are the authoritative version record, clean history…
+**Chosen:** Chosen option: **Version bumps and `package.json` updates are managed exclusively by semantic-release in the CI/CD pipeline and are NOT committed back to the repository**, because git tags are the authoritative version record, clean history...
 
 ### ADR-0006 — 0006. Use JSDoc with TypeScript for Type Checking
 
@@ -62,60 +62,65 @@ _16 ADRs. These are the current rules. The architect agent reads this section fi
 ### ADR-0011 — 0011. ADR Format and Lifecycle Convention
 
 **Status:** proposed
-**Chosen:** Chosen option: **MADR 4.0 with `.proposed.md`/`.accepted.md`/`.superseded.md` filename suffixes**, because it aligns the project with the format the `wr-architect:create-adr` skill produces, makes status visible in `ls docs/decisions/`, and…
+**Chosen:** Chosen option: **MADR 4.0 with `.proposed.md`/`.accepted.md`/`.superseded.md` filename suffixes**, because it aligns the project with the format the `wr-architect:create-adr` skill produces, makes status visible in `ls docs/decisions/`, and...
 
 ### ADR-0012 — 0012. Authentication Mechanism for Autonomous GitHub Workflows
 
 **Status:** proposed
-**Chosen:** Chosen option: **OIDC token-exchange via Anthropic** (Option 3), because it eliminates the manual credential-provisioning step entirely, produces short-lived tokens (no rotation cycle), and reuses the existing Claude Code GitHub App install…
+**Chosen:** Chosen option: **OIDC token-exchange via Anthropic** (Option 3), because it eliminates the manual credential-provisioning step entirely, produces short-lived tokens (no rotation cycle), and reuses the existing Claude Code GitHub App install...
 
 ### ADR-0014 — 0014. `--update` writes the latest-safe version, not the semver-range-satisfying version
 
 **Status:** proposed
-**Chosen:** Chosen option: **Write `latest` (4th tuple element, post-filter / post-smart-search) into `package.json`**, because it (a) is the only interpretation consistent with the spec's safety claim — the 4th element is the version the filters hav…
-
-### ADR-0015 — 0015. Test placement: co-location exception for `src/update-packages.test.js`
-
-**Status:** proposed
-**Chosen:** Chosen: **Option 1 (narrow exception)** in combination with P004 (Option 4's report-upstream path). The single existing co-located test stays where it is; future tests for `src/` modules require a fresh ADR (or amendment of this one) rather…
+**Chosen:** Chosen option: **Write `latest` (4th tuple element, post-filter / post-smart-search) into `package.json`**, because it (a) is the only interpretation consistent with the spec's safety claim — the 4th element is the version the filters hav...
 
 ### ADR-0016 — 0016. Pre-commit hook auto-write and re-stage policy
 
 **Status:** proposed | **Supersedes:** 0013-pre-commit-hook-read-only-policy
-**Chosen:** Chosen option: **Option 1 — plain-shell write-and-restage on staged files only**, because it honours the project's zero-runtime-dep / minimal-devDep posture (carried forward from ADR-0013), the implementation is small enough to read in on…
+**Chosen:** Chosen option: **Option 1 — plain-shell write-and-restage on staged files only**, because it honours the project's zero-runtime-dep / minimal-devDep posture (carried forward from ADR-0013), the implementation is small enough to read in on...
 
 ### ADR-0017 — 0017. Single-workflow inline-loop for autonomous dependency updates
 
 **Status:** proposed
-**Chosen:** Chosen option: **"Single inline-loop workflow"**, because it matches the maintainer's confirmed design intent, eliminates the cross-workflow `workflow_run` indirection that was load-bearing only under the old fallback framing, and lets reco…
+**Chosen:** Chosen option: **"Single inline-loop workflow"**, because it matches the maintainer's confirmed design intent, eliminates the cross-workflow `workflow_run` indirection that was load-bearing only under the old fallback framing, and lets reco...
 
 ### ADR-0018 — 0018. Surface known-vulnerable-but-unfixable packages in dry-aged-deps output
 
 **Status:** proposed
-**Chosen:** Chosen option: **"On by default in all output formats, suppressible via `--no-unfixable`"**, because it directly satisfies JTBD-006's default-policy expectation and JTBD-008's PR-body inspection job. Visibility-first is the right default fo…
+**Chosen:** Chosen option: **"On by default in all output formats, suppressible via `--no-unfixable`"**, because it directly satisfies JTBD-006's default-policy expectation and JTBD-008's PR-body inspection job. Visibility-first is the right default fo...
 
 ### ADR-0019 — Adopt the Problem-RFC-Story Framework (per @windyroad/itil ADR-060)
 
 **Status:** proposed
-**Chosen:** Chosen option: **"Option A"**, because the framework is already implemented in the `@windyroad/itil` plugin we already adopt; reinventing the schema or skipping the tier would either fork the framework or leave direction-confirmed work (P01…
+**Chosen:** Chosen option: **"Option A"**, because the framework is already implemented in the `@windyroad/itil` plugin we already adopt; reinventing the schema or skipping the tier would either fork the framework or leave direction-confirmed work (P01...
+
+### ADR-0020 — 0020. Test placement: co-locate paired tests beside their `src/` module
+
+**Status:** proposed | **Supersedes:** 0015-test-placement-co-location-exception-for-tdd-hook
+**Chosen:** Chosen: **Option 1 (universal co-location for paired tests)**.
 
 ---
 
 ## Historical decisions
 
-_3 ADRs. These were tried and superseded, rejected, or deprecated. Read them as direction for what NOT to do, or to understand the lineage of an in-force decision. Do not enforce them as current rules._
+_4 ADRs. These were tried and superseded, rejected, or deprecated. Read them as direction for what NOT to do, or to understand the lineage of an in-force decision. Do not enforce them as current rules._
 
 ### ADR-0009 — 0009. Scheduled Autonomous Dependency-Update Workflow
 
 **Status:** superseded
-**Chosen:** Chosen option: **Pure scheduled GitHub Actions workflow opening a PR with `gh pr merge --auto --squash`**, because it produces an auditable PR validated by the existing `ci-publish.yml` build-and-test job, requires no new long-lived secrets…
+**Chosen:** Chosen option: **Pure scheduled GitHub Actions workflow opening a PR with `gh pr merge --auto --squash`**, because it produces an auditable PR validated by the existing `ci-publish.yml` build-and-test job, requires no new long-lived secrets...
 
 ### ADR-0010 — 0010. AI Agent CI Trust Boundary for Dependency-Update Recovery
 
 **Status:** superseded
-**Chosen:** Chosen option: **`claude-code-action` invoked only on `prepush` or `ci-publish.yml` failure, with a strict writable-paths allow-list and a single-retry policy**, because it confines AI authority to the moment of failure (rare events in stea…
+**Chosen:** Chosen option: **`claude-code-action` invoked only on `prepush` or `ci-publish.yml` failure, with a strict writable-paths allow-list and a single-retry policy**, because it confines AI authority to the moment of failure (rare events in stea...
 
 ### ADR-0013 — 0013. Pre-commit hook read-only policy
 
 **Status:** superseded
-**Chosen:** Chosen option: **Option 1 — read-only check (`format:check` abort)**, because it eliminates the silent-mutation foot-gun with a one-line change to the hook and no new dependency. The auto-fix path remains available to the developer as a d…
+**Chosen:** Chosen option: **Option 1 — read-only check (`format:check` abort)**, because it eliminates the silent-mutation foot-gun with a one-line change to the hook and no new dependency. The auto-fix path remains available to the developer as a d...
+
+### ADR-0015 — 0015. Test placement: co-location exception for `src/update-packages.test.js`
+
+**Status:** superseded
+**Chosen:** Chosen: **Option 1 (narrow exception)** in combination with P004 (Option 4's report-upstream path). Co-located tests for `src/` modules stay where they are; future new tests for `src/` modules require a fresh ADR (or amendment of this one) ...
