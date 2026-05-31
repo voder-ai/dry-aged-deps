@@ -6,7 +6,8 @@
  * variant tests don't satisfy the strict stem-match pairing).
  *
  * T4 scope is the wire only — the formatters do NOT render the findings in T4.
- * Render (table / JSON / XML) lands in T5.
+ * Render (table / JSON / XML) lands in T5 (extends handleJsonOutput / handleXmlOutput
+ * / handleTableOutput call-sites to thread the captured findings).
  *
  * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-PIPELINE-WIRE REQ-OVERRIDES-DEFAULT-ON
  */
@@ -92,7 +93,7 @@ describe('Story 017.0-DEV-OVERRIDES-HYGIENE: printOutdated overrides-hygiene wir
     expect(calls).toHaveLength(0);
   });
 
-  it('[REQ-OVERRIDES-PIPELINE-WIRE] threads findings into format=json output options without rendering them in T4', async () => {
+  it('[REQ-OVERRIDES-JSON] renders findings into the JSON output (T5 flip of the T4 deferred-render assertion)', async () => {
     vi.spyOn(loadModule, 'loadPackageJson').mockReturnValue({
       dependencies: {},
       devDependencies: {},
@@ -120,9 +121,16 @@ describe('Story 017.0-DEV-OVERRIDES-HYGIENE: printOutdated overrides-hygiene wir
       }
     );
 
-    // T4 explicitly defers rendering to T5 — the JSON output should NOT yet
-    // contain an `overridesHygiene` key. T5 will flip this assertion.
+    // T5 lands the formatter render — the JSON output now carries the
+    // findings under the top-level `overridesHygiene` field per REQ-OVERRIDES-JSON.
     const printedJson = JSON.parse(logSpy.mock.calls[0][0]);
-    expect(printedJson).not.toHaveProperty('overridesHygiene');
+    expect(printedJson).toHaveProperty('overridesHygiene');
+    expect(printedJson.overridesHygiene).toHaveLength(1);
+    expect(printedJson.overridesHygiene[0]).toMatchObject({
+      name: 'brace-expansion',
+      pinned: '^4.0.1',
+      latest: '5.0.6',
+      safeUpgrade: '5.0.6',
+    });
   });
 });

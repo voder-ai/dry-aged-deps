@@ -24,8 +24,13 @@ describe('Story 001.0-DEV-RUN-NPM-OUTDATED: printOutdated unit tests - table out
     vi.restoreAllMocks();
   });
 
+  // RFC-001 T5: overrides-hygiene is default-on across the printOutdated
+  // pipeline. These tests scope-isolate to the outdated-deps path by
+  // explicitly disabling the override surface — the project's own
+  // package.json carries real overrides which would otherwise leak into
+  // these tests' log-call assertions.
   test('[REQ-OUTPUT-DISPLAY] no data ({}), default table mode prints up-to-date message and returns undefined', async () => {
-    const summary = await printOutdated({}, { format: 'table' });
+    const summary = await printOutdated({}, { format: 'table', overridesHygiene: false });
     expect(summary).toBeUndefined();
     expect(logSpy).toHaveBeenCalledTimes(1);
     expect(logSpy).toHaveBeenCalledWith('All dependencies are up to date.');
@@ -44,6 +49,7 @@ describe('Story 001.0-DEV-RUN-NPM-OUTDATED: printOutdated unit tests - table out
       checkVulnerabilities: vi.fn().mockResolvedValue(0),
       prodMinAge: 7,
       devMinAge: 7,
+      overridesHygiene: false,
     });
     expect(summary).toBeUndefined();
     expect(logSpy).toHaveBeenCalled();
@@ -64,6 +70,7 @@ describe('Story 001.0-DEV-RUN-NPM-OUTDATED: printOutdated unit tests - table out
       checkVulnerabilities: vulnStub,
       prodMinAge: 7,
       devMinAge: 7,
+      overridesHygiene: false,
     });
     expect(summary).toBeUndefined();
     expect(logSpy).toHaveBeenCalled();

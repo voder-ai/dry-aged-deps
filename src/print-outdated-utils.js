@@ -22,7 +22,8 @@ import { severityRank } from './find-unfixable-vulns.js';
 /**
  * Output JSON formatted results.
  * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-CLI-FLAG
- * @param {{ rows: Array<[string, string, string, string, number|string, string]>, summary: FilterSummary, thresholds: Thresholds, vulnMap: Map<string, object>, filterReasonMap: Map<string, string>, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }> }} options
+ * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-JSON
+ * @param {{ rows: Array<[string, string, string, string, number|string, string]>, summary: FilterSummary, thresholds: Thresholds, vulnMap: Map<string, object>, filterReasonMap: Map<string, string>, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>, overridesHygiene?: Array<object> }} options
  * @returns {FilterSummary} Summary object returned from filtering.
  */
 export function handleJsonOutput({
@@ -33,18 +34,20 @@ export function handleJsonOutput({
   filterReasonMap,
   excludeMap = {},
   unfixable = [],
+  overridesHygiene = [],
 }) {
   const timestamp = getTimestamp();
   const items = prepareJsonItems(rows, thresholds, vulnMap, filterReasonMap);
   const excluded = Object.entries(excludeMap).map(([name, reason]) => ({ name, reason }));
-  console.log(jsonFormatter({ rows: items, summary, thresholds, timestamp, excluded, unfixable }));
+  console.log(jsonFormatter({ rows: items, summary, thresholds, timestamp, excluded, unfixable, overridesHygiene }));
   return summary;
 }
 
 /**
  * Output XML formatted results.
  * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-CLI-FLAG
- * @param {{ rows: Array<[string, string, string, string, number|string, string]>, summary: FilterSummary, thresholds: Thresholds, vulnMap: Map<string, object>, filterReasonMap: Map<string, string>, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }> }} options
+ * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-XML
+ * @param {{ rows: Array<[string, string, string, string, number|string, string]>, summary: FilterSummary, thresholds: Thresholds, vulnMap: Map<string, object>, filterReasonMap: Map<string, string>, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>, overridesHygiene?: Array<object> }} options
  * @returns {FilterSummary} Summary object returned from filtering.
  */
 export function handleXmlOutput({
@@ -55,11 +58,12 @@ export function handleXmlOutput({
   filterReasonMap,
   excludeMap = {},
   unfixable = [],
+  overridesHygiene = [],
 }) {
   const timestamp = getTimestamp();
   const items = prepareJsonItems(rows, thresholds, vulnMap, filterReasonMap);
   const excluded = Object.entries(excludeMap).map(([name, reason]) => ({ name, reason }));
-  console.log(xmlFormatter({ rows: items, summary, thresholds, timestamp, excluded, unfixable }));
+  console.log(xmlFormatter({ rows: items, summary, thresholds, timestamp, excluded, unfixable, overridesHygiene }));
   return summary;
 }
 
@@ -124,9 +128,46 @@ export function printUnfixableSection(unfixable) {
 }
 
 /**
+ * Render a nullable value as a CLI cell. Null/undefined collapses to `-`
+ * (terse CLI convention per VOICE-AND-TONE.md) so rows never carry literal
+ * "null" text.
+ * @param {unknown} value
+ * @returns {string}
+ */
+function cell(value) {
+  if (value === null || value === undefined) return '-';
+  return String(value);
+}
+
+/**
+ * Print the "Override hygiene" section, if any. Mirrors the unfixable
+ * precedent (appended section, space-aligned columns, skip-when-empty).
+ * Column shape and order per REQ-OVERRIDES-TABLE.
+ * @param {Array<{ name: string, pinned: string|null, latest: string|null, ageDays: number|null, reason: string, advisories: Array<object>, safeUpgrade: string|null }>} overridesHygiene
+ * @returns {void}
+ * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-TABLE REQ-OVERRIDES-REASON-TAXONOMY
+ */
+export function printOverridesHygieneSection(overridesHygiene) {
+  if (!overridesHygiene || overridesHygiene.length === 0) return;
+  console.log('');
+  console.log('Override hygiene:');
+  const header = ['Override', 'Pinned', 'Latest', 'Age', 'Reason', 'Safe Upgrade'];
+  const rows = overridesHygiene.map((f) => [
+    cell(f.name),
+    cell(f.pinned),
+    cell(f.latest),
+    cell(f.ageDays),
+    cell(f.reason),
+    cell(f.safeUpgrade),
+  ]);
+  printAlignedTable(header, rows);
+}
+
+/**
  * Output table formatted results.
  * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
- * @param {{ safeRows: Array<Array>, matureRows: Array<Array>, summary: FilterSummary, prodMinAge: number, devMinAge: number, returnSummary: boolean, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string }> }} options
+ * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-TABLE
+ * @param {{ safeRows: Array<Array>, matureRows: Array<Array>, summary: FilterSummary, prodMinAge: number, devMinAge: number, returnSummary: boolean, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string }>, overridesHygiene?: Array<object> }} options
  * @returns {FilterSummary|undefined} Summary when returnSummary is true or undefined otherwise.
  */
 export function handleTableOutput({
@@ -138,6 +179,7 @@ export function handleTableOutput({
   returnSummary,
   excludeMap = {},
   unfixable = [],
+  overridesHygiene = [],
 }) {
   // @supports prompts/015.0-DEV-EXCLUDE-PACKAGES.md REQ-EXCLUDE-OUTPUT
   const excludedCount = Object.keys(excludeMap).length;
@@ -154,6 +196,7 @@ export function handleTableOutput({
       console.log(`${excludedCount} package(s) excluded from analysis (see .dry-aged-deps.json)`);
     }
     printUnfixableSection(unfixable);
+    printOverridesHygieneSection(overridesHygiene);
     // @supports prompts/013.0-DEV-CHECK-MODE.md REQ-CHECK-FLAG
     if (returnSummary) return summary; // returns {FilterSummary} when returnSummary is true
     return undefined; // returns undefined when returnSummary is false
@@ -168,6 +211,7 @@ export function handleTableOutput({
       console.log(`${excludedCount} package(s) excluded from analysis (see .dry-aged-deps.json)`);
     }
     printUnfixableSection(unfixable);
+    printOverridesHygieneSection(overridesHygiene);
     // @supports prompts/013.0-DEV-CHECK-MODE.md REQ-CHECK-FLAG
     if (returnSummary) return summary; // returns {FilterSummary} when returnSummary is true
     return undefined; // returns undefined when returnSummary is false
@@ -181,6 +225,7 @@ export function handleTableOutput({
     console.log(`${excludedCount} package(s) excluded from analysis (see .dry-aged-deps.json)`);
   }
   printUnfixableSection(unfixable);
+  printOverridesHygieneSection(overridesHygiene);
   // @supports prompts/013.0-DEV-CHECK-MODE.md REQ-CHECK-FLAG
   if (returnSummary) return summary; // returns {FilterSummary} when returnSummary is true
   return undefined; // returns undefined when returnSummary is false

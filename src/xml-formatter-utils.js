@@ -243,3 +243,48 @@ export function buildUnfixableSection(unfixable) {
   xml += '  </unfixable>\n';
   return xml;
 }
+
+/**
+ * Render a nullable scalar as an attribute value. Null/undefined collapses
+ * to the empty string so XML never carries the literal text `null`.
+ * @param {unknown} value
+ * @returns {string}
+ */
+function attrValue(value) {
+  if (value === null || value === undefined) return '';
+  return String(value);
+}
+
+/**
+ * Build XML for the overrides-hygiene section. Element name and field
+ * names are camelCase per REQ-OVERRIDES-XML (mirrors the JSON shape).
+ * @param {Array<{ name: string, pinned: string|null, latest: string|null, ageDays: number|null, reason: string, advisories: Array<{ id: string, severity: string, patchedRange: string|null }>, safeUpgrade: string|null }>} overridesHygiene
+ * @returns {string}
+ * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-XML REQ-OVERRIDES-AUDIT-ARTEFACT
+ */
+export function buildOverridesHygieneSection(overridesHygiene) {
+  let xml = '  <overridesHygiene>\n';
+  for (const finding of overridesHygiene) {
+    const { name, pinned, latest, ageDays, reason, safeUpgrade, advisories = [] } = finding;
+    xml += `    <override name="${escapeXml(attrValue(name))}"`;
+    xml += ` pinned="${escapeXml(attrValue(pinned))}"`;
+    xml += ` latest="${escapeXml(attrValue(latest))}"`;
+    xml += ` ageDays="${escapeXml(attrValue(ageDays))}"`;
+    xml += ` reason="${escapeXml(attrValue(reason))}"`;
+    xml += ` safeUpgrade="${escapeXml(attrValue(safeUpgrade))}">\n`;
+    if (advisories.length === 0) {
+      xml += '      <advisories/>\n';
+    } else {
+      xml += '      <advisories>\n';
+      for (const advisory of advisories) {
+        xml += `        <advisory id="${escapeXml(attrValue(advisory.id))}"`;
+        xml += ` severity="${escapeXml(attrValue(advisory.severity))}"`;
+        xml += ` patchedRange="${escapeXml(attrValue(advisory.patchedRange))}"/>\n`;
+      }
+      xml += '      </advisories>\n';
+    }
+    xml += '    </override>\n';
+  }
+  xml += '  </overridesHygiene>\n';
+  return xml;
+}

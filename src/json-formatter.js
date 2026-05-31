@@ -12,13 +12,22 @@
 /**
  * Format data into JSON string
  * Supports legacy array rows and full JSON mode object rows
- * @param {{ rows: Array<Array<any> | Object>, summary: { totalOutdated: number, safeUpdates: number, filteredByAge: number, filteredBySecurity: number }, thresholds?: { prod: { minAge: number, minSeverity: string }, dev: { minAge: number, minSeverity: string } }, timestamp: string, excluded?: Array<{ name: string, reason: string }>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }> }} params
+ * @param {{ rows: Array<Array<any> | Object>, summary: { totalOutdated: number, safeUpdates: number, filteredByAge: number, filteredBySecurity: number }, thresholds?: { prod: { minAge: number, minSeverity: string }, dev: { minAge: number, minSeverity: string } }, timestamp: string, excluded?: Array<{ name: string, reason: string }>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>, overridesHygiene?: Array<{ name: string, pinned: string|null, latest: string|null, ageDays: number|null, reason: string, advisories: Array<{ id: string, severity: string, patchedRange: string|null }>, safeUpgrade: string|null }> }} params
  * @returns {string} JSON string
  * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-JSON-SCHEMA REQ-COMPLETE-DATA REQ-SUMMARY-STATS
  * @supports prompts/015.0-DEV-EXCLUDE-PACKAGES.md REQ-EXCLUDE-OUTPUT
  * @supports prompts/016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES.md REQ-UNFIXABLE-JSON REQ-UNFIXABLE-SCHEMA-COMPAT
+ * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-JSON REQ-OVERRIDES-SCHEMA-COMPAT REQ-OVERRIDES-AUDIT-ARTEFACT
  */
-export function jsonFormatter({ rows, summary, thresholds, timestamp, excluded = [], unfixable = [] }) {
+export function jsonFormatter({
+  rows,
+  summary,
+  thresholds,
+  timestamp,
+  excluded = [],
+  unfixable = [],
+  overridesHygiene = [],
+}) {
   const packages = rows.map((row) => {
     // @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-JSON-SCHEMA
     if (Array.isArray(row)) {
@@ -74,6 +83,13 @@ export function jsonFormatter({ rows, summary, thresholds, timestamp, excluded =
   // workflow test `.unfixable // empty` cleanly.
   if (unfixable.length > 0) {
     output.unfixable = unfixable;
+  }
+
+  // @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-JSON REQ-OVERRIDES-SCHEMA-COMPAT
+  // Same omit-when-empty pattern as `unfixable` — keeps existing consumers
+  // shape-stable and lets jq surfaces test `.overridesHygiene // empty` cleanly.
+  if (overridesHygiene.length > 0) {
+    output.overridesHygiene = overridesHygiene;
   }
 
   // @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-SUMMARY-STATS

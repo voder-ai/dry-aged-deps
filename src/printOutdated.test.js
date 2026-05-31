@@ -24,8 +24,11 @@ describe('Story 001.0-DEV-RUN-NPM-OUTDATED / 003.0-DEV-IDENTIFY-OUTDATED / 004.0
     vi.restoreAllMocks();
   });
 
+  // RFC-001 T5: overrides-hygiene is default-on. Scope-isolate to the
+  // outdated-deps path so the project's own package.json overrides don't
+  // leak into the log-call count assertion below.
   it('[REQ-OUTPUT-DISPLAY] prints up to date message when no packages are outdated', async () => {
-    await printOutdated({});
+    await printOutdated({}, { overridesHygiene: false });
     expect(logSpy).toHaveBeenCalledTimes(1);
     expect(logSpy).toHaveBeenCalledWith('All dependencies are up to date.');
     expect(errorSpy).not.toHaveBeenCalled();
@@ -127,6 +130,10 @@ describe('Story 001.0-DEV-RUN-NPM-OUTDATED / 003.0-DEV-IDENTIFY-OUTDATED / 004.0
       fetchVersionTimes: fetchModule.fetchVersionTimes,
       calculateAgeInDays: ageModule.calculateAgeInDays,
       checkVulnerabilities: vulnModule.checkVulnerabilities,
+      // RFC-001 T5: scope-isolate to the outdated-deps path; the project's
+      // own package.json overrides would otherwise leak into the log-call
+      // sequence below.
+      overridesHygiene: false,
     });
 
     expect(logSpy.mock.calls[0][0]).toBe('Outdated packages:');

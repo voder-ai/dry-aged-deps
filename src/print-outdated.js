@@ -7,7 +7,7 @@ import * as loadPackageJsonModule from './load-package-json.js';
 import { buildRows } from './build-rows.js';
 import { applyFilters } from './apply-filters.js';
 import { handleJsonOutput, handleXmlOutput, handleTableOutput } from './print-outdated-handlers.js';
-import { printUnfixableSection } from './print-outdated-utils.js';
+import { printUnfixableSection, printOverridesHygieneSection } from './print-outdated-utils.js';
 import { computeUnfixable } from './compute-unfixable.js';
 import { runOverridesHygiene as defaultRunOverridesHygiene } from './overrides-hygiene.js';
 import { runProjectAudit as defaultRunProjectAudit } from './run-project-audit.js';
@@ -16,16 +16,20 @@ import { getThresholds } from './print-utils.js';
 
 /**
  * Handle scenario when there are no outdated dependencies.
- * @param {string} format - Output format ('table', 'json', 'xml').
- * @param {boolean} returnSummary - Whether to return summary object.
- * @param {{prod:{minAge:number,minSeverity:string},dev:{minAge:number,minSeverity:string}}} thresholds - Thresholds configuration.
- * @param {Record<string, string>} [excludeMap] - Excluded packages map.
- * @param {Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>} [unfixable] - Known-vulnerable-but-unfixable rows.
+ * @param {{ format: string, returnSummary: boolean, thresholds: {prod:{minAge:number,minSeverity:string},dev:{minAge:number,minSeverity:string}}, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>, overridesHygiene?: Array<object> }} params
  * @returns {Object|undefined} summary for xml mode or if returnSummary is true
  * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
  * @supports prompts/016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES.md REQ-UNFIXABLE-DETECT
+ * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-TABLE REQ-OVERRIDES-JSON REQ-OVERRIDES-XML
  */
-export function handleNoOutdated(format, returnSummary, thresholds, excludeMap = {}, unfixable = []) {
+export function handleNoOutdated({
+  format,
+  returnSummary,
+  thresholds,
+  excludeMap = {},
+  unfixable = [],
+  overridesHygiene = [],
+}) {
   const summary = {
     totalOutdated: 0,
     safeUpdates: 0,
@@ -42,6 +46,7 @@ export function handleNoOutdated(format, returnSummary, thresholds, excludeMap =
       filterReasonMap: new Map(),
       excludeMap,
       unfixable,
+      overridesHygiene,
     });
   }
   // @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-CLI-FLAG
@@ -54,6 +59,7 @@ export function handleNoOutdated(format, returnSummary, thresholds, excludeMap =
       filterReasonMap: new Map(),
       excludeMap,
       unfixable,
+      overridesHygiene,
     });
   }
   console.log('All dependencies are up to date.');
@@ -64,6 +70,8 @@ export function handleNoOutdated(format, returnSummary, thresholds, excludeMap =
   }
   // @supports prompts/016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES.md REQ-UNFIXABLE-TABLE
   printUnfixableSection(unfixable);
+  // @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-TABLE
+  printOverridesHygieneSection(overridesHygiene);
   // @supports prompts/013.0-DEV-CHECK-MODE.md REQ-CHECK-FLAG
   if (returnSummary) return summary;
   return;
@@ -274,8 +282,13 @@ export async function printOutdated(data, options = {}) {
     // overrides-hygiene surface likewise runs — overrides are independent of
     // npm-outdated's list.
     const unfixable = await resolveUnfixable(new Set(), options, false, auditData);
-    await resolveOverridesHygiene({ packageJson, outdatedData: filteredData, auditData, options });
-    return handleNoOutdated(format, returnSummary, thresholds, excludeMap, unfixable);
+    const overridesHygiene = await resolveOverridesHygiene({
+      packageJson,
+      outdatedData: filteredData,
+      auditData,
+      options,
+    });
+    return handleNoOutdated({ format, returnSummary, thresholds, excludeMap, unfixable, overridesHygiene });
   }
 
   // Build rows
@@ -301,26 +314,69 @@ export async function printOutdated(data, options = {}) {
   // resolveUnfixable returns [] (and skips the audit) in update mode.
   const unfixable = await resolveUnfixable(new Set(safeRows.map((row) => row[0])), options, updateMode, auditData);
 
-  // @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-PIPELINE-WIRE
-  // Computed for the wire; T5 lands the formatter render that surfaces it.
-  await resolveOverridesHygiene({ packageJson, outdatedData: filteredData, auditData, options });
+  // @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-PIPELINE-WIRE REQ-OVERRIDES-TABLE REQ-OVERRIDES-JSON REQ-OVERRIDES-XML
+  // T5: capture the findings and thread them into each formatter handler so
+  // the additive section renders in table / JSON / XML output.
+  const overridesHygiene = await resolveOverridesHygiene({
+    packageJson,
+    outdatedData: filteredData,
+    auditData,
+    options,
+  });
 
-  // @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-CLI-FLAG
-  if (format === 'json') {
-    return handleJsonOutput({ rows: safeRows, summary, thresholds, vulnMap, filterReasonMap, excludeMap, unfixable });
-  }
+  return dispatchFormatter({
+    format,
+    updateMode,
+    skipConfirmation,
+    rows,
+    safeRows,
+    matureRows,
+    summary,
+    thresholds,
+    vulnMap,
+    filterReasonMap,
+    excludeMap,
+    unfixable,
+    overridesHygiene,
+    prodMinAge,
+    devMinAge,
+    returnSummary,
+  });
+}
 
-  // @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-UPDATE-FLAG
-  if (updateMode) {
-    const result = await updatePackages(safeRows, skipConfirmation, summary);
-    return result;
-  }
-
-  // @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-CLI-FLAG
-  if (format === 'xml') {
-    return handleXmlOutput({ rows, summary, thresholds, vulnMap, filterReasonMap, excludeMap, unfixable });
-  }
-
+/**
+ * Route the post-applyFilters context to the right output handler. Extracted
+ * from printOutdated to keep that function within the project's max-lines cap.
+ * @param {object} ctx
+ * @returns {Promise<object|undefined>}
+ * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-CLI-FLAG
+ * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-CLI-FLAG
+ * @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-UPDATE-FLAG
+ * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-TABLE REQ-OVERRIDES-JSON REQ-OVERRIDES-XML
+ */
+async function dispatchFormatter(ctx) {
+  const {
+    format,
+    updateMode,
+    skipConfirmation,
+    rows,
+    safeRows,
+    matureRows,
+    summary,
+    thresholds,
+    vulnMap,
+    filterReasonMap,
+    excludeMap,
+    unfixable,
+    overridesHygiene,
+    prodMinAge,
+    devMinAge,
+    returnSummary,
+  } = ctx;
+  const sharedOpts = { summary, thresholds, vulnMap, filterReasonMap, excludeMap, unfixable, overridesHygiene };
+  if (format === 'json') return handleJsonOutput({ rows: safeRows, ...sharedOpts });
+  if (updateMode) return updatePackages(safeRows, skipConfirmation, summary);
+  if (format === 'xml') return handleXmlOutput({ rows, ...sharedOpts });
   return handleTableOutput({
     safeRows,
     matureRows,
@@ -330,5 +386,6 @@ export async function printOutdated(data, options = {}) {
     returnSummary,
     excludeMap,
     unfixable,
+    overridesHygiene,
   });
 }
