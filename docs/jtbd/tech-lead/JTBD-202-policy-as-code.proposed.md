@@ -3,6 +3,8 @@ status: proposed
 job-id: policy-as-code
 persona: tech-lead
 date-created: 2026-05-11
+human-oversight: confirmed
+oversight-date: 2026-06-02
 screens:
   - Config file: .dry-aged-deps.json (checked into source control)
 ---

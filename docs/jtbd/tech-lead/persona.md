@@ -1,6 +1,8 @@
 ---
 name: tech-lead
 description: A technical lead who sets and enforces dependency-hygiene policy across one or more teams or projects.
+human-oversight: confirmed
+oversight-date: 2026-06-02
 ---
 
 # Tech Lead

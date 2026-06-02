@@ -1,6 +1,8 @@
 ---
 name: project-maintainer
 description: An individual maintainer responsible for the day-to-day health of an npm project who runs dry-aged-deps against their own repository.
+human-oversight: confirmed
+oversight-date: 2026-06-02
 ---
 
 # Project Maintainer

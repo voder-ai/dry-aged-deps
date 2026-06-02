@@ -3,6 +3,8 @@ status: proposed
 job-id: inspect-automated-landings
 persona: project-maintainer
 date-created: 2026-05-18
+human-oversight: confirmed
+oversight-date: 2026-06-02
 screens:
   - GitHub: pull request (merged)
   - GitHub: pull request (failing)

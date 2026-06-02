@@ -3,6 +3,8 @@ status: proposed
 job-id: project-local-config
 persona: project-maintainer
 date-created: 2026-05-11
+human-oversight: confirmed
+oversight-date: 2026-06-02
 screens:
   - Config file: .dry-aged-deps.json
   - CLI: dry-aged-deps --config-file=<path>

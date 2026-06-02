@@ -3,6 +3,8 @@ status: proposed
 job-id: trust-default-policy
 persona: project-maintainer
 date-created: 2026-05-11
+human-oversight: confirmed
+oversight-date: 2026-06-02
 screens:
   - CLI: dry-aged-deps (no flags)
 ---

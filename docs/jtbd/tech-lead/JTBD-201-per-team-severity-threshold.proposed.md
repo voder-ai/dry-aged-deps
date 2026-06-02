@@ -3,6 +3,8 @@ status: proposed
 job-id: per-team-severity-threshold
 persona: tech-lead
 date-created: 2026-05-11
+human-oversight: confirmed
+oversight-date: 2026-06-02
 screens:
   - CLI: --severity, --prod-severity, --dev-severity
 ---

@@ -3,6 +3,8 @@ status: proposed
 job-id: machine-readable-output
 persona: ci-automation-engineer
 date-created: 2026-05-11
+human-oversight: confirmed
+oversight-date: 2026-06-02
 screens:
   - CLI: dry-aged-deps --format=json
   - CLI: dry-aged-deps --format=xml
