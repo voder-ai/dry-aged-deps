@@ -3,9 +3,10 @@
 **Status**: Open
 **Reported**: 2026-06-02
 **Origin**: external (`@windyroad/risk-scorer` external-comms gate PostToolUse marker hook)
-**Priority**: 3 (Medium) — Impact: 3 x Likelihood: 1 (deferred — re-rate at next /wr-itil:review-problems)
-**Effort**: M (deferred — re-rate at next /wr-itil:review-problems)
+**Priority**: 4 (Low) — Impact: Minor (2) x Likelihood: Unlikely (2) — fires every time a subagent is dispatched for the gate; BYPASS workaround exists per P007 precedent
+**Effort**: M — shared-dir marker write OR parent-session-id propagation through the subagent dispatch contract
 **Type**: technical
+**WSJF**: 2.0 = (4 × 1.0) / 2
 
 ## Description
 

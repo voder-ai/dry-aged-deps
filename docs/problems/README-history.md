@@ -57,3 +57,4 @@ Archive of displaced `docs/problems/README.md` line 3 "Last reviewed" fragments 
 ## 2026-06-03
 
 - 2026-06-02 **P021 known error** — `calculateAgeInDays(publishDate, now = Date.now())` extension landed (commit `dc64c44`); overrides-hygiene swap-back complete; RFC-001 T3 inline-arithmetic divergence removed. Awaiting next release for Known Error → Verification Pending.
+- 2026-06-03 **README reconciled** — 2 drift entries corrected: P023, P024 (committed cross-session MISSING — captured by prior session via `/wr-itil:capture-problem` deferred-README contract but never folded into WSJF Rankings). Reconciliation contract per P118 + ADR-014 amended ("Reconciliation as preflight robustness layer").

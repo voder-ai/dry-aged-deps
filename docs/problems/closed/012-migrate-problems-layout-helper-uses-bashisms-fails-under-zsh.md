@@ -1,6 +1,6 @@
 # Problem 012: `migrate-problems-layout.sh` helper uses bashisms but `/wr-itil:work-problems` Step 0a SKILL.md doesn't specify bash — sourcing fails under zsh
 
-**Status**: Known Error
+**Status**: Closed
 **Reported**: 2026-05-17
 **Priority**: 2 (Very Low) — Impact: Minor (2) x Likelihood: Rare (1) — migration already complete in this repo (commit `f44c661`); future likelihood is the upstream-shipping path for other adopters
 **Effort**: S — smallest delta is `bash -c '...'` wrap in upstream SKILL.md Step 0a (Option 1 of three documented fix shapes)
@@ -93,7 +93,18 @@ Option 1 is the smallest delta. Option 2 is the most architecturally clean. Opti
 - `/wr-itil:work-problems` SKILL.md Step 0a — the surface that instructs the failing source-and-call shape.
 - `packages/itil/lib/migrate-problems-layout.sh` — the helper containing the `shopt` bashisms.
 
-(captured via /wr-itil:capture-problem during /wr-retrospective:run-retro Step 4b Stage 1; expand at next investigation)
+(captured via /wr-itil:capture-problem during /wr-retrospective:run-retro Step 4b Stage 1; closed 2026-06-03 as no longer relevant.)
+
+## Closed as no longer relevant
+
+- **Evidence shape**: `file-no-longer-exists` (ADR-079 Phase 1 + Phase 2)
+- **Closed on**: 2026-06-03
+- **Closed by**: `/wr-itil:review-problems` Step 4.6 relevance-close pass (user-confirmed via surface-batch-confirm)
+- **Cite (per-shape evidence)**: cited upstream path `packages/itil/lib/migrate-problems-layout.sh` no longer in current marketplaces install — refactored into the `wr-itil-migrate-problems-layout` PATH shim per ADR-049 (adopter-safe — resolves `lib/migrate-problems-layout.sh` relative to the script, NOT cwd; P317/RFC-009).
+- **Fix shipped via ADR-049 PATH shim mechanism**: upstream rewrote the source-and-call invocation as a single shim command. Empirically this session: Step 0a preflight ran the shim cleanly with no `shopt: command not found` errors that originally triggered this ticket.
+- **Persist**: this section + the script body at `packages/itil/scripts/evaluate-relevance.sh` are the re-runnable verdict sources per ADR-026.
+- **Uncertainty / reversibility**: upstream fix empirically exercised at session-start (preflight ran cleanly). Reversibility: `git revert` the relevance-close commit OR `git mv` back to `.known-error.md` if the shim regresses under zsh.
+- **Upstream notification**: comment posted to `windyroad/agent-plugins#139` confirming the fix landed (per user direction 2026-06-03).
 
 ## Reported Upstream
 

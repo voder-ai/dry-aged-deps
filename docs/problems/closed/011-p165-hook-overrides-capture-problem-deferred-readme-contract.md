@@ -1,6 +1,6 @@
 # Problem 011: P165 README-refresh PreCommit hook overrides `/wr-itil:capture-problem`'s deferred-README contract
 
-**Status**: Known Error
+**Status**: Closed
 **Reported**: 2026-05-17
 **Priority**: 6 (Medium) — Impact: Minor (2) x Likelihood: Possible (3)
 **Effort**: M — upstream `@windyroad/itil` hook amend (Option 1) OR capture-problem SKILL refactor (Option 2)
@@ -72,7 +72,18 @@ Option 1 preserves capture-problem's "capture-and-continue" performance promise 
 - **P010** — the same-day adjacent capture commit (this session) where the conflict was observed.
 - Commit `b63b536` (this session) — P010 capture commit; final body shows the README refresh that was needed to land per P165, contradicting capture-problem's SKILL.md Step 6 contract.
 
-(captured during `/wr-retrospective:run-retro` Step 4b Stage 1; expand at next investigation)
+(captured during `/wr-retrospective:run-retro` Step 4b Stage 1; closed 2026-06-03 as no longer relevant.)
+
+## Closed as no longer relevant
+
+- **Evidence shape**: `file-no-longer-exists` (ADR-079 Phase 1 + Phase 2)
+- **Closed on**: 2026-06-03
+- **Closed by**: `/wr-itil:review-problems` Step 4.6 relevance-close pass (user-confirmed via surface-batch-confirm)
+- **Cite (per-shape evidence)**: cited upstream path `packages/itil/hooks/itil-readme-refresh-precommit.sh` no longer in current install — renamed to `itil-readme-refresh-discipline.sh`. Cited path `packages/itil/skills/capture-problem/SKILL.md` empirically demonstrated working this session (6 capture commits P020-P025 ran the deferred-README contract successfully via the `RISK_BYPASS: capture-deferred-readme` trailer).
+- **Fix shipped via P262 + P265 allow-list mechanism**: the new hook recognises the `RISK_BYPASS: capture-deferred-readme` trailer (registered in `readme-refresh-detect.sh` per P265). All 6 capture commits this session landed without README staging. Functionally satisfies P011's Fix Strategy intent (`detect the capture verb and skip the README-refresh requirement`) via a slightly broader mechanism (registered allow-list token in the commit body) that the architect chose upstream.
+- **Persist**: this section + the script body at `packages/itil/scripts/evaluate-relevance.sh` are the re-runnable verdict sources per ADR-026.
+- **Uncertainty / reversibility**: the upstream fix has been empirically exercised 6× this session without regression. Reversibility: `git revert` the relevance-close commit OR `git mv` back to `.known-error.md` if the hook fix is observed to regress.
+- **Upstream notification**: comment posted to `windyroad/agent-plugins#126` confirming the fix landed (per user direction 2026-06-03).
 
 ## Fix Strategy
 

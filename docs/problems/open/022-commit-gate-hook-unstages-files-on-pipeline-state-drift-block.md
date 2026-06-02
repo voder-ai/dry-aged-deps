@@ -2,10 +2,11 @@
 
 **Status**: Open
 **Reported**: 2026-05-30
-**Priority**: 3 (Medium) — Impact: 3 x Likelihood: 1 (deferred — re-rate at next /wr-itil:review-problems)
+**Priority**: 6 (Medium) — Impact: Minor (2) x Likelihood: Possible (3) — hit 4× across this session (cron-arming, test-relocation, P023 capture cycle, P024 capture cycle) and iter 10 dispatch
 **Origin**: internal
-**Effort**: S (deferred — re-rate at next /wr-itil:review-problems)
+**Effort**: S — block message could add a "Recovery: git add <file> + retry" line; root cause investigation is the harder half
 **Type**: technical
+**WSJF**: 6.0 = (6 × 1.0) / 1
 
 ## Description
 

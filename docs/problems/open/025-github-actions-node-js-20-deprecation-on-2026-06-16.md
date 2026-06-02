@@ -2,10 +2,11 @@
 
 **Status**: Open
 **Reported**: 2026-06-03
-**Priority**: 3 (Medium) — Impact: 3 x Likelihood: 1 (deferred — re-rate at next /wr-itil:review-problems)
+**Priority**: 12 (High) — Impact: Moderate (3) x Likelihood: Likely (4) — deadline 2026-06-16 (13 days from 2026-06-03); no migration queued; 7 references across 3 workflows will be force-migrated; risk of silent behavioural drift if v4-on-Node24 differs from v4-on-Node20
 **Origin**: external (GitHub Actions infrastructure)
-**Effort**: M (deferred — re-rate at next /wr-itil:review-problems)
+**Effort**: M — 7 file edits (workflow YAML) + verification across all 3 workflows; possibly v5 actions if released
 **Type**: technical
+**WSJF**: 6.0 = (12 × 1.0) / 2
 
 ## Description
 
