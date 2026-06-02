@@ -10,6 +10,7 @@
  * / handleTableOutput call-sites to thread the captured findings).
  *
  * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-PIPELINE-WIRE REQ-OVERRIDES-DEFAULT-ON
+ * @supports prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md REQ-EXPOSURE-PER-PACKAGE-APPLY REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
@@ -157,6 +158,64 @@ describe('Story 017.0-DEV-OVERRIDES-HYGIENE: printOutdated overrides-hygiene wir
 
     expect(summary).toHaveProperty('overridesWithSafeUpgrade');
     expect(summary.overridesWithSafeUpgrade).toBe(0);
+  });
+
+  it('[REQ-EXPOSURE-PER-PACKAGE-APPLY] RFC-002 T4 opt-in: Critical-exposure fix 2 days old joins safeUpdates (0-day floor applied)', async () => {
+    vi.spyOn(loadModule, 'loadPackageJson').mockReturnValue({
+      dependencies: { 'critical-pkg': '^1.0.0' },
+      devDependencies: {},
+    });
+
+    const summary = await printOutdated(
+      { 'critical-pkg': { current: '1.0.0', wanted: '1.0.5', latest: '1.0.5' } },
+      {
+        format: 'json',
+        returnSummary: true,
+        prodMinAge: 7,
+        devMinAge: 7,
+        exposureAwareSoak: true,
+        overridesHygiene: false,
+        unfixable: false,
+        fetchVersionTimes: async () => ({ '1.0.5': '2026-06-01T00:00:00Z' }),
+        calculateAgeInDays: () => 2,
+        checkVulnerabilities: async () => ({}),
+        runProjectAudit: async () => ({
+          vulnerabilities: { 'critical-pkg': { severity: 'critical' } },
+        }),
+      }
+    );
+
+    expect(summary.safeUpdates).toBe(1);
+    expect(summary.filteredByAge).toBe(0);
+  });
+
+  it('[REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED] RFC-002 T4 default-OFF: same Critical-exposure inputs, fix stays blocked by unconditional soak', async () => {
+    vi.spyOn(loadModule, 'loadPackageJson').mockReturnValue({
+      dependencies: { 'critical-pkg': '^1.0.0' },
+      devDependencies: {},
+    });
+
+    const summary = await printOutdated(
+      { 'critical-pkg': { current: '1.0.0', wanted: '1.0.5', latest: '1.0.5' } },
+      {
+        format: 'json',
+        returnSummary: true,
+        prodMinAge: 7,
+        devMinAge: 7,
+        // exposureAwareSoak omitted → default-OFF
+        overridesHygiene: false,
+        unfixable: false,
+        fetchVersionTimes: async () => ({ '1.0.5': '2026-06-01T00:00:00Z' }),
+        calculateAgeInDays: () => 2,
+        checkVulnerabilities: async () => ({}),
+        runProjectAudit: async () => ({
+          vulnerabilities: { 'critical-pkg': { severity: 'critical' } },
+        }),
+      }
+    );
+
+    expect(summary.safeUpdates).toBe(0);
+    expect(summary.filteredByAge).toBe(1);
   });
 
   it('[REQ-OVERRIDES-JSON] renders findings into the JSON output (T5 flip of the T4 deferred-render assertion)', async () => {

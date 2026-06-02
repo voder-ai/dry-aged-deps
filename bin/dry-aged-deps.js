@@ -199,6 +199,7 @@ async function main() {
     unfixable,
     unfixableLevel,
     overridesHygiene,
+    exposureAwareSoak,
   } = options;
 
   let data, fetchVersionTimesOverride, checkVulnerabilitiesOverride;
@@ -228,6 +229,7 @@ async function main() {
         unfixable,
         unfixableLevel,
         overridesHygiene,
+        exposureAwareSoak,
       })
     );
 

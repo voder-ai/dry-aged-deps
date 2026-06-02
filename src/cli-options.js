@@ -43,6 +43,39 @@ function parseOverridesHygieneOption(args, config) {
 }
 
 /**
+ * Derive the exposure-aware-soak modifier enable flag from CLI args + config.
+ * Inverted sibling of parseOverridesHygieneOption — default-OFF for v1 per
+ * RFC-002 §Summary and JTBD-006 trust-default-policy contract. v2 default
+ * flip requires its own ADR per RFC-002 §Reassessment.
+ * @param {string[]} args - CLI arguments.
+ * @param {Record<string, any>} config - Loaded config file object.
+ * @returns {boolean}
+ * @supports prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md REQ-EXPOSURE-CLI-FLAG REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED
+ */
+function parseExposureAwareSoakOption(args, config) {
+  if (args.includes('--no-exposure-aware-soak')) return false;
+  if (args.includes('--exposure-aware-soak')) return true;
+  return config['exposure-aware-soak'] === true;
+}
+
+/**
+ * Bundle the surface-flag parsers (unfixable, overrides-hygiene, exposure-aware-soak)
+ * so parseOptions stays within the max-lines-per-function cap.
+ * @param {string[]} args
+ * @param {Record<string, any>} config
+ * @returns {{ unfixable: boolean, unfixableLevel: string, overridesHygiene: boolean, exposureAwareSoak: boolean }}
+ */
+function parseSurfaceFlags(args, config) {
+  const { unfixable, unfixableLevel } = parseUnfixableOptions(args, config);
+  return {
+    unfixable,
+    unfixableLevel,
+    overridesHygiene: parseOverridesHygieneOption(args, config),
+    exposureAwareSoak: parseExposureAwareSoakOption(args, config),
+  };
+}
+
+/**
  * Options derived from CLI arguments and config file.
  *
  * @typedef {Object} CliOptions
@@ -58,6 +91,7 @@ function parseOverridesHygieneOption(args, config) {
  * @property {boolean} unfixable - Whether to surface known-vulnerable-but-unfixable packages.
  * @property {string} unfixableLevel - Minimum severity floor for the unfixable surface.
  * @property {boolean} overridesHygiene - Whether to surface stale or vulnerable package.json `overrides` pins.
+ * @property {boolean} exposureAwareSoak - Whether to apply the RFC-002 exposure-aware soak modifier (default-OFF for v1).
  */
 
 /**
@@ -99,6 +133,8 @@ export function parseOptions(argv) {
     '--no-unfixable',
     '--unfixable-level',
     '--no-overrides-hygiene',
+    '--exposure-aware-soak',
+    '--no-exposure-aware-soak',
     '--help',
     '-h',
     '--version',
@@ -158,8 +194,7 @@ export function parseOptions(argv) {
   const prodMinSeverity = parseProdSeverityFlag(args, defaultProdMinSeverity, validSeverities);
   const devMinSeverity = parseDevSeverityFlag(args, defaultDevMinSeverity, validSeverities);
 
-  const { unfixable, unfixableLevel } = parseUnfixableOptions(args, config);
-  const overridesHygiene = parseOverridesHygieneOption(args, config);
+  const { unfixable, unfixableLevel, overridesHygiene, exposureAwareSoak } = parseSurfaceFlags(args, config);
 
   return {
     format,
@@ -174,5 +209,6 @@ export function parseOptions(argv) {
     unfixable,
     unfixableLevel,
     overridesHygiene,
+    exposureAwareSoak,
   };
 }

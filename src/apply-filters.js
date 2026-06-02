@@ -5,15 +5,24 @@ import { filterBySecurity } from './filter-by-security.js';
 /**
  * Apply age and security filters to rows.
  * @param {Array<[string, string, string, string, number|string, string]>} rows - Array of [name, current, wanted, latest, age, depType].
- * @param {{ prodMinAge: number, devMinAge: number, prodMinSeverity: string, devMinSeverity: string, checkVulnerabilities: Function, format: string }} options
+ * @param {{ prodMinAge: number, devMinAge: number, prodMinSeverity: string, devMinSeverity: string, checkVulnerabilities: Function, format: string, exposureModifierByPackage?: Map<string, number> }} options
  * @returns {Promise<{ safeRows: Array<[string, string, string, string, number|string, string]>, matureRows: Array<[string, string, string, string, number|string, string]>, vulnMap: Map<string, {count: number, maxSeverity: string, details: Array<any>}>, filterReasonMap: Map<string, string>, summary: { totalOutdated: number, safeUpdates: number, filteredByAge: number, filteredBySecurity: number } }>} Filtered results and summary.
  * @supports prompts/003.0-DEV-IDENTIFY-OUTDATED.md REQ-AGE-THRESHOLD
  * @supports prompts/004.0-DEV-FILTER-VULNERABLE-VERSIONS.md REQ-AUDIT-CHECK
+ * @supports prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md REQ-EXPOSURE-PER-PACKAGE-APPLY REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED
  */
 export async function applyFilters(rows, options) {
-  const { prodMinAge, devMinAge, prodMinSeverity, devMinSeverity, checkVulnerabilities, format } = options;
+  const {
+    prodMinAge,
+    devMinAge,
+    prodMinSeverity,
+    devMinSeverity,
+    checkVulnerabilities,
+    format,
+    exposureModifierByPackage,
+  } = options;
   const totalOutdated = rows.length;
-  const matureRows = filterByAge(rows, { prodMinAge, devMinAge });
+  const matureRows = filterByAge(rows, { prodMinAge, devMinAge, exposureModifierByPackage });
   const { safeRows, vulnMap, filterReasonMap } = await filterBySecurity(
     matureRows,
     checkVulnerabilities,

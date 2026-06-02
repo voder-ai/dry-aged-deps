@@ -45,6 +45,9 @@ export interface CliOptions {
 
   /** Whether to surface stale or vulnerable package.json `overrides` pins (on by default; --no-overrides-hygiene disables) */
   overridesHygiene: boolean;
+
+  /** Whether to apply the RFC-002 exposure-aware soak modifier (default-OFF for v1; opt-in via --exposure-aware-soak) */
+  exposureAwareSoak: boolean;
 }
 
 /**

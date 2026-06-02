@@ -13,6 +13,7 @@ import { runOverridesHygiene as defaultRunOverridesHygiene } from './overrides-h
 import { runProjectAudit as defaultRunProjectAudit } from './run-project-audit.js';
 import { updatePackages } from './update-packages.js';
 import { getThresholds } from './print-utils.js';
+import { severityToModifier } from './exposure-soak-modifier.js';
 
 /**
  * Count override findings whose `safeUpgrade` is a non-null target. Feeds the
@@ -227,23 +228,45 @@ async function lookupVersionIso(name, exact, fetchVersionTimes) {
  * Fetch the project-level audit payload exactly once when any consuming
  * surface is enabled. Returns the empty-shape payload when both surfaces
  * are off so downstream resolvers stay shape-stable.
- * @param {{ unfixable?: boolean, overridesHygiene?: boolean, runProjectAudit?: () => Promise<{ vulnerabilities: Record<string, object> }> }} options
+ * @param {{ unfixable?: boolean, overridesHygiene?: boolean, exposureAwareSoak?: boolean, runProjectAudit?: () => Promise<{ vulnerabilities: Record<string, object> }> }} options
  * @param {boolean} updateMode - update mode skips audit cost
  * @returns {Promise<{ vulnerabilities: Record<string, object> }>}
  * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-AUDIT-XREF
+ * @supports prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md REQ-EXPOSURE-AUDIT-INGEST
  */
 async function fetchSharedAudit(options, updateMode) {
   const unfixableOn = options.unfixable === true && !updateMode;
   const overridesOn = options.overridesHygiene !== false;
-  if (!unfixableOn && !overridesOn) return { vulnerabilities: {} };
+  // RFC-002 T4: exposure-aware-soak also needs the audit payload to compute
+  // per-package effective soak. Default-OFF preserves the no-fetch shortcut.
+  const exposureOn = options.exposureAwareSoak === true;
+  if (!unfixableOn && !overridesOn && !exposureOn) return { vulnerabilities: {} };
   const runner = options.runProjectAudit ?? defaultRunProjectAudit;
   return runner();
 }
 
 /**
+ * Build the per-package exposure modifier map from the shared audit payload
+ * using the RFC-002 §Summary locked policy table. Entries whose severity maps
+ * to modifier 1.0 (Moderate / Low / None / unknown) are dropped — they do not
+ * shift the effective soak so a map miss in filterByAge already produces the
+ * same result.
+ * @param {{ vulnerabilities: Record<string, object> }} auditData
+ * @returns {Map<string, number>}
+ * @supports prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md REQ-EXPOSURE-SEVERITY-EXTRACT REQ-EXPOSURE-POLICY-TABLE REQ-EXPOSURE-PER-PACKAGE-APPLY
+ */
+function buildExposureModifierByPackage(auditData) {
+  const entries = Object.entries(auditData?.vulnerabilities ?? {});
+  const modifierEntries = entries
+    .map(([name, v]) => /** @type {[string, number]} */ ([name, severityToModifier(/** @type {any} */ (v)?.severity)]))
+    .filter(([, modifier]) => modifier !== 1);
+  return new Map(modifierEntries);
+}
+
+/**
  * Print outdated dependencies information with age
  * @param {Record<string, { current: string; wanted: string; latest: string }>} data
- * @param {{ fetchVersionTimes?: function, calculateAgeInDays?: function, checkVulnerabilities?: function, format?: string, prodMinAge?: number, devMinAge?: number, prodMinSeverity?: string, devMinSeverity?: string, returnSummary?: boolean, updateMode?: boolean, skipConfirmation?: boolean, exclude?: Record<string, string>, unfixable?: boolean, unfixableLevel?: string, overridesHygiene?: boolean, runProjectAudit?: () => Promise<{ vulnerabilities: Record<string, object> }>, runOverridesHygieneFn?: function }} [options]
+ * @param {{ fetchVersionTimes?: function, calculateAgeInDays?: function, checkVulnerabilities?: function, format?: string, prodMinAge?: number, devMinAge?: number, prodMinSeverity?: string, devMinSeverity?: string, returnSummary?: boolean, updateMode?: boolean, skipConfirmation?: boolean, exclude?: Record<string, string>, unfixable?: boolean, unfixableLevel?: string, overridesHygiene?: boolean, exposureAwareSoak?: boolean, runProjectAudit?: () => Promise<{ vulnerabilities: Record<string, object> }>, runOverridesHygieneFn?: function }} [options]
  * @param {object} [options] - Options object containing CLI and function overrides.
  * @returns {Promise<Object|undefined>} summary for xml mode or if returnSummary is true
  * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND
@@ -313,6 +336,12 @@ export async function printOutdated(data, options = {}) {
     format,
   });
 
+  // RFC-002 T4: opt-in per-package soak modifier. Default-OFF leaves the
+  // map undefined so applyFilters/filterByAge run the unconditional soak path
+  // unchanged per REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED.
+  const exposureModifierByPackage =
+    options.exposureAwareSoak === true ? buildExposureModifierByPackage(auditData) : undefined;
+
   // Apply filters
   const { safeRows, matureRows, vulnMap, filterReasonMap, summary } = await applyFilters(rows, {
     prodMinAge,
@@ -321,6 +350,7 @@ export async function printOutdated(data, options = {}) {
     devMinSeverity,
     checkVulnerabilities,
     format,
+    exposureModifierByPackage,
   });
 
   // @supports prompts/016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES.md REQ-UNFIXABLE-DETECT
