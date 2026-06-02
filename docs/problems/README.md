@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-05-30 — P015 + P018 closed (in-session evidence: P015 wallclock timeout wrapper exercised via `scripts/run-with-timeout.mjs 300 -- vitest run test/cli.e2e.real-fixture.test.js` in prepush — completed within budget; P018 `--diff-filter=ACMR` auto-write contract exercised via commit `a34aebe` staging 55 git mv renames — format:check passed post-commit). Dev-work queue top non-upstream-blocked: P012 (WSJF 4.0, Known Error, S — zsh migrate-problems-layout bashism). Verification Queue: 1 (P016 — `no — not observed`, failure-path not exercised this session). Parked: 3 (P004, P005, P007).
+> Last reviewed: 2026-06-02 **README reconciled** — 3 drift entries corrected: P020, P021, P022 (committed cross-session MISSING — captured by prior /wr-itil:run-retro Step 4b but never staged into WSJF Rankings). Reconciliation contract per P118 + ADR-014 amended ("Reconciliation as preflight robustness layer").
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -12,11 +12,14 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 6.0  | P010 | manage-problem SKILL.md commit-message convention fails @commitlint/config-conventional subject-case rule                                   | 6 (Medium)   | Known Error | M      | 2026-05-17 |
 | 6.0  | P011 | P165 README-refresh PreCommit hook overrides /wr-itil:capture-problem's deferred-README contract                                            | 6 (Medium)   | Known Error | M      | 2026-05-17 |
 | 4.0  | P012 | migrate-problems-layout.sh helper uses bashisms but /wr-itil:work-problems Step 0a SKILL.md doesn't specify bash — sourcing fails under zsh | 2 (Very Low) | Known Error | S      | 2026-05-17 |
+| 3.0  | P021 | `calculateAgeInDays` hardcodes `Date.now()` — not injectable for testability                                                                | 3 (Medium)   | Open        | S      | 2026-05-30 |
+| 3.0  | P022 | commit-gate hook unstages files on "Pipeline state drift" block — manual re-stage needed after rescore                                      | 3 (Medium)   | Open        | S      | 2026-05-30 |
 | 3.0  | P006 | assistant defers actionable items to "next session" instead of acting when the user is observably present                                   | 6 (Medium)   | Open        | M      | 2026-05-13 |
 | 3.0  | P017 | work-problems Step 0 reconcile-readme halt-route can't handle unscored-ticket MISSING drift                                                 | 6 (Medium)   | Open        | M      | 2026-05-30 |
 | 2.25 | P013 | dry-aged-deps ignores the package.json overrides block — stale/vulnerable pins go undetected, override-fixable vulns mislabeled "unfixable" | 9 (Medium)   | Open        | L      | 2026-05-25 |
 | 2.25 | P014 | the age soak is unconditional — it ignores the severity of the vulnerability the project is currently exposed to                            | 9 (Medium)   | Open        | L      | 2026-05-25 |
 | 2.0  | P019 | work-problems Step 5 subprocess JSON envelope's duration_ms can dramatically undercount — extend P089 Gap 2 authority hierarchy             | 4 (Low)      | Open        | M      | 2026-05-30 |
+| 1.5  | P020 | `@windyroad/tdd` hook stem-match strict matching causes variant-named tests to fail to pair with their source modules                       | 3 (Medium)   | Open        | M      | 2026-05-30 |
 
 ## Verification Queue
 
