@@ -38,7 +38,7 @@ console.log(times['4.17.21']);
 // => "2020-04-02T21:31:34.000Z"
 ```
 
-## calculateAgeInDays(publishDate)
+## calculateAgeInDays(publishDate, now?)
 
 Calculate how many days have passed since a given publish date.
 
@@ -50,18 +50,20 @@ import { calculateAgeInDays } from 'dry-aged-deps';
 /**
  * Calculate the age in days since the publish date.
  * @param {string} publishDate - ISO date string of the version publish time.
+ * @param {number} [now=Date.now()] - Reference time in epoch milliseconds (injectable for testing).
  * @returns {number} Number of full days since the publish date.
  */
-function calculateAgeInDays(publishDate)
+function calculateAgeInDays(publishDate, now)
 ```
 
 ### Parameters
 
 - `publishDate` (string): An ISO 8601 date-time string (e.g., `"2023-01-15T12:00:00.000Z"`).
+- `now` (number, optional): Reference time in epoch milliseconds. Defaults to `Date.now()`. Injectable for deterministic test fixtures.
 
 ### Returns
 
-An integer representing the number of full days between the given date and the current system time.
+An integer representing the number of full days between the given date and the current system time (or the injected `now`).
 
 ### Example
 

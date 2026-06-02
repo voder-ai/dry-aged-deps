@@ -7,16 +7,10 @@
  * Pipeline wiring (T4), formatter rendering (T5), exit-code extension (T6),
  * and live-case regression (T7) land in subsequent iters.
  *
- * Age math: REQ-OVERRIDES-AGE in the spec says "compute days-since-publish
- * via existing `calculateAgeInDays()`". The existing helper at
- * `src/age-calculator.js` hardcodes `Date.now()` with no injectable clock,
- * which the deterministic-`now` test fixture cannot drive. T3 inlines the
- * identical arithmetic (`Math.floor((now - publishTime) / 86400000)`) on the
- * injected `now`. A later iter (T4/T5) should extend `calculateAgeInDays`
- * to accept an optional `now` and swap this call site back to the helper.
- *
  * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-PARSE REQ-OVERRIDES-AGE REQ-OVERRIDES-AUDIT-XREF REQ-OVERRIDES-OUTDATED-XREF REQ-OVERRIDES-REASON-TAXONOMY REQ-OVERRIDES-EXCEPTION-RESPECT
  */
+
+import { calculateAgeInDays } from './age-calculator.js';
 
 /**
  * @typedef {{
@@ -37,8 +31,6 @@
  *   safeUpgrade: string|null,
  * }} OverrideFinding
  */
-
-const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
 /**
  * Run the overrides-hygiene scan.
@@ -178,7 +170,7 @@ function buildMalformedFinding(name) {
 function assessOverride({ name, pinned, vulnMap, outdatedMap, versionTimeMap, now, exclusions }) {
   const exactVersion = stripRangeSpecifier(pinned);
   const publishDate = versionTimeMap.get(`${name}@${exactVersion}`);
-  const ageDays = publishDate ? computeAgeDays(publishDate, now) : null;
+  const ageDays = publishDate ? calculateAgeInDays(publishDate, now.getTime()) : null;
 
   const outdatedEntry = outdatedMap.get(name);
   const latest = outdatedEntry?.latest ?? null;
@@ -211,19 +203,6 @@ function assessOverride({ name, pinned, vulnMap, outdatedMap, versionTimeMap, no
  */
 function stripRangeSpecifier(versionRange) {
   return versionRange.replace(/^[\^~>=<]+\s*/, '').trim();
-}
-
-/**
- * Identical arithmetic to `calculateAgeInDays()` but driven by an injected
- * clock (see module-level note on the divergence).
- *
- * @param {string} publishDate
- * @param {Date} now
- * @returns {number}
- */
-function computeAgeDays(publishDate, now) {
-  const publishMs = new Date(publishDate).getTime();
-  return Math.floor((now.getTime() - publishMs) / MS_PER_DAY);
 }
 
 /**

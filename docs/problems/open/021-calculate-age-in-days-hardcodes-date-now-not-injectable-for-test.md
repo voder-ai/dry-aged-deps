@@ -35,9 +35,9 @@ Fix shape: extend the signature to `calculateAgeInDays(publishDate, now = Date.n
 ### Investigation Tasks
 
 - [ ] Re-rate Priority and Effort at next /wr-itil:review-problems
-- [ ] Extend `calculateAgeInDays` signature (TDD: failing test injects custom `now` → add parameter)
-- [ ] Swap inline arithmetic in `src/overrides-hygiene.js` back to helper
-- [ ] Remove JSDoc divergence comment in `src/overrides-hygiene.js` post-swap
+- [x] Extend `calculateAgeInDays` signature (TDD: failing test injects custom `now` → add parameter)
+- [x] Swap inline arithmetic in `src/overrides-hygiene.js` back to helper
+- [x] Remove JSDoc divergence comment in `src/overrides-hygiene.js` post-swap
 
 ## Dependencies
 

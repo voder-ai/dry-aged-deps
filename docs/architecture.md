@@ -61,8 +61,8 @@ test/
 
 ### Age Calculator (`src/age-calculator.js`)
 
-- Exposes `calculateAgeInDays(publishDate)`.
-- Converts ISO date strings to epoch times and computes difference from current time.
+- Exposes `calculateAgeInDays(publishDate, now?)`. Optional `now` (epoch ms, defaults to `Date.now()`) is injectable for deterministic test fixtures.
+- Converts ISO date strings to epoch times and computes difference from the reference time.
 - Returns the integer number of days.
 
 ### Vulnerability Checker (`src/check-vulnerabilities.js`)

@@ -2,8 +2,9 @@
  * Tests for runOverridesHygiene — surfacing stale and vulnerable
  * package.json `overrides` pins.
  *
- * Drives RFC-001 T2 (TDD red) for the overrides-hygiene module.
- * Implementation lands in T3.
+ * Per P021 swap-back, the module now consumes `calculateAgeInDays(publishDate, now)`
+ * directly rather than the previous inline `MS_PER_DAY` arithmetic; the deterministic
+ * `now` Date in this fixture is passed through to the helper as epoch ms.
  *
  * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-PARSE REQ-OVERRIDES-AGE REQ-OVERRIDES-AUDIT-XREF REQ-OVERRIDES-OUTDATED-XREF REQ-OVERRIDES-REASON-TAXONOMY REQ-OVERRIDES-EXCEPTION-RESPECT
  */
