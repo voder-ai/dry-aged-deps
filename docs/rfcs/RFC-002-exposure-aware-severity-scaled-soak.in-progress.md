@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: in-progress
 rfc-id: exposure-aware-severity-scaled-soak
 reported: 2026-05-30
 decision-makers: [Tom Howard]
@@ -11,7 +11,7 @@ stories: []
 
 # RFC-002: Exposure-Aware Severity-Scaled Age Soak
 
-**Status**: accepted
+**Status**: in-progress
 **Reported**: 2026-05-30
 **Problems**: P014
 **ADRs**: ADR-0003, ADR-0018, ADR-0019
