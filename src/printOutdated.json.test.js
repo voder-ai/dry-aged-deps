@@ -52,6 +52,9 @@ describe('Story 008.0-DEV-JSON-OUTPUT: printOutdated unit tests - json output', 
       safeUpdates: 2,
       filteredByAge: 0,
       filteredBySecurity: 0,
+      // RFC-001 T6: orchestrator-level summary now carries the override-pin
+      // safe-upgrade count so the CLI can OR it into the exit-1 trigger.
+      overridesWithSafeUpgrade: 0,
     });
 
     // Verify console.log called once with JSON output

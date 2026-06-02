@@ -32,6 +32,8 @@ describe('Story 009.0-DEV-XML-OUTPUT: printOutdated XML empty rows', () => {
       safeUpdates: 0,
       filteredByAge: 0,
       filteredBySecurity: 0,
+      // RFC-001 T6: orchestrator-level summary carries override safe-upgrade count.
+      overridesWithSafeUpgrade: 0,
     });
 
     formatSpy.mockRestore();

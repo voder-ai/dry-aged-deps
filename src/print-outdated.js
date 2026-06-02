@@ -15,12 +15,25 @@ import { updatePackages } from './update-packages.js';
 import { getThresholds } from './print-utils.js';
 
 /**
+ * Count override findings whose `safeUpgrade` is a non-null target. Feeds the
+ * summary's `overridesWithSafeUpgrade` field that drives the RFC-001 T6
+ * exit-code extension (exit 1 when ≥ 1 override pin has a safe-upgrade target,
+ * additive within ADR-0003's "safe path forward exists" semantic).
+ * @param {Array<{ safeUpgrade?: string|null }>} overridesHygiene
+ * @returns {number}
+ * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-EXIT-CODE-LOGIC
+ */
+function countOverridesWithSafeUpgrade(overridesHygiene) {
+  return overridesHygiene.filter((f) => f.safeUpgrade != null).length;
+}
+
+/**
  * Handle scenario when there are no outdated dependencies.
  * @param {{ format: string, returnSummary: boolean, thresholds: {prod:{minAge:number,minSeverity:string},dev:{minAge:number,minSeverity:string}}, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>, overridesHygiene?: Array<object> }} params
  * @returns {Object|undefined} summary for xml mode or if returnSummary is true
  * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
  * @supports prompts/016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES.md REQ-UNFIXABLE-DETECT
- * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-TABLE REQ-OVERRIDES-JSON REQ-OVERRIDES-XML
+ * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-TABLE REQ-OVERRIDES-JSON REQ-OVERRIDES-XML REQ-OVERRIDES-EXIT-CODE-LOGIC
  */
 export function handleNoOutdated({
   format,
@@ -35,6 +48,7 @@ export function handleNoOutdated({
     safeUpdates: 0,
     filteredByAge: 0,
     filteredBySecurity: 0,
+    overridesWithSafeUpgrade: countOverridesWithSafeUpgrade(overridesHygiene),
   };
   // @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-CLI-FLAG
   if (format === 'json') {
@@ -323,6 +337,11 @@ export async function printOutdated(data, options = {}) {
     auditData,
     options,
   });
+
+  // @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-EXIT-CODE-LOGIC
+  // T6: surface override-pin safe-upgrade count in the summary so the CLI can
+  // OR it into the existing safeUpdates exit-1 trigger per RFC-001 Scope item 7.
+  /** @type {any} */ (summary).overridesWithSafeUpgrade = countOverridesWithSafeUpgrade(overridesHygiene);
 
   return dispatchFormatter({
     format,

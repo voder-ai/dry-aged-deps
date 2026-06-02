@@ -121,6 +121,8 @@ describe('Story 008.0-DEV-JSON-OUTPUT: printOutdated unit tests - json output em
       safeUpdates: 0,
       filteredByAge: 0,
       filteredBySecurity: 0,
+      // RFC-001 T6: orchestrator-level summary carries override safe-upgrade count.
+      overridesWithSafeUpgrade: 0,
     });
     expect(logSpy).toHaveBeenCalledTimes(1);
     const output = logSpy.mock.calls[0][0];
@@ -129,6 +131,9 @@ describe('Story 008.0-DEV-JSON-OUTPUT: printOutdated unit tests - json output em
     expect(parsed).toHaveProperty('packages');
     expect(Array.isArray(parsed.packages)).toBe(true);
     expect(parsed.packages).toHaveLength(0);
+    // JSON-formatter summary intentionally projects 4 fields + thresholds for
+    // backward compatibility (REQ-OVERRIDES-SCHEMA-COMPAT); overridesWithSafeUpgrade
+    // remains an orchestrator-only field, not exposed in JSON output.
     expect(parsed.summary).toEqual({
       totalOutdated: 0,
       safeUpdates: 0,
@@ -160,6 +165,8 @@ describe('Story 009.0-DEV-XML-OUTPUT: printOutdated unit tests - xml output', ()
       safeUpdates: 0,
       filteredByAge: 0,
       filteredBySecurity: 0,
+      // RFC-001 T6: orchestrator-level summary carries override safe-upgrade count.
+      overridesWithSafeUpgrade: 0,
     });
     expect(logSpy).toHaveBeenCalledTimes(1);
     const output = logSpy.mock.calls[0][0];
@@ -189,6 +196,8 @@ describe('Story 009.0-DEV-XML-OUTPUT: printOutdated unit tests - xml output', ()
       safeUpdates: 1,
       filteredByAge: 0,
       filteredBySecurity: 0,
+      // RFC-001 T6: orchestrator-level summary carries override safe-upgrade count.
+      overridesWithSafeUpgrade: 0,
     });
     expect(logSpy).toHaveBeenCalledTimes(1);
     const output = logSpy.mock.calls[0][0];
@@ -233,10 +242,14 @@ describe('Story 008.0-DEV-JSON-OUTPUT: printOutdated unit tests - json output wi
       safeUpdates: 1,
       filteredByAge: 0,
       filteredBySecurity: 0,
+      // RFC-001 T6: orchestrator-level summary carries override safe-upgrade count.
+      overridesWithSafeUpgrade: 0,
     });
     expect(logSpy).toHaveBeenCalledTimes(1);
     const output = logSpy.mock.calls[0][0];
     const obj = JSON.parse(output);
+    // JSON-formatter summary intentionally projects 4 fields + thresholds
+    // (REQ-OVERRIDES-SCHEMA-COMPAT); overridesWithSafeUpgrade stays orchestrator-only.
     expect(obj.summary).toEqual({
       totalOutdated: 1,
       safeUpdates: 1,

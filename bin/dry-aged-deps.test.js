@@ -25,4 +25,10 @@ describe('Story 017.0-DEV-OVERRIDES-HYGIENE: bin/dry-aged-deps.js', () => {
     expect(result.exitCode).toBe(0);
     expect(result.stderr).not.toContain('Unknown option');
   });
+
+  it('[REQ-OVERRIDES-EXIT-CODE] --help advertises the widened --check exit-1 trigger for override pins with a safe upgrade target (RFC-001 T6)', async () => {
+    const result = await execa('node', [cliPath, '--help'], { reject: false });
+    expect(result.exitCode).toBe(0);
+    expect(result.stdout).toMatch(/override pins with a safe upgrade target/);
+  });
 });

@@ -34,7 +34,9 @@ function printHelp() {
   );
   console.log('  --prod-severity=<lvl>  Severity threshold for production dependencies (falls back to --severity)');
   console.log('  --dev-severity=<lvl>   Severity threshold for development dependencies (falls back to --severity)');
-  console.log('  --check                 Check mode: exit code 1 if safe updates available, 0 if none, 2 on error');
+  console.log(
+    '  --check                 Check mode: exit code 1 if safe updates available (including override pins with a safe upgrade target), 0 if none, 2 on error'
+  );
   console.log('  --update               Update dependencies to latest safe versions');
   console.log('  -y, --yes               Skip confirmation prompts (assume yes)');
   console.log(
@@ -210,7 +212,7 @@ async function main() {
 
   try {
     // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
-    const summary = /** @type {{ safeUpdates: number }} */ (
+    const summary = /** @type {{ safeUpdates: number, overridesWithSafeUpgrade?: number }} */ (
       await printOutdated(/** @type {any} */ (data), {
         format,
         fetchVersionTimes: fetchVersionTimesOverride,
@@ -229,15 +231,22 @@ async function main() {
       })
     );
 
+    // @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-EXIT-CODE REQ-OVERRIDES-EXIT-CODE-LOGIC
+    // RFC-001 T6: exit-1 fires when either ≥ 1 safe direct-dep update exists
+    // OR ≥ 1 override pin has a safe upgrade target available. Additive within
+    // ADR-0003's "safe path forward exists" semantic; stale-only / vulnerable-
+    // without-safe-target override pins surface informationally per ADR-0018.
+    const safePathExists = summary.safeUpdates > 0 || (summary.overridesWithSafeUpgrade ?? 0) > 0;
+
     if (checkMode) {
       // @supports prompts/013.0-DEV-CHECK-MODE.md REQ-CHECK-FLAG
-      process.exit(summary.safeUpdates > 0 ? 1 : 0);
+      process.exit(safePathExists ? 1 : 0);
     }
     if (updateMode) {
       // @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-UPDATE-FLAG
       process.exit(0);
     }
-    process.exit(summary.safeUpdates > 0 ? 1 : 0);
+    process.exit(safePathExists ? 1 : 0);
   } catch (error) {
     // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
     handleError(/** @type {Error & {code?: string, details?: string}} */ (error), format);

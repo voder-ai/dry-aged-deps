@@ -93,6 +93,72 @@ describe('Story 017.0-DEV-OVERRIDES-HYGIENE: printOutdated overrides-hygiene wir
     expect(calls).toHaveLength(0);
   });
 
+  it('[REQ-OVERRIDES-EXIT-CODE-LOGIC] surfaces overridesWithSafeUpgrade count in summary when ≥ 1 finding carries non-null safeUpgrade (RFC-001 T6)', async () => {
+    vi.spyOn(loadModule, 'loadPackageJson').mockReturnValue({
+      dependencies: {},
+      devDependencies: {},
+      overrides: { 'brace-expansion': '^4.0.1', 'other-pkg': '^1.0.0' },
+    });
+
+    const findings = [
+      {
+        name: 'brace-expansion',
+        pinned: '^4.0.1',
+        latest: '5.0.6',
+        ageDays: 100,
+        reason: 'stale-and-vulnerable: 100 days behind, GHSA-f886-m6hf-6m8v',
+        advisories: [],
+        safeUpgrade: '5.0.6',
+      },
+      {
+        name: 'other-pkg',
+        pinned: '^1.0.0',
+        latest: null,
+        ageDays: null,
+        reason: 'pin-to-unknown-version',
+        advisories: [],
+        safeUpgrade: null,
+      },
+    ];
+
+    const summary = await printOutdated(
+      {},
+      {
+        format: 'json',
+        returnSummary: true,
+        overridesHygiene: true,
+        unfixable: false,
+        runOverridesHygieneFn: async () => findings,
+        runProjectAudit: async () => ({ vulnerabilities: {} }),
+      }
+    );
+
+    expect(summary).toHaveProperty('overridesWithSafeUpgrade');
+    expect(summary.overridesWithSafeUpgrade).toBe(1);
+    expect(summary.safeUpdates).toBe(0);
+  });
+
+  it('[REQ-OVERRIDES-EXIT-CODE-LOGIC] overridesWithSafeUpgrade defaults to 0 when no findings carry a safeUpgrade (RFC-001 T6)', async () => {
+    vi.spyOn(loadModule, 'loadPackageJson').mockReturnValue({
+      dependencies: {},
+      devDependencies: {},
+      overrides: {},
+    });
+
+    const summary = await printOutdated(
+      {},
+      {
+        format: 'json',
+        returnSummary: true,
+        overridesHygiene: false,
+        unfixable: false,
+      }
+    );
+
+    expect(summary).toHaveProperty('overridesWithSafeUpgrade');
+    expect(summary.overridesWithSafeUpgrade).toBe(0);
+  });
+
   it('[REQ-OVERRIDES-JSON] renders findings into the JSON output (T5 flip of the T4 deferred-render assertion)', async () => {
     vi.spyOn(loadModule, 'loadPackageJson').mockReturnValue({
       dependencies: {},

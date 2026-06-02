@@ -44,21 +44,21 @@ dry-aged-deps
 
 ### Options
 
-| Flag                    | Description                                                                                                               |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| -h, --help              | Show help information                                                                                                     |
-| -v, --version           | Show the CLI version                                                                                                      |
-| --format=<format>       | Output format: table (default), json, xml                                                                                 |
-| --min-age=<days>        | Minimum age in days (1-365) for including versions (default: 7)                                                           |
-| --prod-min-age=<days>   | Minimum age for production dependencies (falls back to --min-age)                                                         |
-| --dev-min-age=<days>    | Minimum age for development dependencies (falls back to --min-age)                                                        |
-| --severity=<level>      | Vulnerability severity threshold: none, low, moderate, high, critical (default: none)                                     |
-| --prod-severity=<level> | Severity threshold for production dependencies (falls back to --severity)                                                 |
-| --dev-severity=<level>  | Severity threshold for development dependencies (falls back to --severity)                                                |
-| --config-file=<file>    | Path to JSON config file (default: .dry-aged-deps.json). CLI flags override config file values                            |
-| --check                 | Check mode: exit code 1 if safe updates available, 0 if none, 2 on error (consistent across table, JSON, and XML formats) |
-| --update                | Update dependencies to latest safe versions                                                                               |
-| -y, --yes               | Skip confirmation prompts (assume yes)                                                                                    |
+| Flag                    | Description                                                                                                                                                                    |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| -h, --help              | Show help information                                                                                                                                                          |
+| -v, --version           | Show the CLI version                                                                                                                                                           |
+| --format=<format>       | Output format: table (default), json, xml                                                                                                                                      |
+| --min-age=<days>        | Minimum age in days (1-365) for including versions (default: 7)                                                                                                                |
+| --prod-min-age=<days>   | Minimum age for production dependencies (falls back to --min-age)                                                                                                              |
+| --dev-min-age=<days>    | Minimum age for development dependencies (falls back to --min-age)                                                                                                             |
+| --severity=<level>      | Vulnerability severity threshold: none, low, moderate, high, critical (default: none)                                                                                          |
+| --prod-severity=<level> | Severity threshold for production dependencies (falls back to --severity)                                                                                                      |
+| --dev-severity=<level>  | Severity threshold for development dependencies (falls back to --severity)                                                                                                     |
+| --config-file=<file>    | Path to JSON config file (default: .dry-aged-deps.json). CLI flags override config file values                                                                                 |
+| --check                 | Check mode: exit code 1 if safe updates available (including override pins with a safe upgrade target), 0 if none, 2 on error (consistent across table, JSON, and XML formats) |
+| --update                | Update dependencies to latest safe versions                                                                                                                                    |
+| -y, --yes               | Skip confirmation prompts (assume yes)                                                                                                                                         |
 
 ### Examples
 
@@ -90,7 +90,7 @@ dry-aged-deps --update
 # Apply updates without confirmation
 dry-aged-deps --update --yes
 
-# Check for safe updates (exit code 1 if safe updates available, 0 if none, 2 on error (consistent across table, JSON, and XML formats))
+# Check for safe updates (exit code 1 if safe updates available, including override pins with a safe upgrade target; 0 if none; 2 on error — consistent across table, JSON, and XML formats)
 dry-aged-deps --check
 
 # Specify a custom configuration file
@@ -170,8 +170,12 @@ jobs:
 ## Exit Codes
 
 - `0`: No safe updates available (success).
-- `1`: Safe updates available (failure).
+- `1`: Safe updates available (failure). Fires when a safe direct-dependency upgrade exists, **or** when a `package.json` `overrides` pin has a safe upgrade target available (see [Overrides hygiene](#overrides-hygiene) below). Override pins that are stale or vulnerable without a safe upgrade target surface informationally and do **not** widen this trigger — they match the [unfixable](#known-vulnerabilities-without-safe-fix) precedent.
 - `2`: Execution error (invalid input or unexpected exceptions).
+
+### Overrides hygiene
+
+`dry-aged-deps` parses the `package.json` `overrides` block on every run (default on; `--no-overrides-hygiene` to opt out). Each pinned override is aged against the npm registry and cross-referenced against `npm audit` advisory ranges. Findings render in the table / JSON / XML outputs under `Override hygiene` / `overridesHygiene` / `<overridesHygiene>`. A finding with a non-null `safeUpgrade` field counts toward the `--check` exit-1 trigger (above); findings without a safe upgrade target are informational.
 
 These exit codes are consistent across table, JSON, and XML output.
 
