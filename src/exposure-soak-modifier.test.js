@@ -20,6 +20,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
+
 import { severityToModifier, effectiveSoakMs } from './exposure-soak-modifier.js';
 
 describe('Story 018.0-DEV-EXPOSURE-AWARE-SOAK: severityToModifier', () => {
