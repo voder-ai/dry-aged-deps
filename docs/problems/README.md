@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-06-03 **Review pass** — closed P011 + P012 as no longer relevant (upstream fixes empirically verified this session; comments posted to windyroad/agent-plugins#126 + #139). Re-rated P022/P023/P024/P025 with this session's evidence. New top of queue: P010 / P022 / P025 tied at WSJF 6.0. P025 (GitHub Actions Node 20 deprecation 2026-06-16, 13 days out) is the highest-urgency new entry.
+> Last reviewed: 2026-06-03 **P025 known error** — actions/checkout + setup-node v4→v6 migrated across 8 refs in 3 workflow files (commit 411fa71, 13 days before 2026-06-16 cutover); awaiting release (next push) for K→V transition per ADR-022.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -10,8 +10,8 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | WSJF | ID   | Title                                                                                                                                       | Severity   | Status      | Effort | Reported   |
 | ---- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ----------- | ------ | ---------- |
 | 6.0  | P010 | manage-problem SKILL.md commit-message convention fails @commitlint/config-conventional subject-case rule                                   | 6 (Medium) | Known Error | M      | 2026-05-17 |
+| 6.0  | P025 | GitHub Actions deprecating Node.js 20 on 2026-06-16 — v4 actions across all workflows will be force-migrated to Node.js 24                  | 12 (High)  | Known Error | M      | 2026-06-03 |
 | 6.0  | P022 | commit-gate hook unstages files on "Pipeline state drift" block — manual re-stage needed after rescore                                      | 6 (Medium) | Open        | S      | 2026-05-30 |
-| 6.0  | P025 | GitHub Actions deprecating Node.js 20 on 2026-06-16 — v4 actions across all workflows will be force-migrated to Node.js 24                  | 12 (High)  | Open        | M      | 2026-06-03 |
 | 3.0  | P021 | `calculateAgeInDays` hardcodes `Date.now()` — not injectable for testability                                                                | 3 (Medium) | Known Error | S      | 2026-05-30 |
 | 3.0  | P006 | assistant defers actionable items to "next session" instead of acting when the user is observably present                                   | 6 (Medium) | Open        | M      | 2026-05-13 |
 | 3.0  | P017 | work-problems Step 0 reconcile-readme halt-route can't handle unscored-ticket MISSING drift                                                 | 6 (Medium) | Open        | M      | 2026-05-30 |

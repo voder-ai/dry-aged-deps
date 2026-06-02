@@ -1,6 +1,6 @@
 # Problem 025: GitHub Actions deprecating Node.js 20 on 2026-06-16 — v4 actions across all workflows will be force-migrated to Node.js 24
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-06-03
 **Priority**: 12 (High) — Impact: Moderate (3) x Likelihood: Likely (4) — deadline 2026-06-16 (13 days from 2026-06-03); no migration queued; 7 references across 3 workflows will be force-migrated; risk of silent behavioural drift if v4-on-Node24 differs from v4-on-Node20
 **Origin**: external (GitHub Actions infrastructure)
@@ -103,5 +103,7 @@ Bump all 8 references from `@v4` to `@v6` across the three workflow files (the P
 - `.github/workflows/auto-update.yml`, `.github/workflows/ci-publish.yml`, `.github/workflows/claude.yml` — affected files.
 - GitHub deprecation announcement: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
 - 2026-05-31/06-01/06-02 cron runs + 2026-06-02 push runs — empirical evidence (deprecation annotation on every run).
+- Fix applied in commit 411fa71 (`ci(workflows): migrate actions/checkout + setup-node from v4 to v6 (P025)`) 2026-06-03; awaiting release (next push) for K→V transition per ADR-022.
+- **Upstream report pending** — external dependency identified; invoke /wr-itil:report-upstream when ready (P063 framework-default marker — GitHub Actions runtime deprecation is a force-applied infrastructure timeline, not an actionable upstream-fileable issue; marker recorded per ADR-044 framework-resolution boundary).
 
-(captured via /wr-itil:capture-problem; expand at next investigation)
+(captured via /wr-itil:capture-problem; expanded during O→KE transition 2026-06-03)
