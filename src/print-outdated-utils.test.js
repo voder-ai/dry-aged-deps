@@ -6,10 +6,11 @@
  * columns, skip-when-empty. Column shape per REQ-OVERRIDES-TABLE.
  *
  * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-TABLE REQ-OVERRIDES-REASON-TAXONOMY
+ * @supports prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md REQ-EXPOSURE-REPORT-MODIFIED REQ-EXPOSURE-REASON-VOCABULARY REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED
  */
 
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { printOverridesHygieneSection } from './print-outdated-utils.js';
+import { handleTableOutput, printOverridesHygieneSection } from './print-outdated-utils.js';
 
 describe('Story 017.0-DEV-OVERRIDES-HYGIENE: printOverridesHygieneSection', () => {
   afterEach(() => vi.restoreAllMocks());
@@ -100,5 +101,91 @@ describe('Story 017.0-DEV-OVERRIDES-HYGIENE: printOverridesHygieneSection', () =
   it('[REQ-OVERRIDES-TABLE] prints nothing when there are no findings', () => {
     expect(capture([])).toHaveLength(0);
     expect(capture(undefined)).toHaveLength(0);
+  });
+});
+
+describe('Story 018.0-DEV-EXPOSURE-AWARE-SOAK: handleTableOutput viaExposureModifier rendering (RFC-002 T5)', () => {
+  let logs;
+
+  function setup() {
+    logs = [];
+    vi.spyOn(console, 'log').mockImplementation((line) => logs.push(String(line)));
+  }
+
+  afterEach(() => vi.restoreAllMocks());
+
+  /** @story prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md */
+  const baseInputs = {
+    matureRows: [
+      ['critical-pkg', '1.0.0', '1.0.5', '1.0.5', 2, 'prod'],
+      ['benign-pkg', '2.0.0', '2.1.0', '2.1.0', 10, 'prod'],
+    ],
+    safeRows: [
+      ['critical-pkg', '1.0.0', '1.0.5', '1.0.5', 2, 'prod'],
+      ['benign-pkg', '2.0.0', '2.1.0', '2.1.0', 10, 'prod'],
+    ],
+    summary: { totalOutdated: 2, safeUpdates: 2, filteredByAge: 0, filteredBySecurity: 0 },
+    prodMinAge: 7,
+    devMinAge: 7,
+    returnSummary: false,
+  };
+
+  it('[REQ-EXPOSURE-REPORT-MODIFIED] appends " *" to the latest column on rows whose name is in the annotation map', () => {
+    setup();
+    const viaExposureModifierByPackage = new Map([
+      ['critical-pkg', { severity: 'critical', baseSoakDays: 7, effectiveSoakDays: 0, advisories: [] }],
+    ]);
+    handleTableOutput({ ...baseInputs, viaExposureModifierByPackage });
+    const annotatedRow = logs.find((l) => l.startsWith('critical-pkg'));
+    const benignRow = logs.find((l) => l.startsWith('benign-pkg'));
+    expect(annotatedRow).toBeDefined();
+    expect(annotatedRow.split('\t')[3]).toBe('1.0.5 *');
+    expect(benignRow.split('\t')[3]).toBe('2.1.0');
+  });
+
+  it('[REQ-EXPOSURE-REASON-VOCABULARY] emits the critical footnote when a critical row is annotated', () => {
+    setup();
+    const viaExposureModifierByPackage = new Map([
+      ['critical-pkg', { severity: 'critical', baseSoakDays: 7, effectiveSoakDays: 0, advisories: [] }],
+    ]);
+    handleTableOutput({ ...baseInputs, viaExposureModifierByPackage });
+    expect(logs).toContain('* via exposure modifier: critical → 0-day floor');
+  });
+
+  it('[REQ-EXPOSURE-REASON-VOCABULARY] emits the high footnote with the effective soak days when a high row is annotated', () => {
+    setup();
+    const viaExposureModifierByPackage = new Map([
+      ['critical-pkg', { severity: 'high', baseSoakDays: 7, effectiveSoakDays: 3, advisories: [] }],
+    ]);
+    handleTableOutput({ ...baseInputs, viaExposureModifierByPackage });
+    expect(logs).toContain('* via exposure modifier: high → halved soak (3d)');
+  });
+
+  it('[REQ-EXPOSURE-REASON-VOCABULARY] dedupes footnotes when multiple rows share the same severity / effective-soak pair', () => {
+    setup();
+    const viaExposureModifierByPackage = new Map([
+      ['critical-pkg', { severity: 'critical', baseSoakDays: 7, effectiveSoakDays: 0, advisories: [] }],
+      ['benign-pkg', { severity: 'critical', baseSoakDays: 7, effectiveSoakDays: 0, advisories: [] }],
+    ]);
+    handleTableOutput({ ...baseInputs, viaExposureModifierByPackage });
+    const footnotes = logs.filter((l) => l === '* via exposure modifier: critical → 0-day floor');
+    expect(footnotes).toHaveLength(1);
+  });
+
+  it('[REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED] omits star markers and footnotes when the annotation map is absent', () => {
+    setup();
+    handleTableOutput({ ...baseInputs });
+    const annotatedRow = logs.find((l) => l.startsWith('critical-pkg'));
+    expect(annotatedRow).toBeDefined();
+    expect(annotatedRow.split('\t')[3]).toBe('1.0.5');
+    expect(logs.some((l) => l.includes('via exposure modifier'))).toBe(false);
+  });
+
+  it('[REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED] omits star markers and footnotes when the annotation map is empty', () => {
+    setup();
+    handleTableOutput({ ...baseInputs, viaExposureModifierByPackage: new Map() });
+    const annotatedRow = logs.find((l) => l.startsWith('critical-pkg'));
+    expect(annotatedRow.split('\t')[3]).toBe('1.0.5');
+    expect(logs.some((l) => l.includes('via exposure modifier'))).toBe(false);
   });
 });

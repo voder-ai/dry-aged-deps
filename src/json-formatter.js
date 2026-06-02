@@ -45,8 +45,10 @@ export function jsonFormatter({
         vulnerabilities,
         filtered,
         filterReason,
+        viaExposureModifier,
       } = row;
-      return {
+      /** @type {Record<string, unknown>} */
+      const pkg = {
         name,
         type,
         current,
@@ -58,6 +60,14 @@ export function jsonFormatter({
         filtered,
         filterReason,
       };
+      // @supports prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md REQ-EXPOSURE-JSON REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED
+      // Omit-when-absent matches the unfixable / overridesHygiene precedent —
+      // schema-compatible additive field; consumers that ignore unknown fields
+      // continue to operate unchanged.
+      if (viaExposureModifier !== undefined) {
+        pkg.viaExposureModifier = viaExposureModifier;
+      }
+      return pkg;
     }
   });
 

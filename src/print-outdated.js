@@ -264,6 +264,115 @@ function buildExposureModifierByPackage(auditData) {
 }
 
 /**
+ * Extract a human-readable advisory id (GHSA slug) from an audit `via` entry,
+ * falling back to the numeric npm-audit source id. Mirrors the local helper
+ * in `src/find-unfixable-vulns.js` — kept inline rather than refactored out
+ * to keep T5 scope strict (see architect re-confirm 2026-06-03).
+ * @param {{ source?: number|string, url?: string }} viaEntry
+ * @returns {string}
+ * @supports prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md REQ-EXPOSURE-JSON REQ-EXPOSURE-XML
+ */
+function advisoryIdFromViaEntry(viaEntry) {
+  const url = viaEntry && viaEntry.url;
+  if (typeof url === 'string') {
+    const match = url.match(/GHSA-[0-9a-z-]+/i);
+    if (match) return match[0];
+  }
+  return String(viaEntry && viaEntry.source != null ? viaEntry.source : 'unknown');
+}
+
+/**
+ * Build the per-package severity + advisory-id sidecar from the shared audit
+ * payload. Only Critical and High entries are kept — they are the only bands
+ * whose modifier shortens the soak and therefore the only bands that can
+ * surface a `viaExposureModifier` annotation on a safe-update row.
+ *
+ * @param {{ vulnerabilities: Record<string, object> }} auditData
+ * @returns {Map<string, { severity: 'critical'|'high', advisoryIds: Array<string> }>}
+ * @supports prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md REQ-EXPOSURE-SEVERITY-EXTRACT REQ-EXPOSURE-REPORT-MODIFIED REQ-EXPOSURE-JSON REQ-EXPOSURE-XML
+ */
+function buildExposureMetaByPackage(auditData) {
+  /** @type {Map<string, { severity: 'critical'|'high', advisoryIds: Array<string> }>} */
+  const meta = new Map();
+  const entries = Object.entries(auditData?.vulnerabilities ?? {});
+  for (const [name, v] of entries) {
+    const vuln = /** @type {{ severity?: string, via?: Array<any> }} */ (v);
+    const severity = vuln?.severity;
+    if (severity !== 'critical' && severity !== 'high') continue;
+    const via = Array.isArray(vuln.via) ? vuln.via : [];
+    const advisoryIds = via
+      .filter((entry) => entry && typeof entry === 'object' && entry.source != null)
+      .map((entry) => advisoryIdFromViaEntry(entry));
+    meta.set(name, { severity, advisoryIds });
+  }
+  return meta;
+}
+
+/**
+ * Resolve the RFC-002 T4 modifier map (filter-time soak shortening) and the
+ * T5 meta sidecar (formatter-time annotation) in a single pass. Extracted
+ * from printOutdated to keep that function within the project's
+ * max-lines-per-function cap; mirrors the resolveUnfixable / resolveOverridesHygiene
+ * extraction pattern. Default-OFF returns `{ undefined, empty Map }` so the
+ * downstream filter pipeline and formatter rendering both behave identically
+ * to the pre-RFC-002 surface per REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED.
+ *
+ * @param {{ exposureAwareSoak?: boolean }} options
+ * @param {{ vulnerabilities: Record<string, object> }} auditData
+ * @returns {{ exposureModifierByPackage: Map<string, number>|undefined, exposureMetaByPackage: Map<string, { severity: 'critical'|'high', advisoryIds: Array<string> }> }}
+ * @supports prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md REQ-EXPOSURE-PER-PACKAGE-APPLY REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED REQ-EXPOSURE-REPORT-MODIFIED
+ */
+function resolveExposureMaps(options, auditData) {
+  if (options.exposureAwareSoak !== true) {
+    return { exposureModifierByPackage: undefined, exposureMetaByPackage: new Map() };
+  }
+  return {
+    exposureModifierByPackage: buildExposureModifierByPackage(auditData),
+    exposureMetaByPackage: buildExposureMetaByPackage(auditData),
+  };
+}
+
+/**
+ * Compute the per-package `viaExposureModifier` annotation for each safe-update
+ * row that was age-permitted ONLY because of the exposure-aware modifier — i.e.
+ * rows whose `age` would have failed the unconditional soak (`age < baseMinAge`)
+ * but whose name appears in the exposure-meta map (Critical or High band).
+ *
+ * Shape: `{ severity, baseSoakDays, effectiveSoakDays, advisories }` per
+ * REQ-EXPOSURE-JSON / REQ-EXPOSURE-XML. Returns an empty map when nothing is
+ * annotated — preserves byte-identical default-OFF output via the formatter's
+ * omit-when-absent contract.
+ *
+ * @param {object} params
+ * @param {Array<[string, string, string, string, number|string, string]>} params.safeRows
+ * @param {Map<string, { severity: 'critical'|'high', advisoryIds: Array<string> }>} params.exposureMetaByPackage
+ * @param {number} params.prodMinAge
+ * @param {number} params.devMinAge
+ * @returns {Map<string, { severity: 'critical'|'high', baseSoakDays: number, effectiveSoakDays: number, advisories: Array<string> }>}
+ * @supports prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md REQ-EXPOSURE-REPORT-MODIFIED REQ-EXPOSURE-JSON REQ-EXPOSURE-XML
+ */
+function buildViaExposureModifierAnnotations({ safeRows, exposureMetaByPackage, prodMinAge, devMinAge }) {
+  /** @type {Map<string, { severity: 'critical'|'high', baseSoakDays: number, effectiveSoakDays: number, advisories: Array<string> }>} */
+  const annotations = new Map();
+  if (!(exposureMetaByPackage instanceof Map) || exposureMetaByPackage.size === 0) return annotations;
+  for (const [name, , , , age, depType] of safeRows) {
+    const meta = exposureMetaByPackage.get(name);
+    if (!meta) continue;
+    if (typeof age !== 'number') continue;
+    const baseSoakDays = depType === 'prod' ? prodMinAge : devMinAge;
+    if (age >= baseSoakDays) continue;
+    const effectiveSoakDays = Math.floor(baseSoakDays * severityToModifier(meta.severity));
+    annotations.set(name, {
+      severity: meta.severity,
+      baseSoakDays,
+      effectiveSoakDays,
+      advisories: meta.advisoryIds,
+    });
+  }
+  return annotations;
+}
+
+/**
  * Print outdated dependencies information with age
  * @param {Record<string, { current: string; wanted: string; latest: string }>} data
  * @param {{ fetchVersionTimes?: function, calculateAgeInDays?: function, checkVulnerabilities?: function, format?: string, prodMinAge?: number, devMinAge?: number, prodMinSeverity?: string, devMinSeverity?: string, returnSummary?: boolean, updateMode?: boolean, skipConfirmation?: boolean, exclude?: Record<string, string>, unfixable?: boolean, unfixableLevel?: string, overridesHygiene?: boolean, exposureAwareSoak?: boolean, runProjectAudit?: () => Promise<{ vulnerabilities: Record<string, object> }>, runOverridesHygieneFn?: function }} [options]
@@ -336,11 +445,11 @@ export async function printOutdated(data, options = {}) {
     format,
   });
 
-  // RFC-002 T4: opt-in per-package soak modifier. Default-OFF leaves the
-  // map undefined so applyFilters/filterByAge run the unconditional soak path
-  // unchanged per REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED.
-  const exposureModifierByPackage =
-    options.exposureAwareSoak === true ? buildExposureModifierByPackage(auditData) : undefined;
+  // RFC-002 T4 + T5: opt-in exposure-aware-soak modifier + per-row annotation.
+  // Default-OFF leaves exposureModifierByPackage undefined (filterByAge runs
+  // unconditional path) and produces an empty annotation Map (formatters render
+  // byte-identical legacy output) per REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED.
+  const { exposureModifierByPackage, exposureMetaByPackage } = resolveExposureMaps(options, auditData);
 
   // Apply filters
   const { safeRows, matureRows, vulnMap, filterReasonMap, summary } = await applyFilters(rows, {
@@ -351,6 +460,13 @@ export async function printOutdated(data, options = {}) {
     checkVulnerabilities,
     format,
     exposureModifierByPackage,
+  });
+
+  const viaExposureModifierByPackage = buildViaExposureModifierAnnotations({
+    safeRows,
+    exposureMetaByPackage,
+    prodMinAge,
+    devMinAge,
   });
 
   // @supports prompts/016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES.md REQ-UNFIXABLE-DETECT
@@ -387,6 +503,7 @@ export async function printOutdated(data, options = {}) {
     excludeMap,
     unfixable,
     overridesHygiene,
+    viaExposureModifierByPackage,
     prodMinAge,
     devMinAge,
     returnSummary,
@@ -418,11 +535,21 @@ async function dispatchFormatter(ctx) {
     excludeMap,
     unfixable,
     overridesHygiene,
+    viaExposureModifierByPackage,
     prodMinAge,
     devMinAge,
     returnSummary,
   } = ctx;
-  const sharedOpts = { summary, thresholds, vulnMap, filterReasonMap, excludeMap, unfixable, overridesHygiene };
+  const sharedOpts = {
+    summary,
+    thresholds,
+    vulnMap,
+    filterReasonMap,
+    excludeMap,
+    unfixable,
+    overridesHygiene,
+    viaExposureModifierByPackage,
+  };
   if (format === 'json') return handleJsonOutput({ rows: safeRows, ...sharedOpts });
   if (updateMode) return updatePackages(safeRows, skipConfirmation, summary);
   if (format === 'xml') return handleXmlOutput({ rows, ...sharedOpts });
@@ -436,5 +563,6 @@ async function dispatchFormatter(ctx) {
     excludeMap,
     unfixable,
     overridesHygiene,
+    viaExposureModifierByPackage,
   });
 }

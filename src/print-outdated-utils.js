@@ -23,7 +23,8 @@ import { severityRank } from './find-unfixable-vulns.js';
  * Output JSON formatted results.
  * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-CLI-FLAG
  * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-JSON
- * @param {{ rows: Array<[string, string, string, string, number|string, string]>, summary: FilterSummary, thresholds: Thresholds, vulnMap: Map<string, object>, filterReasonMap: Map<string, string>, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>, overridesHygiene?: Array<object> }} options
+ * @supports prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md REQ-EXPOSURE-JSON REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED
+ * @param {{ rows: Array<[string, string, string, string, number|string, string]>, summary: FilterSummary, thresholds: Thresholds, vulnMap: Map<string, object>, filterReasonMap: Map<string, string>, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>, overridesHygiene?: Array<object>, viaExposureModifierByPackage?: Map<string, { severity: string, baseSoakDays: number, effectiveSoakDays: number, advisories: Array<string> }> }} options
  * @returns {FilterSummary} Summary object returned from filtering.
  */
 export function handleJsonOutput({
@@ -35,9 +36,10 @@ export function handleJsonOutput({
   excludeMap = {},
   unfixable = [],
   overridesHygiene = [],
+  viaExposureModifierByPackage,
 }) {
   const timestamp = getTimestamp();
-  const items = prepareJsonItems(rows, thresholds, vulnMap, filterReasonMap);
+  const items = prepareJsonItems(rows, thresholds, vulnMap, filterReasonMap, viaExposureModifierByPackage);
   const excluded = Object.entries(excludeMap).map(([name, reason]) => ({ name, reason }));
   console.log(jsonFormatter({ rows: items, summary, thresholds, timestamp, excluded, unfixable, overridesHygiene }));
   return summary;
@@ -47,7 +49,8 @@ export function handleJsonOutput({
  * Output XML formatted results.
  * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-CLI-FLAG
  * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-XML
- * @param {{ rows: Array<[string, string, string, string, number|string, string]>, summary: FilterSummary, thresholds: Thresholds, vulnMap: Map<string, object>, filterReasonMap: Map<string, string>, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>, overridesHygiene?: Array<object> }} options
+ * @supports prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md REQ-EXPOSURE-XML REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED
+ * @param {{ rows: Array<[string, string, string, string, number|string, string]>, summary: FilterSummary, thresholds: Thresholds, vulnMap: Map<string, object>, filterReasonMap: Map<string, string>, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>, overridesHygiene?: Array<object>, viaExposureModifierByPackage?: Map<string, { severity: string, baseSoakDays: number, effectiveSoakDays: number, advisories: Array<string> }> }} options
  * @returns {FilterSummary} Summary object returned from filtering.
  */
 export function handleXmlOutput({
@@ -59,9 +62,10 @@ export function handleXmlOutput({
   excludeMap = {},
   unfixable = [],
   overridesHygiene = [],
+  viaExposureModifierByPackage,
 }) {
   const timestamp = getTimestamp();
-  const items = prepareJsonItems(rows, thresholds, vulnMap, filterReasonMap);
+  const items = prepareJsonItems(rows, thresholds, vulnMap, filterReasonMap, viaExposureModifierByPackage);
   const excluded = Object.entries(excludeMap).map(([name, reason]) => ({ name, reason }));
   console.log(xmlFormatter({ rows: items, summary, thresholds, timestamp, excluded, unfixable, overridesHygiene }));
   return summary;
@@ -164,10 +168,64 @@ export function printOverridesHygieneSection(overridesHygiene) {
 }
 
 /**
+ * Render a `safeRow` tuple for table output. When the row's name appears in
+ * the exposure-modifier annotation map, append ` *` to the `latest` column
+ * (row index 3) per REQ-EXPOSURE-REPORT-MODIFIED. Default-OFF path emits the
+ * row byte-identical to legacy output.
+ * @param {Array<string|number>} row - [name, current, wanted, latest, age, depType]
+ * @param {Map<string, object>|undefined} annotations - viaExposureModifierByPackage
+ * @returns {string}
+ * @supports prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md REQ-EXPOSURE-REPORT-MODIFIED REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED
+ */
+function formatSafeRow(row, annotations) {
+  if (!(annotations instanceof Map) || !annotations.has(/** @type {string} */ (row[0]))) {
+    return row.join('\t');
+  }
+  const cells = row.slice();
+  cells[3] = `${cells[3]} *`;
+  return cells.join('\t');
+}
+
+/**
+ * Print the footnotes describing the exposure-modifier reason vocabulary for
+ * any safe-update rows that were age-permitted only by the modifier. Emits
+ * one line per unique `(severity, effectiveSoakDays)` pair so two annotated
+ * rows of the same band collapse to a single footnote.
+ *
+ * Vocabulary per REQ-EXPOSURE-REASON-VOCABULARY (voice-tone PASS 2026-06-03):
+ *   `* via exposure modifier: critical → 0-day floor`
+ *   `* via exposure modifier: high → halved soak (<N>d)`
+ *
+ * @param {Array<Array<string|number>>} safeRows
+ * @param {Map<string, { severity: string, baseSoakDays: number, effectiveSoakDays: number, advisories: Array<string> }>|undefined} annotations
+ * @returns {void}
+ * @supports prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md REQ-EXPOSURE-REPORT-MODIFIED REQ-EXPOSURE-REASON-VOCABULARY REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED
+ */
+function printExposureModifierFootnotes(safeRows, annotations) {
+  if (!(annotations instanceof Map) || annotations.size === 0) return;
+  /** @type {Set<string>} */
+  const seen = new Set();
+  for (const row of safeRows) {
+    const name = /** @type {string} */ (row[0]);
+    const annotation = annotations.get(name);
+    if (!annotation) continue;
+    const key = `${annotation.severity}|${annotation.effectiveSoakDays}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    if (annotation.severity === 'critical') {
+      console.log('* via exposure modifier: critical → 0-day floor');
+    } else if (annotation.severity === 'high') {
+      console.log(`* via exposure modifier: high → halved soak (${annotation.effectiveSoakDays}d)`);
+    }
+  }
+}
+
+/**
  * Output table formatted results.
  * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
  * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-TABLE
- * @param {{ safeRows: Array<Array>, matureRows: Array<Array>, summary: FilterSummary, prodMinAge: number, devMinAge: number, returnSummary: boolean, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string }>, overridesHygiene?: Array<object> }} options
+ * @supports prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md REQ-EXPOSURE-REPORT-MODIFIED REQ-EXPOSURE-REASON-VOCABULARY REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED
+ * @param {{ safeRows: Array<Array>, matureRows: Array<Array>, summary: FilterSummary, prodMinAge: number, devMinAge: number, returnSummary: boolean, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string }>, overridesHygiene?: Array<object>, viaExposureModifierByPackage?: Map<string, { severity: string, baseSoakDays: number, effectiveSoakDays: number, advisories: Array<string> }> }} options
  * @returns {FilterSummary|undefined} Summary when returnSummary is true or undefined otherwise.
  */
 export function handleTableOutput({
@@ -180,6 +238,7 @@ export function handleTableOutput({
   excludeMap = {},
   unfixable = [],
   overridesHygiene = [],
+  viaExposureModifierByPackage,
 }) {
   // @supports prompts/015.0-DEV-EXCLUDE-PACKAGES.md REQ-EXCLUDE-OUTPUT
   const excludedCount = Object.keys(excludeMap).length;
@@ -218,9 +277,12 @@ export function handleTableOutput({
   }
 
   // @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
+  // @supports prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md REQ-EXPOSURE-REPORT-MODIFIED REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED
   for (const row of safeRows) {
-    console.log(row.join('\t'));
+    console.log(formatSafeRow(row, viaExposureModifierByPackage));
   }
+  // @supports prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md REQ-EXPOSURE-REASON-VOCABULARY
+  printExposureModifierFootnotes(safeRows, viaExposureModifierByPackage);
   if (excludedCount > 0) {
     console.log(`${excludedCount} package(s) excluded from analysis (see .dry-aged-deps.json)`);
   }

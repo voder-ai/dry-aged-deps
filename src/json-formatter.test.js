@@ -2,6 +2,7 @@
  * Tests for JSON Formatter
  * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-JSON-SCHEMA REQ-COMPLETE-DATA REQ-SUMMARY-STATS
  * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-JSON REQ-OVERRIDES-SCHEMA-COMPAT REQ-OVERRIDES-AUDIT-ARTEFACT
+ * @supports prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md REQ-EXPOSURE-JSON REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED
  */
 
 import { describe, it, expect } from 'vitest';
@@ -128,5 +129,68 @@ describe('Story 017.0-DEV-OVERRIDES-HYGIENE: jsonFormatter overridesHygiene', ()
     const obj = JSON.parse(json);
     expect(obj.overridesHygiene[0].advisories).toHaveLength(2);
     expect(obj.overridesHygiene[0].advisories.map((a) => a.id)).toEqual(['GHSA-f886-m6hf-6m8v', 'GHSA-jxxr-4gwj-5jf2']);
+  });
+});
+
+describe('Story 018.0-DEV-EXPOSURE-AWARE-SOAK: jsonFormatter viaExposureModifier passthrough (RFC-002 T5)', () => {
+  /** @story prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md */
+  const baseInput = {
+    summary: { totalOutdated: 1, safeUpdates: 1, filteredByAge: 0, filteredBySecurity: 0 },
+    timestamp: '2026-06-03T00:00:00.000Z',
+  };
+
+  /** @story prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md */
+  const criticalItem = {
+    name: 'critical-pkg',
+    dependencyType: 'prod',
+    current: '1.0.0',
+    wanted: '1.0.5',
+    latest: '1.0.5',
+    recommended: '1.0.5',
+    age: 2,
+    vulnerabilities: { count: 0, maxSeverity: 'none', details: [] },
+    filtered: false,
+    filterReason: '',
+    viaExposureModifier: {
+      severity: 'critical',
+      baseSoakDays: 7,
+      effectiveSoakDays: 0,
+      advisories: ['GHSA-aaaa-bbbb-cccc'],
+    },
+  };
+
+  it('[REQ-EXPOSURE-JSON] propagates viaExposureModifier from object-shape items to the packages output', () => {
+    const json = jsonFormatter({ ...baseInput, rows: [criticalItem] });
+    const obj = JSON.parse(json);
+    expect(obj.packages).toHaveLength(1);
+    expect(obj.packages[0]).toHaveProperty('viaExposureModifier');
+    expect(obj.packages[0].viaExposureModifier).toEqual({
+      severity: 'critical',
+      baseSoakDays: 7,
+      effectiveSoakDays: 0,
+      advisories: ['GHSA-aaaa-bbbb-cccc'],
+    });
+  });
+
+  it('[REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED] omits viaExposureModifier when the item carries no annotation', () => {
+    const noAnnotation = { ...criticalItem };
+    delete noAnnotation.viaExposureModifier;
+    const json = jsonFormatter({ ...baseInput, rows: [noAnnotation] });
+    const obj = JSON.parse(json);
+    expect(obj.packages[0]).not.toHaveProperty('viaExposureModifier');
+  });
+
+  it('[REQ-EXPOSURE-JSON] existing per-row fields (name / current / latest / vulnerabilities) are unchanged when viaExposureModifier is present', () => {
+    const json = jsonFormatter({ ...baseInput, rows: [criticalItem] });
+    const obj = JSON.parse(json);
+    expect(obj.packages[0]).toMatchObject({
+      name: 'critical-pkg',
+      type: 'prod',
+      current: '1.0.0',
+      wanted: '1.0.5',
+      latest: '1.0.5',
+      recommended: '1.0.5',
+      age: 2,
+    });
   });
 });

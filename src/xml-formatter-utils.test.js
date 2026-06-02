@@ -17,10 +17,11 @@
  * `<overrides-hygiene>`, per REQ-OVERRIDES-XML prompts line 40).
  *
  * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-XML REQ-OVERRIDES-AUDIT-ARTEFACT
+ * @supports prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md REQ-EXPOSURE-XML REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED
  */
 
 import { describe, it, expect } from 'vitest';
-import { buildOverridesHygieneSection } from './xml-formatter-utils.js';
+import { buildOverridesHygieneSection, buildPackagesSection } from './xml-formatter-utils.js';
 
 describe('Story 017.0-DEV-OVERRIDES-HYGIENE: buildOverridesHygieneSection', () => {
   /** @story prompts/017.0-DEV-OVERRIDES-HYGIENE.md */
@@ -112,5 +113,70 @@ describe('Story 017.0-DEV-OVERRIDES-HYGIENE: buildOverridesHygieneSection', () =
     expect(xml).toContain('pinned="&lt;bad&gt;"');
     expect(xml).toContain('latest="&quot;quoted&quot;"');
     expect(xml).toContain('reason="stale: 1 days behind &apos;latest&apos;"');
+  });
+});
+
+describe('Story 018.0-DEV-EXPOSURE-AWARE-SOAK: buildPackagesSection viaExposureModifier (RFC-002 T5)', () => {
+  /** @story prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md */
+  const criticalItem = {
+    name: 'critical-pkg',
+    current: '1.0.0',
+    wanted: '1.0.5',
+    latest: '1.0.5',
+    recommended: '1.0.5',
+    age: 2,
+    vulnerabilities: { count: 0, maxSeverity: 'none', details: [] },
+    filtered: false,
+    filterReason: '',
+    dependencyType: 'prod',
+    viaExposureModifier: {
+      severity: 'critical',
+      baseSoakDays: 7,
+      effectiveSoakDays: 0,
+      advisories: ['GHSA-aaaa-bbbb-cccc'],
+    },
+  };
+
+  it('[REQ-EXPOSURE-XML] emits a camelCase <viaExposureModifier> child under <package> with nested camelCase elements', () => {
+    const xml = buildPackagesSection([criticalItem]);
+    expect(xml).toContain('<viaExposureModifier>');
+    expect(xml).toContain('</viaExposureModifier>');
+    expect(xml).toContain('<severity>critical</severity>');
+    expect(xml).toContain('<baseSoakDays>7</baseSoakDays>');
+    expect(xml).toContain('<effectiveSoakDays>0</effectiveSoakDays>');
+  });
+
+  it('[REQ-EXPOSURE-XML] nests advisories as <advisory> children of <advisories>', () => {
+    const xml = buildPackagesSection([criticalItem]);
+    expect(xml).toContain('<advisories>');
+    expect(xml).toContain('</advisories>');
+    expect(xml).toContain('<advisory>GHSA-aaaa-bbbb-cccc</advisory>');
+  });
+
+  it('[REQ-EXPOSURE-XML] emits <advisories/> as a self-closed element when the advisories array is empty', () => {
+    const item = { ...criticalItem, viaExposureModifier: { ...criticalItem.viaExposureModifier, advisories: [] } };
+    const xml = buildPackagesSection([item]);
+    expect(xml).toMatch(/<advisories(\s*\/>|>\s*<\/advisories>)/);
+  });
+
+  it('[REQ-EXPOSURE-XML] xml-escapes severity / advisory values', () => {
+    const item = {
+      ...criticalItem,
+      viaExposureModifier: {
+        severity: 'high',
+        baseSoakDays: 7,
+        effectiveSoakDays: 3,
+        advisories: ['GHSA-<bad>&id'],
+      },
+    };
+    const xml = buildPackagesSection([item]);
+    expect(xml).toContain('<advisory>GHSA-&lt;bad&gt;&amp;id</advisory>');
+  });
+
+  it('[REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED] omits <viaExposureModifier> entirely when the item carries no annotation', () => {
+    const noAnnotation = { ...criticalItem };
+    delete noAnnotation.viaExposureModifier;
+    const xml = buildPackagesSection([noAnnotation]);
+    expect(xml).not.toContain('<viaExposureModifier>');
   });
 });

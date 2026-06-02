@@ -1,6 +1,7 @@
 /**
  * Tests for prepareJsonItems mapping logic
  * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-COMPLETE-DATA
+ * @supports prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md REQ-EXPOSURE-REPORT-MODIFIED REQ-EXPOSURE-JSON REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED
  */
 
 import { describe, it, expect } from 'vitest';
@@ -74,5 +75,49 @@ describe('Story 008.0-DEV-JSON-OUTPUT: prepareJsonItems mapping logic', () => {
     const item = items[0];
     expect(item.age).toBeNull();
     expect(item.filtered).toBe(false);
+  });
+});
+
+describe('Story 018.0-DEV-EXPOSURE-AWARE-SOAK: prepareJsonItems viaExposureModifier propagation (RFC-002 T5)', () => {
+  const thresholds = { prod: { minAge: 7, minSeverity: 'none' }, dev: { minAge: 7, minSeverity: 'none' } };
+
+  /** @story prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md */
+  it('[REQ-EXPOSURE-JSON] attaches viaExposureModifier field to items whose name is in the annotation map', () => {
+    const rows = [
+      ['critical-pkg', '1.0.0', '1.0.5', '1.0.5', 2, 'prod'],
+      ['benign-pkg', '2.0.0', '2.1.0', '2.1.0', 10, 'prod'],
+    ];
+    const vulnMap = new Map();
+    const filterReasonMap = new Map();
+    const viaExposureModifierByPackage = new Map([
+      [
+        'critical-pkg',
+        { severity: 'critical', baseSoakDays: 7, effectiveSoakDays: 0, advisories: ['GHSA-aaaa-bbbb-cccc'] },
+      ],
+    ]);
+
+    const items = prepareJsonItems(rows, thresholds, vulnMap, filterReasonMap, viaExposureModifierByPackage);
+
+    expect(items[0].viaExposureModifier).toEqual({
+      severity: 'critical',
+      baseSoakDays: 7,
+      effectiveSoakDays: 0,
+      advisories: ['GHSA-aaaa-bbbb-cccc'],
+    });
+    expect(items[1]).not.toHaveProperty('viaExposureModifier');
+  });
+
+  /** @story prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md */
+  it('[REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED] omits viaExposureModifier on every item when annotation map is absent', () => {
+    const rows = [['critical-pkg', '1.0.0', '1.0.5', '1.0.5', 2, 'prod']];
+    const items = prepareJsonItems(rows, thresholds, new Map(), new Map());
+    expect(items[0]).not.toHaveProperty('viaExposureModifier');
+  });
+
+  /** @story prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md */
+  it('[REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED] omits viaExposureModifier on every item when annotation map is empty', () => {
+    const rows = [['critical-pkg', '1.0.0', '1.0.5', '1.0.5', 2, 'prod']];
+    const items = prepareJsonItems(rows, thresholds, new Map(), new Map(), new Map());
+    expect(items[0]).not.toHaveProperty('viaExposureModifier');
   });
 });

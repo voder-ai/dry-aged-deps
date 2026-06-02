@@ -134,10 +134,45 @@ export function buildPackagesSection(rows) {
       xml += `      <filtered>${item.filtered === true}</filtered>\n`;
       xml += `      <filter-reason>${escapeXml(item.filterReason || '')}</filter-reason>\n`;
       xml += `      <dependency-type>${escapeXml(item.dependencyType || '')}</dependency-type>\n`;
+      // @supports prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md REQ-EXPOSURE-XML REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED
+      // Omit-when-absent matches the unfixable / overridesHygiene precedent —
+      // schema-compatible additive element; consumers that ignore unknown
+      // elements continue to operate unchanged.
+      if (item.viaExposureModifier) {
+        xml += buildViaExposureModifierElement(item.viaExposureModifier);
+      }
     }
     xml += '    </package>\n';
   }
   xml += '  </packages>\n';
+  return xml;
+}
+
+/**
+ * Build the per-package `<viaExposureModifier>` element for a row that was
+ * age-permitted only by the RFC-002 exposure-aware soak modifier. Mirrors the
+ * JSON shape (camelCase tag + child names) for JSON↔XML name-symmetry.
+ *
+ * @param {{ severity: string, baseSoakDays: number, effectiveSoakDays: number, advisories?: Array<string> }} annotation
+ * @returns {string}
+ * @supports prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md REQ-EXPOSURE-XML
+ */
+function buildViaExposureModifierElement(annotation) {
+  const { severity, baseSoakDays, effectiveSoakDays, advisories = [] } = annotation;
+  let xml = '      <viaExposureModifier>\n';
+  xml += `        <severity>${escapeXml(severity)}</severity>\n`;
+  xml += `        <baseSoakDays>${escapeXml(String(baseSoakDays))}</baseSoakDays>\n`;
+  xml += `        <effectiveSoakDays>${escapeXml(String(effectiveSoakDays))}</effectiveSoakDays>\n`;
+  if (advisories.length === 0) {
+    xml += '        <advisories/>\n';
+  } else {
+    xml += '        <advisories>\n';
+    for (const advisory of advisories) {
+      xml += `          <advisory>${escapeXml(String(advisory))}</advisory>\n`;
+    }
+    xml += '        </advisories>\n';
+  }
+  xml += '      </viaExposureModifier>\n';
   return xml;
 }
 

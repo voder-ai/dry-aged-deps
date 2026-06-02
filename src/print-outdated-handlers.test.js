@@ -13,6 +13,7 @@
  * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-CLI-FLAG
  * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
  * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-JSON REQ-OVERRIDES-XML REQ-OVERRIDES-TABLE
+ * @supports prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md REQ-EXPOSURE-JSON REQ-EXPOSURE-XML REQ-EXPOSURE-REPORT-MODIFIED
  */
 
 import { describe, it, expect, vi, afterEach } from 'vitest';
@@ -98,5 +99,65 @@ describe('Story 001.0-DEV-RUN-NPM-OUTDATED: print-outdated-handlers pass-through
     });
     const logs = logSpy.mock.calls.map((c) => c[0]);
     expect(logs).toContain('Override hygiene:');
+  });
+
+  /** @story prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md */
+  it('[REQ-EXPOSURE-JSON] handleJsonOutput forwards viaExposureModifierByPackage through to the JSON delegate', () => {
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    handleJsonOutput({
+      rows: [['critical-pkg', '1.0.0', '1.0.5', '1.0.5', 2, 'prod']],
+      summary: { totalOutdated: 1, safeUpdates: 1, filteredByAge: 0, filteredBySecurity: 0 },
+      thresholds: { prod: { minAge: 7, minSeverity: 'none' }, dev: { minAge: 7, minSeverity: 'none' } },
+      vulnMap: new Map(),
+      filterReasonMap: new Map(),
+      viaExposureModifierByPackage: new Map([
+        [
+          'critical-pkg',
+          { severity: 'critical', baseSoakDays: 7, effectiveSoakDays: 0, advisories: ['GHSA-aaaa-bbbb-cccc'] },
+        ],
+      ]),
+    });
+    const printed = JSON.parse(logSpy.mock.calls[0][0]);
+    expect(printed.packages[0]).toHaveProperty('viaExposureModifier');
+    expect(printed.packages[0].viaExposureModifier.severity).toBe('critical');
+  });
+
+  /** @story prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md */
+  it('[REQ-EXPOSURE-XML] handleXmlOutput forwards viaExposureModifierByPackage through to the XML delegate', () => {
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    handleXmlOutput({
+      rows: [['critical-pkg', '1.0.0', '1.0.5', '1.0.5', 2, 'prod']],
+      summary: { totalOutdated: 1, safeUpdates: 1, filteredByAge: 0, filteredBySecurity: 0 },
+      thresholds: { prod: { minAge: 7, minSeverity: 'none' }, dev: { minAge: 7, minSeverity: 'none' } },
+      vulnMap: new Map(),
+      filterReasonMap: new Map(),
+      viaExposureModifierByPackage: new Map([
+        [
+          'critical-pkg',
+          { severity: 'critical', baseSoakDays: 7, effectiveSoakDays: 0, advisories: ['GHSA-aaaa-bbbb-cccc'] },
+        ],
+      ]),
+    });
+    const printed = logSpy.mock.calls[0][0];
+    expect(printed).toContain('<viaExposureModifier>');
+    expect(printed).toContain('<severity>critical</severity>');
+  });
+
+  /** @story prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md */
+  it('[REQ-EXPOSURE-REPORT-MODIFIED] handleTableOutput forwards viaExposureModifierByPackage through to the table delegate', () => {
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    handleTableOutput({
+      safeRows: [['critical-pkg', '1.0.0', '1.0.5', '1.0.5', 2, 'prod']],
+      matureRows: [['critical-pkg', '1.0.0', '1.0.5', '1.0.5', 2, 'prod']],
+      summary: {},
+      prodMinAge: 7,
+      devMinAge: 7,
+      returnSummary: false,
+      viaExposureModifierByPackage: new Map([
+        ['critical-pkg', { severity: 'critical', baseSoakDays: 7, effectiveSoakDays: 0, advisories: [] }],
+      ]),
+    });
+    const logs = logSpy.mock.calls.map((c) => c[0]);
+    expect(logs).toContain('* via exposure modifier: critical → 0-day floor');
   });
 });
