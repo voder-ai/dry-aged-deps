@@ -1,5 +1,5 @@
 ---
-status: in-progress
+status: verifying
 rfc-id: overrides-hygiene-module
 reported: 2026-05-30
 decision-makers: [Tom Howard]
@@ -11,7 +11,7 @@ stories: []
 
 # RFC-001: Overrides Hygiene Module
 
-**Status**: in-progress
+**Status**: verifying
 **Reported**: 2026-05-30
 **Problems**: P013
 **ADRs**: ADR-0002, ADR-0003, ADR-0004, ADR-0018, ADR-0019
@@ -60,7 +60,7 @@ Ordered execution sequence. The `accepted → in-progress` transition fires on t
 - [x] **T6**: Update exit-code logic — exit 1 when ≥ 1 override pin has a safe upgrade target available (per Scope item 7 narrowed contract). Preserve existing safe-update exit-code semantics. Document the narrow contract in README + prompts. (2026-06-02: AFK iter 7 — `countOverridesWithSafeUpgrade()` helper in `src/print-outdated.js` populates `summary.overridesWithSafeUpgrade` in both `handleNoOutdated` and the main path; `bin/dry-aged-deps.js` ORs the new count into the existing `summary.safeUpdates > 0` exit-1 condition for both `--check` and default modes per ADR-0003 parity. New paired-test assertions in `src/print-outdated.test.js` and `bin/dry-aged-deps.test.js`. README "Exit Codes" + "Overrides hygiene" sections updated; prompt acceptance criterion REQ-OVERRIDES-EXIT-CODE marked [x]. Architect PASS-WITH-NOTES (ADR-0004 Confirmation §3 literal-`safeUpdates` reference flagged for follow-up amendment via RFC-001 per ADR-0019 governance authority); jtbd PASS-WITH-NOTES (mechanically derivable from spec — descriptive-cite posture preserved); risk WIP 4/25 Low — RISK_VERDICT: CONTINUE. Commit-type: `chore:` per RFC-001 codified sequencing — the user-facing `feat:` rides T4+T5+T6 wired-up together or a separate flag-flip commit.)
 - [x] **T7**: Live-case regression test — exercise the original brace-expansion mislabel scenario from P013. A current advisory-range-hit override pin should surface as a finding (new RFC-001 surface). The same data should NOT mislabel itself as "unfixable transitive" — that's gap #2's surface; the test should pin the boundary. (2026-06-02: AFK iter 8 — `test/cli.overrides-hygiene-regression.test.js` added under the ADR-0020 cross-module-integration carve-out; 3 it-blocks GREEN. Asserts (a) `runOverridesHygiene` reports brace-expansion `^4.0.1` with reason matching `/^(stale-and-vulnerable|vulnerable):/` + `advisories: [{ id: 'GHSA-f886-m6hf-6m8v', severity: 'moderate' }]` + `safeUpgrade: '5.0.6'`; (b) `findUnfixableVulns` STILL stamps the same vuln with reason `'vulnerable transitive dependency'` — pinning the gap #2 mislabel RFC-001 §Out-of-Scope explicitly preserves; (c) RFC-001 surface's reason vocabulary is disjoint from the gap #2 string. Architect PASS — ADR-0020 carve-out qualifies (test crosses three module boundaries, no single paired-source owner); ADR-0018 reason vocabulary protected by the disjointness assertion. JTBD PASS-WITH-NOTES — no new citations beyond RFC-001's existing descriptive set (JTBD-001 / JTBD-204 / JTBD-006).)
 - [x] **T8**: First task commit (T2 or T3) carries `Refs: RFC-001` trailer and triggers `accepted → in-progress` transition. (2026-05-30: AFK iter 2 — T2 commit carries the trailer; `git mv` to `.in-progress.md` rides the same commit per @windyroad/itil ADR-014 single-commit grain.)
-- [ ] **T9**: On the final task commit (post-T7), transition `in-progress → verifying` with `## Verification` section drafted: release marker; user-side check that `dry-aged-deps --check` no longer reports the brace-expansion-style mislabel for an override-fixable vuln in their own projects.
+- [x] **T9**: On the final task commit (post-T7), transition `in-progress → verifying` with `## Verification` section drafted: release marker; user-side check that `dry-aged-deps --check` no longer reports the brace-expansion-style mislabel for an override-fixable vuln in their own projects. (2026-06-02: AFK iter 9 — ship-signal `feat:` commit `355deee` landed (`feat(overrides-hygiene): expose --no-overrides-hygiene in README Options table`); RFC renamed `.in-progress.md` → `.verifying.md`; `## Verification` section drafted below. Architect PASS-WITH-NOTES (ADR-0005 / ADR-0019 / RFC-001 codified sequencing alignment; pattern-extraction P-ticket deferred to ITERATION_SUMMARY carried-forward); JTBD PASS-WITH-NOTES (descriptive-cite posture preserved per T1/T3/T6/T7/T8 precedent); external-comms risk + voice-tone PASS; pipeline-risk LOW (commit 3, push 2, release 2 — within 4/25 appetite).)
 
 ### Commit-type sequencing (codified 2026-05-30)
 
@@ -76,6 +76,46 @@ Source: CLAUDE.md `## Commit Messages` section names `chore:` as the type for "d
 ## Commits
 
 (maintained automatically — populated by the commit-message RFC trailer hook per ADR-060 Phase 1 item 12)
+
+## Verification
+
+**Status**: Awaiting user verification.
+
+### Release marker
+
+- **Ship-signal commit**: `355deee` — `feat(overrides-hygiene): expose --no-overrides-hygiene in README Options table` (authored 2026-06-02, AFK iter 9). This is the release-eligible `feat:` commit per RFC-001 §"Commit-type sequencing (codified 2026-05-30)". Semantic-release's commit-analyzer will translate this into a **minor bump** on the orchestrator's next release-cadence drain (`npm run push:watch` → `npm run release:watch` per ADR-0005). The actual published version (e.g. `0.2.0` if the current is `0.1.x`) is to be filled in post-release once `ci-publish.yml` lands the npm tag.
+- **Wiring chain** that the `feat:` commit ships (all already merged):
+  - T1 `de73e59` — prompts/017.0 spec
+  - T2 `037d33b` — failing test (RED)
+  - T3 `45340db` — implementation (GREEN)
+  - T4 `8a9aa08` — pipeline wire
+  - T5 `e54c59e` — formatter render
+  - T6 `82b2234` — exit-code logic
+  - T7 `42031d5` — live-case regression test (brace-expansion mislabel boundary)
+  - T8 — accepted → in-progress transition rode T2's commit
+  - T9 — this RFC rename rides the post-`feat:` `docs(rfcs):` commit
+
+### User-side check
+
+After the next release-cadence drain publishes the minor bump:
+
+1. Install (or upgrade to) the published version: `npm install -g dry-aged-deps@latest`.
+2. In a project that has an override-fixable vulnerability (e.g. the original brace-expansion case from P013: `brace-expansion@^4.0.1` within the GHSA-f886-m6hf-6m8v advisory range, override-pinned in `package.json` with a safe upgrade target available):
+
+   ```sh
+   dry-aged-deps --check
+   ```
+
+3. **Confirm**: the override pin surfaces under the `Override hygiene` / `overridesHygiene` / `<overridesHygiene>` section (per `--format=table` / `--format=json` / `--format=xml`) with a non-null `safeUpgrade` field and the advisory id + severity populated. Exit code 1 fires per the narrowed `--check` contract (Scope item 7: exit-1 only when ≥ 1 override pin has a safe upgrade target available).
+4. **Boundary check** (RFC-001 §Out-of-Scope preserved): the same vuln continues to surface under the existing unfixable-transitive surface with the legacy reason vocabulary (`'vulnerable transitive dependency'`). That is the deliberate gap #2 mislabel that RFC-001 explicitly does NOT fix — a separate workstream amends ADR-0018 to sharpen the unfixable-reason logic. The disjoint-vocabulary assertion in `test/cli.overrides-hygiene-regression.test.js` pins this boundary mechanically.
+5. **Opt-out check**: `dry-aged-deps --check --no-overrides-hygiene` suppresses the new surface and the new exit-1 trigger; the rest of the check-mode contract is unchanged.
+
+### Trace closure path
+
+- **Driving problem**: P013 (dry-aged-deps ignores the package.json `overrides` block) — gap #1 (the new-capability half) is what this RFC scopes. P013 itself remains Open until BOTH gaps close: gap #2 (the `fixAvailable`-aware sharpening of the "unfixable" reason logic) is a separate workstream tracked under the ADR-0018-amendment thread, not RFC-001. Per ADR-060 § Confirmation criteria, RFC-001 reaching Closed is decoupled from P013 reaching Closed when the RFC covers only a portion of the problem's surface — the `## RFCs` reverse-trace on P013 will keep Status visible as RFC-001 advances to verifying / closed.
+- **On verification PASS by the user**: RFC-001 transitions verifying → closed via `/wr-itil:manage-rfc RFC-001 close` in a future interactive session. The P013 ticket gets a `## Resolution Notes` update noting "gap #1 closed via RFC-001 `{published-version}`; gap #2 remains tracked under the ADR-0018-amendment thread".
+
+Awaiting user verification.
 
 ## Related
 
