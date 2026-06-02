@@ -37,7 +37,7 @@ Deprecation reference: https://github.blog/changelog/2025-09-19-deprecation-of-n
 
 ## Workaround
 
-(deferred to investigation — currently observable as warning annotations on every workflow run; no functional impact yet)
+Pre-cutover (before 2026-06-16): no workaround needed — the deprecation surfaces as warning annotations on every workflow run; no functional impact. Post-cutover: GitHub force-migrates v4 actions to Node 24, so the warning annotations disappear automatically but any latent v4-on-Node24 compat issues would manifest as workflow failures.
 
 ## Impact Assessment
 
@@ -48,13 +48,48 @@ Deprecation reference: https://github.blog/changelog/2025-09-19-deprecation-of-n
 
 ## Root Cause Analysis
 
+**Root cause (external)**: GitHub Actions runner deprecation of Node.js 20, announced 2025-09-19 (https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/). Effective 2026-06-16, all JavaScript actions pinned to majors built against Node 20 will be force-migrated to Node 24. This project's three workflow files reference v4 of `actions/checkout` and `actions/setup-node`, both of which are Node-20-built majors. The deprecation is upstream-driven and the migration cannot be deferred past 2026-06-16 without accepting silent runtime substitution.
+
+**Empirical confirmation of v6 availability (2026-06-03, the day this ticket was captured)**:
+
+- `actions/checkout` latest stable: `v6.0.3` (published 2026-06-02; non-prerelease) — supersedes the v5 line.
+- `actions/setup-node` latest stable: `v6.4.0` (published 2026-04-20; non-prerelease) — supersedes the v5 line.
+
+Both v6 majors run on Node 24, fully closing the deprecation. v5 was a transitional major and is now superseded; v6 is the canonical latest-stable-major.
+
+### Fix Strategy
+
+Bump all 8 references from `@v4` to `@v6` across the three workflow files (the P025 capture-time Description undercounts `ci-publish.yml` — it lists 4 refs there but the actual file carries 5: 3× checkout + 2× setup-node, lines 20/36/41/110/115; the `publish` job's setup-node at line 115 was missed in the original count):
+
+| File                                | Line | Action     | Before | After |
+| ----------------------------------- | ---- | ---------- | ------ | ----- |
+| `.github/workflows/auto-update.yml` | 61   | checkout   | v4     | v6    |
+| `.github/workflows/auto-update.yml` | 72   | setup-node | v4     | v6    |
+| `.github/workflows/ci-publish.yml`  | 20   | checkout   | v4     | v6    |
+| `.github/workflows/ci-publish.yml`  | 36   | checkout   | v4     | v6    |
+| `.github/workflows/ci-publish.yml`  | 41   | setup-node | v4     | v6    |
+| `.github/workflows/ci-publish.yml`  | 110  | checkout   | v4     | v6    |
+| `.github/workflows/ci-publish.yml`  | 115  | setup-node | v4     | v6    |
+| `.github/workflows/claude.yml`      | 29   | checkout   | v4     | v6    |
+
+**Rejected alternatives**:
+
+- `@v5` (the P025 capture-time named option): superseded by `@v6` upstream; pinning to a legacy stable when a fresher stable exists offers no benefit and accrues immediate dep-debt.
+- `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true` env var: lower-delta but leaves the v4 pin in place; still has to be migrated before/at cutover. Bumping to v6 closes the issue in one step.
+
+**Architect verdict (2026-06-03)**: APPROVE. ADR-0017's verbatim-step contract (Confirmation #10) scopes the OIDC Mint step prose, not action version pins. No existing ADR pins action versions. No new ADR required — this is a forced upstream-driven runtime migration, not an architectural choice.
+
+**JTBD verdict (2026-06-03)**: ALIGNED. JTBD-103/104/106 are preserved; migration is invisible at the persona-surface layer.
+
+**Verification plan** (deferred to next CI run after this commit lands): the next `push` event triggers `ci-publish.yml` end-to-end; the next 06:00 UTC cron triggers `auto-update.yml`; `claude.yml` triggers on the next `@claude` comment. A green outcome on each workflow under v6 closes the migration; a red outcome surfaces the v6 compat issue with lead time before the 2026-06-16 cutover.
+
 ### Investigation Tasks
 
-- [ ] Re-rate Priority and Effort at next /wr-itil:review-problems
-- [ ] Confirm `actions/checkout@v5` + `actions/setup-node@v5` availability and stability
-- [ ] Decide on migration path (v5 upgrade vs FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true opt-in)
-- [ ] Apply chosen migration before 2026-06-16 cutover
-- [ ] Verify all 3 workflows (auto-update, ci-publish, claude) pass under the migrated runtime
+- [x] Re-rate Priority and Effort at next /wr-itil:review-problems — re-rated 2026-06-03 (P022/P023/P024/P025 review pass, commit 0220471); Effort confirmed M, WSJF 6.0.
+- [x] Confirm `actions/checkout@v5` + `actions/setup-node@v5` availability and stability — superseded by `@v6`; both v6 majors verified stable via `gh api` on 2026-06-03 (v6.0.3 + v6.4.0, both non-prerelease).
+- [x] Decide on migration path (v5 upgrade vs FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true opt-in) — chose `@v6` (latest stable major, supersedes both candidates).
+- [x] Apply chosen migration before 2026-06-16 cutover — applied this iter (13 days before cutover).
+- [ ] Verify all 3 workflows (auto-update, ci-publish, claude) pass under the migrated runtime — gated on the next CI run after this commit lands (next push exercises ci-publish; next 06:00 UTC cron exercises auto-update; next `@claude` comment exercises claude.yml).
 
 ## Dependencies
 
