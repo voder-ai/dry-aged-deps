@@ -77,6 +77,17 @@ Conventional Commits enforced by commitlint + husky pre-commit hook.
 - `refactor:`, `test:`, `docs:`, `style:`, `perf:`, `ci:`, `build:` — standard types
 - `BREAKING CHANGE:` — only for changes to CLI flags, exit codes, output format, or removal of features
 
+### Multi-iter feature ship-signal (codified 2026-06-02 from RFC-001 experience)
+
+When a feature lands across multiple iters as `chore:` / `test:` commits (e.g. T1 spec → T2 RED → T3 impl → T4 wire → T5 formatter → T6 exit-code → T7 regression), the release-eligible `feat:` commit follows one of two shapes:
+
+1. **Bundled** — T4+T5+T6 wired-up together as a single `feat:` commit. Use when the iters land in close succession with no intermediate user-visible signal needed.
+2. **README-discoverability addition** — a separate `feat:` commit that surfaces the new flag / option / column in the README Options table (or equivalent user-facing surface) once all the pieces are in place. Use when chore-type implementation has already shipped across multiple iters. RFC-001 used this shape via commit `355deee feat(overrides-hygiene): expose --no-overrides-hygiene in README Options table` to ship `dry-aged-deps@2.11.0`.
+
+The `feat:` commit's diff can be small (a README line addition is sufficient); its purpose is to signal "the feature is shipping to users" and trigger the semantic-release minor bump per ADR-0005. Avoid pattern 3 — letting RFC code ship inside the next unrelated `feat:`/`fix:` — because it defers the ship-decision indefinitely and breaks the audit trail between feature work and release.
+
+Track multi-iter feature work in the RFC's `## Tasks` section per ADR-0019; record the chosen ship-signal shape there too so future contributors don't rediscover the rule.
+
 ## Workflow Rules
 
 See `.github/instructions/base.instructions.md` for the full base instructions. Key points:
