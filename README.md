@@ -59,6 +59,7 @@ dry-aged-deps
 | --check                 | Check mode: exit code 1 if safe updates available (including override pins with a safe upgrade target), 0 if none, 2 on error (consistent across table, JSON, and XML formats) |
 | --update                | Update dependencies to latest safe versions                                                                                                                                    |
 | -y, --yes               | Skip confirmation prompts (assume yes)                                                                                                                                         |
+| --no-overrides-hygiene  | Disable the package.json overrides hygiene surface (default: on). See [Overrides hygiene](#overrides-hygiene) below.                                                           |
 
 ### Examples
 
@@ -98,6 +99,9 @@ dry-aged-deps --config-file=custom-config.json
 
 # Check using a specific configuration file
 dry-aged-deps --check --config-file=custom-config.json
+
+# Opt out of the overrides hygiene surface (default: on)
+dry-aged-deps --no-overrides-hygiene
 ```
 
 ```sh
