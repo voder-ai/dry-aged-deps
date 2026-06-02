@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-06-02 **P021 known error** — `calculateAgeInDays(publishDate, now = Date.now())` extension landed (commit `dc64c44`); overrides-hygiene swap-back complete; RFC-001 T3 inline-arithmetic divergence removed. Awaiting next release for Known Error → Verification Pending.
+> Last reviewed: 2026-06-03 **README reconciled** — 2 drift entries corrected: P023, P024 (committed cross-session MISSING — captured by prior session via `/wr-itil:capture-problem` deferred-README contract but never folded into WSJF Rankings). Reconciliation contract per P118 + ADR-014 amended ("Reconciliation as preflight robustness layer").
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -20,6 +20,8 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 2.25 | P014 | the age soak is unconditional — it ignores the severity of the vulnerability the project is currently exposed to                            | 9 (Medium)   | Open        | L      | 2026-05-25 |
 | 2.0  | P019 | work-problems Step 5 subprocess JSON envelope's duration_ms can dramatically undercount — extend P089 Gap 2 authority hierarchy             | 4 (Low)      | Open        | M      | 2026-05-30 |
 | 1.5  | P020 | `@windyroad/tdd` hook stem-match strict matching causes variant-named tests to fail to pair with their source modules                       | 3 (Medium)   | Open        | M      | 2026-05-30 |
+| 1.5  | P023 | external-comms gate marker re-hashes on every draft-body delta — forces redundant re-fire cycles per iter                                   | 3 (Medium)   | Open        | M      | 2026-06-02 |
+| 1.5  | P024 | external-comms gate cross-session marker dir mismatch — subagent PASS verdicts land in agent's own dir, main session's gate can't find them | 3 (Medium)   | Open        | M      | 2026-06-02 |
 
 ## Verification Queue
 
