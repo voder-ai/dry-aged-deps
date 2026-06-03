@@ -22,6 +22,8 @@ You need time to let the community kick the tires, spot the issues, and validate
 
 Think of it as `npm outdated` with a patience and a security guard.
 
+**What's new**: opt-in [exposure-aware soak](#exposure-aware-soak) shortens the per-package maturity window when you are sitting on a Critical or High `npm audit` exposure — pull fixes sooner without manually overriding `--min-age=0`.
+
 ## 🚀 Getting Started
 
 ### Installation
