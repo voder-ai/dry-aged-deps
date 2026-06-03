@@ -44,22 +44,23 @@ dry-aged-deps
 
 ### Options
 
-| Flag                    | Description                                                                                                                                                                    |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| -h, --help              | Show help information                                                                                                                                                          |
-| -v, --version           | Show the CLI version                                                                                                                                                           |
-| --format=<format>       | Output format: table (default), json, xml                                                                                                                                      |
-| --min-age=<days>        | Minimum age in days (1-365) for including versions (default: 7)                                                                                                                |
-| --prod-min-age=<days>   | Minimum age for production dependencies (falls back to --min-age)                                                                                                              |
-| --dev-min-age=<days>    | Minimum age for development dependencies (falls back to --min-age)                                                                                                             |
-| --severity=<level>      | Vulnerability severity threshold: none, low, moderate, high, critical (default: none)                                                                                          |
-| --prod-severity=<level> | Severity threshold for production dependencies (falls back to --severity)                                                                                                      |
-| --dev-severity=<level>  | Severity threshold for development dependencies (falls back to --severity)                                                                                                     |
-| --config-file=<file>    | Path to JSON config file (default: .dry-aged-deps.json). CLI flags override config file values                                                                                 |
-| --check                 | Check mode: exit code 1 if safe updates available (including override pins with a safe upgrade target), 0 if none, 2 on error (consistent across table, JSON, and XML formats) |
-| --update                | Update dependencies to latest safe versions                                                                                                                                    |
-| -y, --yes               | Skip confirmation prompts (assume yes)                                                                                                                                         |
-| --no-overrides-hygiene  | Disable the package.json overrides hygiene surface (default: on). See [Overrides hygiene](#overrides-hygiene) below.                                                           |
+| Flag                    | Description                                                                                                                                                                          |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| -h, --help              | Show help information                                                                                                                                                                |
+| -v, --version           | Show the CLI version                                                                                                                                                                 |
+| --format=<format>       | Output format: table (default), json, xml                                                                                                                                            |
+| --min-age=<days>        | Minimum age in days (1-365) for including versions (default: 7)                                                                                                                      |
+| --prod-min-age=<days>   | Minimum age for production dependencies (falls back to --min-age)                                                                                                                    |
+| --dev-min-age=<days>    | Minimum age for development dependencies (falls back to --min-age)                                                                                                                   |
+| --severity=<level>      | Vulnerability severity threshold: none, low, moderate, high, critical (default: none)                                                                                                |
+| --prod-severity=<level> | Severity threshold for production dependencies (falls back to --severity)                                                                                                            |
+| --dev-severity=<level>  | Severity threshold for development dependencies (falls back to --severity)                                                                                                           |
+| --config-file=<file>    | Path to JSON config file (default: .dry-aged-deps.json). CLI flags override config file values                                                                                       |
+| --check                 | Check mode: exit code 1 if safe updates available (including override pins with a safe upgrade target), 0 if none, 2 on error (consistent across table, JSON, and XML formats)       |
+| --update                | Update dependencies to latest safe versions                                                                                                                                          |
+| -y, --yes               | Skip confirmation prompts (assume yes)                                                                                                                                               |
+| --no-overrides-hygiene  | Disable the package.json overrides hygiene surface (default: on). See [Overrides hygiene](#overrides-hygiene) below.                                                                 |
+| --exposure-aware-soak   | Enable exposure-aware soak: shorten the per-package maturity window under Critical/High current vuln exposure (default: off). See [Exposure-aware soak](#exposure-aware-soak) below. |
 
 ### Examples
 
@@ -102,6 +103,12 @@ dry-aged-deps --check --config-file=custom-config.json
 
 # Opt out of the overrides hygiene surface (default: on)
 dry-aged-deps --no-overrides-hygiene
+
+# Opt in to exposure-aware soak (shortens per-package maturity window under Critical/High current exposure)
+dry-aged-deps --exposure-aware-soak
+
+# Combine with stricter prod soak — exposure shortening only applies to packages with current exposure
+dry-aged-deps --exposure-aware-soak --prod-min-age=30
 ```
 
 ```sh
@@ -180,6 +187,32 @@ jobs:
 ### Overrides hygiene
 
 `dry-aged-deps` parses the `package.json` `overrides` block on every run (default on; `--no-overrides-hygiene` to opt out). Each pinned override is aged against the npm registry and cross-referenced against `npm audit` advisory ranges. Findings render in the table / JSON / XML outputs under `Override hygiene` / `overridesHygiene` / `<overridesHygiene>`. A finding with a non-null `safeUpgrade` field counts toward the `--check` exit-1 trigger (above); findings without a safe upgrade target are informational.
+
+### Exposure-aware soak
+
+`dry-aged-deps` waits `--min-age` days before recommending an update — a cheap proxy for "this release has been vetted." But when you are sitting on a known-vulnerable version and the fix is fresh, the right wait is shorter, not longer. `--exposure-aware-soak` (opt-in, default off) shortens the per-package maturity window in proportion to your current `npm audit` exposure severity:
+
+| Current exposure severity | Maturity-window modifier    |
+| ------------------------- | --------------------------- |
+| Critical                  | 0.0 × default (0-day floor) |
+| High                      | 0.5 × default               |
+| Moderate / Low / None     | 1.0 × default (unchanged)   |
+
+The modifier scales whatever `--min-age` you set — it does not hard-code a 7-day base. A `--min-age=14` operator under Critical exposure sees the same 0-day floor; under High exposure they see 7 days. Sibling packages without current exposure preserve the full operator-set minimum age. This is the per-package alternative to the global `--min-age=0` workaround.
+
+**Composition with `--severity`**: the two axes are orthogonal. `--severity` / `--prod-severity` / `--dev-severity` gate whether the candidate version is clean (a candidate carrying a vuln is excluded regardless of how old it is). `--exposure-aware-soak` scales the maturity window for the version you are currently sitting on. The cleanness gate runs before the age gate — a vulnerable candidate still fails cleanness even when Critical current exposure would otherwise relax the age gate.
+
+**Exit-code semantics unchanged**: `--check` exits 1 when safe updates are available. The modifier shifts which updates qualify as safe (an exposure-modified row joins the safe-update set when the floor is met), but does not add a new exit-1 trigger.
+
+**Default-off rationale**: this preserves JTBD-006 (Trust that the default policy is sensibly safe) for non-opt-in users — out-of-the-box behaviour is unchanged on this minor. The opt-in path extends JTBD-001 (See which dependencies have safe updates available) to the inverse case where a fix is too fresh to clear the unconditional age gate, but the current exposure warrants surfacing it anyway. Graduation to opt-out is a v2 decision requiring its own ADR and changelog entry — see the v2 graduation triggers below.
+
+**v2 graduation triggers**:
+
+1. `--exposure-aware-soak` enabled in CI for at least one calendar month with no operator-reported regression of trust or safety expectations.
+2. No locked-policy violations observed (Critical → 0 and High → 0.5 hold across opt-in usage).
+3. Evidence that the policy materially reduced operator override frequency (`--min-age=0`-by-hand cases) without surfacing previously-hidden risk.
+
+If any trigger fails or evidence accumulates that the locked policy needs amendment, the v2 ADR records the policy change before the default flips.
 
 These exit codes are consistent across table, JSON, and XML output.
 
