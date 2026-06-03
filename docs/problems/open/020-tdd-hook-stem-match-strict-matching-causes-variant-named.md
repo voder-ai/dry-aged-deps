@@ -2,9 +2,10 @@
 
 **Status**: Open
 **Reported**: 2026-05-30
-**Priority**: 3 (Medium) — Impact: 3 x Likelihood: 1 (deferred — re-rate at next /wr-itil:review-problems)
+**Priority**: 3 (Low) — Impact: Moderate (3) x Likelihood: Rare (1) — ADR-0020 canonical-pair workaround in place; the strictness gap only fires when a project sidesteps the canonical-pair convention
 **Origin**: external (`@windyroad/tdd`)
-**Effort**: M (deferred — re-rate at next /wr-itil:review-problems)
+**Effort**: M — upstream `@windyroad/tdd` hook stem-match relaxation OR formalised project-level canonical-pair convention
+**WSJF**: 1.5 = (3 × 1.0) / 2
 **Type**: technical
 
 ## Description

@@ -1,12 +1,12 @@
 # Problem 023: external-comms gate marker re-hashes on every draft-body delta — forces redundant re-fire cycles per iter
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-06-02
 **Priority**: 6 (Medium) — Impact: Minor (2) x Likelihood: Possible (3) — hit on every multi-edit commit on a gated surface (iter 9: 3 re-fires + 6 redundant subagent dispatches; iter 10: 1 re-fire)
 **Origin**: external (`@windyroad/risk-scorer` + `@windyroad/voice-tone` external-comms surfaces)
 **Effort**: M — upstream hook change (substantive-content hash vs verbatim hash) OR delta-classifier between PASS verdicts
 **Type**: technical
-**WSJF**: 3.0 = (6 × 1.0) / 2
+**WSJF**: 6.0 = (6 × 2.0) / 2
 
 ## Description
 

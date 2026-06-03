@@ -1,10 +1,11 @@
 # Problem 013: dry-aged-deps ignores the package.json `overrides` block — stale/vulnerable override pins go undetected, and override-fixable vulns are mislabeled "unfixable"
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-05-25
+**Origin**: internal
 **Priority**: 9 (Medium) — Impact: Moderate (3) x Likelihood: Possible (3)
 **Effort**: L — new module (overrides parser + advisory-range cross-reference) + new prompt/ADR (RFC scope: overrides hygiene surface plus `fixAvailable`-aware unfixable reason)
-**WSJF**: 2.25 = (9 × 1.0) / 4
+**WSJF**: 4.5 = (9 × 2.0) / 4
 **Type**: technical
 
 ## Description

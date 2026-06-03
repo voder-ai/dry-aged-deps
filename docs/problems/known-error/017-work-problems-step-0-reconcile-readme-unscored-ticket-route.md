@@ -1,11 +1,11 @@
 # Problem 017: work-problems Step 0 reconcile-readme halt-route can't handle unscored-ticket MISSING drift
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-05-30
 **Priority**: 6 (Medium) — Impact: Minor (2) x Likelihood: Possible (3)
 **Origin**: external (`@windyroad/itil`)
 **Effort**: M — upstream `@windyroad/itil` skill spec change (classify-readme-drift new exit class + Step 0 routing) + upstream report
-**WSJF**: 3.0 = (6 × 1.0) / 2
+**WSJF**: 6.0 = (6 × 2.0) / 2
 **Type**: technical
 
 ## Description

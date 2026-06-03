@@ -2,9 +2,10 @@
 
 **Status**: Known Error
 **Reported**: 2026-05-30
-**Priority**: 3 (Medium) — Impact: 3 x Likelihood: 1 (deferred — re-rate at next /wr-itil:review-problems)
+**Priority**: 3 (Low) — Impact: Moderate (3) x Likelihood: Rare (1) — implementation already landed; remaining work is the K→V transition
 **Origin**: internal
-**Effort**: S (deferred — re-rate at next /wr-itil:review-problems)
+**Effort**: S — single function-signature extension; implementation tasks done
+**WSJF**: 6.0 = (3 × 2.0) / 1
 **Type**: technical
 
 ## Description

@@ -2,6 +2,7 @@
 
 **Status**: Open
 **Reported**: 2026-05-13
+**Origin**: internal
 **Priority**: 6 (Medium) — Impact: Minor (2) x Likelihood: Possible (3)
 **Effort**: M — structural fix shape undecided (Step 2.5 pre-`ALL_DONE` audit vs reframe wrap-up vs default-to-action); may warrant an ADR; cross-cuts ADR-044 + P130 + P078
 **WSJF**: 3.0 = (6 × 1.0) / 2

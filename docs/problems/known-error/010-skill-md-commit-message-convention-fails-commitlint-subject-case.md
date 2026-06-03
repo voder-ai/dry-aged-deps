@@ -2,6 +2,7 @@
 
 **Status**: Known Error
 **Reported**: 2026-05-17
+**Origin**: internal
 **Priority**: 6 (Medium) — Impact: Minor (2) x Likelihood: Possible (3)
 **Effort**: M — upstream `@windyroad/itil` SKILL.md examples + possibly commitlint config amendment
 **WSJF**: 6.0 = (6 × 2.0) / 2

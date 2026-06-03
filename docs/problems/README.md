@@ -1,34 +1,32 @@
 # Problem Backlog
 
-> Last reviewed: 2026-06-03 **P025 known error** — actions/checkout + setup-node v4→v6 migrated across 8 refs in 3 workflow files (commit 411fa71, 13 days before 2026-06-16 cutover); awaiting release (next push) for K→V transition per ADR-022.
+> Last reviewed: 2026-06-03 — P016 closed (push:watch network-flake fix verified across recent releases incl. today's RFC-002 ship); 6 Open → Known Error auto-transitions (P013, P014, P017, P019, P023, P024 — root cause + workaround documented). WSJF top of queue: P021 / P022 / P010 / P017 / P023 / P025 tied at 6.0. Verification Queue empty; P013 / P014 / P021 / P025 fixes shipped but await `/wr-itil:transition-problems` for K→V flip.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
 
-Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) and Parked (`.parked.md`, multiplier 0) tickets are excluded per ADR-022 — surfaced in their own sections below. Rows sort by `(WSJF desc, Known-Error-first, Effort-divisor asc, Reported-date asc, ID asc)` so top-to-bottom order matches `/wr-itil:work-problems` Step 3 tie-break selection 1:1 (P138). The `Reported` column MUST appear.
+Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) and Parked (`.parked.md`, multiplier 0) tickets are excluded per ADR-022 — surfaced in their own sections below. Rows render tier-first (Tier 0 Critical-bypass [Severity Very High ≥17 OR security-classified OR incident-linked] → Tier 1 Inbound-reported [`**Origin**: inbound-reported`] → Tier 2 Internal), then within each tier by `(WSJF desc, Known-Error-first, Effort-divisor asc, Reported-date asc, ID asc)` so top-to-bottom order matches `/wr-itil:work-problems` Step 3 selection 1:1 (P138 + ADR-076). The `Reported` and `Origin` columns MUST appear. <!-- REPORTED-FIRST-TIER-SOURCE: /wr-itil:work-problems SKILL.md Step 3 (ADR-076) -->
 
-| WSJF | ID   | Title                                                                                                                                       | Severity   | Status      | Effort | Reported   |
-| ---- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ----------- | ------ | ---------- |
-| 6.0  | P010 | manage-problem SKILL.md commit-message convention fails @commitlint/config-conventional subject-case rule                                   | 6 (Medium) | Known Error | M      | 2026-05-17 |
-| 6.0  | P025 | GitHub Actions deprecating Node.js 20 on 2026-06-16 — v4 actions across all workflows will be force-migrated to Node.js 24                  | 12 (High)  | Known Error | M      | 2026-06-03 |
-| 6.0  | P022 | commit-gate hook unstages files on "Pipeline state drift" block — manual re-stage needed after rescore                                      | 6 (Medium) | Open        | S      | 2026-05-30 |
-| 3.0  | P021 | `calculateAgeInDays` hardcodes `Date.now()` — not injectable for testability                                                                | 3 (Medium) | Known Error | S      | 2026-05-30 |
-| 3.0  | P006 | assistant defers actionable items to "next session" instead of acting when the user is observably present                                   | 6 (Medium) | Open        | M      | 2026-05-13 |
-| 3.0  | P017 | work-problems Step 0 reconcile-readme halt-route can't handle unscored-ticket MISSING drift                                                 | 6 (Medium) | Open        | M      | 2026-05-30 |
-| 3.0  | P023 | external-comms gate marker re-hashes on every draft-body delta — forces redundant re-fire cycles per iter                                   | 6 (Medium) | Open        | M      | 2026-06-02 |
-| 2.25 | P013 | dry-aged-deps ignores the package.json overrides block — stale/vulnerable pins go undetected, override-fixable vulns mislabeled "unfixable" | 9 (Medium) | Open        | L      | 2026-05-25 |
-| 2.25 | P014 | the age soak is unconditional — it ignores the severity of the vulnerability the project is currently exposed to                            | 9 (Medium) | Open        | L      | 2026-05-25 |
-| 2.0  | P019 | work-problems Step 5 subprocess JSON envelope's duration_ms can dramatically undercount — extend P089 Gap 2 authority hierarchy             | 4 (Low)    | Open        | M      | 2026-05-30 |
-| 2.0  | P024 | external-comms gate cross-session marker dir mismatch — subagent PASS verdicts land in agent's own dir, main session's gate can't find them | 4 (Low)    | Open        | M      | 2026-06-02 |
-| 1.5  | P020 | `@windyroad/tdd` hook stem-match strict matching causes variant-named tests to fail to pair with their source modules                       | 3 (Medium) | Open        | M      | 2026-05-30 |
+| WSJF | ID   | Title                                                                                                                                       | Severity   | Status      | Effort | Reported   | Origin                                                        |
+| ---- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ----------- | ------ | ---------- | ------------------------------------------------------------- |
+| 6.0  | P021 | `calculateAgeInDays` hardcodes `Date.now()` — not injectable for testability                                                                | 3 (Low)    | Known Error | S      | 2026-05-30 | internal                                                      |
+| 6.0  | P022 | commit-gate hook unstages files on "Pipeline state drift" block — manual re-stage needed after rescore                                      | 6 (Medium) | Open        | S      | 2026-05-30 | internal                                                      |
+| 6.0  | P010 | manage-problem SKILL.md commit-message convention fails @commitlint/config-conventional subject-case rule                                   | 6 (Medium) | Known Error | M      | 2026-05-17 | internal                                                      |
+| 6.0  | P017 | work-problems Step 0 reconcile-readme halt-route can't handle unscored-ticket MISSING drift                                                 | 6 (Medium) | Known Error | M      | 2026-05-30 | external (`@windyroad/itil`)                                  |
+| 6.0  | P023 | external-comms gate marker re-hashes on every draft-body delta — forces redundant re-fire cycles per iter                                   | 6 (Medium) | Known Error | M      | 2026-06-02 | external (`@windyroad/risk-scorer` + `@windyroad/voice-tone`) |
+| 6.0  | P025 | GitHub Actions deprecating Node.js 20 on 2026-06-16 — v4 actions across all workflows will be force-migrated to Node.js 24                  | 12 (High)  | Known Error | M      | 2026-06-03 | external (GitHub Actions)                                     |
+| 4.5  | P013 | dry-aged-deps ignores the package.json overrides block — stale/vulnerable pins go undetected, override-fixable vulns mislabeled "unfixable" | 9 (Medium) | Known Error | L      | 2026-05-25 | internal                                                      |
+| 4.5  | P014 | the age soak is unconditional — it ignores the severity of the vulnerability the project is currently exposed to                            | 9 (Medium) | Known Error | L      | 2026-05-25 | internal                                                      |
+| 4.0  | P019 | work-problems Step 5 subprocess JSON envelope's duration_ms can dramatically undercount — extend P089 Gap 2 authority hierarchy             | 4 (Low)    | Known Error | M      | 2026-05-30 | external (`@windyroad/itil`)                                  |
+| 4.0  | P024 | external-comms gate cross-session marker dir mismatch — subagent PASS verdicts land in agent's own dir, main session's gate can't find them | 4 (Low)    | Known Error | M      | 2026-06-02 | external (`@windyroad/risk-scorer`)                           |
+| 3.0  | P006 | assistant defers actionable items to "next session" instead of acting when the user is observably present                                   | 6 (Medium) | Open        | M      | 2026-05-13 | internal                                                      |
+| 1.5  | P020 | `@windyroad/tdd` hook stem-match strict matching causes variant-named tests to fail to pair with their source modules                       | 3 (Low)    | Open        | M      | 2026-05-30 | external (`@windyroad/tdd`)                                   |
 
 ## Verification Queue
 
-Fix released; awaiting user confirmation that the production behaviour matches the fix intent. Excluded from WSJF ranking per ADR-022. Sorted by `Released date ASC` (oldest at row 1; same-day releases tiebreak by ID ASC) per P150 — older entries are the most likely-verified candidates to close first. `Likely verified?` carries the evidence-first cell per P186 (`yes — observed: <evidence>` / `no — not observed` / `no — observed regression`).
+Fix released; awaiting user confirmation that the production behaviour matches the fix intent. Excluded from WSJF ranking per ADR-022. Sorted by `Released date ASC` (oldest at row 1; same-day releases tiebreak by ID ASC). `Likely verified?` carries the evidence-first cell per P186 (`yes — observed: <evidence>` / `no — not observed` / `no — observed regression`).
 
-| ID   | Title                                                                              | Released   | Likely verified?  |
-| ---- | ---------------------------------------------------------------------------------- | ---------- | ----------------- |
-| P016 | push:watch declares CI failure on network timeout — should verify with gh run view | 2026-05-30 | no — not observed |
+_Empty. P016 closed at this review pass; P013 / P014 / P021 / P025 fixes have shipped but the tickets remain in `.known-error.md` pending an explicit `/wr-itil:transition-problems` K→V flip — that flip is out of scope for `/wr-itil:review-problems` per ADR-010 amended Skill Granularity rule._
 
 ## Parked
 

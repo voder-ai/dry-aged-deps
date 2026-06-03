@@ -1,10 +1,11 @@
 # Problem 014: the age soak is unconditional — it ignores the severity of the vulnerability the project is _currently exposed to_, so it can hold you on a known-vulnerable version while a fix ages
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-05-25
+**Origin**: internal
 **Priority**: 9 (Medium) — Impact: Moderate (3) x Likelihood: Possible (3)
 **Effort**: L — product-shape RFC (severity→soak policy decision) + new logic combining npm audit current-exposure data with age-gate semantics
-**WSJF**: 2.25 = (9 × 1.0) / 4
+**WSJF**: 4.5 = (9 × 2.0) / 4
 **Type**: technical (design / product)
 
 ## Description

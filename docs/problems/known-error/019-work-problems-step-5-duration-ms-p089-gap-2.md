@@ -1,11 +1,11 @@
 # Problem 019: work-problems Step 5 subprocess JSON envelope's duration_ms can dramatically undercount — extend P089 Gap 2 authority hierarchy
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-05-30
 **Priority**: 4 (Low) — Impact: Minor (2) x Likelihood: Unlikely (2)
 **Origin**: external (`@windyroad/itil`)
 **Effort**: M — upstream `@windyroad/itil` SKILL.md Step 5 Authority hierarchy paragraph amend + upstream report
-**WSJF**: 2.0 = (4 × 1.0) / 2
+**WSJF**: 4.0 = (4 × 2.0) / 2
 **Type**: technical
 
 ## Description

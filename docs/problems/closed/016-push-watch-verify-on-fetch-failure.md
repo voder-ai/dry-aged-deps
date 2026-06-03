@@ -1,7 +1,8 @@
 # Problem 016: push:watch declares CI failure on network timeout — should verify with gh run view
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-05-30
+**Closed**: 2026-06-03 — verified at /wr-itil:review-problems Step 4; user confirmed push:watch has run cleanly across multiple pushes since the fix shipped (RFC-002 ship today + prior releases) with no false-positive "Pipeline failed" reports on healthy CI runs.
 **Priority**: 6 (Medium) — Impact: Minor (2) x Likelihood: Possible (3)
 **Origin**: internal
 **Effort**: S — single shell-script edit at `scripts/push-watch.sh` (network-flake fallback to `gh run view`) + bounded-retry block + test
