@@ -89,6 +89,6 @@ Next AFK iter should invoke `/wr-itil:capture-rfc` (or `/wr-itil:manage-rfc`) wi
 
 ## RFCs
 
-| RFC     | Status   | Title                                   |
-| ------- | -------- | --------------------------------------- |
-| RFC-002 | accepted | Exposure-Aware Severity-Scaled Age Soak |
+| RFC     | Status    | Title                                   |
+| ------- | --------- | --------------------------------------- |
+| RFC-002 | verifying | Exposure-Aware Severity-Scaled Age Soak |
