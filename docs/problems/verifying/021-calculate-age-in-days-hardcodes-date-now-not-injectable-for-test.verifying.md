@@ -1,11 +1,12 @@
 # Problem 021: `calculateAgeInDays` hardcodes `Date.now()` — not injectable for testability
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-05-30
-**Priority**: 3 (Low) — Impact: Moderate (3) x Likelihood: Rare (1) — implementation already landed; remaining work is the K→V transition
+**Released**: 2026-06-02 (commit `dc64c44`)
+**Priority**: 3 (Low) — Impact: Moderate (3) x Likelihood: Rare (1) — fix shipped; awaiting user confirmation that the production behaviour matches the fix intent
 **Origin**: internal
 **Effort**: S — single function-signature extension; implementation tasks done
-**WSJF**: 6.0 = (3 × 2.0) / 1
+**WSJF**: 0 (Verification Pending — ADR-022 multiplier 0; surfaced in Verification Queue not WSJF Rankings)
 **Type**: technical
 
 ## Description
@@ -35,10 +36,22 @@ Fix shape: extend the signature to `calculateAgeInDays(publishDate, now = Date.n
 
 ### Investigation Tasks
 
-- [ ] Re-rate Priority and Effort at next /wr-itil:review-problems
+- [x] Re-rate Priority and Effort at next /wr-itil:review-problems
 - [x] Extend `calculateAgeInDays` signature (TDD: failing test injects custom `now` → add parameter)
 - [x] Swap inline arithmetic in `src/overrides-hygiene.js` back to helper
 - [x] Remove JSDoc divergence comment in `src/overrides-hygiene.js` post-swap
+
+## Fix Released
+
+Shipped 2026-06-02 in commit [`dc64c44`](../../../commit/dc64c44) `fix(age-calculator): accept optional now parameter for testability`. Released to npm as part of RFC-001 + subsequent RFC-002 ship-trains. Three coordinated changes:
+
+1. **Signature extension** — `src/age-calculator.js` extended from `calculateAgeInDays(publishDate)` to `calculateAgeInDays(publishDate, now = Date.now())`. Default-argument shape preserves backwards compatibility for all 30+ existing single-arg consumers (`buildRows`, `security-smart-search`, etc.); `src/age-calculator.test.js` extended with a deterministic-`now` regression case.
+2. **Overrides-hygiene swap-back** — `src/overrides-hygiene.js` no longer inlines `Math.floor((now.getTime() - publishMs) / MS_PER_DAY)` with a local `MS_PER_DAY` constant + `computeAgeDays` helper; it calls `calculateAgeInDays(publishDate, now.getTime())` directly. The local `MS_PER_DAY` constant + local `computeAgeDays` helper were removed.
+3. **JSDoc divergence comment removal** — the inline-arithmetic divergence comment block introduced by RFC-001 T3 as a temporary workaround was removed from `src/overrides-hygiene.js` in the same commit. `docs/api.md` and `docs/architecture.md` were updated to reflect the new `(publishDate, now?)` signature.
+
+Closure-via: architect's PASS-WITH-NOTES verdict on RFC-001 T3 flagged the inline-arithmetic divergence as note 1; this ticket was captured to track the swap-back point. The swap-back landed in `dc64c44` and is now reachable in published artifacts via the RFC-001 and RFC-002 release trains.
+
+Awaiting user verification: next call into `runOverridesHygiene()` (production code path) should produce identical age math to the test fixture's deterministic-`now` injection — the swap-back is structural (same arithmetic, same primitive), so this is a "no observed regression" verification rather than a behavioural change.
 
 ## Dependencies
 

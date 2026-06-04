@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-06-03 — P016 closed (push:watch network-flake fix verified across recent releases incl. today's RFC-002 ship); 6 Open → Known Error auto-transitions (P013, P014, P017, P019, P023, P024 — root cause + workaround documented). WSJF top of queue: P021 / P022 / P010 / P017 / P023 / P025 tied at 6.0. Verification Queue empty; P013 / P014 / P021 / P025 fixes shipped but await `/wr-itil:transition-problems` for K→V flip.
+> Last reviewed: 2026-06-04 — P021 transitioned Known Error → Verification Pending (calculateAgeInDays clock-injectability fix released in `dc64c44`, now reachable via RFC-001/RFC-002 ship-trains). WSJF top of queue: P022 / P010 / P017 / P023 / P025 tied at 6.0 (P021 dropped out per ADR-022 verifying-multiplier-0). Verification Queue: 1 (P021 — `no — not observed`); P013 / P014 / P025 fixes shipped but still await K→V flip.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -9,7 +9,6 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 | WSJF | ID   | Title                                                                                                                                       | Severity   | Status      | Effort | Reported   | Origin                                                        |
 | ---- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ----------- | ------ | ---------- | ------------------------------------------------------------- |
-| 6.0  | P021 | `calculateAgeInDays` hardcodes `Date.now()` — not injectable for testability                                                                | 3 (Low)    | Known Error | S      | 2026-05-30 | internal                                                      |
 | 6.0  | P022 | commit-gate hook unstages files on "Pipeline state drift" block — manual re-stage needed after rescore                                      | 6 (Medium) | Open        | S      | 2026-05-30 | internal                                                      |
 | 6.0  | P010 | manage-problem SKILL.md commit-message convention fails @commitlint/config-conventional subject-case rule                                   | 6 (Medium) | Known Error | M      | 2026-05-17 | internal                                                      |
 | 6.0  | P017 | work-problems Step 0 reconcile-readme halt-route can't handle unscored-ticket MISSING drift                                                 | 6 (Medium) | Known Error | M      | 2026-05-30 | external (`@windyroad/itil`)                                  |
@@ -26,7 +25,11 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 Fix released; awaiting user confirmation that the production behaviour matches the fix intent. Excluded from WSJF ranking per ADR-022. Sorted by `Released date ASC` (oldest at row 1; same-day releases tiebreak by ID ASC). `Likely verified?` carries the evidence-first cell per P186 (`yes — observed: <evidence>` / `no — not observed` / `no — observed regression`).
 
-_Empty. P016 closed at this review pass; P013 / P014 / P021 / P025 fixes have shipped but the tickets remain in `.known-error.md` pending an explicit `/wr-itil:transition-problems` K→V flip — that flip is out of scope for `/wr-itil:review-problems` per ADR-010 amended Skill Granularity rule._
+| ID   | Title                                                                        | Released   | Likely verified?  |
+| ---- | ---------------------------------------------------------------------------- | ---------- | ----------------- |
+| P021 | `calculateAgeInDays` hardcodes `Date.now()` — not injectable for testability | 2026-06-02 | no — not observed |
+
+P013 / P014 / P025 fixes have also shipped but the tickets remain in `.known-error.md` pending an explicit `/wr-itil:transition-problems` K→V flip — that flip is sequenced across subsequent `/wr-itil:work-problems` iters per ADR-010 amended Skill Granularity rule.
 
 ## Parked
 

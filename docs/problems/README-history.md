@@ -60,3 +60,7 @@ Archive of displaced `docs/problems/README.md` line 3 "Last reviewed" fragments 
 - 2026-06-03 **README reconciled** — 2 drift entries corrected: P023, P024 (committed cross-session MISSING — captured by prior session via `/wr-itil:capture-problem` deferred-README contract but never folded into WSJF Rankings). Reconciliation contract per P118 + ADR-014 amended ("Reconciliation as preflight robustness layer").
 - 2026-06-03 **Review pass** — closed P011 + P012 as no longer relevant (upstream fixes empirically verified this session; comments posted to windyroad/agent-plugins#126 + #139). Re-rated P022/P023/P024/P025 with this session's evidence. New top of queue: P010 / P022 / P025 tied at WSJF 6.0. P025 (GitHub Actions Node 20 deprecation 2026-06-16, 13 days out) is the highest-urgency new entry.
 - 2026-06-03 **P025 known error** — actions/checkout + setup-node v4→v6 migrated across 8 refs in 3 workflow files (commit 411fa71, 13 days before 2026-06-16 cutover); awaiting release (next push) for K→V transition per ADR-022.
+
+## 2026-06-04
+
+- 2026-06-03 **Review pass + K→V batch backlog (displaced from line 3 by 2026-06-04 K→V iter)** — P016 closed (push:watch network-flake fix verified across recent releases incl. today's RFC-002 ship); 6 Open → Known Error auto-transitions (P013, P014, P017, P019, P023, P024 — root cause + workaround documented). WSJF top of queue: P021 / P022 / P010 / P017 / P023 / P025 tied at 6.0. Verification Queue empty; P013 / P014 / P021 / P025 fixes shipped but await `/wr-itil:transition-problems` for K→V flip.
