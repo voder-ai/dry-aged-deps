@@ -110,4 +110,42 @@ describe('Story 016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES: findUnfixableVulns'
   it('[REQ-UNFIXABLE-DETECT] returns an empty array when there are no vulnerabilities', () => {
     expect(findUnfixableVulns({ vulnerabilities: [], safePackages: new Set() })).toEqual([]);
   });
+
+  // Class (a) — fix-via-parent-bump (ADR-0018 amendment 2026-06-05).
+  // The vulnerable copy lives inside an upgradable parent's bundled `node_modules`
+  // (here: `node_modules/npm/node_modules/brace-expansion`). `overrides` cannot
+  // reach a bundling parent's own dependencies — the actionable fix is bumping the
+  // parent (`npm`), not editing `overrides`. The amendment mandates the reason
+  // string be `fix via parent bump: <parent>` so the surface guides the user to
+  // the right tree-change, not the wrong one.
+  /** @story prompts/016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES.md */
+  const braceExpansionBundledInNpm = {
+    name: 'brace-expansion',
+    severity: 'moderate',
+    isDirect: false,
+    fixAvailable: true,
+    nodes: ['node_modules/npm/node_modules/brace-expansion'],
+    via: [
+      {
+        source: 1119088,
+        title: 'brace-expansion: Large numeric range defeats documented `max` DoS protection',
+        url: 'https://github.com/advisories/GHSA-jxxr-4gwj-5jf2',
+        severity: 'moderate',
+      },
+    ],
+  };
+
+  it('[REQ-UNFIXABLE-DETECT] class (a): classifies a vuln bundled inside an upgradable parent as `fix via parent bump: <parent>` (ADR-0018 amendment 2026-06-05, Confirmation #14)', () => {
+    const rows = findUnfixableVulns({
+      vulnerabilities: [braceExpansionBundledInNpm],
+      safePackages: new Set(),
+    });
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({
+      name: 'brace-expansion',
+      severity: 'moderate',
+      advisory: 'GHSA-jxxr-4gwj-5jf2',
+      reason: 'fix via parent bump: npm',
+    });
+  });
 });
