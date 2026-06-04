@@ -64,5 +64,6 @@ JTBD-001 impact (governance without slowing down): 6 subagent dispatches per ite
 - `packages/risk-scorer/hooks/external-comms-mark-reviewed.sh` — upstream marker-write hook.
 - `packages/voice-tone/agents/external-comms.md` — voice-tone external-comms subagent.
 - 2026-06-02 session iters 9 + 10 — empirical evidence (3 + 1 re-fires; 6 + 2 redundant dispatches).
+- **Upstream report pending** — external dependency identified; invoke /wr-itil:report-upstream when ready
 
 (captured via /wr-itil:capture-problem; expand at next investigation)

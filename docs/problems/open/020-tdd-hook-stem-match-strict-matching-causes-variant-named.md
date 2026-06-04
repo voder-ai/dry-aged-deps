@@ -47,5 +47,6 @@
 - **ADR-0020** — universal test co-location; closed P004 but not stem-match strictness.
 - Iter 5 of 2026-05-30 `/wr-itil:work-problems` — empirical evidence (3 hits in one iter).
 - `docs/briefing/hooks-and-gates.md` — workaround captured per-iter.
+- **Upstream report pending** — external dependency identified; invoke /wr-itil:report-upstream when ready
 
 (captured via /wr-itil:capture-problem; expand at next investigation)

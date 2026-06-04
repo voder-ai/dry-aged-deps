@@ -70,5 +70,6 @@ Two fix shapes:
 - **P022** — orchestrator-side staging-loss trip that compounds with the BYPASS_RISK_GATE workaround.
 - `packages/risk-scorer/hooks/external-comms-mark-reviewed.sh` — upstream marker-write hook.
 - 2026-06-02 session iter 7 — first empirical observation in this session (orchestrator main turn delegated to subagent; got PASS; gate still blocked; recovered via BYPASS).
+- **Upstream report pending** — external dependency identified; invoke /wr-itil:report-upstream when ready
 
 (captured via /wr-itil:capture-problem; expand at next investigation)
