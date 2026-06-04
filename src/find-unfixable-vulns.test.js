@@ -148,4 +148,44 @@ describe('Story 016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES: findUnfixableVulns'
       reason: 'fix via parent bump: npm',
     });
   });
+
+  // Class (b) — fix-via-overrides-edit (ADR-0018 amendment 2026-06-05).
+  // The vulnerable copy lives at the root project's own `node_modules/<name>`
+  // (not bundled inside an un-overridable parent), `fixAvailable: true` so a
+  // patched range is satisfiable, and no existing `overrides` pin. The
+  // amendment §Detection signals Step 2 second sub-bullet routes this to
+  // class (b); §User-facing reason strings (b) mandates `fix via overrides
+  // edit` for the no-pin case. The amendment also RETIRES the pre-amendment
+  // `vulnerable transitive dependency` string this fixture would otherwise
+  // produce — the test locks in the new vocabulary.
+  /** @story prompts/016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES.md */
+  const transitiveAtRoot = {
+    name: 'some-pkg',
+    severity: 'moderate',
+    isDirect: false,
+    fixAvailable: true,
+    nodes: ['node_modules/some-pkg'],
+    via: [
+      {
+        source: 1234567,
+        title: 'some-pkg: hypothetical advisory used to lock class (b) classification',
+        url: 'https://github.com/advisories/GHSA-bbbb-cccc-dddd',
+        severity: 'moderate',
+      },
+    ],
+  };
+
+  it('[REQ-UNFIXABLE-DETECT] class (b): classifies a root-level transitive vuln with patched range satisfiable as `fix via overrides edit` (ADR-0018 amendment 2026-06-05, Confirmation #15)', () => {
+    const rows = findUnfixableVulns({
+      vulnerabilities: [transitiveAtRoot],
+      safePackages: new Set(),
+    });
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({
+      name: 'some-pkg',
+      severity: 'moderate',
+      advisory: 'GHSA-bbbb-cccc-dddd',
+      reason: 'fix via overrides edit',
+    });
+  });
 });
