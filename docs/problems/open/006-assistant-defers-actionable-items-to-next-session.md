@@ -48,6 +48,33 @@ Possible structural fixes:
 2. **Reframe the wrap-up**: emit the wrap-up summary AS A QUESTION ("Loop is complete; 4 follow-up items remain — action which now?") rather than as a statement.
 3. **Default to action**: when the in-session state still has the relevant skills loaded and the user is observably present, default to action; emit "Defer" only when the user explicitly declines or when items genuinely require external context (a release window the user wants to control, a scheduled maintenance period).
 
+## Decision (2026-06-04)
+
+User direction at `/wr-itil:work-problems` iter 5 loop-end Step 2.4 gate (a) — clarifies the framing this ticket was missing:
+
+> "At the AFK loop and the assistance stops then eventually I'm gonna come back and be at the keyboard ready to answer. The whole purpose of the [AFK loop] is to complete all the work that we can while I'm away and then surface the question so that when I come back, I can answer those questions and you can proceed."
+
+**Resolved shape**: Option 3 "Default to action" — combined with Step 2.4 / 2.5 / 2.5b loop-end surfacing (already structurally in place per P341 — UNCONDITIONAL pre-`ALL_DONE` gate sequence).
+
+**The composition**:
+
+- **Inside an iter subprocess** (AFK by construction per ADR-032 subprocess-boundary) — do every mechanical follow-up item INLINE. Do NOT defer to "next session". P130 "treat user as transient" applies HERE (no AskUserQuestion mid-iter) — but mechanical work is not user-input; just do it.
+- **At orchestrator-main-turn between iters** — same default-to-action discipline for mechanical orchestration overhead (push:watch, release:watch, README rotation). No defer.
+- **At orchestrator-main-turn loop-end Step 2.4 gate (a)** — the documented framework-prescribed user-interaction surface. Accumulated user-answerable items from `outstanding_questions` queue surface as `AskUserQuestion` batch. The user is presumed at the keyboard at this gate.
+
+**What this DOESN'T change**: the existing AFK iter prompt's "Do not call AskUserQuestion mid-iter" rule (P130). That rule is correct for iter subprocesses where the user genuinely IS away. The bug this ticket captures was that the SAME defer-everything framing was being applied at the wrap-up surface where the user IS coming back.
+
+**Composes with**:
+
+- **P341 / Step 2.4** — the unconditional pre-`ALL_DONE` gate that surfaces accumulated `outstanding_questions`. This is the structural answer to "where do user-input items go" — the queue, surfaced at gate (a).
+- **P130** — applies INSIDE iter subprocesses (AFK by construction). Does NOT apply at orchestrator-main-turn loop-end where the user IS presumed back.
+- **P078** — capture-on-correction signal hook; the same mechanism caught the original 2026-05-13 pushback. Orchestrator-level extension: if mechanical items are present at wrap-up time AND iter context is hot, route to action rather than defer.
+- **ADR-044** — framework-resolution boundary already authorises the orchestrator to default-to-action for mechanical items between iters; this decision makes explicit that the same rule applies to WRAP-UP framing.
+
+**Closing condition**: this ticket transitions to Verifying when the next AFK orchestrator iter's wrap-up framing emits "Completed N follow-ups" (or equivalent action-first language) rather than "Outstanding for next session" for mechanical items. The Step 2.4 gate (a) prose itself already implements the user-input surfacing half; the remaining gap is documentation hygiene in the wrap-up summary's framing words.
+
+**Next iter should**: surface this resolution in a small SKILL.md edit to `/wr-itil:work-problems` Step 6 progress-report wording (or Step 2.4 final-summary wording) — flip "Outstanding for next session" → "Completed N follow-ups" for mechanical-action items; preserve "Outstanding for next session" only for user-answerable items that are about to surface at Step 2.4 gate (a).
+
 ### Investigation Tasks
 
 - [ ] Re-rate Priority and Effort at next /wr-itil:review-problems

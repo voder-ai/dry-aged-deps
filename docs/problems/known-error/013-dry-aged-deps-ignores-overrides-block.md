@@ -80,6 +80,31 @@ Candidate fix shapes (for a future RFC):
 - **Substance to confirm** (queued for loop-end Step 2.5 via `outstanding_questions`): the three-class unfixable-reason taxonomy proposed in the 2026-05-30 Findings — (a) `fix-via-parent-bump` / (b) `fix-via-overrides-edit` / (c) `genuinely-unfixable`. The amendment also needs to confirm whether ADR-0018 itself should be transitioned `proposed → accepted` as part of the same amendment commit, or kept `proposed` until the amendment lands. Until the user confirms the substance, `src/find-unfixable-vulns.js` edits are deferred.
 - **No work commit beyond the ticket update.** This iter commits the substance-confirm-defer marker + the outstanding-questions entry only. No src/ edits, no ADR amendment draft (drafting the amendment text would itself be a substance choice that is the user's to make).
 
+## Decision (2026-06-04)
+
+User direction at `/wr-itil:work-problems` iter 5 loop-end Step 2.4 gate (a) — closes the ADR-074 substance-confirm-defer from iter 5:
+
+**Three-class unfixable-reason taxonomy confirmed** for the ADR-0018 amendment:
+
+- **(a) `fix-via-parent-bump`** — the vulnerable copy is bundled inside an upgradable parent (e.g. `node_modules/npm/node_modules/brace-expansion`). Overrides cannot reach it. Fix: bump the bundling parent.
+- **(b) `fix-via-overrides-edit`** — the vulnerable copy is in the user's tree and reachable via `package.json` `overrides`. Fix: add or update the override pin.
+- **(c) `genuinely-unfixable`** — no satisfying version exists yet, or the bundling parent is itself un-upgradable. Fix: wait for upstream patch.
+
+Each class surfaces a different actionable advice string to the user. Aligns with the 2026-05-30 ticket Findings analysis of the live `brace-expansion` case (npm reports `fixAvailable: true`, dry-aged-deps reports "vulnerable transitive dependency" — the mislabel this amendment closes).
+
+Selected alternatives rejected: two-class collapses parent-vs-overrides distinction (loses actionable advice); binary `fixAvailable` passthrough loses human-readable context (essentially what `npm audit` already provides); RFC-first deferral is unnecessary scope inflation — ADR-0018 amendment grain suffices.
+
+**ADR-0018 lifecycle**: open question for the next iter — should the amendment commit transition ADR-0018 `proposed → accepted` in the same change, or keep it `proposed` until the amendment lands? Architect input at next iter dispatch.
+
+**Next iter should** (substance confirmed; ADR-074 substance-confirm gate clears):
+
+1. Draft the ADR-0018 amendment with the three-class taxonomy + Confirmation criterion + the lifecycle-transition decision.
+2. Architect review of the draft amendment.
+3. TDD: failing test per class against `src/find-unfixable-vulns.js`.
+4. Implement the classifier extension — read `npm audit`'s `fixAvailable` field + tree-walk for parent-bundled detection.
+5. Document the user-facing reason strings in README.md.
+6. Multi-iter ship-signal per CLAUDE.md: chore commits across iters, then a `feat:` commit surfacing the new reason strings in the README "Options" / "What's new" table to trigger semantic-release.
+
 ## Fix Strategy
 
 **Direction selected** (AFK loop 2026-05-30 — Option 3 "Both, full scope"): combine both candidate shapes — (1) add a new `overrides-hygiene` module that reads the `overrides` block, ages each pin, and surfaces stale/vulnerable override pins, AND (2) sharpen the "unfixable" reason logic to be `fixAvailable`-aware so override-fixable vulns aren't mislabelled as "vulnerable transitive dependency".
