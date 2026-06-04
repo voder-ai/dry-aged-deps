@@ -1,8 +1,9 @@
 # Problem 021: `calculateAgeInDays` hardcodes `Date.now()` — not injectable for testability
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-05-30
 **Released**: 2026-06-02 (commit `dc64c44`)
+**Closed**: 2026-06-04 — user confirmed at `/wr-itil:review-problems` Step 4 verification prompt: structural swap-back (same arithmetic primitive, same math) — no behavioural change expected, no observed regression.
 **Priority**: 3 (Low) — Impact: Moderate (3) x Likelihood: Rare (1) — fix shipped; awaiting user confirmation that the production behaviour matches the fix intent
 **Origin**: internal
 **Effort**: S — single function-signature extension; implementation tasks done

@@ -1,7 +1,8 @@
 # Problem 025: GitHub Actions deprecating Node.js 20 on 2026-06-16 — v4 actions across all workflows will be force-migrated to Node.js 24
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-06-03
+**Closed**: 2026-06-04 — partial evidence accepted at `/wr-itil:review-problems` Step 4 verification prompt: ci-publish green across 8+ runs under v6; auto-update + claude workflows verify passively as they trigger naturally before the 2026-06-16 cutover.
 **Priority**: 12 (High) — Impact: Moderate (3) x Likelihood: Likely (4) — deadline 2026-06-16 (13 days from 2026-06-03); no migration queued; 7 references across 3 workflows will be force-migrated; risk of silent behavioural drift if v4-on-Node24 differs from v4-on-Node20
 **Origin**: external (GitHub Actions infrastructure)
 **Effort**: M — 7 file edits (workflow YAML) + verification across all 3 workflows; possibly v5 actions if released

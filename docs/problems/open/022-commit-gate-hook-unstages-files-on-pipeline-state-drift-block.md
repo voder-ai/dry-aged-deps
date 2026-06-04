@@ -2,11 +2,11 @@
 
 **Status**: Open
 **Reported**: 2026-05-30
-**Priority**: 6 (Medium) — Impact: Minor (2) x Likelihood: Possible (3) — hit 4× across this session (cron-arming, test-relocation, P023 capture cycle, P024 capture cycle) and iter 10 dispatch
+**Priority**: 4 (Low) — Impact: Minor (2) x Likelihood: Unlikely (2) — leading "gate unstages files" hypothesis falsified 2026-06-04 iter 3 (static audit + empirical scratch-repo repro showed staging persists across `--hash-inputs`); remaining concern is UX recovery wording, not gate correctness. Re-frame: partial-staging misperception or inter-tool working-tree mutation between `git add` and `git commit` retry.
 **Origin**: internal
-**Effort**: S — block message could add a "Recovery: git add <file> + retry" line; root cause investigation is the harder half
+**Effort**: S — block message could add a "Recovery: git add -A + retry" line; root cause now needs a fresh empirical hit with `git status --porcelain` snapshots BEFORE recovery to confirm the partial-staging hypothesis
 **Type**: technical
-**WSJF**: 6.0 = (6 × 1.0) / 1
+**WSJF**: 4.0 = (4 × 1.0) / 1
 
 ## Description
 

@@ -1,11 +1,11 @@
 # Problem 006: assistant defers actionable items to "next session" instead of acting when the user is observably present
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-05-13
 **Origin**: internal
 **Priority**: 6 (Medium) — Impact: Minor (2) x Likelihood: Possible (3)
-**Effort**: M — structural fix shape undecided (Step 2.5 pre-`ALL_DONE` audit vs reframe wrap-up vs default-to-action); may warrant an ADR; cross-cuts ADR-044 + P130 + P078
-**WSJF**: 3.0 = (6 × 1.0) / 2
+**Effort**: M — fix shape selected (Option 3 "Default to action" + Step 2.4 / 2.5 / 2.5b loop-end surfacing per 2026-06-04 Decision); remaining work is a small SKILL.md edit to `/wr-itil:work-problems` Step 6 progress-report wording
+**WSJF**: 6.0 = (6 × 2.0) / 2
 **Type**: technical
 
 ## Description
