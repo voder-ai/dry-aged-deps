@@ -45,11 +45,38 @@ function advisoryId(viaEntry) {
 }
 
 /**
+ * Detect a bundling-parent path for the vuln per ADR-0018 §Detection signals
+ * Step 2 (class (a) `fix-via-parent-bump`). Walks `nodes[]` for a path matching
+ * `node_modules/<parent>/node_modules/<name>` and returns the parent segment.
+ * `overrides` cannot reach a bundling parent's own `node_modules`, so the
+ * actionable fix is bumping the parent — surfaced in the reason string.
+ * Returns `null` when no bundling-parent topology is detected.
+ * @param {{ fixAvailable?: boolean|object, nodes?: Array<string> }} vuln
+ * @returns {string|null}
+ */
+function detectBundlingParent(vuln) {
+  if (vuln.fixAvailable === false) return null;
+  const nodes = Array.isArray(vuln.nodes) ? vuln.nodes : [];
+  for (const node of nodes) {
+    if (typeof node !== 'string') continue;
+    const match = node.match(/node_modules\/([^/]+)\/node_modules\/[^/]+$/);
+    if (match) return match[1];
+  }
+  return null;
+}
+
+/**
  * Short, human-readable reason dry-aged-deps cannot land a safe fix.
- * @param {{ isDirect?: boolean, fixAvailable?: boolean|object }} vuln
+ * Per ADR-0018 (2026-06-05 amendment), class (a) `fix via parent bump: <parent>`
+ * is checked first — when a vuln's `nodes[]` reveals a bundling-parent topology,
+ * the parent bump is the actionable fix and takes precedence over generic
+ * transitive labelling.
+ * @param {{ isDirect?: boolean, fixAvailable?: boolean|object, nodes?: Array<string> }} vuln
  * @returns {string}
  */
 function deriveReason(vuln) {
+  const parent = detectBundlingParent(vuln);
+  if (parent) return `fix via parent bump: ${parent}`;
   if (vuln.isDirect === false) return 'vulnerable transitive dependency';
   if (vuln.fixAvailable === false) return 'no patched version';
   return 'no safe, mature version available';

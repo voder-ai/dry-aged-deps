@@ -114,10 +114,10 @@ describe('Story 016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES: findUnfixableVulns'
   // Class (a) — fix-via-parent-bump (ADR-0018 amendment 2026-06-05).
   // The vulnerable copy lives inside an upgradable parent's bundled `node_modules`
   // (here: `node_modules/npm/node_modules/brace-expansion`). `overrides` cannot
-  // reach a bundling parent's own dependencies — the actionable fix is bumping the
-  // parent (`npm`), not editing `overrides`. The amendment mandates the reason
-  // string be `fix via parent bump: <parent>` so the surface guides the user to
-  // the right tree-change, not the wrong one.
+  // reach a bundling parent's own dependencies — the actionable fix is bumping
+  // the parent (`npm`), not editing `overrides`. The amendment mandates the
+  // reason string be `fix via parent bump: <parent>` so the surface guides the
+  // user to the right tree-change, not the wrong one.
   /** @story prompts/016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES.md */
   const braceExpansionBundledInNpm = {
     name: 'brace-expansion',
