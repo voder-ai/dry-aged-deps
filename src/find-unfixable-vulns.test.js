@@ -175,7 +175,7 @@ describe('Story 016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES: findUnfixableVulns'
     ],
   };
 
-  it('[REQ-UNFIXABLE-DETECT] class (b): classifies a root-level transitive vuln with patched range satisfiable as `fix via overrides edit` (ADR-0018 amendment 2026-06-05, Confirmation #15)', () => {
+  it('[REQ-UNFIXABLE-DETECT] class (b): classifies a root-level transitive vuln with a patched range satisfiable as `fix via overrides edit` (ADR-0018 amendment 2026-06-05, Confirmation #15)', () => {
     const rows = findUnfixableVulns({
       vulnerabilities: [transitiveAtRoot],
       safePackages: new Set(),

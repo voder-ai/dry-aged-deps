@@ -66,17 +66,41 @@ function detectBundlingParent(vuln) {
 }
 
 /**
+ * Detect a root-level `node_modules/<name>` install per ADR-0018 §Detection
+ * signals Step 2 second sub-bullet (class (b) `fix-via-overrides-edit`). The
+ * vulnerable copy lives directly under the root project's `node_modules`, not
+ * inside a bundling parent — so a `package.json` `overrides` pin can reach it
+ * once the patched range is satisfiable.
+ * @param {{ nodes?: Array<string> }} vuln
+ * @returns {boolean}
+ */
+function isAtRootNodeModules(vuln) {
+  const nodes = Array.isArray(vuln.nodes) ? vuln.nodes : [];
+  for (const node of nodes) {
+    if (typeof node !== 'string') continue;
+    if (/^node_modules\/[^/]+$/.test(node)) return true;
+  }
+  return false;
+}
+
+/**
  * Short, human-readable reason dry-aged-deps cannot land a safe fix.
- * Per ADR-0018 (2026-06-05 amendment), class (a) `fix via parent bump: <parent>`
- * is checked first — when a vuln's `nodes[]` reveals a bundling-parent topology,
- * the parent bump is the actionable fix and takes precedence over generic
- * transitive labelling.
+ * Per ADR-0018 (2026-06-05 amendment), classification proceeds in precedence
+ * order (a) > (b) > legacy-transitive: class (a) `fix via parent bump: <parent>`
+ * wins when a bundling-parent topology is detected; class (b) `fix via
+ * overrides edit` follows for root-level transitives with a satisfiable patched
+ * range; the legacy `vulnerable transitive dependency` string is retained for
+ * transitives without `nodes[]` topology data and is staged for retirement in
+ * the class (c) iter (ADR-0018 amendment §User-facing reason strings).
  * @param {{ isDirect?: boolean, fixAvailable?: boolean|object, nodes?: Array<string> }} vuln
  * @returns {string}
  */
 function deriveReason(vuln) {
   const parent = detectBundlingParent(vuln);
   if (parent) return `fix via parent bump: ${parent}`;
+  if (vuln.fixAvailable !== false && isAtRootNodeModules(vuln)) {
+    return 'fix via overrides edit';
+  }
   if (vuln.isDirect === false) return 'vulnerable transitive dependency';
   if (vuln.fixAvailable === false) return 'no patched version';
   return 'no safe, mature version available';
