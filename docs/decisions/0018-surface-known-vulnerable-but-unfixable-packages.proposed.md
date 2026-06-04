@@ -180,5 +180,71 @@ Reassess by **2026-08-19** (3-month default), or earlier if any of the following
 - **Driven by JTBD-100** (Gate CI on pending updates) — `--check` semantics extended without changing exit-code contract.
 - **Driven by JTBD-202** (Policy as code) — `--unfixable-level` is config-file settable in `.dry-aged-deps.json`.
 - **Driven by JTBD-203** (Reproducible audit artefacts) — unfixable surface visible across all three output formats.
-- **Anticipates a new JTBD** (to be authored in the same change-set): "See vulnerabilities I can't yet fix so I can plan mitigation" under the project-maintainer persona. The new JTBD will be the primary alignment anchor for this feature; ADR-0018 documents the architectural shape.
+- **Anticipates a new JTBD** (to be authored in the same change-set): "See vulnerabilities I can't yet fix so I can plan mitigation" under the project-maintainer persona. The new JTBD will be the primary alignment anchor for this feature; ADR-0018 documents the architectural shape. _(Status update 2026-06-05: this JTBD has since been authored and ratified as JTBD-009 — see `docs/jtbd/project-maintainer/JTBD-009-see-unfixable-vulnerabilities.proposed.md`. The 2026-06-05 amendment below cites it as a driver, not as anticipated.)_
 - **Spec file:** `prompts/016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES.md` (to be created in the same change-set).
+
+## 2026-06-05 Amendment — three-class unfixable-reason taxonomy
+
+### Motivation
+
+The shipped v2.10.0 / v2.10.1 unfixable surface keys reason text off a binary `isDirect` test (`src/find-unfixable-vulns.js` lines 52–56): transitive deps get `vulnerable transitive dependency`, direct deps with no safe-and-mature target get `no patched version`, and a residual catch-all says `no safe, mature version available`. P013 (Status: Known Error, WSJF 4.5) confirmed the live case on this repo: `npm audit` reports `brace-expansion` with `fixAvailable: true` while `dry-aged-deps --check` stamps it `vulnerable transitive dependency` — directly contradictory guidance, and exactly the trust gap the unfixable surface is meant to close.
+
+`fixAvailable: true` semantics are not uniform: in the brace-expansion case it means the fix exists inside an npm parent bump (`node_modules/npm/node_modules/brace-expansion`), which `overrides` cannot reach. In other cases the same flag means an `overrides` edit at the root project would resolve it. In a third class no satisfying version exists yet. The reason string must distinguish these three because each implies a different user action.
+
+### Three-class taxonomy
+
+A package surfaced under `Known vulnerabilities without safe fix` is classified into exactly one of:
+
+- **(a) `fix-via-parent-bump`** — the vulnerable copy is bundled inside an upgradable parent (e.g. `node_modules/npm/node_modules/brace-expansion`). The parent itself appears in the dependency tree as a package that can be upgraded to a release that bundles a non-vulnerable copy. `overrides` cannot reach a bundling parent's own `node_modules`. **Action surfaced**: bump the bundling parent package.
+- **(b) `fix-via-overrides-edit`** — the vulnerable copy lives in the root project's tree at a path that `package.json` `overrides` can pin. The advisory's patched range is satisfiable by some installable version. **Action surfaced**: add or update an `overrides` pin to a patched version.
+- **(c) `genuinely-unfixable`** — no satisfying version exists yet (`fixAvailable: false` or `fixAvailable` describes a range with no installable member), OR the bundling parent itself has no upgrade path that resolves the vulnerability. **Action surfaced**: wait for an upstream patch; no autonomous action available.
+
+### Detection signals
+
+For each `npm audit --json` `vulnerabilities.<name>` entry that survives the existing safe-set / exclusion / severity-floor filters:
+
+1. If `fixAvailable === false` or `fixAvailable` is an object whose `name`/`version` does not resolve to an installable patched version → **class (c)**.
+2. Otherwise, walk `via` and `effects` to identify the bundling-parent path:
+   - If the advisory's path traverses a `node_modules/<parent>/node_modules/<name>` segment AND `<parent>` itself appears as a vulnerability entry or as a dependency that can be upgraded to a release bundling a non-vulnerable copy → **class (a)** (`fix-via-parent-bump`, with the parent name surfaced in the advice string).
+   - Else if the vulnerable package name resolves under the root project's own `node_modules/<name>` AND the patched range is satisfiable AND an `overrides` pin to the patched range is structurally possible (i.e. the package is not bundled inside an un-overridable parent) → **class (b)** (`fix-via-overrides-edit`).
+   - Else → **class (c)**.
+
+**Class precedence (per-advisory).** When a single advisory could be resolved by either bumping a bundling parent OR pinning via `overrides`, **class (a) takes precedence over class (b)**. Rationale: a parent bump resolves the vulnerable copy at its source (the parent's bundled `node_modules`), whereas an `overrides` pin against a bundled-inside-parent path is structurally unreachable. The step ordering above already encodes this — the precedence is stated here so the classifier's tie-break is documented, not implicit.
+
+**Multi-advisory packages.** Per the 2026-05-25 amendment, the table formatter groups by package — one row per package with advisories joined in the `Advisory` column. When a package's advisories span multiple classes (e.g. one class (a) and one class (c)), the displayed `Reason` is the **most-actionable** class using the precedence **(a) > (b) > (c)**. Rationale: surfacing `no patched version` for a package whose other advisory is in fact fixable-by-parent-bump would suppress the actionable signal. The JSON / XML formats retain per-advisory granularity (one entry per advisory, each carrying its own classified `reason`); only the human-readable table collapses to the most-actionable class.
+
+Detection runs entirely from existing inputs: `npm audit --json` (vulnerability + `fixAvailable` data), the dependency tree (`npm ls --json` or the already-resolved tree from the existing pipeline), and the `package.json` `overrides` block. No new I/O channel.
+
+### User-facing reason strings
+
+The `Reason` column in the table formatter and the `reason` field in JSON/XML use:
+
+- **(a)**: `fix via parent bump: <parent>` — e.g. `fix via parent bump: npm` for the brace-expansion live case.
+- **(b)**: `fix via overrides edit` — when no override currently pins the vulnerable name, OR `update overrides pin: <name>` when an existing pin needs to move to a patched range.
+- **(c)**: `no patched version` (when `fixAvailable === false`) or `no fix path` (when `fixAvailable` is structurally unreachable).
+
+The pre-amendment string `vulnerable transitive dependency` is **retired** — it was a category label, not an action, and conflated all three new classes. Existing test snapshots that assert the old string need updating. The `reason` field is documented as a human-readable string (not an enum); no known consumer switches on the retired literal, so the vocabulary churn is in-scope additive change rather than a schema break.
+
+### Backwards compatibility
+
+JSON / XML consumers see the same `reason` field shape (string) with new vocabulary. The schema is unchanged. Snapshot tests that assert exact reason strings (likely under `src/formatters.*.test.js` and `test/formatters.unfixable.test.js`) will need to be updated as part of the implementation iters — this is in-scope for the work P013 tracks, not a separate concern.
+
+### Confirmation criterion (additive)
+
+13. The `Reason` column / `reason` field uses one of `fix via parent bump: <parent>`, `fix via overrides edit`, `update overrides pin: <name>`, `no patched version`, or `no fix path` — never the retired `vulnerable transitive dependency` string. (Verifiable by fixture matrix covering all three classes plus the two class-(c) subcases.)
+14. On the live repo state where `node_modules/npm/node_modules/brace-expansion` is the surviving vulnerable copy and `npm audit` reports `fixAvailable: true`, `dry-aged-deps --check` classifies brace-expansion as **(a) `fix via parent bump: npm`** — not `vulnerable transitive dependency`. (Verifiable by a fixture mirroring the bundled-in-npm topology, or by direct invocation on this repo post-implementation.)
+15. A vulnerability whose patched range is satisfiable AND whose vulnerable copy sits at the root project's `node_modules/<name>` AND has no existing `overrides` pin is classified as **(b) `fix via overrides edit`**. (Verifiable by a fixture where overrides is empty and a transitive vuln has `fixAvailable: true`.)
+16. A vulnerability with `fixAvailable: false` is classified as **(c) `no patched version`**; with `fixAvailable` describing an unreachable target it is **(c) `no fix path`**. (Verifiable by two fixtures covering each subcase.)
+17. A package with two advisories spanning classes (a) and (c) renders a single table row whose `Reason` is the class-(a) string (most-actionable wins); the JSON / XML output retains both advisories with their per-advisory classified `reason`. (Verifiable by a fixture with a mixed-class package.)
+
+### Lifecycle-transition decision
+
+This amendment is **structural** to ADR-0018's chosen option (it sharpens the `Reason` semantics; it does not change which option was chosen, the detection rule's pipeline placement, or the exit-code contract). ADR-0018 remains `proposed` until the classifier-extension iters complete: an `accepted` ADR whose Confirmation criteria #13–#17 describe behaviour absent from `src/find-unfixable-vulns.js` would assert reality that does not hold. Transition `proposed → accepted` when the classifier-extension lands and Confirmation #14 is observable on this repo. (Architect review at amendment-draft time selected this option over (L1) "transition at amendment commit" and (L3) "defer to 2026-08-19 reassessment".)
+
+### Related (amendment-specific)
+
+- **Driven by JTBD-009** (See unfixable vulnerabilities, `docs/jtbd/project-maintainer/JTBD-009-see-unfixable-vulnerabilities.proposed.md`, ratified 2026-06-02) — Desired Outcome #1 ("by default, without me needing to remember a flag") is sharpened by making each surfaced row self-classify into an action class.
+- **Drives P013** (Known Error, WSJF 4.5) — the brace-expansion live mislabel that motivated this amendment.
+- **Touches `src/find-unfixable-vulns.js`** — `deriveReason()` (lines 52–56) is the surface that this amendment requires extending to read `fixAvailable` and walk the bundling-parent path.
+- **Touches the table / JSON / XML formatters** — `Reason` column values change for any non-direct vuln; snapshot tests update with the rollout.
+- **Composes with RFC-001 (Overrides Hygiene Module, verifying)** — RFC-001 surfaces stale `overrides` pins as a standalone section. This amendment is independent: classes (a) and (c) operate without any `overrides` block, and class (b) describes an action (`add an overrides pin`) that is downstream-readable by RFC-001's hygiene checks but does not require RFC-001 to be shipped.
