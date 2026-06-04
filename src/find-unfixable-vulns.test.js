@@ -188,4 +188,44 @@ describe('Story 016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES: findUnfixableVulns'
       reason: 'fix via overrides edit',
     });
   });
+
+  // Class (c) — genuinely-unfixable, `no patched version` subcase
+  // (ADR-0018 amendment 2026-06-05, §Detection signals Step 1 + §User-facing
+  // reason strings (c) + Confirmation #16 first clause).
+  // The vulnerable copy is a transitive dep (`isDirect: false`) AND npm-audit
+  // reports `fixAvailable: false` — no satisfying version exists yet, neither
+  // a parent bump nor an overrides edit can resolve it. The amendment routes
+  // any `fixAvailable === false` vuln to class (c) regardless of `isDirect`,
+  // with reason string `no patched version`. The retired category-label
+  // `vulnerable transitive dependency` MUST NOT surface — that was the P013
+  // mislabel motivating this taxonomy.
+  /** @story prompts/016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES.md */
+  const transitiveNoPatch = {
+    name: 'orphan-pkg',
+    severity: 'high',
+    isDirect: false,
+    fixAvailable: false,
+    via: [
+      {
+        source: 7777777,
+        title: 'orphan-pkg: hypothetical advisory used to lock class (c) `no patched version` classification',
+        url: 'https://github.com/advisories/GHSA-cccc-dddd-eeee',
+        severity: 'high',
+      },
+    ],
+  };
+
+  it('[REQ-UNFIXABLE-DETECT] class (c): classifies a transitive vuln with fixAvailable: false as `no patched version` (ADR-0018 amendment 2026-06-05, Confirmation #16)', () => {
+    const rows = findUnfixableVulns({
+      vulnerabilities: [transitiveNoPatch],
+      safePackages: new Set(),
+    });
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({
+      name: 'orphan-pkg',
+      severity: 'high',
+      advisory: 'GHSA-cccc-dddd-eeee',
+      reason: 'no patched version',
+    });
+  });
 });
