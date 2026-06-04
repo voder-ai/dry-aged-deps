@@ -1,6 +1,6 @@
 # Problem 014: the age soak is unconditional — it ignores the severity of the vulnerability the project is _currently exposed to_, so it can hold you on a known-vulnerable version while a fix ages
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-05-25
 **Origin**: internal
 **Priority**: 9 (Medium) — Impact: Moderate (3) x Likelihood: Possible (3)
@@ -73,6 +73,28 @@ Implementation needs:
 **Severity→soak policy confirmed** (AFK loop 2026-05-30 Step 2.5 surfacing — user direction): adopt the sketched shape — **Critical exposure ⇒ 0-day soak floor; High ⇒ ½ default soak; Moderate / Low / None ⇒ default soak**. The two policy points the RFC must lock are (1) `critical → 0` (no soak when a critical is currently exposed) and (2) `high → 0.5 × default` (halved soak under high exposure). Moderate/low/none preserve the current default unchanged. The RFC may extend this shape with additional bands but MUST NOT regress these two locked points without an explicit policy-change ADR.
 
 Next AFK iter should invoke `/wr-itil:capture-rfc` (or `/wr-itil:manage-rfc`) with a problem-trace to P014 to formalise the product-shape spec before implementation begins.
+
+## Fix Released
+
+**Released**: 2026-06-04 in `dry-aged-deps@2.12.0` (npm).
+
+**Feature**: `--exposure-aware-soak` flag implementing the severity-scaled soak policy locked in this ticket's Fix Strategy — Critical exposure → 0-day soak floor; High exposure → ½ default soak; Moderate / Low / None → default soak. Off by default; opt-in per CLI run.
+
+**RFC**: RFC-002 "Exposure-Aware Severity-Scaled Age Soak" (currently in `verifying` per its own lifecycle).
+
+**Key implementation commits**:
+
+- `34120cc` — RFC-002 T1 spec authored at `prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md`.
+- `789a18b` — RFC-002 T2 failing test for `severityToModifier`.
+- `1a435f9` — RFC-002 T3 `severityToModifier` + `effectiveSoakMs` implementation in `src/exposure-soak-modifier.js`.
+- `4241c4b` — RFC-002 T4 wire `effectiveSoakMs` into the filter pipeline + add `--exposure-aware-soak` flag.
+- `93343ee` — RFC-002 T5 render exposure-modifier findings in table / JSON / XML formatters.
+- `a83ccf3` — RFC-002 T6 `--exposure-aware-soak` flag documentation + locked policy table.
+- `450a355` — RFC-002 T7 live-case regression test for Critical exposure + 2-day fix.
+- `07311a1` — RFC-002 T8 README "What's new" addition exposing `--exposure-aware-soak` (multi-iter ship-signal per CLAUDE.md).
+- `d5ff125` — RFC-002 T9 lifecycle transition in-progress → verifying.
+
+**Verification plan**: exercise `--exposure-aware-soak` against a real-case scenario where the consuming project sits on a known-vulnerable version and a candidate fix exists at an age younger than `min-age`. Confirm Critical exposure → 0-day floor allows the candidate; Moderate exposure → default soak holds. The brace-expansion advisory described in this ticket's Description is one such live case for the next `dry-aged-deps` user to encounter.
 
 ## Dependencies
 
