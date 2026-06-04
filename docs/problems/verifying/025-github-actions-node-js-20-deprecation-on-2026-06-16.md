@@ -1,6 +1,6 @@
 # Problem 025: GitHub Actions deprecating Node.js 20 on 2026-06-16 — v4 actions across all workflows will be force-migrated to Node.js 24
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-06-03
 **Priority**: 12 (High) — Impact: Moderate (3) x Likelihood: Likely (4) — deadline 2026-06-16 (13 days from 2026-06-03); no migration queued; 7 references across 3 workflows will be force-migrated; risk of silent behavioural drift if v4-on-Node24 differs from v4-on-Node20
 **Origin**: external (GitHub Actions infrastructure)
@@ -89,7 +89,32 @@ Bump all 8 references from `@v4` to `@v6` across the three workflow files (the P
 - [x] Confirm `actions/checkout@v5` + `actions/setup-node@v5` availability and stability — superseded by `@v6`; both v6 majors verified stable via `gh api` on 2026-06-03 (v6.0.3 + v6.4.0, both non-prerelease).
 - [x] Decide on migration path (v5 upgrade vs FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true opt-in) — chose `@v6` (latest stable major, supersedes both candidates).
 - [x] Apply chosen migration before 2026-06-16 cutover — applied this iter (13 days before cutover).
-- [ ] Verify all 3 workflows (auto-update, ci-publish, claude) pass under the migrated runtime — gated on the next CI run after this commit lands (next push exercises ci-publish; next 06:00 UTC cron exercises auto-update; next `@claude` comment exercises claude.yml).
+- [x] Verify all 3 workflows (auto-update, ci-publish, claude) pass under the migrated runtime — partial: ci-publish empirically green across 8+ post-fix pushes under v6 (latest run https://github.com/voder-ai/dry-aged-deps/actions/runs/26929804300 — iter 1's push, all v6 steps green); auto-update + claude await natural trigger (next 06:00 UTC cron + next `@claude` comment respectively). Verification ticket stays open through those exercises.
+
+## Fix Released
+
+**Released**: 2026-06-03 (commit `411fa71` — `ci(workflows): migrate actions/checkout + setup-node from v4 to v6 (P025)`), 13 days before the 2026-06-16 cutover.
+
+**What shipped**: 8 v4→v6 action-version migrations across 3 workflow files. The fix swaps every Node-20-built v4 reference for the v6 majors (`actions/checkout@v6.0.3`, `actions/setup-node@v6.4.0`) which run natively on Node 24:
+
+| File                                | Line | Action     |
+| ----------------------------------- | ---- | ---------- |
+| `.github/workflows/auto-update.yml` | 61   | checkout   |
+| `.github/workflows/auto-update.yml` | 72   | setup-node |
+| `.github/workflows/ci-publish.yml`  | 20   | checkout   |
+| `.github/workflows/ci-publish.yml`  | 36   | checkout   |
+| `.github/workflows/ci-publish.yml`  | 41   | setup-node |
+| `.github/workflows/ci-publish.yml`  | 110  | checkout   |
+| `.github/workflows/ci-publish.yml`  | 115  | setup-node |
+| `.github/workflows/claude.yml`      | 29   | checkout   |
+
+**Empirical verification (partial — ci-publish surface only)**:
+
+- ci-publish has been exercised on every push since `411fa71` — 8+ post-fix runs to date, **all green** under v6. Latest run: [26929804300](https://github.com/voder-ai/dry-aged-deps/actions/runs/26929804300) (iter 1's `41c4b12` push at 2026-06-04 04:02 UTC) — checkout@v6 + setup-node@v6 steps both green; downstream build/test/publish steps unaffected.
+- auto-update workflow has NOT yet been exercised under v6 — next 06:00 UTC cron triggers it.
+- claude workflow has NOT yet been exercised under v6 — next `@claude` comment triggers it.
+
+**Verification ticket stays open** until both remaining workflows are exercised at their natural trigger times. Per the Verification Plan in the Root Cause Analysis section, "a green outcome on each workflow under v6 closes the migration; a red outcome surfaces the v6 compat issue with lead time before the 2026-06-16 cutover" — 13-day lead time at fix-release time is preserved for the remaining two surfaces.
 
 ## Dependencies
 

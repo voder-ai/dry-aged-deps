@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-06-04 — P021 transitioned Known Error → Verification Pending (calculateAgeInDays clock-injectability fix released in `dc64c44`, now reachable via RFC-001/RFC-002 ship-trains). WSJF top of queue: P022 / P010 / P017 / P023 / P025 tied at 6.0 (P021 dropped out per ADR-022 verifying-multiplier-0). Verification Queue: 1 (P021 — `no — not observed`); P013 / P014 / P025 fixes shipped but still await K→V flip.
+> Last reviewed: 2026-06-04 — P025 transitioned Known Error → Verification Pending (actions/checkout + setup-node v4→v6 migration released in `411fa71` 13 days before 2026-06-16 cutover; ci-publish empirically green across 8+ post-fix runs under v6; auto-update + claude workflows await natural trigger). WSJF top of queue: P022 / P010 / P017 / P023 tied at 6.0 (P025 dropped out per ADR-022 verifying-multiplier-0). Verification Queue: 2 (P021 — `no — not observed`; P025 — `yes — observed: ci-publish surface only`); P013 / P014 fixes shipped but still await K→V flip.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -13,7 +13,6 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 6.0  | P010 | manage-problem SKILL.md commit-message convention fails @commitlint/config-conventional subject-case rule                                   | 6 (Medium) | Known Error | M      | 2026-05-17 | internal                                                      |
 | 6.0  | P017 | work-problems Step 0 reconcile-readme halt-route can't handle unscored-ticket MISSING drift                                                 | 6 (Medium) | Known Error | M      | 2026-05-30 | external (`@windyroad/itil`)                                  |
 | 6.0  | P023 | external-comms gate marker re-hashes on every draft-body delta — forces redundant re-fire cycles per iter                                   | 6 (Medium) | Known Error | M      | 2026-06-02 | external (`@windyroad/risk-scorer` + `@windyroad/voice-tone`) |
-| 6.0  | P025 | GitHub Actions deprecating Node.js 20 on 2026-06-16 — v4 actions across all workflows will be force-migrated to Node.js 24                  | 12 (High)  | Known Error | M      | 2026-06-03 | external (GitHub Actions)                                     |
 | 4.5  | P013 | dry-aged-deps ignores the package.json overrides block — stale/vulnerable pins go undetected, override-fixable vulns mislabeled "unfixable" | 9 (Medium) | Known Error | L      | 2026-05-25 | internal                                                      |
 | 4.5  | P014 | the age soak is unconditional — it ignores the severity of the vulnerability the project is currently exposed to                            | 9 (Medium) | Known Error | L      | 2026-05-25 | internal                                                      |
 | 4.0  | P019 | work-problems Step 5 subprocess JSON envelope's duration_ms can dramatically undercount — extend P089 Gap 2 authority hierarchy             | 4 (Low)    | Known Error | M      | 2026-05-30 | external (`@windyroad/itil`)                                  |
@@ -25,11 +24,12 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 Fix released; awaiting user confirmation that the production behaviour matches the fix intent. Excluded from WSJF ranking per ADR-022. Sorted by `Released date ASC` (oldest at row 1; same-day releases tiebreak by ID ASC). `Likely verified?` carries the evidence-first cell per P186 (`yes — observed: <evidence>` / `no — not observed` / `no — observed regression`).
 
-| ID   | Title                                                                        | Released   | Likely verified?  |
-| ---- | ---------------------------------------------------------------------------- | ---------- | ----------------- |
-| P021 | `calculateAgeInDays` hardcodes `Date.now()` — not injectable for testability | 2026-06-02 | no — not observed |
+| ID   | Title                                                                                                                      | Released   | Likely verified?                                                                                                                                   |
+| ---- | -------------------------------------------------------------------------------------------------------------------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| P021 | `calculateAgeInDays` hardcodes `Date.now()` — not injectable for testability                                               | 2026-06-02 | no — not observed                                                                                                                                  |
+| P025 | GitHub Actions deprecating Node.js 20 on 2026-06-16 — v4 actions across all workflows will be force-migrated to Node.js 24 | 2026-06-03 | yes — observed: ci-publish exercised under v6 across 8+ pushes since fix shipped — all green; auto-update + claude workflows await natural trigger |
 
-P013 / P014 / P025 fixes have also shipped but the tickets remain in `.known-error.md` pending an explicit `/wr-itil:transition-problems` K→V flip — that flip is sequenced across subsequent `/wr-itil:work-problems` iters per ADR-010 amended Skill Granularity rule.
+P013 / P014 fixes have also shipped but the tickets remain in `.known-error.md` pending an explicit `/wr-itil:transition-problems` K→V flip — that flip is sequenced across subsequent `/wr-itil:work-problems` iters per ADR-010 amended Skill Granularity rule.
 
 ## Parked
 
