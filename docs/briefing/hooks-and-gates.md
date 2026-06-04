@@ -15,7 +15,13 @@
   <!-- signal-score: 2 | last-classified: 2026-05-17 | first-written: 2026-05-13 -->
 
 - P057 staging-trap: `git mv` followed by post-rename edits is BLOCKED by a hook unless you stage the post-rename edits too. Either commit rename + rewrite together (architect's separate-commits recommendation can't apply here) or stage both before commit.
-  <!-- signal-score: 1 | last-classified: 2026-05-17 | first-written: 2026-05-13 -->
+  <!-- signal-score: 3 | last-classified: 2026-06-04 | first-written: 2026-05-13 -->
+
+- Per-state subdir layout uses BARE-NAME filenames (no `.<state>.md` suffix). When transitioning a ticket via `git mv` from `docs/problems/known-error/<NNN>-<title>.md` to `docs/problems/verifying/<NNN>-<title>.md`, the destination filename drops any `.<state>.md` extension — the per-state subdir IS the state indicator. 2026-06-04 iter 1 produced `docs/problems/verifying/021-...-test.verifying.md` (double-suffix); iter 2 corrected via explicit orchestrator hint. Drift class: subprocess muscle-memory from the flat-layout era. The dual-tolerant glob `docs/problems/<state>/*.md docs/problems/*.<state>.md` matches both shapes — both work — but the bare-name shape is the canonical post-ADR-031 convention every other ticket in the per-state subdirs uses.
+  <!-- signal-score: 2 | last-classified: 2026-06-04 | first-written: 2026-06-04 -->
+
+- BYPASS_RISK_GATE=1 is still needed for some commits even when both gate subagents return PASS. Root cause is P024 (cross-session marker dir mismatch — subagent PASS verdict lands in subagent's session dir, main session's gate reads from its own dir). Confirmed again 2026-06-04 iter 4 — required BYPASS plus 3 commitlint body-line-length redraft cycles before the commit landed. Workaround: invoke BOTH subagents (risk + voice-tone), confirm PASS verdicts in the agent output, then BYPASS_RISK_GATE=1 with audit trail in the commit message.
+  <!-- signal-score: 2 | last-classified: 2026-06-04 | first-written: 2026-06-04 -->
 
 - The `/wr-itil:capture-problem` skill's Step 2 create-gate marker has to match the Claude Code session SID. Use the bash helpers in the plugin's `hooks/lib/` (or read `/tmp/itil-runtime-sid-${USER}-${proj_hash}.current` directly) — the agent-side helper sometimes returns a different SID than the hook expects.
   <!-- signal-score: 0 | last-classified: 2026-05-17 | first-written: 2026-05-13 -->
