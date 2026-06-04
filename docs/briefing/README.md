@@ -15,6 +15,8 @@ Per-topic briefing index. Each topic file holds short, durable observations acro
 
 - **Autonomous-update workflow auth is HTTP Basic (`x-access-token`), not bearer.** App installation tokens used for `git push` via `auto-update.yml` MUST use either URL-embedded `https://x-access-token:$APP_TOKEN@github.com/owner/repo.git` (canonical, what ships in v2.7.3) or `git -c http.extraheader=AUTHORIZATION: basic $(base64 of "x-access-token:$APP_TOKEN")`. Bearer works for the API but not for git transport. P008 shipped two-layer fix: v2.7.2 `persist-credentials: false` + v2.7.3 URL-embedded basic auth. Repo also needs "Allow auto-merge" enabled in Settings → General → Pull Requests for the workflow's `gh pr merge --auto` step to succeed.
 
+- **Before any `git commit -m "$(cat <<'EOF' ... EOF)"` with risk-scorer / voice-tone gates active: compose the `<draft>...</draft>` block from the EXACT final commit body, Co-Authored-By trailer included.** Marker hash is `sha256(draft + '\n' + surface)` keyed bytewise. Omitting the trailer in the review draft (or shell-escaping backticks in the heredoc post-PASS) re-blocks the gate. Promoted from `hooks-and-gates.md§52` after 3 hits in 2026-06-05 (iters 3, 5, 7).
+
 ## Topic Index
 
 | Topic                  | File                                                     | Scope                                                                                                                     |
