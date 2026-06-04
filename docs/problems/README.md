@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-06-04 — Review pass: P006 auto-transitioned Open → Known Error (2026-06-04 Decision documented: Option 3 "Default to action" + Step 2.4/2.5/2.5b loop-end surfacing). P022 downrated WSJF 6.0 → 4.0 after iter-3 investigation falsified the "commit-gate unstages files" leading hypothesis (re-framed as partial-staging misperception / inter-tool working-tree mutation). Verification Queue drained: P021 closed (structural swap, no observed regression confirmed) + P025 closed (partial evidence — ci-publish 8+ runs green under v6 accepted as sufficient before 2026-06-16 cutover). WSJF top of queue: P006 / P010 / P017 / P023 tied at 6.0 (all KE, M, tier-2 internal/external — tier-order by Reported asc). Verification Queue: 1 (P014 — `no — not observed`, released today).
+> Last reviewed: 2026-06-04 **P006 K→V** — closing condition met via upstream `@windyroad/itil@0.47.9` Step 2.4/2.5/2.5b structural framing (P341 / P135 Phase 3 + P348); "Outstanding for next session" wording absent upstream; THIS iter's action-first orchestration IS the empirical evidence. WSJF top of queue: P010 / P017 / P023 tied at 6.0 (P006 dropped out per ADR-022 verifying-multiplier-0). Verification Queue: 2 (P006 — `yes — observed: this iter's action-first orchestration`; P014 — `no — not observed`).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -9,7 +9,6 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 | WSJF | ID   | Title                                                                                                                                       | Severity   | Status      | Effort | Reported   | Origin                                                        |
 | ---- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ----------- | ------ | ---------- | ------------------------------------------------------------- |
-| 6.0  | P006 | assistant defers actionable items to "next session" instead of acting when the user is observably present                                   | 6 (Medium) | Known Error | M      | 2026-05-13 | internal                                                      |
 | 6.0  | P010 | manage-problem SKILL.md commit-message convention fails @commitlint/config-conventional subject-case rule                                   | 6 (Medium) | Known Error | M      | 2026-05-17 | internal                                                      |
 | 6.0  | P017 | work-problems Step 0 reconcile-readme halt-route can't handle unscored-ticket MISSING drift                                                 | 6 (Medium) | Known Error | M      | 2026-05-30 | external (`@windyroad/itil`)                                  |
 | 6.0  | P023 | external-comms gate marker re-hashes on every draft-body delta — forces redundant re-fire cycles per iter                                   | 6 (Medium) | Known Error | M      | 2026-06-02 | external (`@windyroad/risk-scorer` + `@windyroad/voice-tone`) |
@@ -23,9 +22,10 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 Fix released; awaiting user confirmation that the production behaviour matches the fix intent. Excluded from WSJF ranking per ADR-022. Sorted by `Released date ASC` (oldest at row 1; same-day releases tiebreak by ID ASC). `Likely verified?` carries the evidence-first cell per P186 (`yes — observed: <evidence>` / `no — not observed` / `no — observed regression`).
 
-| ID   | Title                                                                                                            | Released   | Likely verified?  |
-| ---- | ---------------------------------------------------------------------------------------------------------------- | ---------- | ----------------- |
-| P014 | the age soak is unconditional — it ignores the severity of the vulnerability the project is currently exposed to | 2026-06-04 | no — not observed |
+| ID   | Title                                                                                                            | Released   | Likely verified?                                                              |
+| ---- | ---------------------------------------------------------------------------------------------------------------- | ---------- | ----------------------------------------------------------------------------- |
+| P006 | assistant defers actionable items to "next session" instead of acting when the user is observably present        | 2026-06-04 | yes — observed: this iter's action-first orchestration (upstream itil@0.47.9) |
+| P014 | the age soak is unconditional — it ignores the severity of the vulnerability the project is currently exposed to | 2026-06-04 | no — not observed                                                             |
 
 P013 fix has also shipped but the ticket remains in `.known-error.md` pending the ADR-0018 amendment (gap #2 three-class unfixable-reason taxonomy) — the 2026-06-04 Decision confirmed substance; next iter drafts the amendment + TDD + classifier extension per ADR-074 substance-confirm gate now clear.
 
