@@ -58,7 +58,7 @@ A major bump in the safe-update batch had no resolvable peer graph: `vite` 8 cou
 
 - **Blocks**: (none)
 - **Blocked by**: (none)
-- **Composes with**: P029 (detect deprecated dependencies + surface recommended replacement) — sibling "should we attempt this update?" signal split from the same capture.
+- **Composes with**: P029 (detect deprecated dependencies + surface them loudly, no auto-remediation) — sibling "should we attempt this update?" signal split from the same capture.
 
 ## Related
 

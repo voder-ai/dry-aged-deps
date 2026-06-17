@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-06-18 **P028 split into P028 + P029** — separated the two "should we attempt this update?" signals per user direction: P028 = flag/skip un-landable updates (incompatible peer deps / ERESOLVE); P029 = detect deprecated dependencies + surface recommended replacement (npm `deprecated` field). Prior fragment rotated to README-history.md.
+> Last reviewed: 2026-06-18 **P029 scoped to loud-surfacing only** — per user direction, dry-aged-deps must NOT heuristically extract a replacement from the deprecation message; detect deprecation, surface the verbatim npm message loudly, and leave the decision to the human/LLM (no auto-remediation). Prior fragment rotated to README-history.md.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -20,7 +20,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 1.5  | P020 | `@windyroad/tdd` hook stem-match strict matching causes variant-named tests to fail to pair with their source modules                       | 3 (Low)    | Open        | M      | 2026-05-30 | external (`@windyroad/tdd`)                                   |
 | 1.5  | P026 | `@windyroad/tdd` hook per-session IDLE state blocks multi-session RED→GREEN impl edits                                                      | 3 (Medium) | Open        | M      | 2026-06-05 | external (`@windyroad/tdd` hook contract)                     |
 | 1.5  | P028 | dry-aged-deps --update should flag and skip un-landable updates (incompatible peer deps / ERESOLVE)                                         | 3 (Medium) | Open        | M      | 2026-06-17 | internal                                                      |
-| 1.5  | P029 | dry-aged-deps should detect deprecated dependencies and surface the recommended replacement                                                 | 3 (Medium) | Open        | M      | 2026-06-17 | internal                                                      |
+| 1.5  | P029 | dry-aged-deps should detect deprecated dependencies and surface them loudly (verbatim message, no auto-remediation)                         | 3 (Medium) | Open        | M      | 2026-06-17 | internal                                                      |
 
 ## Verification Queue
 
