@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-06-04 **P006 K→V** — closing condition met via upstream `@windyroad/itil@0.47.9` Step 2.4/2.5/2.5b structural framing (P341 / P135 Phase 3 + P348); "Outstanding for next session" wording absent upstream; THIS iter's action-first orchestration IS the empirical evidence. WSJF top of queue: P010 / P017 / P023 tied at 6.0 (P006 dropped out per ADR-022 verifying-multiplier-0). Verification Queue: 2 (P006 — `yes — observed: this iter's action-first orchestration`; P014 — `no — not observed`).
+> Last reviewed: 2026-06-17 **README reconciled** — 2 drift entries corrected: P026, P027 (deferred-placeholder Open tickets absent from WSJF Rankings; derived WSJF P027=3.0, P026=1.5 from stored Priority/Effort). Reconciliation contract per P118 + ADR-014 amended ("Reconciliation as preflight robustness layer"). Prior fragment rotated to README-history.md.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -16,7 +16,9 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 4.0  | P019 | work-problems Step 5 subprocess JSON envelope's duration_ms can dramatically undercount — extend P089 Gap 2 authority hierarchy             | 4 (Low)    | Known Error | M      | 2026-05-30 | external (`@windyroad/itil`)                                  |
 | 4.0  | P024 | external-comms gate cross-session marker dir mismatch — subagent PASS verdicts land in agent's own dir, main session's gate can't find them | 4 (Low)    | Known Error | M      | 2026-06-02 | external (`@windyroad/risk-scorer`)                           |
 | 4.0  | P022 | commit-gate hook unstages files on "Pipeline state drift" block — manual re-stage needed after rescore                                      | 4 (Low)    | Open        | S      | 2026-05-30 | internal                                                      |
+| 3.0  | P027 | orchestrator halts AFK work-problems loop at P147 stuck-before-emit despite verified work integrity                                         | 6 (Medium) | Open        | M      | 2026-06-05 | internal                                                      |
 | 1.5  | P020 | `@windyroad/tdd` hook stem-match strict matching causes variant-named tests to fail to pair with their source modules                       | 3 (Low)    | Open        | M      | 2026-05-30 | external (`@windyroad/tdd`)                                   |
+| 1.5  | P026 | `@windyroad/tdd` hook per-session IDLE state blocks multi-session RED→GREEN impl edits                                                      | 3 (Medium) | Open        | M      | 2026-06-05 | external (`@windyroad/tdd` hook contract)                     |
 
 ## Verification Queue
 
