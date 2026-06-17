@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-06-17 **README reconciled** — 2 drift entries corrected: P026, P027 (deferred-placeholder Open tickets absent from WSJF Rankings; derived WSJF P027=3.0, P026=1.5 from stored Priority/Effort). Reconciliation contract per P118 + ADR-014 amended ("Reconciliation as preflight robustness layer"). Prior fragment rotated to README-history.md.
+> Last reviewed: 2026-06-17 **P028 captured** — dry-aged-deps --update should flag and skip impossible updates (incompatible peers / deprecated deps) instead of attempting them (lightweight aside via /wr-itil:capture-problem). Prior fragment rotated to README-history.md.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -19,6 +19,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 3.0  | P027 | orchestrator halts AFK work-problems loop at P147 stuck-before-emit despite verified work integrity                                         | 6 (Medium) | Open        | M      | 2026-06-05 | internal                                                      |
 | 1.5  | P020 | `@windyroad/tdd` hook stem-match strict matching causes variant-named tests to fail to pair with their source modules                       | 3 (Low)    | Open        | M      | 2026-05-30 | external (`@windyroad/tdd`)                                   |
 | 1.5  | P026 | `@windyroad/tdd` hook per-session IDLE state blocks multi-session RED→GREEN impl edits                                                      | 3 (Medium) | Open        | M      | 2026-06-05 | external (`@windyroad/tdd` hook contract)                     |
+| 1.5  | P028 | dry-aged-deps --update should flag and skip impossible updates (incompatible peers / deprecated deps)                                       | 3 (Medium) | Open        | M      | 2026-06-17 | internal                                                      |
 
 ## Verification Queue
 
