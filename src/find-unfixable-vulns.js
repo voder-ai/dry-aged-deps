@@ -101,8 +101,8 @@ function deriveReason(vuln) {
   if (vuln.fixAvailable !== false && isAtRootNodeModules(vuln)) {
     return 'fix via overrides edit';
   }
-  if (vuln.isDirect === false) return 'vulnerable transitive dependency';
   if (vuln.fixAvailable === false) return 'no patched version';
+  if (vuln.isDirect === false) return 'vulnerable transitive dependency';
   return 'no safe, mature version available';
 }
 
