@@ -142,3 +142,7 @@ docs/generated/
 .claude/
 .risk-reports/
 *.backup
+# updates.json: auto-update.yml's run-scratch `dry-aged-deps --check` output.
+# Never committed; also .prettierignore'd so the pre-commit format:check
+# doesn't fail the workflow's commit step.
+updates.json

@@ -15,3 +15,8 @@ scripts/validate-traceability.cjs
 .afk-run-state/
 .claude/
 *.backup
+# updates.json: auto-update.yml writes `dry-aged-deps --check --format=json`
+# here as a run-scratch artefact consumed by later steps. Untracked and
+# unformatted; without this ignore the pre-commit `format:check` fails the
+# workflow's "Commit initial bump" step. Also .gitignore'd (never committed).
+updates.json
