@@ -78,3 +78,7 @@ Archive of displaced `docs/problems/README.md` line 3 "Last reviewed" fragments 
 
 - 2026-06-17 **P028 captured (displaced from line 3 by P028/P029 split)** — dry-aged-deps --update should flag and skip impossible updates (incompatible peers / deprecated deps) instead of attempting them (lightweight aside via /wr-itil:capture-problem).
 - 2026-06-18 **P028 split into P028 + P029 (displaced from line 3 by P029 loud-surfacing refinement)** — separated the two "should we attempt this update?" signals per user direction: P028 = flag/skip un-landable updates (incompatible peer deps / ERESOLVE); P029 = detect deprecated dependencies + surface recommended replacement (npm `deprecated` field).
+
+## 2026-07-08
+
+- 2026-06-18 **P029 scoped to loud-surfacing only** — per user direction, dry-aged-deps must NOT heuristically extract a replacement from the deprecation message; detect deprecation, surface the verbatim npm message loudly, and leave the decision to the human/LLM (no auto-remediation). Prior fragment rotated to README-history.md.

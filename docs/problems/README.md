@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-06-18 **P029 scoped to loud-surfacing only** — per user direction, dry-aged-deps must NOT heuristically extract a replacement from the deprecation message; detect deprecation, surface the verbatim npm message loudly, and leave the decision to the human/LLM (no auto-remediation). Prior fragment rotated to README-history.md.
+> Last reviewed: 2026-07-08 **P030 captured** — `dry-aged-deps --update` leaves package-lock.json stale, breaking `npm ci` for adopters (lightweight aside via /wr-itil:capture-problem)
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -13,6 +13,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 6.0  | P017 | work-problems Step 0 reconcile-readme halt-route can't handle unscored-ticket MISSING drift                                                 | 6 (Medium) | Known Error | M      | 2026-05-30 | external (`@windyroad/itil`)                                  |
 | 6.0  | P023 | external-comms gate marker re-hashes on every draft-body delta — forces redundant re-fire cycles per iter                                   | 6 (Medium) | Known Error | M      | 2026-06-02 | external (`@windyroad/risk-scorer` + `@windyroad/voice-tone`) |
 | 4.5  | P013 | dry-aged-deps ignores the package.json overrides block — stale/vulnerable pins go undetected, override-fixable vulns mislabeled "unfixable" | 9 (Medium) | Known Error | L      | 2026-05-25 | internal                                                      |
+| 4.5  | P030 | `dry-aged-deps --update` leaves package-lock.json stale, breaking `npm ci` for adopters                                                     | 9 (Medium) | Open        | M      | 2026-07-08 | internal                                                      |
 | 4.0  | P019 | work-problems Step 5 subprocess JSON envelope's duration_ms can dramatically undercount — extend P089 Gap 2 authority hierarchy             | 4 (Low)    | Known Error | M      | 2026-05-30 | external (`@windyroad/itil`)                                  |
 | 4.0  | P024 | external-comms gate cross-session marker dir mismatch — subagent PASS verdicts land in agent's own dir, main session's gate can't find them | 4 (Low)    | Known Error | M      | 2026-06-02 | external (`@windyroad/risk-scorer`)                           |
 | 4.0  | P022 | commit-gate hook unstages files on "Pipeline state drift" block — manual re-stage needed after rescore                                      | 4 (Low)    | Open        | S      | 2026-05-30 | internal                                                      |
