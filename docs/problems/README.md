@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-07-08 **P030 verification pending** — `--update` now reconciles package-lock.json (ADR-0021 / RFC-003); fix shipping via `feat(update)`, awaiting release + user verification.
+> Last reviewed: 2026-07-09 **P028 known error** — `--update`/`--check` flag+skip un-landable updates; root cause + ADR-0022 / RFC-004 fix strategy recorded (WSJF 1.5 → 3.0).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -16,10 +16,10 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 4.0  | P019 | work-problems Step 5 subprocess JSON envelope's duration_ms can dramatically undercount — extend P089 Gap 2 authority hierarchy             | 4 (Low)    | Known Error | M      | 2026-05-30 | external (`@windyroad/itil`)                                  |
 | 4.0  | P024 | external-comms gate cross-session marker dir mismatch — subagent PASS verdicts land in agent's own dir, main session's gate can't find them | 4 (Low)    | Known Error | M      | 2026-06-02 | external (`@windyroad/risk-scorer`)                           |
 | 4.0  | P022 | commit-gate hook unstages files on "Pipeline state drift" block — manual re-stage needed after rescore                                      | 4 (Low)    | Open        | S      | 2026-05-30 | internal                                                      |
+| 3.0  | P028 | dry-aged-deps --update should flag and skip un-landable updates (incompatible peer deps / ERESOLVE)                                         | 3 (Medium) | Known Error | M      | 2026-06-17 | internal                                                      |
 | 3.0  | P027 | orchestrator halts AFK work-problems loop at P147 stuck-before-emit despite verified work integrity                                         | 6 (Medium) | Open        | M      | 2026-06-05 | internal                                                      |
 | 1.5  | P020 | `@windyroad/tdd` hook stem-match strict matching causes variant-named tests to fail to pair with their source modules                       | 3 (Low)    | Open        | M      | 2026-05-30 | external (`@windyroad/tdd`)                                   |
 | 1.5  | P026 | `@windyroad/tdd` hook per-session IDLE state blocks multi-session RED→GREEN impl edits                                                      | 3 (Medium) | Open        | M      | 2026-06-05 | external (`@windyroad/tdd` hook contract)                     |
-| 1.5  | P028 | dry-aged-deps --update should flag and skip un-landable updates (incompatible peer deps / ERESOLVE)                                         | 3 (Medium) | Open        | M      | 2026-06-17 | internal                                                      |
 | 1.5  | P029 | dry-aged-deps should detect deprecated dependencies and surface them loudly (verbatim message, no auto-remediation)                         | 3 (Medium) | Open        | M      | 2026-06-17 | internal                                                      |
 
 ## Verification Queue

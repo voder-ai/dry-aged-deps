@@ -1,6 +1,6 @@
 # Problem 028: dry-aged-deps --update should flag and skip un-landable updates (incompatible peer deps / ERESOLVE) instead of attempting them
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-06-17
 **Priority**: 3 (Medium) — Impact: 3 x Likelihood: 1 (deferred — re-rate at next /wr-itil:review-problems)
 **Origin**: internal
@@ -45,14 +45,35 @@ A major bump in the safe-update batch had no resolvable peer graph: `vite` 8 cou
 
 ## Root Cause Analysis
 
+`dry-aged-deps` filters by age + security only; it never probes whether a safe
+update's peer graph resolves. `applyFilters()` emits every mature+secure row into
+`safeRows`; `--update` writes them all and (post-ADR-0021) reconciles the lockfile
+via `npm install --ignore-scripts --package-lock-only`, which fails loud on a
+single ERESOLVE — so one un-landable major (bbstats: `vite` 8 vs stale peer
+`clerk-sveltekit`) fails the whole reconcile and nothing lands; `--check` still
+counts the un-landable row toward exit-1, so the cron re-triggers daily.
+
+### Workaround
+
+Pin/exclude the un-landable package (e.g. via `.dry-aged-deps.json` exclude) so it
+never enters the batch, until the fix ships.
+
+### Fix Strategy
+
+Per **ADR-0022** (confirmed 2026-07-09) + **RFC-004**: detect un-landable updates
+via npm's real resolver (attempt reconcile; on ERESOLVE isolate the culprit(s)),
+move them out of `safeRows` in the filter pipeline (so `--check` and `--update`
+agree), and surface them as `incompatible-peers` (table/JSON/XML, ADR-0018-style).
+ADR-0021's fail-loud is narrowed: ERESOLVE isolates; other npm errors still fail
+loud. Never auto-apply `--force` / `--legacy-peer-deps`.
+
 ### Investigation Tasks
 
-- [ ] Re-rate Priority and Effort at next /wr-itil:review-problems
-- [ ] Investigate root cause
-- [ ] Create reproduction test
-- [ ] Decide detection mechanism for un-landable updates (peer-resolution dry-run vs `peerDependencies` range check)
-- [ ] Decide output shape for flagged-and-skipped updates (reason column / JSON field) across table / JSON / XML formatters
-- [ ] Decide whether a single un-landable major should be skipped in isolation so the rest of the batch can still land (avoid one bad bump poisoning the batch)
+- [x] Investigate root cause — filter pipeline emits un-landable rows; reconcile fails loud on ERESOLVE (see RCA above).
+- [x] Decide detection mechanism — npm-resolver bisect (ADR-0022, maintainer 2026-07-09).
+- [x] Decide output shape — `incompatible-peers` section, ADR-0018-style (ADR-0022).
+- [x] Decide batch isolation — isolate the culprit so the rest lands (ADR-0022).
+- [ ] Implement per RFC-004 (detection module + pipeline + formatters + reconcile narrowing) with reproduction test.
 
 ## Dependencies
 
@@ -67,3 +88,9 @@ A major bump in the safe-update batch had no resolvable peer graph: `vite` 8 cou
 - **JTBD-002** (`docs/jtbd/project-maintainer/JTBD-002-apply-safe-updates.proposed.md`) — the manual `--update`/apply surface this capability also serves.
 - **P029** — sibling ticket: deprecation detection (split from this capture per user direction 2026-06-17).
 - Captured via /wr-itil:capture-problem; split into P028 + P029 per user direction; expand at next investigation.
+
+## RFCs
+
+| RFC     | Status   | Title                             |
+| ------- | -------- | --------------------------------- |
+| RFC-004 | proposed | flag and skip un-landable updates |

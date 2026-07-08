@@ -1,16 +1,15 @@
 # RFC Backlog
 
-> Last reviewed: 2026-07-08 **RFC-003 verifying** — `--update` reconciles package-lock.json (P030 / ADR-0021); implementation shipped via `feat(update)`, awaiting release + downstream verification.
+> Last reviewed: 2026-07-09 **RFC-004 proposed** — flag and skip un-landable updates (traces P028 / ADR-0022); awaiting implementation.
 > Run `/wr-itil:manage-rfc review` to refresh WSJF rankings.
 
 ## WSJF Rankings
 
 Dev-work queue only. Verifying (`.verifying.md`, WSJF multiplier 0) and Closed (`.closed.md`, multiplier 0) RFCs are excluded per ADR-060 — surfaced in their own sections below. Rows sort by `(WSJF desc, Status-priority, Reported-date asc, ID asc)` so top-to-bottom order matches the work-RFC selection contract per P138.
 
-| WSJF | ID  | Title | Severity | Status | Effort | Reported |
-| ---- | --- | ----- | -------- | ------ | ------ | -------- |
-
-(none — all currently-tracked RFCs are in Verifying.)
+| WSJF | ID      | Title                             | Severity   | Status   | Effort | Reported   |
+| ---- | ------- | --------------------------------- | ---------- | -------- | ------ | ---------- |
+| 1.5  | RFC-004 | flag and skip un-landable updates | 3 (Medium) | proposed | M      | 2026-07-09 |
 
 ## Verification Queue
 
