@@ -74,3 +74,9 @@ Reconcile the lockfile incrementally after `--update`: `npm install` (no `rm`) o
 - **P028** — `--update` flag/skip un-landable updates. Distinct: P028 is about updates that _cannot_ land (ERESOLVE); P030 is about _landable_ updates that leave an inconsistent lockfile. Sibling hardening of the same command.
 - **P013** — overrides block ignored / vuln mislabelling. Adjacent (both surfaced during the same 2026-07-08 session), different subsystem.
 - Captured via `/wr-itil:capture-problem`; expand at next investigation. Duplicate-check surfaced P001/P008/P017/P028 on keyword overlap — none are the same problem (P028 noted above).
+
+## RFCs
+
+| RFC     | Status   | Title                                   |
+| ------- | -------- | --------------------------------------- |
+| RFC-003 | proposed | `--update` reconciles package-lock.json |

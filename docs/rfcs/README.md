@@ -1,16 +1,15 @@
 # RFC Backlog
 
-> Last reviewed: 2026-06-03 **RFC-002 verifying** — exposure-aware severity-scaled soak feature shipped via `feat:` commit `07311a1` (ship-signal); awaiting release (next push) and user-side confirmation that `--exposure-aware-soak` correctly relaxes the soak under Critical/High current exposure.
+> Last reviewed: 2026-07-08 **RFC-003 captured** — `--update` reconciles package-lock.json (traces P030 / ADR-0021); proposed, awaiting implementation.
 > Run `/wr-itil:manage-rfc review` to refresh WSJF rankings.
 
 ## WSJF Rankings
 
 Dev-work queue only. Verifying (`.verifying.md`, WSJF multiplier 0) and Closed (`.closed.md`, multiplier 0) RFCs are excluded per ADR-060 — surfaced in their own sections below. Rows sort by `(WSJF desc, Status-priority, Reported-date asc, ID asc)` so top-to-bottom order matches the work-RFC selection contract per P138.
 
-| WSJF | ID  | Title | Severity | Status | Effort | Reported |
-| ---- | --- | ----- | -------- | ------ | ------ | -------- |
-
-(none — both currently-tracked RFCs are in Verifying.)
+| WSJF | ID      | Title                                   | Severity   | Status   | Effort | Reported   |
+| ---- | ------- | --------------------------------------- | ---------- | -------- | ------ | ---------- |
+| 4.5  | RFC-003 | `--update` reconciles package-lock.json | 9 (Medium) | proposed | M      | 2026-07-08 |
 
 ## Verification Queue
 
