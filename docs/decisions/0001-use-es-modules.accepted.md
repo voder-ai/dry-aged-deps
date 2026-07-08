@@ -1,6 +1,8 @@
 ---
 status: 'accepted'
 date: 2025-11-07
+human-oversight: confirmed
+oversight-date: 2026-07-08
 decision-makers: ['Tom Howard']
 consulted: []
 informed: []

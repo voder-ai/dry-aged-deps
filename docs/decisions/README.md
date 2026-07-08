@@ -21,87 +21,87 @@ _17 ADRs. These are the current rules. The architect agent reads this section fi
 
 ### ADR-0001 — 0001. Use ES Modules for All Code
 
-**Status:** accepted
+**Status:** accepted | **Oversight:** confirmed
 **Chosen:** Chosen option: **ES Modules throughout the entire codebase**, because users install and run the CLI rather than importing it as a library, modern tooling (vitest, ESLint, bundlers) works best with ES modules, and all supported Node.js LTS v...
 
 ### ADR-0002 — 0002. Support JSON and XML Output Formats
 
-**Status:** accepted
+**Status:** accepted | **Oversight:** confirmed
 **Chosen:** Chosen option: **JSON and XML output formats alongside the existing table format**, because the CLI must serve both modern automation (JSON) and environments where XML is still the consumed format, while preserving the existing human-readab...
 
 ### ADR-0003 — 0003. Standardize CLI Exit Codes
 
-**Status:** accepted
+**Status:** accepted | **Oversight:** confirmed
 **Chosen:** Chosen option: **three-code scheme**, because it gives automation a single deterministic contract that survives the introduction of new modes and aligns with the principle that exit code `2` is reserved for tool errors (mirroring `getopt` a...
 
 ### ADR-0004 — 0004. Add Check Mode for CI/CD Enforcement
 
-**Status:** accepted
+**Status:** accepted | **Oversight:** confirmed
 **Chosen:** Chosen option: **`--check` flag**, because opt-in enforcement preserves the default informational behaviour, makes the intent explicit at the call site, and composes cleanly with the exit-code contract in ADR-0003.
 
 ### ADR-0005 — 0005. Semantic Release Version Management
 
-**Status:** accepted
+**Status:** accepted | **Oversight:** confirmed
 **Chosen:** Chosen option: **Version bumps and `package.json` updates are managed exclusively by semantic-release in the CI/CD pipeline and are NOT committed back to the repository**, because git tags are the authoritative version record, clean history...
 
 ### ADR-0006 — 0006. Use JSDoc with TypeScript for Type Checking
 
-**Status:** accepted
+**Status:** accepted | **Oversight:** confirmed
 **Chosen:** Chosen option: **JSDoc annotations with TypeScript as a type checker (not a compiler)**, because TypeScript is already installed, JSDoc coverage already exists, and the project's scale and stability do not warrant a build step.
 
 ### ADR-0007 — 0007. ESLint Plugin Selection Strategy
 
-**Status:** accepted
+**Status:** accepted | **Oversight:** confirmed
 **Chosen:** Chosen option: **Do NOT add `eslint-plugin-unicorn` or additional linting plugins at this time**, because current quality measures are sufficient for the project's scale and there is no evidence of problems these plugins would solve.
 
 ### ADR-0008 — 0008. Use better-npm-audit for Security Audit Exception Management
 
-**Status:** accepted
+**Status:** accepted | **Oversight:** confirmed
 **Chosen:** Chosen option: **Use `better-npm-audit` for security audit exception management in CI/CD pipelines**, because it provides a declarative, version-controlled exception list with an audit trail, while still catching new vulnerabilities.
 
 ### ADR-0011 — 0011. ADR Format and Lifecycle Convention
 
-**Status:** proposed
+**Status:** proposed | **Oversight:** confirmed
 **Chosen:** Chosen option: **MADR 4.0 with `.proposed.md`/`.accepted.md`/`.superseded.md` filename suffixes**, because it aligns the project with the format the `wr-architect:create-adr` skill produces, makes status visible in `ls docs/decisions/`, and...
 
 ### ADR-0012 — 0012. Authentication Mechanism for Autonomous GitHub Workflows
 
-**Status:** proposed
+**Status:** proposed | **Oversight:** confirmed
 **Chosen:** Chosen option: **OIDC token-exchange via Anthropic** (Option 3), because it eliminates the manual credential-provisioning step entirely, produces short-lived tokens (no rotation cycle), and reuses the existing Claude Code GitHub App install...
 
 ### ADR-0014 — 0014. `--update` writes the latest-safe version, not the semver-range-satisfying version
 
-**Status:** proposed
+**Status:** proposed | **Oversight:** confirmed
 **Chosen:** Chosen option: **Write `latest` (4th tuple element, post-filter / post-smart-search) into `package.json`**, because it (a) is the only interpretation consistent with the spec's safety claim — the 4th element is the version the filters hav...
 
 ### ADR-0016 — 0016. Pre-commit hook auto-write and re-stage policy
 
-**Status:** proposed | **Supersedes:** 0013-pre-commit-hook-read-only-policy
+**Status:** proposed | **Oversight:** confirmed | **Supersedes:** 0013-pre-commit-hook-read-only-policy
 **Chosen:** Chosen option: **Option 1 — plain-shell write-and-restage on staged files only**, because it honours the project's zero-runtime-dep / minimal-devDep posture (carried forward from ADR-0013), the implementation is small enough to read in on...
 
 ### ADR-0017 — 0017. Single-workflow inline-loop for autonomous dependency updates
 
-**Status:** proposed
+**Status:** proposed | **Oversight:** confirmed
 **Chosen:** Chosen option: **"Single inline-loop workflow"**, because it matches the maintainer's confirmed design intent, eliminates the cross-workflow `workflow_run` indirection that was load-bearing only under the old fallback framing, and lets reco...
 
 ### ADR-0018 — 0018. Surface known-vulnerable-but-unfixable packages in dry-aged-deps output
 
-**Status:** proposed
+**Status:** proposed | **Oversight:** confirmed
 **Chosen:** Chosen option: **"On by default in all output formats, suppressible via `--no-unfixable`"**, because it directly satisfies JTBD-006's default-policy expectation and JTBD-008's PR-body inspection job. Visibility-first is the right default fo...
 
 ### ADR-0019 — Adopt the Problem-RFC-Story Framework (per @windyroad/itil ADR-060)
 
-**Status:** proposed
+**Status:** proposed | **Oversight:** confirmed
 **Chosen:** Chosen option: **"Option A"**, because the framework is already implemented in the `@windyroad/itil` plugin we already adopt; reinventing the schema or skipping the tier would either fork the framework or leave direction-confirmed work (P01...
 
 ### ADR-0020 — 0020. Test placement: co-locate paired tests beside their `src/` module
 
-**Status:** proposed | **Supersedes:** 0015-test-placement-co-location-exception-for-tdd-hook
+**Status:** proposed | **Oversight:** confirmed | **Supersedes:** 0015-test-placement-co-location-exception-for-tdd-hook
 **Chosen:** Chosen: **Option 1 (universal co-location for paired tests)**.
 
 ### ADR-0021 — 0021. `--update` reconciles package-lock.json via incremental `npm install --package-lock-only`
 
-**Status:** proposed | **Oversight:** unconfirmed
+**Status:** proposed | **Oversight:** confirmed
 **Chosen:** Chosen option: **"Reconcile in `--update`"** (Option 1), selected by the
 **Confirmation:** REQ-POST-UPDATE (prompts/011.0) is amended: post-update reconciles the; A test asserts the reconcile spawns npm with --ignore-scripts and; A test asserts the no-safe-updates path does NOT spawn the reconcile.
 **Related:** ADR-0014, ADR-0017, ADR-0008

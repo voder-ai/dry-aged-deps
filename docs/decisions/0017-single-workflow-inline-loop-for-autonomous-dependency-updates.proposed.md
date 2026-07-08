@@ -1,6 +1,8 @@
 ---
 status: 'proposed'
 date: 2026-05-18
+human-oversight: confirmed
+oversight-date: 2026-07-08
 decision-makers: ['Tom Howard']
 consulted: ['Tom Howard (via wr-architect:agent, wr-jtbd:agent review)']
 informed: []
