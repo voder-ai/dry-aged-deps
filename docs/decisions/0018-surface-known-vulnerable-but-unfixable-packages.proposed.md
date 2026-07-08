@@ -250,3 +250,37 @@ This amendment is **structural** to ADR-0018's chosen option (it sharpens the `R
 - **Touches `src/find-unfixable-vulns.js`** — `deriveReason()` (lines 52–56) is the surface that this amendment requires extending to read `fixAvailable` and walk the bundling-parent path.
 - **Touches the table / JSON / XML formatters** — `Reason` column values change for any non-direct vuln; snapshot tests update with the rollout.
 - **Composes with RFC-001 (Overrides Hygiene Module, verifying)** — RFC-001 surfaces stale `overrides` pins as a standalone section. This amendment is independent: classes (a) and (c) operate without any `overrides` block, and class (b) describes an action (`add an overrides pin`) that is downstream-readable by RFC-001's hygiene checks but does not require RFC-001 to be shipped.
+
+## 2026-07-08 Amendment — class (0) `fix-via-lockfile-refresh`
+
+### Problem
+
+The 2026-06-05 three-class taxonomy routes **any** non-`false` `fixAvailable` at root `node_modules` to class (b) `fix via overrides edit` (Confirmation #15). That over-claims. `npm audit`'s `fixAvailable` is three-valued:
+
+- `fixAvailable: true` (boolean) — a **compatible, in-range** fix exists; `npm audit fix` resolves it with **no `package.json` edit**. The vuln is present only because the lockfile pins a stale (but still in-range) version.
+- `fixAvailable: { name, version, isSemVerMajor }` (object) — the fix needs a **specific / breaking** version, i.e. a range change an `overrides` pin expresses.
+- `fixAvailable: false` — no fix.
+
+Telling a maintainer to edit `overrides` when a plain `npm audit fix` suffices points them at a harder remedy than needed. Live evidence (2026-07-08 session): `sigstore` / `undici` / `vite` all had `fixAvailable: true` and `npm audit fix` cleared them from a stale lockfile — yet the topology-only classifier would have labelled them `fix via overrides edit` / `fix via parent bump`.
+
+**Niche note (why a _fixable_ vuln reaches the *un*fixable surface at all):** these packages are **invisible to `npm outdated`** (the installed version still satisfies the `package.json` range, so ADR-0014 smart-search never puts them in `safePackages`) yet **visible to `npm audit`** (the lockfile pins a stale version). They fall through to the unfixable surface, where class (0) now names the one-command remedy.
+
+### Class (0)
+
+Add **class (0) `fix via lockfile refresh`**: a vuln with `fixAvailable === true` that is **not** bundled inside a parent (`detectBundlingParent()` returns `null`). Surfaced action: run `npm audit fix` (or `npm install` / an incremental lockfile refresh) — no manifest edit.
+
+**Precedence: (a) > (0) > (b) > (c).** Class (a) still runs FIRST (before (0)): a copy bundled inside a parent's own `node_modules` will NOT be honoured by a root-tree lockfile refresh — npm's bundled tree needs the parent bump. So (a) precedes (0) not on effort but on reachability. Below (a), (0) is the lowest-effort remedy and wins over (b)/(c). The §Multi-advisory most-actionable tie-break becomes **(a) > (0) > (b) > (c)**.
+
+### Restated confirmations (IDs stable — bodies revised)
+
+- **#13** — the allowed `Reason` string set now also includes `fix via lockfile refresh`; the retired `vulnerable transitive dependency` string is still never emitted for a classified case.
+- **#15 (revised)** — a vuln whose `fixAvailable === true`, not bundled in a parent, IS classified as **(0) `fix via lockfile refresh`** (NOT (b)). Class (b) no longer owns the boolean-`true` case.
+- **#16 (tightened)** — class (b) `fix via overrides edit` now owns the `fixAvailable`-is-an-**object** case at root `node_modules` (a range-changing fix an override expresses); `fixAvailable: false` or an object that resolves to no installable target is class (c).
+
+### New confirmation
+
+- **#18** — a root-level transitive vuln with `fixAvailable: true` and no bundling parent is classified as **(0) `fix via lockfile refresh`**, and the surfaced action names `npm audit fix` / a lockfile refresh (no `package.json` edit). (Verifiable by a fixture with `fixAvailable: true` and non-bundled `nodes`.)
+
+### Provenance
+
+Routed here by the `/wr-itil:capture-problem` hang-off-check (verdict HANG_OFF: P013 — this IS P013 gap #2's `deriveReason()` taxonomy). Sharpens, does not change, ADR-0018's chosen option. `deriveReason()`'s JSDoc + the class (b) fixture (which used `fixAvailable: true`) update with the classifier change.

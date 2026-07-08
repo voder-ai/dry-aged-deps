@@ -56,7 +56,9 @@ describe('Story 016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES: findUnfixableVulns'
       severity: 'moderate',
       advisory: 'GHSA-f886-m6hf-6m8v',
     });
-    expect(rows[0].reason).toMatch(/transitive/i);
+    // fixAvailable: true + no bundling topology → class (0) lockfile refresh
+    // (2026-07-08 amendment); npm's own fixAvailable signal is authoritative.
+    expect(rows[0].reason).toMatch(/lockfile refresh/i);
     expect(Array.isArray(rows[0].via)).toBe(true);
     expect(rows[1].advisory).toBe('GHSA-jxxr-4gwj-5jf2');
   });
@@ -149,21 +151,18 @@ describe('Story 016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES: findUnfixableVulns'
     });
   });
 
-  // Class (b) — fix-via-overrides-edit (ADR-0018 amendment 2026-06-05).
-  // The vulnerable copy lives at the root project's own `node_modules/<name>`
-  // (not bundled inside an un-overridable parent), `fixAvailable: true` so a
-  // patched range is satisfiable, and no existing `overrides` pin. The
-  // amendment §Detection signals Step 2 second sub-bullet routes this to
-  // class (b); §User-facing reason strings (b) mandates `fix via overrides
-  // edit` for the no-pin case. The amendment also RETIRES the pre-amendment
-  // `vulnerable transitive dependency` string this fixture would otherwise
-  // produce — the test locks in the new vocabulary.
+  // Class (b) — fix-via-overrides-edit. Per the 2026-07-08 amendment (revised
+  // #16), class (b) now owns the `fixAvailable`-is-an-OBJECT case (a
+  // range-changing / breaking fix an `overrides` pin expresses) at the root
+  // project's own `node_modules/<name>`, not bundled inside an un-overridable
+  // parent, no existing `overrides` pin. (The boolean-`true` case moved to
+  // class (0) `fix via lockfile refresh` — see the class-(0) test below.)
   /** @story prompts/016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES.md */
   const transitiveAtRoot = {
     name: 'some-pkg',
     severity: 'moderate',
     isDirect: false,
-    fixAvailable: true,
+    fixAvailable: { name: 'some-pkg', version: '2.0.0', isSemVerMajor: true },
     nodes: ['node_modules/some-pkg'],
     via: [
       {
@@ -175,7 +174,7 @@ describe('Story 016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES: findUnfixableVulns'
     ],
   };
 
-  it('[REQ-UNFIXABLE-DETECT] class (b): classifies a root-level transitive vuln with a patched range satisfiable as `fix via overrides edit` (ADR-0018 amendment 2026-06-05, Confirmation #15)', () => {
+  it('[REQ-UNFIXABLE-DETECT] class (b): classifies a root-level transitive vuln whose fixAvailable is a range-changing object as `fix via overrides edit` (ADR-0018 amendment 2026-07-08, Confirmation #16)', () => {
     const rows = findUnfixableVulns({
       vulnerabilities: [transitiveAtRoot],
       safePackages: new Set(),
@@ -186,6 +185,43 @@ describe('Story 016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES: findUnfixableVulns'
       severity: 'moderate',
       advisory: 'GHSA-bbbb-cccc-dddd',
       reason: 'fix via overrides edit',
+    });
+  });
+
+  // Class (0) — fix-via-lockfile-refresh (ADR-0018 amendment 2026-07-08).
+  // A root-level transitive vuln with `fixAvailable: true` (a compatible,
+  // in-range fix) that is NOT bundled inside a parent. `npm audit fix` resolves
+  // it with no package.json edit — the lowest-effort remedy. This is the exact
+  // mislabel the 2026-07-08 session hit (sigstore/undici/vite had fixAvailable:
+  // true and `npm audit fix` cleared them from a stale lockfile).
+  /** @story prompts/016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES.md */
+  const transitiveLockfileRefresh = {
+    name: 'stale-lock-pkg',
+    severity: 'high',
+    isDirect: false,
+    fixAvailable: true,
+    nodes: ['node_modules/stale-lock-pkg'],
+    via: [
+      {
+        source: 2468013,
+        title: 'stale-lock-pkg: hypothetical advisory fixable by an in-range lockfile refresh',
+        url: 'https://github.com/advisories/GHSA-0000-1111-2222',
+        severity: 'high',
+      },
+    ],
+  };
+
+  it('[REQ-UNFIXABLE-DETECT] class (0): classifies a non-bundled transitive vuln with fixAvailable: true as `fix via lockfile refresh` (ADR-0018 amendment 2026-07-08, Confirmation #18)', () => {
+    const rows = findUnfixableVulns({
+      vulnerabilities: [transitiveLockfileRefresh],
+      safePackages: new Set(),
+    });
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({
+      name: 'stale-lock-pkg',
+      severity: 'high',
+      advisory: 'GHSA-0000-1111-2222',
+      reason: 'fix via lockfile refresh',
     });
   });
 

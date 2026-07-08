@@ -92,7 +92,7 @@ describe('Story 017.0-DEV-OVERRIDES-HYGIENE: P013 brace-expansion mislabel bound
     expect(braceFinding.reason).toMatch(/^(stale-and-vulnerable|vulnerable):/);
   });
 
-  it('[REQ-OVERRIDES-REASON-TAXONOMY] gap #2 mislabel is preserved on the unfixable surface (RFC-001 Out-of-Scope)', () => {
+  it('[REQ-OVERRIDES-REASON-TAXONOMY] gap #2 is FIXED — a fixAvailable:true transitive is `fix via lockfile refresh`, not the retired mislabel (ADR-0018 amendment 2026-07-08)', () => {
     const rows = findUnfixableVulns({
       vulnerabilities,
       safePackages: new Set(),
@@ -100,12 +100,14 @@ describe('Story 017.0-DEV-OVERRIDES-HYGIENE: P013 brace-expansion mislabel bound
 
     const braceRow = rows.find((r) => r.name === 'brace-expansion');
     expect(braceRow).toBeDefined();
-    // ADR-0018's current reason logic stamps any isDirect=false dep with
-    // 'vulnerable transitive dependency' regardless of fixAvailable. RFC-001
-    // explicitly does NOT sharpen this — the fix lands in a separate
-    // workstream that amends ADR-0018. The assertion below pins that
-    // boundary; do not loosen it by widening RFC-001's scope.
-    expect(braceRow.reason).toBe('vulnerable transitive dependency');
+    // Was a boundary asserting the gap #2 mislabel ('vulnerable transitive
+    // dependency' regardless of fixAvailable) was PRESERVED because RFC-001 left
+    // the ADR-0018 reason-taxonomy fix to a separate workstream. That workstream
+    // shipped (P013 class (0), 2026-07-08 amendment): a non-bundled transitive
+    // with fixAvailable: true is now `fix via lockfile refresh`. The retired
+    // mislabel must never re-appear for this case.
+    expect(braceRow.reason).toBe('fix via lockfile refresh');
+    expect(braceRow.reason).not.toBe('vulnerable transitive dependency');
   });
 
   it('[REQ-OVERRIDES-REASON-TAXONOMY] RFC-001 reason vocabulary is disjoint from the gap #2 string', async () => {

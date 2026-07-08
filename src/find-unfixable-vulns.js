@@ -85,19 +85,32 @@ function isAtRootNodeModules(vuln) {
 
 /**
  * Short, human-readable reason dry-aged-deps cannot land a safe fix.
- * Per ADR-0018 (2026-06-05 amendment), classification proceeds in precedence
- * order (a) > (b) > legacy-transitive: class (a) `fix via parent bump: <parent>`
- * wins when a bundling-parent topology is detected; class (b) `fix via
- * overrides edit` follows for root-level transitives with a satisfiable patched
- * range; the legacy `vulnerable transitive dependency` string is retained for
- * transitives without `nodes[]` topology data and is staged for retirement in
- * the class (c) iter (ADR-0018 amendment §User-facing reason strings).
+ * Per ADR-0018 (2026-06-05 + 2026-07-08 amendments), classification proceeds in
+ * precedence order (a) > (0) > (b) > (c):
+ *   - class (a) `fix via parent bump: <parent>` — a bundling-parent topology is
+ *     detected (runs first: a bundled copy's fix is not reached by a root refresh);
+ *   - class (0) `fix via lockfile refresh` — `fixAvailable === true` (a compatible
+ *     in-range fix) and not bundled: `npm audit fix` resolves it, no manifest edit;
+ *   - class (b) `fix via overrides edit` — `fixAvailable` is a range-changing OBJECT
+ *     at the root project's node_modules;
+ *   - class (c) `no patched version` — `fixAvailable === false`;
+ *   - legacy `vulnerable transitive dependency` / `no safe, mature version available`
+ *     for transitives without `nodes[]` topology data.
  * @param {{ isDirect?: boolean, fixAvailable?: boolean|object, nodes?: Array<string> }} vuln
  * @returns {string}
  */
 function deriveReason(vuln) {
   const parent = detectBundlingParent(vuln);
   if (parent) return `fix via parent bump: ${parent}`;
+  // Class (0) `fix via lockfile refresh` (ADR-0018 amendment 2026-07-08): npm
+  // reports a compatible IN-RANGE fix (`fixAvailable === true`) and the copy is
+  // not bundled in a parent — `npm audit fix` / a lockfile refresh resolves it
+  // with NO package.json edit. Lowest-effort remedy; precedence (a) > (0) > (b)
+  // > (c). (a) still runs first: a bundled copy's `fixAvailable: true` is not
+  // honoured by a root-tree refresh — it needs the parent bump.
+  if (vuln.fixAvailable === true) return 'fix via lockfile refresh';
+  // Class (b): `fixAvailable` is now an OBJECT here (a range-changing fix an
+  // `overrides` pin expresses) at the root project's own node_modules.
   if (vuln.fixAvailable !== false && isAtRootNodeModules(vuln)) {
     return 'fix via overrides edit';
   }
