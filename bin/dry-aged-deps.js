@@ -37,7 +37,9 @@ function printHelp() {
   console.log(
     '  --check                 Check mode: exit code 1 if safe updates available (including override pins with a safe upgrade target), 0 if none, 2 on error'
   );
-  console.log('  --update               Update dependencies to latest safe versions');
+  console.log(
+    '  --update               Update dependencies to latest safe versions (also reconciles package-lock.json so npm ci works)'
+  );
   console.log('  -y, --yes               Skip confirmation prompts (assume yes)');
   console.log(
     '  --config-file=<file>    Path to JSON config file (default: .dry-aged-deps.json). CLI flags override config file values'

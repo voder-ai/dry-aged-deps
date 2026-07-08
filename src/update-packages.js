@@ -1,6 +1,44 @@
 // @ts-check
 import fs from 'fs';
 import path from 'path';
+import { execFile } from 'child_process';
+
+/**
+ * Reconcile package-lock.json after `--update` rewrites package.json (ADR-0021 / P030).
+ *
+ * Spawns `npm install --ignore-scripts --package-lock-only` in the project directory,
+ * INCREMENTALLY (never rm-and-reinstall — a from-scratch regen produces an unstable
+ * lockfile). `--package-lock-only` syncs lockfile metadata only (no node_modules
+ * install), and `--ignore-scripts` keeps the supply-chain-safety posture. The result
+ * is immediately installable via `npm ci --prefer-frozen-lockfile`.
+ *
+ * Fails loud: rejects on ANY npm error. Deliberately does NOT copy the WARN-swallow
+ * branch from src/check-vulnerabilities.js — a stale lockfile must never ship silently.
+ *
+ * @returns {Promise<void>}
+ * @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-POST-UPDATE
+ */
+export function reconcileLockfile() {
+  return new Promise((resolve, reject) => {
+    // Reconcile the EXISTING lockfile. A project with no package-lock.json isn't
+    // using `npm ci`, so there's nothing to reconcile — skip rather than surprise
+    // it with a freshly-created lockfile.
+    if (!fs.existsSync(path.join(process.cwd(), 'package-lock.json'))) {
+      return resolve();
+    }
+    execFile(
+      'npm',
+      ['install', '--ignore-scripts', '--package-lock-only'],
+      { cwd: process.cwd(), encoding: 'utf8' },
+      (error) => {
+        if (error) {
+          return reject(error);
+        }
+        resolve();
+      }
+    );
+  });
+}
 
 /**
  * Prompt the user for confirmation before updating.
@@ -81,7 +119,8 @@ function applyUpdates(pkgPath, safeRows) {
  * @returns {Promise<{ totalOutdated: number, safeUpdates: number, filteredByAge: number, filteredBySecurity: number }>} The summary object.
  * @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-UPDATE-FLAG REQ-YES-FLAG REQ-PREVIEW REQ-SAFE-ONLY REQ-PACKAGE-JSON REQ-BACKUP REQ-CONFIRMATION REQ-POST-UPDATE REQ-SUMMARY
  */
-export async function updatePackages(safeRows, skipConfirmation, summary) {
+export async function updatePackages(safeRows, skipConfirmation, summary, options = {}) {
+  const { reconcile = reconcileLockfile } = options;
   const pkgPath = path.join(process.cwd(), 'package.json');
 
   // @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-SAFE-ONLY
@@ -123,6 +162,19 @@ export async function updatePackages(safeRows, skipConfirmation, summary) {
     const message = err instanceof Error ? err.message : String(err);
     console.error(`Failed to update package.json: ${message}`);
     return summary;
+  }
+
+  // @supports prompts/011.0-DEV-AUTO-UPDATE.md REQ-POST-UPDATE
+  // Reconcile package-lock.json so the project is immediately `npm ci`-installable
+  // (ADR-0021 / P030). Fail loud — re-throw so the CLI exits non-zero rather than
+  // silently shipping a stale lockfile.
+  try {
+    await reconcile();
+    console.log('Reconciled package-lock.json.');
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error(`Failed to reconcile package-lock.json: ${message}`);
+    throw err;
   }
 
   return summary;

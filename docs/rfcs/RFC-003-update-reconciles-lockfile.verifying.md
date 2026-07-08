@@ -1,5 +1,5 @@
 ---
-status: proposed
+status: verifying
 rfc-id: update-reconciles-lockfile
 reported: 2026-07-08
 decision-makers: [Tom Howard]
@@ -11,7 +11,7 @@ stories: []
 
 # RFC-003: `--update` reconciles package-lock.json
 
-**Status**: proposed
+**Status**: verifying
 **Reported**: 2026-07-08
 **Problems**: P030
 **ADRs**: ADR-0021
@@ -58,13 +58,20 @@ incrementally. Implements the decision recorded in ADR-0021.
 
 ## Tasks
 
-- [ ] T1 — RED: failing test — `--update` on a fixture leaves `npm ci
---prefer-frozen-lockfile` passing (currently fails EUSAGE).
-- [ ] T2 — RED: failing test — the reconcile spawns npm with `--ignore-scripts`
-      and `--package-lock-only`; the no-safe-updates path does NOT spawn it.
-- [ ] T3 — GREEN: implement the reconcile spawn in `src/update-packages.js`.
-- [ ] T4 — amend `prompts/011.0-DEV-AUTO-UPDATE.md` (REQ-POST-UPDATE + Story Note).
-- [ ] T5 — surface in README / `--help`; ship the `feat:` release signal.
+- [~] T1 — end-to-end `npm ci --prefer-frozen-lockfile` passing after `--update`:
+  covered indirectly by the deterministic unit tests (T2) plus the auto-update
+  pipeline that dogfoods this exact `npm install --ignore-scripts
+--package-lock-only` reconcile (shipped green this session). A dedicated
+  real-`npm ci` fixture e2e is DEFERRED (slow / network) — noted, not silently
+  dropped.
+- [x] T2 — unit tests: reconcile spawns npm with `--ignore-scripts` +
+      `--package-lock-only`; no-safe-updates path does NOT spawn; fail-loud on
+      npm error (`src/update-packages.reconcile.test.js`, 4 tests).
+- [x] T3 — GREEN: `reconcileLockfile()` + injectable reconcile wired into
+      `updatePackages()` in `src/update-packages.js`.
+- [x] T4 — amended `prompts/011.0-DEV-AUTO-UPDATE.md` (REQ-POST-UPDATE + Story Note).
+- [x] T5 — surfaced in README Options table + example + `bin/dry-aged-deps.js`
+      `--help`; ships as the `feat:` release signal.
 
 ## Related
 

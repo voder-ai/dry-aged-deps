@@ -1,6 +1,6 @@
 # Problem 030: `dry-aged-deps --update` leaves package-lock.json stale, breaking `npm ci` for adopters
 
-**Status**: Open
+**Status**: Verification Pending
 **Reported**: 2026-07-08
 **Priority**: 9 (Medium) — Impact: 3 × Likelihood: 3 — derived at capture from the description per Step 4a
 **Origin**: internal
@@ -38,6 +38,26 @@ Suggested direction (not prescriptive): have `--update` reconcile
 OR at minimum document/warn that the lockfile must be reconciled _incrementally_
 and never via `rm`-and-reinstall.
 
+## RFCs
+
+| RFC     | Status    | Title                                   |
+| ------- | --------- | --------------------------------------- |
+| RFC-003 | verifying | `--update` reconciles package-lock.json |
+
+## Fix Released
+
+Fixed per ADR-0021 / RFC-003 (2026-07-08). `src/update-packages.js` now reconciles
+`package-lock.json` after `--update` writes package.json, by spawning
+`npm install --ignore-scripts --package-lock-only` (incremental, no node_modules
+install, no scripts) — runs only when ≥1 update was applied, fails loud on npm
+error. Post-update projects are immediately installable via
+`npm ci --prefer-frozen-lockfile`. Covered by `src/update-packages.reconcile.test.js`
+(reconcile spawns the right npm args; no-safe-updates path does not spawn; fail-loud
+on error). Spec amended (`prompts/011.0` REQ-POST-UPDATE + Story Note); surfaced in
+README + `--help`. **Release vehicle**: `feat(update): reconcile package-lock.json`.
+Awaiting release + user verification that `dry-aged-deps --update` followed by
+`npm ci` succeeds in a downstream project.
+
 ## Symptoms
 
 - `npm ci --prefer-frozen-lockfile` fails EUSAGE ("out of sync") immediately after `dry-aged-deps --update`, before any dep-related test failure.
@@ -74,9 +94,3 @@ Reconcile the lockfile incrementally after `--update`: `npm install` (no `rm`) o
 - **P028** — `--update` flag/skip un-landable updates. Distinct: P028 is about updates that _cannot_ land (ERESOLVE); P030 is about _landable_ updates that leave an inconsistent lockfile. Sibling hardening of the same command.
 - **P013** — overrides block ignored / vuln mislabelling. Adjacent (both surfaced during the same 2026-07-08 session), different subsystem.
 - Captured via `/wr-itil:capture-problem`; expand at next investigation. Duplicate-check surfaced P001/P008/P017/P028 on keyword overlap — none are the same problem (P028 noted above).
-
-## RFCs
-
-| RFC     | Status   | Title                                   |
-| ------- | -------- | --------------------------------------- |
-| RFC-003 | proposed | `--update` reconciles package-lock.json |
