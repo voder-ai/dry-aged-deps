@@ -11,13 +11,13 @@ Compact rendered index of every ADR's chosen option, confirmation criteria, and 
 
 For deep-dive — creating, evolving, ratifying, or contesting a decision — open the per-ADR file directly. `/wr-architect:create-adr`, `/wr-architect:capture-adr`, and `/wr-architect:review-decisions` all keep the full body in scope. Decision Drivers, Considered Options bodies, Pros and Cons, Consequences narrative, and Reassessment Criteria are intentionally NOT in this routine view — they live in the per-ADR body.
 
-**Total ADRs:** 21 (17 in-force, 4 historical)
+**Total ADRs:** 22 (18 in-force, 4 historical)
 
 ---
 
 ## In-force decisions
 
-_17 ADRs. These are the current rules. The architect agent reads this section first for routine compliance review._
+_18 ADRs. These are the current rules. The architect agent reads this section first for routine compliance review._
 
 ### ADR-0001 — 0001. Use ES Modules for All Code
 
@@ -105,6 +105,13 @@ _17 ADRs. These are the current rules. The architect agent reads this section fi
 **Chosen:** Chosen option: **"Reconcile in `--update`"** (Option 1), selected by the
 **Confirmation:** REQ-POST-UPDATE (prompts/011.0) is amended: post-update reconciles the; A test asserts the reconcile spawns npm with --ignore-scripts and; A test asserts the no-safe-updates path does NOT spawn the reconcile.
 **Related:** ADR-0014, ADR-0017, ADR-0008
+
+### ADR-0022 — 0022. `--update`/`--check` flag and skip un-landable updates via npm-resolver bisect
+
+**Status:** proposed | **Oversight:** confirmed
+**Chosen:** Chosen (maintainer, 2026-07-09, via AskUserQuestion):
+**Confirmation:** A fixture batch with one ERESOLVE-inducing update classifies that update; A non-ERESOLVE npm error during reconcile still fails loud (ADR-0021 preserved).; No code path passes --force / --legacy-peer-deps.; The incompatible-peers surface is additive across table/JSON/XML.
+**Related:** ADR-0021, ADR-0018, ADR-0014, ADR-0002
 
 ---
 
