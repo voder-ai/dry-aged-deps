@@ -11,13 +11,13 @@ Compact rendered index of every ADR's chosen option, confirmation criteria, and 
 
 For deep-dive — creating, evolving, ratifying, or contesting a decision — open the per-ADR file directly. `/wr-architect:create-adr`, `/wr-architect:capture-adr`, and `/wr-architect:review-decisions` all keep the full body in scope. Decision Drivers, Considered Options bodies, Pros and Cons, Consequences narrative, and Reassessment Criteria are intentionally NOT in this routine view — they live in the per-ADR body.
 
-**Total ADRs:** 20 (16 in-force, 4 historical)
+**Total ADRs:** 21 (17 in-force, 4 historical)
 
 ---
 
 ## In-force decisions
 
-_16 ADRs. These are the current rules. The architect agent reads this section first for routine compliance review._
+_17 ADRs. These are the current rules. The architect agent reads this section first for routine compliance review._
 
 ### ADR-0001 — 0001. Use ES Modules for All Code
 
@@ -98,6 +98,13 @@ _16 ADRs. These are the current rules. The architect agent reads this section fi
 
 **Status:** proposed | **Supersedes:** 0015-test-placement-co-location-exception-for-tdd-hook
 **Chosen:** Chosen: **Option 1 (universal co-location for paired tests)**.
+
+### ADR-0021 — 0021. `--update` reconciles package-lock.json via incremental `npm install --package-lock-only`
+
+**Status:** proposed | **Oversight:** unconfirmed
+**Chosen:** Chosen option: **"Reconcile in `--update`"** (Option 1), selected by the
+**Confirmation:** REQ-POST-UPDATE (prompts/011.0) is amended: post-update reconciles the; A test asserts the reconcile spawns npm with --ignore-scripts and; A test asserts the no-safe-updates path does NOT spawn the reconcile.
+**Related:** ADR-0014, ADR-0017, ADR-0008
 
 ---
 
