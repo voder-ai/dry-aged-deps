@@ -8,6 +8,7 @@ import {
   buildThresholdsSection,
   buildExcludedSection,
   buildUnfixableSection,
+  buildIncompatibleSection,
   buildOverridesHygieneSection,
   buildRootEnd,
 } from './xml-formatter-utils.js';
@@ -23,6 +24,7 @@ import {
  * @param {Array<{ name: string, reason: string }>} [params.excluded]
  * @param {Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>} [params.unfixable]
  * @param {Array<{ name: string, pinned: string|null, latest: string|null, ageDays: number|null, reason: string, advisories: Array<{ id: string, severity: string, patchedRange: string|null }>, safeUpgrade: string|null }>} [params.overridesHygiene]
+ * @param {Array<{ name: string, current: string, latest: string, reason: string }>} [params.incompatible]
  * @returns {string} XML string
  * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-XML-SCHEMA REQ-COMPLETE-DATA REQ-SUMMARY-STATS REQ-XML-DECLARATION
  * @supports prompts/015.0-DEV-EXCLUDE-PACKAGES.md REQ-EXCLUDE-OUTPUT
@@ -38,6 +40,7 @@ export function xmlFormatter({
   excluded = [],
   unfixable = [],
   overridesHygiene = [],
+  incompatible = [],
 } = {}) {
   let xml = buildXmlDeclaration();
   xml += buildRootStart(timestamp);
@@ -52,7 +55,7 @@ export function xmlFormatter({
   xml += buildPackagesSection(rows);
   xml += buildSummarySection(summary);
 
-  xml += appendOptionalSections({ thresholds, excluded, unfixable, overridesHygiene });
+  xml += appendOptionalSections({ thresholds, excluded, unfixable, overridesHygiene, incompatible });
   xml += buildRootEnd();
   return xml;
 }
@@ -61,14 +64,20 @@ export function xmlFormatter({
  * Append the four optional XML sections (thresholds, excluded, unfixable,
  * overridesHygiene) via a single iteration so the top-level formatter stays
  * within the project's complexity cap as new additive surfaces are added.
- * @param {{ thresholds?: Object, excluded?: Array<any>, unfixable?: Array<any>, overridesHygiene?: Array<any> }} params
+ * @param {{ thresholds?: Object, excluded?: Array<any>, unfixable?: Array<any>, overridesHygiene?: Array<any>, incompatible?: Array<any> }} params
  * @returns {string}
  * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-XML-SCHEMA
  * @supports prompts/015.0-DEV-EXCLUDE-PACKAGES.md REQ-EXCLUDE-OUTPUT
  * @supports prompts/016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES.md REQ-UNFIXABLE-XML
  * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-XML
  */
-function appendOptionalSections({ thresholds, excluded = [], unfixable = [], overridesHygiene = [] }) {
+function appendOptionalSections({
+  thresholds,
+  excluded = [],
+  unfixable = [],
+  overridesHygiene = [],
+  incompatible = [],
+}) {
   // @ts-ignore - thresholds shape validated by caller
   const hasThresholds = Boolean(thresholds && (thresholds.prod || thresholds.dev));
   return [
@@ -76,5 +85,6 @@ function appendOptionalSections({ thresholds, excluded = [], unfixable = [], ove
     excluded.length > 0 ? buildExcludedSection(excluded) : '',
     unfixable.length > 0 ? buildUnfixableSection(unfixable) : '',
     overridesHygiene.length > 0 ? buildOverridesHygieneSection(overridesHygiene) : '',
+    incompatible.length > 0 ? buildIncompatibleSection(incompatible) : '',
   ].join('');
 }

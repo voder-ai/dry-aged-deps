@@ -15,15 +15,18 @@ An individual maintainer responsible for the day-to-day health of an npm project
 
 ### Proposed
 
-| ID       | Job                                                            | File                                                                                                          |
-| -------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| JTBD-001 | See which dependencies have safe updates available             | [JTBD-001-see-safe-updates.proposed.md](project-maintainer/JTBD-001-see-safe-updates.proposed.md)             |
-| JTBD-002 | Apply safe updates without manually picking versions           | [JTBD-002-apply-safe-updates.proposed.md](project-maintainer/JTBD-002-apply-safe-updates.proposed.md)         |
-| JTBD-003 | Tighten the age threshold for a higher-risk project            | [JTBD-003-tighten-age-policy.proposed.md](project-maintainer/JTBD-003-tighten-age-policy.proposed.md)         |
-| JTBD-004 | Skip specific packages that need different handling            | [JTBD-004-exclude-packages.proposed.md](project-maintainer/JTBD-004-exclude-packages.proposed.md)             |
-| JTBD-005 | Get a familiar npm-outdated-style report                       | [JTBD-005-familiar-output-format.proposed.md](project-maintainer/JTBD-005-familiar-output-format.proposed.md) |
-| JTBD-006 | Trust that the default policy is sensibly safe                 | [JTBD-006-trust-default-policy.proposed.md](project-maintainer/JTBD-006-trust-default-policy.proposed.md)     |
-| JTBD-007 | Save and reuse my project's filtering policy via a config file | [JTBD-007-project-local-config.proposed.md](project-maintainer/JTBD-007-project-local-config.proposed.md)     |
+| ID       | Job                                                                          | File                                                                                                                        |
+| -------- | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| JTBD-001 | See which dependencies have safe updates available                           | [JTBD-001-see-safe-updates.proposed.md](project-maintainer/JTBD-001-see-safe-updates.proposed.md)                           |
+| JTBD-002 | Apply safe updates without manually picking versions                         | [JTBD-002-apply-safe-updates.proposed.md](project-maintainer/JTBD-002-apply-safe-updates.proposed.md)                       |
+| JTBD-003 | Tighten the age threshold for a higher-risk project                          | [JTBD-003-tighten-age-policy.proposed.md](project-maintainer/JTBD-003-tighten-age-policy.proposed.md)                       |
+| JTBD-004 | Skip specific packages that need different handling                          | [JTBD-004-exclude-packages.proposed.md](project-maintainer/JTBD-004-exclude-packages.proposed.md)                           |
+| JTBD-005 | Get a familiar npm-outdated-style report                                     | [JTBD-005-familiar-output-format.proposed.md](project-maintainer/JTBD-005-familiar-output-format.proposed.md)               |
+| JTBD-006 | Trust that the default policy is sensibly safe                               | [JTBD-006-trust-default-policy.proposed.md](project-maintainer/JTBD-006-trust-default-policy.proposed.md)                   |
+| JTBD-007 | Save and reuse my project's filtering policy via a config file               | [JTBD-007-project-local-config.proposed.md](project-maintainer/JTBD-007-project-local-config.proposed.md)                   |
+| JTBD-008 | Inspect what an automated update landed and why                              | [JTBD-008-inspect-automated-landings.proposed.md](project-maintainer/JTBD-008-inspect-automated-landings.proposed.md)       |
+| JTBD-009 | See vulnerabilities I can't yet fix so I can plan mitigation                 | [JTBD-009-see-unfixable-vulnerabilities.proposed.md](project-maintainer/JTBD-009-see-unfixable-vulnerabilities.proposed.md) |
+| JTBD-010 | See safe updates that can't currently land so I can plan a manual resolution | [JTBD-010-see-un-landable-updates.proposed.md](project-maintainer/JTBD-010-see-un-landable-updates.proposed.md)             |
 
 ## CI/Automation Engineer
 

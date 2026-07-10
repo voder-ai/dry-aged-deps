@@ -5,8 +5,8 @@ reported: 2026-07-09
 decision-makers: [Tom Howard]
 problems: [P028]
 adrs: [ADR-0022]
-jtbd: []
-stories: []
+jtbd: [JTBD-104, JTBD-106, JTBD-100, JTBD-002, JTBD-005, JTBD-010]
+stories: [019.0-DEV-FLAG-UN-LANDABLE-UPDATES]
 ---
 
 # RFC-004: flag and skip un-landable updates
@@ -15,7 +15,7 @@ stories: []
 **Reported**: 2026-07-09
 **Problems**: P028
 **ADRs**: ADR-0022
-**JTBD**: (deferred — cited JTBD-104 / JTBD-106 / JTBD-002 unratified-cite deferral per the RFC-001 precedent.)
+**JTBD**: JTBD-010 (maintainer surface — see un-landable updates), JTBD-104 / JTBD-106 / JTBD-100 (CI path), JTBD-002 (--update), JTBD-005 (familiar output). All ratified.
 
 ## Summary
 

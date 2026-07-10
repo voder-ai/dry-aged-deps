@@ -45,6 +45,7 @@ function printHelp() {
     '  --config-file=<file>    Path to JSON config file (default: .dry-aged-deps.json). CLI flags override config file values'
   );
   console.log('  --no-overrides-hygiene  Disable the package.json overrides hygiene surface (default: on)');
+  console.log('  --no-landable-check     Disable the peer-graph landability check (default: on)');
   console.log('');
   console.log('Examples of invalid option error messages:');
   console.log('  $ dry-aged-deps --json');

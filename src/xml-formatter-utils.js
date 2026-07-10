@@ -280,6 +280,23 @@ export function buildUnfixableSection(unfixable) {
 }
 
 /**
+ * Build the `<incompatible>` section: safe, mature updates skipped because their
+ * peer graph won't resolve without --force (P028 / ADR-0022). Additive + only
+ * emitted when non-empty (ADR-0002 schema additivity).
+ * @param {Array<{ name: string, current: string, latest: string, reason: string }>} incompatible
+ * @returns {string}
+ * @supports prompts/019.0-DEV-FLAG-UN-LANDABLE-UPDATES.md REQ-UNLANDABLE-REASON
+ */
+export function buildIncompatibleSection(incompatible) {
+  let xml = '  <incompatible>\n';
+  for (const { name, current, latest, reason } of incompatible) {
+    xml += `    <update name="${escapeXml(name)}" current="${escapeXml(current)}" latest="${escapeXml(latest)}" reason="${escapeXml(reason)}"/>\n`;
+  }
+  xml += '  </incompatible>\n';
+  return xml;
+}
+
+/**
  * Render a nullable scalar as an attribute value. Null/undefined collapses
  * to the empty string so XML never carries the literal text `null`.
  * @param {unknown} value

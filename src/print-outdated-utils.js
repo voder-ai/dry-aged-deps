@@ -24,7 +24,7 @@ import { severityRank } from './find-unfixable-vulns.js';
  * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-CLI-FLAG
  * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-JSON
  * @supports prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md REQ-EXPOSURE-JSON REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED
- * @param {{ rows: Array<[string, string, string, string, number|string, string]>, summary: FilterSummary, thresholds: Thresholds, vulnMap: Map<string, object>, filterReasonMap: Map<string, string>, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>, overridesHygiene?: Array<object>, viaExposureModifierByPackage?: Map<string, { severity: string, baseSoakDays: number, effectiveSoakDays: number, advisories: Array<string> }> }} options
+ * @param {{ rows: Array<[string, string, string, string, number|string, string]>, summary: FilterSummary, thresholds: Thresholds, vulnMap: Map<string, object>, filterReasonMap: Map<string, string>, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>, overridesHygiene?: Array<object>, incompatible?: Array<{ name: string, current: string, latest: string, reason: string }>, viaExposureModifierByPackage?: Map<string, { severity: string, baseSoakDays: number, effectiveSoakDays: number, advisories: Array<string> }> }} options
  * @returns {FilterSummary} Summary object returned from filtering.
  */
 export function handleJsonOutput({
@@ -36,12 +36,15 @@ export function handleJsonOutput({
   excludeMap = {},
   unfixable = [],
   overridesHygiene = [],
+  incompatible = [],
   viaExposureModifierByPackage,
 }) {
   const timestamp = getTimestamp();
   const items = prepareJsonItems(rows, thresholds, vulnMap, filterReasonMap, viaExposureModifierByPackage);
   const excluded = Object.entries(excludeMap).map(([name, reason]) => ({ name, reason }));
-  console.log(jsonFormatter({ rows: items, summary, thresholds, timestamp, excluded, unfixable, overridesHygiene }));
+  console.log(
+    jsonFormatter({ rows: items, summary, thresholds, timestamp, excluded, unfixable, overridesHygiene, incompatible })
+  );
   return summary;
 }
 
@@ -50,7 +53,7 @@ export function handleJsonOutput({
  * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-CLI-FLAG
  * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-XML
  * @supports prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md REQ-EXPOSURE-XML REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED
- * @param {{ rows: Array<[string, string, string, string, number|string, string]>, summary: FilterSummary, thresholds: Thresholds, vulnMap: Map<string, object>, filterReasonMap: Map<string, string>, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>, overridesHygiene?: Array<object>, viaExposureModifierByPackage?: Map<string, { severity: string, baseSoakDays: number, effectiveSoakDays: number, advisories: Array<string> }> }} options
+ * @param {{ rows: Array<[string, string, string, string, number|string, string]>, summary: FilterSummary, thresholds: Thresholds, vulnMap: Map<string, object>, filterReasonMap: Map<string, string>, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>, overridesHygiene?: Array<object>, incompatible?: Array<{ name: string, current: string, latest: string, reason: string }>, viaExposureModifierByPackage?: Map<string, { severity: string, baseSoakDays: number, effectiveSoakDays: number, advisories: Array<string> }> }} options
  * @returns {FilterSummary} Summary object returned from filtering.
  */
 export function handleXmlOutput({
@@ -62,12 +65,15 @@ export function handleXmlOutput({
   excludeMap = {},
   unfixable = [],
   overridesHygiene = [],
+  incompatible = [],
   viaExposureModifierByPackage,
 }) {
   const timestamp = getTimestamp();
   const items = prepareJsonItems(rows, thresholds, vulnMap, filterReasonMap, viaExposureModifierByPackage);
   const excluded = Object.entries(excludeMap).map(([name, reason]) => ({ name, reason }));
-  console.log(xmlFormatter({ rows: items, summary, thresholds, timestamp, excluded, unfixable, overridesHygiene }));
+  console.log(
+    xmlFormatter({ rows: items, summary, thresholds, timestamp, excluded, unfixable, overridesHygiene, incompatible })
+  );
   return summary;
 }
 
@@ -168,6 +174,24 @@ export function printOverridesHygieneSection(overridesHygiene) {
 }
 
 /**
+ * Print the "Updates skipped — incompatible peer dependencies" section, if any.
+ * Mirrors the unfixable / overrides precedent (appended section, aligned
+ * columns, skip-when-empty). These are safe, mature updates that npm's resolver
+ * cannot land without --force (P028 / ADR-0022), surfaced so the maintainer
+ * knows WHY they were withheld.
+ * @param {Array<{ name: string, current: string, latest: string, reason: string }>} incompatible
+ * @returns {void}
+ * @supports prompts/019.0-DEV-FLAG-UN-LANDABLE-UPDATES.md REQ-UNLANDABLE-REASON
+ */
+export function printIncompatibleSection(incompatible) {
+  if (!incompatible || incompatible.length === 0) return;
+  console.log('');
+  console.log('Updates skipped (incompatible peer dependencies):');
+  const rows = incompatible.map((f) => [cell(f.name), cell(f.current), cell(f.latest), cell(f.reason)]);
+  printAlignedTable(['Name', 'Current', 'Latest', 'Reason'], rows);
+}
+
+/**
  * Render a `safeRow` tuple for table output. When the row's name appears in
  * the exposure-modifier annotation map, append ` *` to the `latest` column
  * (row index 3) per REQ-EXPOSURE-REPORT-MODIFIED. Default-OFF path emits the
@@ -225,7 +249,7 @@ function printExposureModifierFootnotes(safeRows, annotations) {
  * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
  * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-TABLE
  * @supports prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md REQ-EXPOSURE-REPORT-MODIFIED REQ-EXPOSURE-REASON-VOCABULARY REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED
- * @param {{ safeRows: Array<Array>, matureRows: Array<Array>, summary: FilterSummary, prodMinAge: number, devMinAge: number, returnSummary: boolean, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string }>, overridesHygiene?: Array<object>, viaExposureModifierByPackage?: Map<string, { severity: string, baseSoakDays: number, effectiveSoakDays: number, advisories: Array<string> }> }} options
+ * @param {{ safeRows: Array<Array>, matureRows: Array<Array>, summary: FilterSummary, prodMinAge: number, devMinAge: number, returnSummary: boolean, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string }>, overridesHygiene?: Array<object>, incompatible?: Array<{ name: string, current: string, latest: string, reason: string }>, viaExposureModifierByPackage?: Map<string, { severity: string, baseSoakDays: number, effectiveSoakDays: number, advisories: Array<string> }> }} options
  * @returns {FilterSummary|undefined} Summary when returnSummary is true or undefined otherwise.
  */
 export function handleTableOutput({
@@ -238,6 +262,7 @@ export function handleTableOutput({
   excludeMap = {},
   unfixable = [],
   overridesHygiene = [],
+  incompatible = [],
   viaExposureModifierByPackage,
 }) {
   // @supports prompts/015.0-DEV-EXCLUDE-PACKAGES.md REQ-EXCLUDE-OUTPUT
@@ -256,6 +281,7 @@ export function handleTableOutput({
     }
     printUnfixableSection(unfixable);
     printOverridesHygieneSection(overridesHygiene);
+    printIncompatibleSection(incompatible);
     // @supports prompts/013.0-DEV-CHECK-MODE.md REQ-CHECK-FLAG
     if (returnSummary) return summary; // returns {FilterSummary} when returnSummary is true
     return undefined; // returns undefined when returnSummary is false
@@ -271,6 +297,7 @@ export function handleTableOutput({
     }
     printUnfixableSection(unfixable);
     printOverridesHygieneSection(overridesHygiene);
+    printIncompatibleSection(incompatible);
     // @supports prompts/013.0-DEV-CHECK-MODE.md REQ-CHECK-FLAG
     if (returnSummary) return summary; // returns {FilterSummary} when returnSummary is true
     return undefined; // returns undefined when returnSummary is false
@@ -288,6 +315,7 @@ export function handleTableOutput({
   }
   printUnfixableSection(unfixable);
   printOverridesHygieneSection(overridesHygiene);
+  printIncompatibleSection(incompatible);
   // @supports prompts/013.0-DEV-CHECK-MODE.md REQ-CHECK-FLAG
   if (returnSummary) return summary; // returns {FilterSummary} when returnSummary is true
   return undefined; // returns undefined when returnSummary is false

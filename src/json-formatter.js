@@ -12,7 +12,7 @@
 /**
  * Format data into JSON string
  * Supports legacy array rows and full JSON mode object rows
- * @param {{ rows: Array<Array<any> | Object>, summary: { totalOutdated: number, safeUpdates: number, filteredByAge: number, filteredBySecurity: number }, thresholds?: { prod: { minAge: number, minSeverity: string }, dev: { minAge: number, minSeverity: string } }, timestamp: string, excluded?: Array<{ name: string, reason: string }>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>, overridesHygiene?: Array<{ name: string, pinned: string|null, latest: string|null, ageDays: number|null, reason: string, advisories: Array<{ id: string, severity: string, patchedRange: string|null }>, safeUpgrade: string|null }> }} params
+ * @param {{ rows: Array<Array<any> | Object>, summary: { totalOutdated: number, safeUpdates: number, filteredByAge: number, filteredBySecurity: number }, thresholds?: { prod: { minAge: number, minSeverity: string }, dev: { minAge: number, minSeverity: string } }, timestamp: string, excluded?: Array<{ name: string, reason: string }>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>, overridesHygiene?: Array<{ name: string, pinned: string|null, latest: string|null, ageDays: number|null, reason: string, advisories: Array<{ id: string, severity: string, patchedRange: string|null }>, safeUpgrade: string|null }>, incompatible?: Array<{ name: string, current: string, latest: string, reason: string }> }} params
  * @returns {string} JSON string
  * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-JSON-SCHEMA REQ-COMPLETE-DATA REQ-SUMMARY-STATS
  * @supports prompts/015.0-DEV-EXCLUDE-PACKAGES.md REQ-EXCLUDE-OUTPUT
@@ -27,6 +27,7 @@ export function jsonFormatter({
   excluded = [],
   unfixable = [],
   overridesHygiene = [],
+  incompatible = [],
 }) {
   const packages = rows.map((row) => {
     // @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-JSON-SCHEMA
@@ -100,6 +101,13 @@ export function jsonFormatter({
   // shape-stable and lets jq surfaces test `.overridesHygiene // empty` cleanly.
   if (overridesHygiene.length > 0) {
     output.overridesHygiene = overridesHygiene;
+  }
+
+  // @supports prompts/019.0-DEV-FLAG-UN-LANDABLE-UPDATES.md REQ-UNLANDABLE-REASON
+  // Additive + omitted-when-empty (ADR-0022 / ADR-0002 schema additivity):
+  // safe updates skipped because their peer graph won't resolve (P028).
+  if (incompatible.length > 0) {
+    output.incompatible = incompatible;
   }
 
   // @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-SUMMARY-STATS

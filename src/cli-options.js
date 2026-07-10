@@ -59,11 +59,27 @@ function parseExposureAwareSoakOption(args, config) {
 }
 
 /**
- * Bundle the surface-flag parsers (unfixable, overrides-hygiene, exposure-aware-soak)
- * so parseOptions stays within the max-lines-per-function cap.
+ * Derive the landability-check enable flag from CLI args + config. Mirrors
+ * parseOverridesHygieneOption (default-ON): the CLI probes whether safe updates
+ * can land and flags un-landable ones (P028 / ADR-0022). The programmatic
+ * printOutdated API stays default-OFF (it requires `landableCheck === true`), so
+ * only the CLI path pays the npm-resolver cost.
+ * @param {string[]} args - CLI arguments.
+ * @param {Record<string, any>} config - Loaded config file object.
+ * @returns {boolean}
+ * @supports prompts/019.0-DEV-FLAG-UN-LANDABLE-UPDATES.md REQ-UNLANDABLE-DETECT
+ */
+function parseLandableCheckOption(args, config) {
+  // On by default; config `landable-check: false` or `--no-landable-check` disables.
+  return config['landable-check'] !== false && !args.includes('--no-landable-check');
+}
+
+/**
+ * Bundle the surface-flag parsers (unfixable, overrides-hygiene, exposure-aware-soak,
+ * landable-check) so parseOptions stays within the max-lines-per-function cap.
  * @param {string[]} args
  * @param {Record<string, any>} config
- * @returns {{ unfixable: boolean, unfixableLevel: string, overridesHygiene: boolean, exposureAwareSoak: boolean }}
+ * @returns {{ unfixable: boolean, unfixableLevel: string, overridesHygiene: boolean, exposureAwareSoak: boolean, landableCheck: boolean }}
  */
 function parseSurfaceFlags(args, config) {
   const { unfixable, unfixableLevel } = parseUnfixableOptions(args, config);
@@ -72,6 +88,7 @@ function parseSurfaceFlags(args, config) {
     unfixableLevel,
     overridesHygiene: parseOverridesHygieneOption(args, config),
     exposureAwareSoak: parseExposureAwareSoakOption(args, config),
+    landableCheck: parseLandableCheckOption(args, config),
   };
 }
 
@@ -135,6 +152,7 @@ export function parseOptions(argv) {
     '--no-overrides-hygiene',
     '--exposure-aware-soak',
     '--no-exposure-aware-soak',
+    '--no-landable-check',
     '--help',
     '-h',
     '--version',
@@ -194,8 +212,6 @@ export function parseOptions(argv) {
   const prodMinSeverity = parseProdSeverityFlag(args, defaultProdMinSeverity, validSeverities);
   const devMinSeverity = parseDevSeverityFlag(args, defaultDevMinSeverity, validSeverities);
 
-  const { unfixable, unfixableLevel, overridesHygiene, exposureAwareSoak } = parseSurfaceFlags(args, config);
-
   return {
     format,
     prodMinAge,
@@ -206,9 +222,6 @@ export function parseOptions(argv) {
     skipConfirmation,
     returnSummary: checkMode,
     exclude: config.exclude,
-    unfixable,
-    unfixableLevel,
-    overridesHygiene,
-    exposureAwareSoak,
+    ...parseSurfaceFlags(args, config),
   };
 }

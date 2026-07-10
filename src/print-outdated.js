@@ -9,6 +9,7 @@ import { applyFilters } from './apply-filters.js';
 import { handleJsonOutput, handleXmlOutput, handleTableOutput } from './print-outdated-handlers.js';
 import { printUnfixableSection, printOverridesHygieneSection } from './print-outdated-utils.js';
 import { computeUnfixable } from './compute-unfixable.js';
+import { computeUnlandable as defaultComputeUnlandable } from './compute-unlandable.js';
 import { runOverridesHygiene as defaultRunOverridesHygiene } from './overrides-hygiene.js';
 import { runProjectAudit as defaultRunProjectAudit } from './run-project-audit.js';
 import { updatePackages } from './update-packages.js';
@@ -373,9 +374,63 @@ function buildViaExposureModifierAnnotations({ safeRows, exposureMetaByPackage, 
 }
 
 /**
+ * Resolve the three informational surfaces (unfixable vulns, overrides hygiene,
+ * un-landable updates) and the landable safe-row subset in one place, keeping
+ * printOutdated within the line cap. `unfixable` is computed from the FULL safe
+ * set (un-landable packages have a safe version, so must not be mislabelled),
+ * then landability splits that set. Mutates `summary` (overridesWithSafeUpgrade +
+ * the landable safeUpdates count).
+ * @param {{ safeRows: Array, packageJson: object, filteredData: Record<string, any>, auditData: object, options: object, summary: object }} ctx
+ * @returns {Promise<{ unfixable: Array<object>, overridesHygiene: Array<object>, incompatible: Array<object>, safeRows: Array }>}
+ * @supports prompts/016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES.md REQ-UNFIXABLE-DETECT
+ * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-PIPELINE-WIRE REQ-OVERRIDES-EXIT-CODE-LOGIC
+ * @supports prompts/019.0-DEV-FLAG-UN-LANDABLE-UPDATES.md REQ-UNLANDABLE-DETECT REQ-UNLANDABLE-ISOLATE
+ */
+async function resolveSurfaces({ safeRows, packageJson, filteredData, auditData, options, summary }) {
+  const updateMode = options.updateMode === true;
+  const unfixable = await resolveUnfixable(new Set(safeRows.map((row) => row[0])), options, updateMode, auditData);
+  const overridesHygiene = await resolveOverridesHygiene({
+    packageJson,
+    outdatedData: filteredData,
+    auditData,
+    options,
+  });
+  /** @type {any} */ (summary).overridesWithSafeUpgrade = countOverridesWithSafeUpgrade(overridesHygiene);
+  const { safeRows: landableRows, incompatible } = await resolveLandability(safeRows, packageJson, options, summary);
+  return { unfixable, overridesHygiene, incompatible, safeRows: landableRows };
+}
+
+/**
+ * Split the safe-update rows into landable vs un-landable via npm's resolver
+ * (P028 / ADR-0022). Default-OFF programmatically (`landableCheck !== true`) so
+ * embedders and unit tests never shell out to npm; parseOptions turns it on for
+ * the CLI. When on, un-landable rows leave `safeRows` (so `--check`'s exit-1
+ * count and `--update`'s applied set both exclude them — ADR-0014 coherence) and
+ * become the `incompatible` surface.
+ *
+ * Also recomputes `summary.safeUpdates` to the landable count so `--check`'s
+ * exit-1 signal matches what `--update` applies (ADR-0014 coherence).
+ * @param {Array<[string, string, string, string, number|string, string]>} safeRows
+ * @param {object} packageJson - loaded package.json (peer graph resolves against the full manifest)
+ * @param {{ landableCheck?: boolean, computeUnlandable?: function }} options
+ * @param {{ safeUpdates: number }} summary - mutated in place with the landable count
+ * @returns {Promise<{ safeRows: Array, incompatible: Array<{ name: string, current: string, latest: string, reason: string }> }>}
+ * @supports prompts/019.0-DEV-FLAG-UN-LANDABLE-UPDATES.md REQ-UNLANDABLE-DETECT REQ-UNLANDABLE-ISOLATE
+ */
+async function resolveLandability(safeRows, packageJson, options, summary) {
+  if (options.landableCheck !== true || safeRows.length === 0) {
+    return { safeRows, incompatible: [] };
+  }
+  const compute = options.computeUnlandable || defaultComputeUnlandable;
+  const { landable, unlandable } = await compute(safeRows, packageJson);
+  summary.safeUpdates = landable.length;
+  return { safeRows: landable, incompatible: unlandable };
+}
+
+/**
  * Print outdated dependencies information with age
  * @param {Record<string, { current: string; wanted: string; latest: string }>} data
- * @param {{ fetchVersionTimes?: function, calculateAgeInDays?: function, checkVulnerabilities?: function, format?: string, prodMinAge?: number, devMinAge?: number, prodMinSeverity?: string, devMinSeverity?: string, returnSummary?: boolean, updateMode?: boolean, skipConfirmation?: boolean, exclude?: Record<string, string>, unfixable?: boolean, unfixableLevel?: string, overridesHygiene?: boolean, exposureAwareSoak?: boolean, runProjectAudit?: () => Promise<{ vulnerabilities: Record<string, object> }>, runOverridesHygieneFn?: function }} [options]
+ * @param {{ fetchVersionTimes?: function, calculateAgeInDays?: function, checkVulnerabilities?: function, format?: string, prodMinAge?: number, devMinAge?: number, prodMinSeverity?: string, devMinSeverity?: string, returnSummary?: boolean, updateMode?: boolean, skipConfirmation?: boolean, exclude?: Record<string, string>, unfixable?: boolean, unfixableLevel?: string, overridesHygiene?: boolean, exposureAwareSoak?: boolean, runProjectAudit?: () => Promise<{ vulnerabilities: Record<string, object> }>, runOverridesHygieneFn?: function, landableCheck?: boolean, computeUnlandable?: function }} [options]
  * @param {object} [options] - Options object containing CLI and function overrides.
  * @returns {Promise<Object|undefined>} summary for xml mode or if returnSummary is true
  * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-NPM-COMMAND
@@ -445,10 +500,7 @@ export async function printOutdated(data, options = {}) {
     format,
   });
 
-  // RFC-002 T4 + T5: opt-in exposure-aware-soak modifier + per-row annotation.
-  // Default-OFF leaves exposureModifierByPackage undefined (filterByAge runs
-  // unconditional path) and produces an empty annotation Map (formatters render
-  // byte-identical legacy output) per REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED.
+  // RFC-002 T4+T5: opt-in exposure-aware-soak modifier + per-row annotation (default-OFF is byte-identical).
   const { exposureModifierByPackage, exposureMetaByPackage } = resolveExposureMaps(options, auditData);
 
   // Apply filters
@@ -469,40 +521,23 @@ export async function printOutdated(data, options = {}) {
     devMinAge,
   });
 
-  // @supports prompts/016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES.md REQ-UNFIXABLE-DETECT
-  // The absence of a package from safeRows is the unfixable signal (ADR-0018).
-  // resolveUnfixable returns [] (and skips the audit) in update mode.
-  const unfixable = await resolveUnfixable(new Set(safeRows.map((row) => row[0])), options, updateMode, auditData);
-
-  // @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-PIPELINE-WIRE REQ-OVERRIDES-TABLE REQ-OVERRIDES-JSON REQ-OVERRIDES-XML
-  // T5: capture the findings and thread them into each formatter handler so
-  // the additive section renders in table / JSON / XML output.
-  const overridesHygiene = await resolveOverridesHygiene({
-    packageJson,
-    outdatedData: filteredData,
-    auditData,
-    options,
-  });
-
-  // @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-EXIT-CODE-LOGIC
-  // T6: surface override-pin safe-upgrade count in the summary so the CLI can
-  // OR it into the existing safeUpdates exit-1 trigger per RFC-001 Scope item 7.
-  /** @type {any} */ (summary).overridesWithSafeUpgrade = countOverridesWithSafeUpgrade(overridesHygiene);
+  const surfaces = await resolveSurfaces({ safeRows, packageJson, filteredData, auditData, options, summary });
 
   return dispatchFormatter({
     format,
     updateMode,
     skipConfirmation,
     rows,
-    safeRows,
+    safeRows: surfaces.safeRows,
     matureRows,
     summary,
     thresholds,
     vulnMap,
     filterReasonMap,
     excludeMap,
-    unfixable,
-    overridesHygiene,
+    unfixable: surfaces.unfixable,
+    overridesHygiene: surfaces.overridesHygiene,
+    incompatible: surfaces.incompatible,
     viaExposureModifierByPackage,
     prodMinAge,
     devMinAge,
@@ -535,6 +570,7 @@ async function dispatchFormatter(ctx) {
     excludeMap,
     unfixable,
     overridesHygiene,
+    incompatible,
     viaExposureModifierByPackage,
     prodMinAge,
     devMinAge,
@@ -548,6 +584,7 @@ async function dispatchFormatter(ctx) {
     excludeMap,
     unfixable,
     overridesHygiene,
+    incompatible,
     viaExposureModifierByPackage,
   };
   if (format === 'json') return handleJsonOutput({ rows: safeRows, ...sharedOpts });
@@ -563,6 +600,7 @@ async function dispatchFormatter(ctx) {
     excludeMap,
     unfixable,
     overridesHygiene,
+    incompatible,
     viaExposureModifierByPackage,
   });
 }

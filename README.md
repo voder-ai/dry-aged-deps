@@ -22,7 +22,7 @@ You need time to let the community kick the tires, spot the issues, and validate
 
 Think of it as `npm outdated` with a patience and a security guard.
 
-**What's new**: opt-in [exposure-aware soak](#exposure-aware-soak) shortens the per-package maturity window when you are sitting on a Critical or High `npm audit` exposure — pull fixes sooner without manually overriding `--min-age=0`.
+**What's new**: [un-landable updates](#un-landable-updates) are now flagged and skipped — a safe update whose peer graph won't resolve (an npm `ERESOLVE`) no longer poisons the rest of the batch, and surfaces with reason `incompatible-peers` instead.
 
 ## 🚀 Getting Started
 
@@ -63,6 +63,7 @@ dry-aged-deps
 | -y, --yes               | Skip confirmation prompts (assume yes)                                                                                                                                                          |
 | --no-overrides-hygiene  | Disable the package.json overrides hygiene surface (default: on). See [Overrides hygiene](#overrides-hygiene) below.                                                                            |
 | --exposure-aware-soak   | Enable exposure-aware soak: shorten the per-package maturity window under Critical/High current vuln exposure (default: off). See [Exposure-aware soak](#exposure-aware-soak) below.            |
+| --no-landable-check     | Disable the landability check (default: on). See [Un-landable updates](#un-landable-updates) below.                                                                                             |
 
 ### Examples
 
@@ -190,6 +191,12 @@ jobs:
 ### Overrides hygiene
 
 `dry-aged-deps` parses the `package.json` `overrides` block on every run (default on; `--no-overrides-hygiene` to opt out). Each pinned override is aged against the npm registry and cross-referenced against `npm audit` advisory ranges. Findings render in the table / JSON / XML outputs under `Override hygiene` / `overridesHygiene` / `<overridesHygiene>`. A finding with a non-null `safeUpgrade` field counts toward the `--check` exit-1 trigger (above); findings without a safe upgrade target are informational.
+
+### Un-landable updates
+
+Some safe, mature updates cannot actually be installed: the package's peer-dependency graph won't resolve without `npm install --force` / `--legacy-peer-deps` (an npm `ERESOLVE`), usually because another dependency is too stale to declare a compatible peer range. `dry-aged-deps` checks landability on every run (default on; `--no-landable-check` to opt out) by resolving the prospective update set with npm's own resolver, and it **never** passes `--force`.
+
+An un-landable update is flagged and skipped rather than attempted: it drops out of the safe-update set (so it does not count toward the `--check` exit-1 trigger, keeping `--check` and `--update` in agreement), and the rest of the batch still lands — one un-resolvable peer no longer poisons every other update. Skipped updates surface as a separate section in the table (`Updates skipped (incompatible peer dependencies)`), JSON (`incompatible`), and XML (`<incompatible>`), each with reason `incompatible-peers`, so you can plan a manual resolution (bump the blocking peer, or replace an unmaintained dependency). The landability probe runs `npm install --ignore-scripts --package-lock-only` against a copy of your manifest; on a batch that resolves cleanly it adds one resolve step, and it only bisects to isolate a culprit when a batch actually fails.
 
 ### Exposure-aware soak
 
