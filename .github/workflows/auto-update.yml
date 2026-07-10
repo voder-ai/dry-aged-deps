@@ -113,7 +113,7 @@ jobs:
               else .
               end
               | if type == "array" then . else [.] end
-              | map("\(.package // .name)@\(.safeUpdate // .latestSafe // .target)")
+              | map("\(.package // .name)@\(.latest)")
               | sort
               | join("\n")
             ' updates.json | sha256sum | cut -c1-16)
@@ -190,7 +190,7 @@ jobs:
               else .
               end
               | if type == "array" then .[] else . end
-              | select((.severity // "none") != "none")
+              | select((.vulnerabilities.maxSeverity // "none") != "none")
             ' updates.json > /dev/null 2>&1; then
             echo "type=fix(deps)" >> "$GITHUB_OUTPUT"
             echo "Security-relevant update detected; using fix(deps):"
@@ -205,7 +205,11 @@ jobs:
 
       - name: Normalize lockfile after update
         if: steps.skip.outputs.proceed == 'true'
-        # Ensures check:lockfile (part of prepush) sees a canonical lockfile.
+        # Belt-and-braces: as of P030 / ADR-0021, `--update` already reconciles
+        # package-lock.json itself (via this same incremental command), so this
+        # step is normally a no-op. ADR-0021 §Related keeps it as defence-in-depth
+        # (it is NOT removed by that ADR) — it guarantees check:lockfile (part of
+        # prepush) sees a canonical lockfile even if the tool's reconcile regresses.
         run: npm install --ignore-scripts --package-lock-only
 
       - name: Configure git identity
@@ -238,7 +242,7 @@ jobs:
               else .
               end
               | if type == "array" then . else [.] end
-              | map("- \(.package // .name): \(.current // .currentVersion) → \(.safeUpdate // .latestSafe // .target) (severity \(.severity // "none"))")
+              | map("- \(.package // .name): \(.current // .currentVersion) → \(.latest) (severity \(.vulnerabilities.maxSeverity // "none"))")
               | join("\n")
             ' updates.json)
           git commit -m "${{ steps.commit_type.outputs.type }}: update safe dependencies
@@ -622,7 +626,7 @@ jobs:
               else .
               end
               | if type == "array" then . else [.] end
-              | map("- **\(.package // .name)**: \(.current // .currentVersion) → \(.safeUpdate // .latestSafe // .target) (age \(.ageInDays // .age // "?")d, severity \(.severity // "none"))")
+              | map("- **\(.package // .name)**: \(.current // .currentVersion) → \(.latest) (age \(.ageInDays // .age // "?")d, severity \(.vulnerabilities.maxSeverity // "none"))")
               | join("\n")
             ' updates.json)
 
@@ -640,6 +644,23 @@ jobs:
 
           $UNFIXABLE_ROWS
           UNFIXEOF
+          )
+          fi
+
+          # JTBD-010 / ADR-0022: surface safe updates that could NOT land (their
+          # peer graph won't resolve without --force) so the maintainer sees them
+          # on the auto-update PR and can plan a manual resolution.
+          INCOMPAT_ROWS=$(jq -r '(.incompatible // []) | map("- **\(.name)**: \(.current) → \(.latest) — \(.reason)") | join("\n")' updates.json)
+          INCOMPAT_BLOCK=""
+          if [ -n "$INCOMPAT_ROWS" ]; then
+            INCOMPAT_BLOCK=$(cat <<INCOMPATEOF
+
+          ## Updates skipped (incompatible peer dependencies)
+
+          These safe, mature updates could not land — their peer-dependency graph won't resolve without \`--force\` (an npm ERESOLVE). They are informational and do not block this PR; plan a manual resolution (bump the blocking peer, or replace an unmaintained dependency). See [ADR-0022](../blob/main/docs/decisions/0022-update-flags-and-skips-un-landable-updates-via-npm-resolver-bisect.proposed.md).
+
+          $INCOMPAT_ROWS
+          INCOMPATEOF
           )
           fi
 
@@ -679,6 +700,7 @@ jobs:
 
           $BUMP_LIST
           $UNFIXABLE_BLOCK
+          $INCOMPAT_BLOCK
           $FAILURE_BLOCK
 
           ---
