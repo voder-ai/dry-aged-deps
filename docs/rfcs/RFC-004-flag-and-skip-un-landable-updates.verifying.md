@@ -1,5 +1,5 @@
 ---
-status: proposed
+status: verifying
 rfc-id: flag-and-skip-un-landable-updates
 reported: 2026-07-09
 decision-makers: [Tom Howard]
@@ -11,7 +11,7 @@ stories: [019.0-DEV-FLAG-UN-LANDABLE-UPDATES]
 
 # RFC-004: flag and skip un-landable updates
 
-**Status**: proposed
+**Status**: verifying (shipped in dry-aged-deps@2.16.0, 2026-07-10; awaiting downstream verification)
 **Reported**: 2026-07-09
 **Problems**: P028
 **ADRs**: ADR-0022
@@ -61,15 +61,11 @@ on ERESOLVE, isolate the culprit(s)).
 
 ## Tasks
 
-- [ ] T1 — RED+GREEN: `computeUnlandable()` detection module — apply-all →
-      on ERESOLVE isolate culprit(s) via npm's resolver; unit tests with mocked
-      npm (ERESOLVE isolates the culprit; clean batch → all landable; non-ERESOLVE
-      npm error propagates fail-loud).
-- [ ] T2 — wire into `print-outdated.js`: un-landable removed from `safeRows`
-      (coherent `--check`), surfaced separately.
-- [ ] T3 — `incompatible-peers` section in table + additive JSON/XML fields.
-- [ ] T4 — narrow `updatePackages` reconcile fail-loud (ERESOLVE vs other errors).
-- [ ] T5 — README / `--help`; `feat:` ship signal.
+- [x] T1 — `computeUnlandable()` detection module + tests (`chore(unlandable)`, `src/compute-unlandable.js` + `.test.js`; plus `test/compute-unlandable.integration.test.js` real-npm coverage).
+- [x] T2 — wired into `print-outdated.js` (`resolveLandability` / `resolveSurfaces`): un-landable removed from `safeRows` (coherent `--check`), surfaced separately.
+- [x] T3 — `incompatible-peers` section in table + additive JSON/XML fields (mirrors the unfixable surface).
+- [~] T4 — NOT NEEDED (subsumed by T2): the pipeline split removes un-landable rows before `updatePackages`, so its ADR-0021 reconcile never sees them and cannot ERESOLVE. No reconcile-narrowing code was required; ADR-0022's fail-loud narrowing is realised structurally by the pre-`updatePackages` split.
+- [x] T5 — README (Options row + Un-landable-updates section + What's-new) / `--help`; `feat(landable-check)` ship signal → dry-aged-deps@2.16.0.
 
 ## Related
 

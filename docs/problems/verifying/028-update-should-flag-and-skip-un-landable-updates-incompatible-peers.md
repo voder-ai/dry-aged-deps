@@ -1,6 +1,6 @@
 # Problem 028: dry-aged-deps --update should flag and skip un-landable updates (incompatible peer deps / ERESOLVE) instead of attempting them
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-06-17
 **Priority**: 3 (Medium) — Impact: 3 x Likelihood: 1 (deferred — re-rate at next /wr-itil:review-problems)
 **Origin**: internal
@@ -73,7 +73,20 @@ loud. Never auto-apply `--force` / `--legacy-peer-deps`.
 - [x] Decide detection mechanism — npm-resolver bisect (ADR-0022, maintainer 2026-07-09).
 - [x] Decide output shape — `incompatible-peers` section, ADR-0018-style (ADR-0022).
 - [x] Decide batch isolation — isolate the culprit so the rest lands (ADR-0022).
-- [ ] Implement per RFC-004 (detection module + pipeline + formatters + reconcile narrowing) with reproduction test.
+- [x] Implement per RFC-004 (detection module + pipeline + formatters) with reproduction test — SHIPPED in v2.16.0.
+
+## Fix Released
+
+Shipped in **dry-aged-deps@2.16.0** (2026-07-10). `--update`/`--check` now probe
+landability via npm's own resolver (`compute-unlandable`, default on for the CLI;
+`--no-landable-check` to opt out) and flag+skip un-landable safe updates as
+`incompatible-peers` (table / JSON / XML), removing them from the `--check`
+exit-1 count and the `--update` applied set so one un-resolvable peer no longer
+poisons the batch. Never passes `--force` / `--legacy-peer-deps`. Implements
+ADR-0022 via RFC-004 (T1 detection module → T2 pipeline split → T3 formatters).
+Awaiting user verification in a downstream project (the bbstats vite/clerk-sveltekit
+case: the landable rest of the batch lands; the un-landable major is flagged, not
+force-committed, and the cron no longer churns land/revert).
 
 ## Dependencies
 
@@ -91,6 +104,6 @@ loud. Never auto-apply `--force` / `--legacy-peer-deps`.
 
 ## RFCs
 
-| RFC     | Status   | Title                             |
-| ------- | -------- | --------------------------------- |
-| RFC-004 | proposed | flag and skip un-landable updates |
+| RFC     | Status    | Title                             |
+| ------- | --------- | --------------------------------- |
+| RFC-004 | verifying | flag and skip un-landable updates |
