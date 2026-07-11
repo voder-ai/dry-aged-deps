@@ -1,10 +1,11 @@
 # Problem 027: orchestrator halts AFK work-problems loop at P147 stuck-before-emit despite verified work integrity + obvious next iter + user "no human dev pool" memory
 
-**Status**: Open
+**Status**: Known Error
 **Reported**: 2026-06-05
-**Priority**: 6 (Medium) — Impact: Minor (2) x Likelihood: Possible (3) (deferred — re-rate at next /wr-itil:review-problems; pattern recurrence likely whenever an AFK iter exits via SIGTERM-after-work-complete, which is the common shape per P147 stuck-before-emit observations)
-**Origin**: internal
-**Effort**: M (deferred — re-rate at next /wr-itil:review-problems)
+**Priority**: 6 (Medium) — Impact: Minor (2) x Likelihood: Possible (3)
+**Origin**: external (`@windyroad/itil`)
+**Effort**: M — upstream `@windyroad/itil` work-problems SKILL prose amendment (Step 5 P147 halt contract) + upstream report
+**WSJF**: 6.0 = (6 × 2.0) / 2
 **Type**: technical
 
 ## Description
@@ -51,11 +52,19 @@ Three composing causes:
 2. **Step 2.4 gate sequence's hard-fail mode mis-routes**: the hard-fail halt-with-directive shape (Step 2.4 "If either gate cannot complete to a clean state, the orchestrator MUST halt with a clear directive rather than emit `ALL_DONE`") was designed for genuinely-blocked end-of-loop states. P147 + verified integrity is NOT a blocked state — it's a known-clean handoff with metadata loss. The orchestrator collapsed the two into one halt class.
 3. **User-memory directives not elevated to session-start instruction**: the three relevant memory items (`no human dev pool`, `push as often as possible`, `pick one don't ask`) live in `MEMORY.md` and are read once per session, but they do not appear as a SessionStart hook injection that overrides default halt-on-SKILL-mandate framing. The agent had to do the override reasoning mid-conversation rather than reading it as policy.
 
+### Confirmation (2026-07-11, /wr-itil:work-problems iter)
+
+Investigation this iter confirmed the root cause and pinned it as **external** (`@windyroad/itil`), same class as sibling tickets P017 / P019 (work-problems SKILL prose defects tracked as Known Error, Origin external):
+
+1. **Offending prose still present in the installed plugin.** `~/.claude/plugins/cache/windyroad/wr-itil/0.57.2/skills/work-problems/SKILL.md` Step 5 still reads, verbatim: _"(2) halt the AFK loop per exit-code semantics rather than silently continue"_. The surrounding "SIGTERM exit-flush is **conditional**, not universal" caveat was added, but it qualifies the _flush_ semantics (what metadata survives), NOT the _halt_ directive — the halt itself remains unconditional. So fix shape (1) has **not** landed upstream as of 0.57.2. This closes Investigation Task 3 (contract-intent audit): the "halt" directive is written as unconditional; no conditional-continue clause exists in the current prose.
+2. **No agent-authorable local fix surface in this adopter repo.** dry-aged-deps adopts `@windyroad/itil` via the plugin cache — there is no `packages/itil/` source tree here. Fix shapes (1) + (2) target the upstream `work-problems` SKILL prose / orchestrator, which cannot be edited from this repo. Fix shape (3) (elevate the memory directives to a SessionStart-hook injection) targets `.claude/` user-config space, which the governance gates forbid the agent from writing as a project artefact (P131). The one conceivable local surface — a project `CLAUDE.md` governance-override that instructs the orchestrator to prefer continue-over-halt at integrity-verified P147 handoffs — is a **variant of fix shape (3)** and requires the still-unmade fix-shape direction decision (which of 1/2/3, and the exact override semantics that must not suppress legitimate protective halts). Building it now would guess on unconfirmed direction.
+3. **Disposition**: root cause confirmed + workaround documented (re-invoke `/wr-itil:work-problems`) ⇒ **Known Error**. Origin corrected `internal → external (@windyroad/itil)` (the prior `internal` label is what made the orchestrator mis-select this ticket as locally-actionable). Upstream dependency noted in `## Related` per the external-root-cause detection block (P063). The **fix-shape choice remains a direction-setting question** queued for the user (see `## Fix Strategy` — candidate shapes 1/2/3).
+
 ### Investigation Tasks
 
-- [ ] Re-rate Priority and Effort at next /wr-itil:review-problems
-- [ ] Choose fix shape from the candidates below — likely (1) + (3) compose well; (2) is more invasive
-- [ ] Confirm P147 contract's intent via prose audit of Step 5 history (was "halt" ever meant as conditional?)
+- [x] Re-rate Priority and Effort — re-rated 2026-07-11: Known Error, Effort M, WSJF 6.0 (matches sibling P017)
+- [ ] Choose fix shape from the candidates below — likely (1) + (3) compose well; (2) is more invasive — **direction-setting question for the user; queued 2026-07-11**
+- [x] Confirm P147 contract's intent via prose audit of Step 5 history — confirmed 2026-07-11: halt directive is written unconditional in installed 0.57.2; the "conditional" caveat qualifies flush semantics, not the halt
 
 ## Fix Strategy
 
@@ -85,5 +94,6 @@ Likely shape: (1) for the immediate fix + (3) for the class-level reinforcement.
 - `/wr-itil:work-problems` SKILL.md Step 2.4 hard-fail mode paragraph — the prose surface the fix shape (1) clarifies (halt-with-directive is for blocked states, not clean handoffs).
 - `~/.claude/projects/.../memory/feedback_no_human_dev_pool.md`, `feedback_push_as_often_as_possible.md`, `feedback_pick_one_dont_ask_when_order_doesnt_matter.md` — the user-memory directives that override default halt framing; candidate session-start-injection targets for fix shape (3).
 - User direction (verbatim, 2026-06-05): _"I'm disappointed you stopped working. Explain the reasoning to me please."_ — the originating correction signal that triggered this capture via P078.
+- **Upstream report pending** -- external dependency identified; invoke /wr-itil:report-upstream when ready. Root cause is upstream `@windyroad/itil` work-problems SKILL Step 5 P147 halt-contract prose (confirmed present in installed 0.57.2). Deferred not auto-filed this iter, consistent with sibling P017 / P019 (same external class carry the same deferred marker); the outward-facing upstream filing is queued for user authorization.
 
-(captured via /wr-itil:capture-problem during /wr-itil:work-problems orchestrator main turn post-iter-5 halt; expand at next investigation)
+(captured via /wr-itil:capture-problem during /wr-itil:work-problems orchestrator main turn post-iter-5 halt; expanded 2026-07-11 during /wr-itil:work-problems — root cause confirmed external, transitioned Open → Known Error)

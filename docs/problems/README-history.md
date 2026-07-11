@@ -88,3 +88,5 @@ Archive of displaced `docs/problems/README.md` line 3 "Last reviewed" fragments 
 > Last reviewed: 2026-07-11 **P010 parked** — upstream-blocked on windyroad/agent-plugins#137 (still OPEN, unfixed at SKILL v0.57.2); no local fix in scope.
 
 > Last reviewed: 2026-07-11 **P031 verification pending** — `recommended` JSON/XML field now reports the safe target (`latest`) not `wanted`; one-line producer fix in `src/output-utils.js` corrects both surfaces, RED→GREEN test added, ships via semantic-release patch.
+
+> Last reviewed: 2026-07-11 **P013 verification pending** — both gaps released: overrides-hygiene surface (`src/overrides-hygiene.js`, RFC-001) + fixAvailable-aware four-class unfixable-reason taxonomy (`src/find-unfixable-vulns.js`, ADR-0018 amended). Original `brace-expansion` mislabel closed; module + classifier suites green (21 tests), live `--check` clean.
