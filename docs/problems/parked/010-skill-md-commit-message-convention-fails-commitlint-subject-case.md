@@ -1,6 +1,6 @@
 # Problem 010: manage-problem SKILL.md commit-message convention fails `@commitlint/config-conventional` subject-case rule
 
-**Status**: Known Error
+**Status**: Parked
 **Reported**: 2026-05-17
 **Origin**: internal
 **Priority**: 6 (Medium) — Impact: Minor (2) x Likelihood: Possible (3)
@@ -48,9 +48,16 @@ The SKILL.md examples were authored against a commitlint config that disabled or
 ### Investigation Tasks
 
 - [x] Re-rate Priority and Effort at next /wr-itil:review-problems (2026-05-30: Impact 2 × Likelihood 3 = 6, Effort M, auto-transitioned Open → Known Error per root-cause+workaround documented)
-- [ ] Confirm root cause: inspect `@windyroad/itil`'s own commitlint config; check whether `subject-case` is disabled or set to `[2, 'always', 'lower-case']` upstream
-- [ ] Decide upstream fix scope: amend SKILL.md examples ONLY, OR also amend the wr-itil monorepo's commitlint config to match the documented shape
-- [ ] File upstream report via `/wr-itil:report-upstream P010` (already user-approved direction)
+- [ ] Confirm root cause: inspect `@windyroad/itil`'s own commitlint config; check whether `subject-case` is disabled or set to `[2, 'always', 'lower-case']` upstream — **upstream-side task; not accessible from this adopter repo. Belongs to whoever works [windyroad/agent-plugins#137](https://github.com/windyroad/agent-plugins/issues/137).**
+- [ ] Decide upstream fix scope: amend SKILL.md examples ONLY, OR also amend the wr-itil monorepo's commitlint config to match the documented shape — **upstream-side decision; tracked on #137.**
+- [x] File upstream report via `/wr-itil:report-upstream P010` (already user-approved direction) — filed 2026-05-17 as [windyroad/agent-plugins#137](https://github.com/windyroad/agent-plugins/issues/137); see `## Reported Upstream`.
+
+### Re-check 2026-07-11 (parking assessment)
+
+- Upstream issue [#137](https://github.com/windyroad/agent-plugins/issues/137) remains **OPEN** with no maintainer response since it was filed (last activity 2026-05-17).
+- The latest published `@windyroad/itil` SKILL (v0.57.2) **still carries the offending pascal-case example** — `docs(problems): P<NNN> known error — …` at SKILL.md lines ~847/1080 leads the subject with `P<NNN>`, which `@commitlint/config-conventional`'s default `subject-case` rule rejects. (Sibling examples `open P<NNN>` / `close P<NNN>` at lines 1079/1082 are already verb-first, so upstream is only partially converged.)
+- No local fix exists in this repo: the fix target is the upstream SKILL.md documentation, not any file under `dry-aged-deps`. This project is already mitigated by convention (project memory note enforces the working `<verb> P<NNN>` shape). The remaining value of the fix is for other adopters.
+- **Conclusion**: genuinely upstream-blocked with the report already filed → park (below). Un-park when #137 resolves.
 
 ## Dependencies
 
@@ -66,6 +73,13 @@ The SKILL.md examples were authored against a commitlint config that disabled or
 - Session log: 2026-05-17 `/wr-itil:work-problems` deviation-approval AskUserQuestion. User answer: "Approve + amend upstream SKILL".
 
 (captured via /wr-itil:capture-problem during /wr-itil:work-problems Step 2.5 surfacing; expand at next investigation)
+
+## Parked
+
+- **Reason**: `upstream-blocked` — the fix path is entirely in upstream `@windyroad/itil` (the SKILL.md commit-message examples, and possibly the wr-itil monorepo's commitlint config). No file in this adopter repo (`dry-aged-deps`) can carry the fix. This project is already mitigated by convention (project memory enforces the working `<verb> P<NNN>` shape), so the remaining value is for other adopters. User direction 2026-05-17 pinned scope to "amend upstream SKILL" — no local mitigation is in scope.
+- **Un-park trigger**: upstream issue [windyroad/agent-plugins#137](https://github.com/windyroad/agent-plugins/issues/137) resolves — i.e. the published `@windyroad/itil` SKILL.md commit-message examples are amended to the verb-first `<verb> P<NNN> — <summary>` shape (currently still pascal-case at SKILL v0.57.2 lines ~847/1080). On un-park: `git mv` back to `.known-error.md`, verify the updated SKILL example passes `@commitlint/config-conventional`'s `subject-case` rule, then transition to `.verifying.md` per ADR-022.
+- **Parked since**: 2026-07-11
+- **External-root-cause detection (P063)**: already-noted check passed — the `## Reported Upstream` section (set during `/wr-itil:report-upstream P010` on 2026-05-17, upstream URL <https://github.com/windyroad/agent-plugins/issues/137>) is the audit-trail anchor; the parking-path detection did not re-fire the prompt.
 
 ## Reported Upstream
 

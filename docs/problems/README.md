@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-07-11 **P032 captured** — oversight-marker helper's 24h SID window blocks born-confirmed writes on long sessions (retro aside via /wr-itil:capture-problem).
+> Last reviewed: 2026-07-11 **P010 parked** — upstream-blocked on windyroad/agent-plugins#137 (still OPEN, unfixed at SKILL v0.57.2); no local fix in scope.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -9,7 +9,6 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 | WSJF | ID   | Title                                                                                                                                       | Severity   | Status      | Effort | Reported   | Origin                                                        |
 | ---- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ----------- | ------ | ---------- | ------------------------------------------------------------- |
-| 6.0  | P010 | manage-problem SKILL.md commit-message convention fails @commitlint/config-conventional subject-case rule                                   | 6 (Medium) | Known Error | M      | 2026-05-17 | internal                                                      |
 | 6.0  | P017 | work-problems Step 0 reconcile-readme halt-route can't handle unscored-ticket MISSING drift                                                 | 6 (Medium) | Known Error | M      | 2026-05-30 | external (`@windyroad/itil`)                                  |
 | 6.0  | P023 | external-comms gate marker re-hashes on every draft-body delta — forces redundant re-fire cycles per iter                                   | 6 (Medium) | Known Error | M      | 2026-06-02 | external (`@windyroad/risk-scorer` + `@windyroad/voice-tone`) |
 | 6.0  | P031 | JSON/XML `recommended` field reports `wanted`, not the safe update target                                                                   | 6 (Medium) | Open        | S      | 2026-07-11 | internal                                                      |
@@ -45,3 +44,4 @@ Excluded from WSJF ranking per the Parked policy in `/wr-itil:manage-problem` SK
 | P004 | `@windyroad/tdd` hook only recognises same-dir or `__tests__/` test associations       | upstream-blocked | 2026-05-16   |
 | P005 | `wr-voice-tone:agent` returns FAIL when `docs/VOICE-AND-TONE.md` is missing            | upstream-blocked | 2026-05-16   |
 | P007 | external-comms gate's sandboxed subagent reviewer cannot compute the SHA256 marker key | upstream-blocked | 2026-05-16   |
+| P010 | manage-problem SKILL.md commit-message convention fails commitlint subject-case rule   | upstream-blocked | 2026-07-11   |
