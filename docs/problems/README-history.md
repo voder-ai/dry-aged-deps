@@ -86,3 +86,5 @@ Archive of displaced `docs/problems/README.md` line 3 "Last reviewed" fragments 
 ## 2026-07-11
 
 > Last reviewed: 2026-07-11 **P010 parked** — upstream-blocked on windyroad/agent-plugins#137 (still OPEN, unfixed at SKILL v0.57.2); no local fix in scope.
+
+> Last reviewed: 2026-07-11 **P031 verification pending** — `recommended` JSON/XML field now reports the safe target (`latest`) not `wanted`; one-line producer fix in `src/output-utils.js` corrects both surfaces, RED→GREEN test added, ships via semantic-release patch.

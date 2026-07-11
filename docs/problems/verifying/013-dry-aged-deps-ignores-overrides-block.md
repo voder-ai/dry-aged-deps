@@ -1,6 +1,6 @@
 # Problem 013: dry-aged-deps ignores the package.json `overrides` block — stale/vulnerable override pins go undetected, and override-fixable vulns are mislabeled "unfixable"
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-05-25
 **Origin**: internal
 **Priority**: 9 (Medium) — Impact: Moderate (3) x Likelihood: Possible (3)
@@ -131,6 +131,19 @@ Implementation needs a new RFC (per Investigation Task above) that defines the `
 **RFC scope confirmed** (AFK loop 2026-05-30 Step 2.5 surfacing — user direction): the overrides-hygiene module is a **new RFC/story** (standalone surface with its own RFC, story map, and acceptance criteria) — NOT an extension of ADR-0018. ADR-0018 is the unfixable-surface decision; the overrides-hygiene module is an adjacent new capability with its own product-shape. The `fixAvailable`-aware reason sharpening (gap #2) IS an amendment of ADR-0018 and rides its own confirmation criterion.
 
 Next AFK iter should invoke `/wr-itil:capture-rfc` (or `/wr-itil:manage-rfc`) with a problem-trace to P013 to formalise the product-shape spec before implementation begins. This satisfies ADR-074 substance-confirm-before-build.
+
+**Release vehicle**: shipped across prior iters via semantic-release (no in-flight changeset at transition time). Gap #1 (overrides-hygiene module) shipped under RFC-001 T-series — module in commit `45340db`, RFC-001 transitioned in-progress → verifying at `d47e1e1` (T9 ship-signal). Gap #2 (fixAvailable-aware reason taxonomy) shipped as four ADR-0018-amendment classes: `8631270` (class (a) fix-via-parent-bump), `0b7fe9a` (class (b) fix-via-overrides-edit), `1fdba4a` (class (c) genuinely-unfixable), `7f427b3` (class (0) fix-via-lockfile-refresh, 2026-07-08).
+
+## Fix Released
+
+Both gaps of the Fix Strategy's "Option 3 — Both, full scope" are released as of 2026-07-08 (final component `7f427b3`). Awaiting user verification.
+
+- **Gap #1 — overrides-hygiene surface**: `src/overrides-hygiene.js` (`runOverridesHygiene`) parses the `overrides` block, ages each pin, and cross-references advisory + outdated data — the new capability P013 identified as missing. Shipped under RFC-001 (`verifying`); module commit `45340db`, RFC ship-signal `d47e1e1`.
+- **Gap #2 — fixAvailable-aware unfixable reason**: `src/find-unfixable-vulns.js` `deriveReason()` now distinguishes four remedy classes instead of stamping every transitive vuln `vulnerable transitive dependency`: (0) `fix via lockfile refresh`, (a) `fix via parent bump`, (b) `fix via overrides edit`, (c) genuinely-unfixable `no patched version`. The original `brace-expansion` mislabel (npm `fixAvailable: true` vs tool "unfixable") is closed. ADR-0018 amended (2026-06-05 three-class + 2026-07-08 class-(0)); `human-oversight: confirmed`.
+
+**Exercise evidence (this session, 2026-07-11)**: `overrides-hygiene` + `find-unfixable-vulns` + `compute-unfixable` suites green (21 tests); live `dry-aged-deps --check` on this repo runs clean and integrates both modules without error (the original live `brace-expansion` symptom no longer reproduces — the override was bumped to `^5.0.6` and the lockfile refreshed, so there is no stale-override / mislabel state left to surface here). Production verification of the surfacing + classification behaviour against a real project carrying stale overrides / override-fixable vulns is user-side.
+
+Gap #1's RFC-001 remains in `verifying` in parallel — both this ticket and RFC-001 await the same user verification.
 
 ## Dependencies
 
