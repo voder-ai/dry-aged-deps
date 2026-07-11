@@ -1,6 +1,6 @@
 # Problem 031: JSON/XML `recommended` field reports `wanted`, not the safe update target
 
-**Status**: Open
+**Status**: Verification Pending
 **Reported**: 2026-07-11
 **Priority**: 6 (Medium) — Impact: 3 × Likelihood: 2 — derived at capture: a machine-readable output field is deterministically wrong, but the harm is bounded (the correct value is available in the adjacent `.latest` field, the human table output is unaffected, and the X→X symptom requires an exact-pinned project whose consumer reads `.recommended` programmatically).
 **Origin**: internal
@@ -14,7 +14,9 @@ The JSON/XML `recommended` field is mislabelled — it reports `wanted` (the sem
 
 ## Symptoms
 
-(deferred to investigation)
+- `--check --format=json` emits `recommended` equal to `wanted` (the semver-range-satisfying version) rather than the safe update target.
+- On an exact-pinned package (`wanted === current` by construction), `recommended === current` — an `X → X` no-op (the P001 silent-failure symptom on the machine-readable surface).
+- The XML `<recommended>` element carries the same wrong value (shared item shape).
 
 ## Workaround
 
@@ -29,12 +31,28 @@ Read `.latest` (JSON) / `<latest>` (XML) instead of `.recommended` — `.latest`
 
 ## Root Cause Analysis
 
+**Root cause**: `src/output-utils.js:36` in `prepareJsonItems()` set `recommended: wanted`. In the row tuple `[name, current, wanted, latest, age, depType]`, `wanted` is the 3rd element (semver-range-satisfying version) and `latest` is the 4th (the smart-search-overwritten safe update target that `--update` actually applies, per ADR-0014). Both output surfaces read the same field off the item object `prepareJsonItems()` produces — JSON at `src/json-formatter.js:58`, XML at `src/xml-formatter-utils.js:112` — so the single mislabelled line corrupted both `--format=json` and `--format=xml`.
+
+**Why it went undetected**: every pre-existing test fixture that asserted `recommended` used data where `wanted === latest` (e.g. `printOutdated.json.test.js` rows `wanted: '1.1.0', latest: '1.1.0'`), so the wrong value coincided with the right one. The exact-pin case (`wanted === current !== latest`) — where the bug actually bites — had no coverage.
+
+**Confirmed a bugfix, not a breaking schema change** (architect + JTBD gates, 2026-07-11): `prompts/008.0-DEV-JSON-OUTPUT.md:68` and `prompts/009.0-DEV-XML-OUTPUT.md:68` both document `recommended: "4.18.2" == latest` while `wanted` is `4.18.1`. The documented schema specifies `recommended === latest`; the field name/presence/type are unchanged. `fix:` (patch), not `BREAKING CHANGE`, per ADR-0002 + ADR-0005.
+
 ### Investigation Tasks
 
-- [ ] Investigate root cause
-- [ ] Create reproduction test (assert `recommended === latest` and `recommended !== current` on an exact-pin fixture)
-- [ ] Reconcile the JSON `recommended` (src/output-utils.js) and XML `<recommended>` (src/xml-formatter-utils.js) surfaces with the spec + ADR-0014
-- [ ] Confirm the change is a bugfix, not an ADR-0002 breaking schema change (the field was wrong, not merely renamed)
+- [x] Investigate root cause — `output-utils.js:36` `recommended: wanted`; single producer feeds both JSON + XML surfaces
+- [x] Create reproduction test (assert `recommended === latest` and `recommended !== current` on an exact-pin fixture) — `src/output-utils.test.js` `[REQ-JSON-SCHEMA]` case, RED→GREEN confirmed
+- [x] Reconcile the JSON `recommended` (src/output-utils.js) and XML `<recommended>` (src/xml-formatter-utils.js) surfaces with the spec + ADR-0014 — one-line producer fix corrects both
+- [x] Confirm the change is a bugfix, not an ADR-0002 breaking schema change (the field was wrong, not merely renamed) — architect PASS
+
+## Fix Strategy
+
+Correct `src/output-utils.js:36` from `recommended: wanted` to `recommended: latest`. Both the JSON and XML surfaces consume `item.recommended` from the shared `prepareJsonItems()` item shape, so the single producer-side change reconciles both formats with the documented schema and ADR-0014. Guarded by the `[REQ-JSON-SCHEMA]` RED reproduction test on an exact-pinned fixture.
+
+**Release vehicle**: `fix(output): ...` conventional commit → semantic-release patch bump (this repo releases via semantic-release per ADR-0005; no `.changeset/` surface).
+
+## Fix Released
+
+Fixed in commit on 2026-07-11: `recommended` now reports the safe update target (`latest`), matching the documented JSON/XML schema and what `--update` applies. RED reproduction test in `src/output-utils.test.js` now GREEN; full suite (387 tests) passes. Awaiting user verification against a real exact-pinned project's `--check --format=json` output. Ships via semantic-release patch bump.
 
 ## Dependencies
 

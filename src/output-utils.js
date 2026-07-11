@@ -33,7 +33,7 @@ export function prepareJsonItems(rows, thresholds, vulnMap, filterReasonMap, via
       current,
       wanted,
       latest,
-      recommended: wanted,
+      recommended: latest,
       age: typeof age === 'number' ? age : null,
       vulnerabilities: vulnInfo,
       filtered,

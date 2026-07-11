@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-07-11 **P010 parked** — upstream-blocked on windyroad/agent-plugins#137 (still OPEN, unfixed at SKILL v0.57.2); no local fix in scope.
+> Last reviewed: 2026-07-11 **P031 verification pending** — `recommended` JSON/XML field now reports the safe target (`latest`) not `wanted`; one-line producer fix in `src/output-utils.js` corrects both surfaces, RED→GREEN test added, ships via semantic-release patch.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -11,7 +11,6 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | ---- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ----------- | ------ | ---------- | ------------------------------------------------------------- |
 | 6.0  | P017 | work-problems Step 0 reconcile-readme halt-route can't handle unscored-ticket MISSING drift                                                 | 6 (Medium) | Known Error | M      | 2026-05-30 | external (`@windyroad/itil`)                                  |
 | 6.0  | P023 | external-comms gate marker re-hashes on every draft-body delta — forces redundant re-fire cycles per iter                                   | 6 (Medium) | Known Error | M      | 2026-06-02 | external (`@windyroad/risk-scorer` + `@windyroad/voice-tone`) |
-| 6.0  | P031 | JSON/XML `recommended` field reports `wanted`, not the safe update target                                                                   | 6 (Medium) | Open        | S      | 2026-07-11 | internal                                                      |
 | 4.5  | P013 | dry-aged-deps ignores the package.json overrides block — stale/vulnerable pins go undetected, override-fixable vulns mislabeled "unfixable" | 9 (Medium) | Known Error | L      | 2026-05-25 | internal                                                      |
 | 4.0  | P019 | work-problems Step 5 subprocess JSON envelope's duration_ms can dramatically undercount — extend P089 Gap 2 authority hierarchy             | 4 (Low)    | Known Error | M      | 2026-05-30 | external (`@windyroad/itil`)                                  |
 | 4.0  | P024 | external-comms gate cross-session marker dir mismatch — subagent PASS verdicts land in agent's own dir, main session's gate can't find them | 4 (Low)    | Known Error | M      | 2026-06-02 | external (`@windyroad/risk-scorer`)                           |
@@ -26,12 +25,13 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 Fix released; awaiting user confirmation that the production behaviour matches the fix intent. Excluded from WSJF ranking per ADR-022. Sorted by `Released date ASC` (oldest at row 1; same-day releases tiebreak by ID ASC). `Likely verified?` carries the evidence-first cell per P186 (`yes — observed: <evidence>` / `no — not observed` / `no — observed regression`).
 
-| ID   | Title                                                                                                            | Released   | Likely verified?                                                              |
-| ---- | ---------------------------------------------------------------------------------------------------------------- | ---------- | ----------------------------------------------------------------------------- |
-| P006 | assistant defers actionable items to "next session" instead of acting when the user is observably present        | 2026-06-04 | yes — observed: this iter's action-first orchestration (upstream itil@0.47.9) |
-| P014 | the age soak is unconditional — it ignores the severity of the vulnerability the project is currently exposed to | 2026-06-04 | no — not observed                                                             |
-| P030 | `dry-aged-deps --update` leaves package-lock.json stale, breaking `npm ci` for adopters                          | 2026-07-08 | no — not observed                                                             |
-| P028 | dry-aged-deps --update should flag and skip un-landable updates (incompatible peer deps / ERESOLVE)              | 2026-07-10 | no — not observed                                                             |
+| ID   | Title                                                                                                            | Released   | Likely verified?                                                               |
+| ---- | ---------------------------------------------------------------------------------------------------------------- | ---------- | ------------------------------------------------------------------------------ |
+| P006 | assistant defers actionable items to "next session" instead of acting when the user is observably present        | 2026-06-04 | yes — observed: this iter's action-first orchestration (upstream itil@0.47.9)  |
+| P014 | the age soak is unconditional — it ignores the severity of the vulnerability the project is currently exposed to | 2026-06-04 | no — not observed                                                              |
+| P030 | `dry-aged-deps --update` leaves package-lock.json stale, breaking `npm ci` for adopters                          | 2026-07-08 | no — not observed                                                              |
+| P028 | dry-aged-deps --update should flag and skip un-landable updates (incompatible peer deps / ERESOLVE)              | 2026-07-10 | no — not observed                                                              |
+| P031 | JSON/XML `recommended` field reports `wanted`, not the safe update target                                        | 2026-07-11 | yes — observed: RED→GREEN test on exact-pin fixture, full 387-test suite green |
 
 P013 fix has also shipped but the ticket remains in `.known-error.md` pending the ADR-0018 amendment (gap #2 three-class unfixable-reason taxonomy) — the 2026-06-04 Decision confirmed substance; next iter drafts the amendment + TDD + classifier extension per ADR-074 substance-confirm gate now clear.
 

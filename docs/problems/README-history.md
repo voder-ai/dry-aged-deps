@@ -82,3 +82,7 @@ Archive of displaced `docs/problems/README.md` line 3 "Last reviewed" fragments 
 ## 2026-07-08
 
 - 2026-06-18 **P029 scoped to loud-surfacing only** — per user direction, dry-aged-deps must NOT heuristically extract a replacement from the deprecation message; detect deprecation, surface the verbatim npm message loudly, and leave the decision to the human/LLM (no auto-remediation). Prior fragment rotated to README-history.md.
+
+## 2026-07-11
+
+> Last reviewed: 2026-07-11 **P010 parked** — upstream-blocked on windyroad/agent-plugins#137 (still OPEN, unfixed at SKILL v0.57.2); no local fix in scope.

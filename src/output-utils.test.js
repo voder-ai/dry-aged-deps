@@ -76,6 +76,20 @@ describe('Story 008.0-DEV-JSON-OUTPUT: prepareJsonItems mapping logic', () => {
     expect(item.age).toBeNull();
     expect(item.filtered).toBe(false);
   });
+
+  // @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-JSON-SCHEMA
+  // P031 regression: the `recommended` field is the safe update target (`latest`),
+  // NOT `wanted`. Fixture uses an exact-pinned package (wanted === current) so the
+  // old `recommended: wanted` value would collapse to `current` — an X→X no-op that
+  // re-introduces the P001 silent-failure symptom on the machine-readable surface.
+  it('[REQ-JSON-SCHEMA] recommended reports the safe target (latest), not wanted, on an exact-pinned package', () => {
+    const rows = [['pinned-pkg', '2.0.0', '2.0.0', '2.1.3', 30, 'prod']];
+    const items = prepareJsonItems(rows, thresholds, new Map(), new Map());
+    const item = items[0];
+    expect(item.recommended).toBe(item.latest);
+    expect(item.recommended).toBe('2.1.3');
+    expect(item.recommended).not.toBe(item.current);
+  });
 });
 
 describe('Story 018.0-DEV-EXPOSURE-AWARE-SOAK: prepareJsonItems viaExposureModifier propagation (RFC-002 T5)', () => {
