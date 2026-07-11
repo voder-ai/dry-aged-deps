@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-07-11 **P031 captured** — JSON/XML `recommended` field reports `wanted` not the safe target (lightweight aside via /wr-itil:capture-problem).
+> Last reviewed: 2026-07-11 **P032 captured** — oversight-marker helper's 24h SID window blocks born-confirmed writes on long sessions (retro aside via /wr-itil:capture-problem).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -18,6 +18,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 4.0  | P024 | external-comms gate cross-session marker dir mismatch — subagent PASS verdicts land in agent's own dir, main session's gate can't find them | 4 (Low)    | Known Error | M      | 2026-06-02 | external (`@windyroad/risk-scorer`)                           |
 | 4.0  | P022 | commit-gate hook unstages files on "Pipeline state drift" block — manual re-stage needed after rescore                                      | 4 (Low)    | Open        | S      | 2026-05-30 | internal                                                      |
 | 3.0  | P027 | orchestrator halts AFK work-problems loop at P147 stuck-before-emit despite verified work integrity                                         | 6 (Medium) | Open        | M      | 2026-06-05 | internal                                                      |
+| 3.0  | P032 | oversight-marker helper's 24h SID window blocks born-confirmed ADR/JTBD writes on long sessions                                             | 6 (Medium) | Open        | M      | 2026-07-11 | external (`@windyroad/wr-architect` + `@windyroad/wr-jtbd`)   |
 | 1.5  | P020 | `@windyroad/tdd` hook stem-match strict matching causes variant-named tests to fail to pair with their source modules                       | 3 (Low)    | Open        | M      | 2026-05-30 | external (`@windyroad/tdd`)                                   |
 | 1.5  | P026 | `@windyroad/tdd` hook per-session IDLE state blocks multi-session RED→GREEN impl edits                                                      | 3 (Medium) | Open        | M      | 2026-06-05 | external (`@windyroad/tdd` hook contract)                     |
 | 1.5  | P029 | dry-aged-deps should detect deprecated dependencies and surface them loudly (verbatim message, no auto-remediation)                         | 3 (Medium) | Open        | M      | 2026-06-17 | internal                                                      |

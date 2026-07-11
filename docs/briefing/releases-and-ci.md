@@ -15,7 +15,7 @@
   <!-- signal-score: 0 | last-classified: 2026-06-05 | first-written: 2026-05-13 -->
 
 - Pre-commit hook auto-writes and re-stages staged files per ADR-0016 (supersedes ADR-0013; P009 verifying, shipped v2.8.0). `.husky/pre-commit` runs `prettier --write --ignore-unknown` on `git diff --cached --name-only --diff-filter=ACM` files + `git add` BEFORE `format:check`; the formatted output lands IN the commit and the working tree stays clean post-commit. Workspace state dirs (`.afk-run-state/`, `.claude/`, `.risk-reports/`, `*.backup`) are in `.gitignore` and `.prettierignore`. Markdown commits no longer hit the format:check abort.
-  <!-- signal-score: 6 | last-classified: 2026-06-05 | first-written: 2026-05-13 -->
+  <!-- signal-score: 8 | last-classified: 2026-07-11 | first-written: 2026-05-13 -->
 
 - `check:lockfile` (part of prepush) runs `npm install --ignore-scripts --package-lock-only` and asserts `git diff --exit-code -- package-lock.json`. After `npm audit fix`, run `npm install --package-lock-only` to normalize before commit, or check:lockfile fails.
   <!-- signal-score: 0 | last-classified: 2026-06-05 | first-written: 2026-05-13 -->
