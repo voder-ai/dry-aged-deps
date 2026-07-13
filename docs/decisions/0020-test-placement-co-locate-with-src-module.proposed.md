@@ -50,6 +50,14 @@ Chosen: **Option 1 (universal co-location for paired tests)**.
 
 The landing commit relocates ~55 paired test files from `test/` → `src/` via `git mv` (preserves history). Each moved file gets its import paths flipped from `'../src/foo.js'` → `'./foo.js'`. No test-runner config change. The change is content-equivalent: vitest discovers and runs the same set; coverage thresholds unchanged; eslint-plugin-traceability validates the same `@supports` annotations.
 
+### Amendment 2026-07-11 — canonical `<stem>.test.js` invariant (P020)
+
+Co-location is **necessary but not sufficient** for the TDD hook's association. `@windyroad/tdd`'s `tdd_find_test_for_impl()` matches a tracked test to a source module only via the glob `"${STEM}.test."*` / `"${STEM}.spec."*` — a fixed single-segment infix on the module stem. A module whose paired tests are ALL variant-named (`src/foo.<variant>.test.js`) with **no** canonical `src/foo.test.js` therefore pairs with no test, and TDD-gated edits to it hit the `IDLE`-state deny even though co-located variant suites exist and pass under vitest (P020).
+
+**Invariant**: every `src/foo.js` module with paired tests keeps at least one file named exactly `src/foo.test.js`. Additional edge-case suites use `src/foo.<variant>.test.js`. When a module has only variant suites, rename the primary suite to the canonical name (`git mv src/foo.success.test.js src/foo.test.js`). This completes the workaround this ADR established — co-location alone does not satisfy the hook.
+
+Applied 2026-07-11 to `src/build-rows.js` (the lone module in the repo with variant-only tests and no canonical pair): `git mv src/build-rows.success.test.js src/build-rows.test.js`. The durable fix (relax the upstream glob to accept a `.variant.` segment) remains upstream-blocked and is tracked by P020.
+
 ## Consequences
 
 ### Good
@@ -81,6 +89,7 @@ This decision is implemented when:
 4. CLAUDE.md "Test Conventions" section references this ADR (not ADR-0015) for test-placement guidance.
 5. `npm test` passes after relocation; coverage threshold (80%) preserved.
 6. `docs/problems/004-tdd-hook-only-recognises-same-dir-tests.*.md` carries a disposition note: "This project no longer needs the workaround under ADR-0020 (universal co-location); P004 remains open as an upstream report because the gap still affects other adopters."
+7. (Amendment 2026-07-11, P020) Every `src/**/*.js` module that has paired tests keeps at least one file named exactly `src/<module>.test.js` — a canonical-stem suite the `@windyroad/tdd` hook can associate. Modules with only variant suites (`src/<module>.<variant>.test.js`) are brought into compliance by renaming the primary suite to the canonical name. Verify: `for f in src/**/*.js; do case "$f" in *.test.js|*.spec.js) continue;; esac; stem="${f%.js}"; ls "${stem}".test.js >/dev/null 2>&1 || echo "MISSING canonical test: ${stem}.test.js"; done` reports nothing.
 
 ## Pros and Cons of the Options
 
@@ -130,6 +139,7 @@ Reassess this decision when:
 ## References
 
 - `docs/problems/004-tdd-hook-only-recognises-same-dir-tests.parked.md` — the upstream report ticket; remains open per Confirmation criterion 6.
+- `docs/problems/known-error/020-tdd-hook-stem-match-strict-matching-causes-variant-named.md` — the residual stem-match strictness layer this ADR's 2026-07-11 amendment addresses (canonical-`<stem>.test.js` invariant).
 - `docs/rfcs/RFC-001-overrides-hygiene-module.in-progress.md` — the in-flight RFC whose T4 task surfaced the third-trigger forcing function.
 - `CLAUDE.md` Test Conventions section — updated to reference this ADR.
 - `@windyroad/tdd` plugin's `tdd_find_test_for_impl()` function — the upstream code whose mapping behaviour drives the convention choice.

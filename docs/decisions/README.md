@@ -94,10 +94,12 @@ _18 ADRs. These are the current rules. The architect agent reads this section fi
 **Status:** proposed | **Oversight:** confirmed
 **Chosen:** Chosen option: **"Option A"**, because the framework is already implemented in the `@windyroad/itil` plugin we already adopt; reinventing the schema or skipping the tier would either fork the framework or leave direction-confirmed work (P01...
 
-### ADR-0020 — 0020. Test placement: co-locate paired tests beside their `src/` module
+### ADR-0020 — Test placement: co-locate paired tests beside their `src/` module
 
-**Status:** proposed | **Oversight:** confirmed | **Supersedes:** 0015-test-placement-co-location-exception-for-tdd-hook
-**Chosen:** Chosen: **Option 1 (universal co-location for paired tests)**.
+**Status:** proposed | **Oversight:** confirmed | **Supersedes:** ADR-0015
+**Decides:** Adopt universal co-location for paired tests — every `src/foo.js` keeps its paired tests at `src/foo*.test.js` (with at least one canonical `src/foo.test.js`), while CLI integration / e2e and cross-cutting tests stay under `test/`. Chosen because it satisfies `@windyroad/tdd`'s same-directory association hook directly and eliminates the compounding per-file ADR-exception ceremony ADR-0015 required.
+**Confirmation:** ADR-0015 renamed `.superseded.md` with superseded-by note; paired tests sit beside their module; CLI / e2e + cross-cutting tests remain under `test/`; CLAUDE.md points at this ADR; `npm test` passes at 80% coverage post-relocation; P004 ticket carries the upstream-only disposition note; every paired module keeps a canonical `<stem>.test.js` the hook can associate.
+**Related:** ADR-0011, ADR-0013, ADR-0015, ADR-0016, ADR-0019
 
 ### ADR-0021 — 0021. `--update` reconciles package-lock.json via incremental `npm install --package-lock-only`
 
