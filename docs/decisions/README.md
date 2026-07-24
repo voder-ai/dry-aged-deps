@@ -79,10 +79,12 @@ _18 ADRs. These are the current rules. The architect agent reads this section fi
 **Status:** proposed | **Oversight:** confirmed | **Supersedes:** 0013-pre-commit-hook-read-only-policy
 **Chosen:** Chosen option: **Option 1 — plain-shell write-and-restage on staged files only**, because it honours the project's zero-runtime-dep / minimal-devDep posture (carried forward from ADR-0013), the implementation is small enough to read in on...
 
-### ADR-0017 — 0017. Single-workflow inline-loop for autonomous dependency updates
+### ADR-0017 — Single-workflow inline-loop for autonomous dependency updates
 
-**Status:** proposed | **Oversight:** confirmed
-**Chosen:** Chosen option: **"Single inline-loop workflow"**, because it matches the maintainer's confirmed design intent, eliminates the cross-workflow `workflow_run` indirection that was load-bearing only under the old fallback framing, and lets reco...
+**Status:** proposed | **Oversight:** confirmed | **Supersedes:** ADR-0009, ADR-0010
+**Decides:** Collapse the two-workflow auto-update flow (ADR-0009 detect/PR + ADR-0010 post-hoc recovery) into a single `auto-update.yml` with a bounded `MAX_RETRIES=3` inline loop (detect → apply → prepush → claude-fix → post-diff audit → merge), making recovery the mechanism that closes the loop rather than a one-shot fallback — ADR-0010's trust boundary carries forward verbatim, and the `needs-human` dead-end is replaced by a failing-but-inspectable PR with auto-merge disabled, per confirmed maintainer intent and the no-human-pool reality (JTBD-008, JTBD-106).
+**Confirmation:** only `auto-update.yml` remains (recover.yml deleted); grep-able `MAX_RETRIES=3` loop; post-diff audit inside the loop body and last gate before push; allow-list + no-touch list match ADR-0010 byte-for-byte; `CLAUDE_CODE_OAUTH_TOKEN` present, `ANTHROPIC_API_KEY` absent; green → `gh pr merge --auto --squash`, exhaustion → PR without auto-merge plus embedded failure context; skip-if-same-bump-open guard before apply; agent PR comment on every PR; bot co-author trailers; OIDC "Mint GitHub App installation token" step unchanged (ADR-0012).
+**Related:** ADR-0005, ADR-0008, ADR-0009, ADR-0010, ADR-0011, ADR-0012
 
 ### ADR-0018 — 0018. Surface known-vulnerable-but-unfixable packages in dry-aged-deps output
 

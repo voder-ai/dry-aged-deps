@@ -280,6 +280,7 @@ jobs:
         # §No-touch list.
         if: steps.skip.outputs.proceed == 'true' && steps.prepush_1.outcome == 'failure'
         id: agent_1
+        continue-on-error: true
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
@@ -326,7 +327,7 @@ jobs:
             After making changes, run `npm run prepush` locally to verify, then
             commit your fix with a clear conventional-commit message describing
             what changed and why.
-          claude_args: '--max-turns 1'
+          claude_args: '--allowed-tools Bash,Edit,Write,Read,Grep,Glob,MultiEdit,TodoWrite'
 
       - name: Audit attempt 1 (no-touch enforcement)
         # HARD gate per ADR-0017 §What carries forward verbatim. Runs INSIDE the
@@ -380,6 +381,7 @@ jobs:
           steps.prepush_1.outcome == 'failure' &&
           steps.prepush_2.outcome == 'failure'
         id: agent_2
+        continue-on-error: true
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
@@ -419,7 +421,7 @@ jobs:
             without committing. Make root-cause fixes only. After making
             changes, run `npm run prepush` locally to verify, then commit your
             fix with a clear conventional-commit message.
-          claude_args: '--max-turns 1'
+          claude_args: '--allowed-tools Bash,Edit,Write,Read,Grep,Glob,MultiEdit,TodoWrite'
 
       - name: Audit attempt 2
         if: >-
@@ -477,6 +479,7 @@ jobs:
           steps.prepush_2.outcome == 'failure' &&
           steps.prepush_3.outcome == 'failure'
         id: agent_3
+        continue-on-error: true
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
@@ -521,7 +524,7 @@ jobs:
             describing what changed and why. (Per ADR-0017, agent attempt 3's
             fix is not re-validated by another prepush — it ships as part of
             the failing-PR inspection surface if still red.)
-          claude_args: '--max-turns 1'
+          claude_args: '--allowed-tools Bash,Edit,Write,Read,Grep,Glob,MultiEdit,TodoWrite'
 
       - name: Audit attempt 3
         if: >-
