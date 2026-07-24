@@ -15,7 +15,7 @@ import path from 'path';
  * Overlay a safe-update row set onto a parsed package.json, writing each row's
  * target version (`latest`, tuple element 3) into dependencies / devDependencies
  * per its depType — the same rule as applyUpdates() (ADR-0014).
- * @param {object} pkgData
+ * @param {Record<string, any>} pkgData
  * @param {Array<[string, string, string, string, number|string, string]>} rows
  * @returns {object} a new package.json object with the rows applied
  */

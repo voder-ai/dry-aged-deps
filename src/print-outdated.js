@@ -31,7 +31,7 @@ function countOverridesWithSafeUpgrade(overridesHygiene) {
 
 /**
  * Handle scenario when there are no outdated dependencies.
- * @param {{ format: string, returnSummary: boolean, thresholds: {prod:{minAge:number,minSeverity:string},dev:{minAge:number,minSeverity:string}}, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>, overridesHygiene?: Array<object> }} params
+ * @param {{ format: string, returnSummary: boolean, thresholds: {prod:{minAge:number,minSeverity:string},dev:{minAge:number,minSeverity:string}}, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>, overridesHygiene?: Array<any> }} params
  * @returns {Object|undefined} summary for xml mode or if returnSummary is true
  * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
  * @supports prompts/016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES.md REQ-UNFIXABLE-DETECT
@@ -380,7 +380,7 @@ function buildViaExposureModifierAnnotations({ safeRows, exposureMetaByPackage, 
  * set (un-landable packages have a safe version, so must not be mislabelled),
  * then landability splits that set. Mutates `summary` (overridesWithSafeUpgrade +
  * the landable safeUpdates count).
- * @param {{ safeRows: Array, packageJson: object, filteredData: Record<string, any>, auditData: object, options: object, summary: object }} ctx
+ * @param {{ safeRows: Array, packageJson: object, filteredData: Record<string, any>, auditData: Record<string, any>, options: Record<string, any>, summary: Record<string, any> }} ctx
  * @returns {Promise<{ unfixable: Array<object>, overridesHygiene: Array<object>, incompatible: Array<object>, safeRows: Array }>}
  * @supports prompts/016.0-DEV-SURFACE-UNFIXABLE-VULNERABILITIES.md REQ-UNFIXABLE-DETECT
  * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-PIPELINE-WIRE REQ-OVERRIDES-EXIT-CODE-LOGIC
@@ -388,15 +388,25 @@ function buildViaExposureModifierAnnotations({ safeRows, exposureMetaByPackage, 
  */
 async function resolveSurfaces({ safeRows, packageJson, filteredData, auditData, options, summary }) {
   const updateMode = options.updateMode === true;
-  const unfixable = await resolveUnfixable(new Set(safeRows.map((row) => row[0])), options, updateMode, auditData);
+  const unfixable = await resolveUnfixable(
+    new Set(safeRows.map((row) => row[0])),
+    options,
+    updateMode,
+    /** @type {any} */ (auditData)
+  );
   const overridesHygiene = await resolveOverridesHygiene({
     packageJson,
     outdatedData: filteredData,
-    auditData,
+    auditData: /** @type {any} */ (auditData),
     options,
   });
   /** @type {any} */ (summary).overridesWithSafeUpgrade = countOverridesWithSafeUpgrade(overridesHygiene);
-  const { safeRows: landableRows, incompatible } = await resolveLandability(safeRows, packageJson, options, summary);
+  const { safeRows: landableRows, incompatible } = await resolveLandability(
+    safeRows,
+    packageJson,
+    options,
+    /** @type {any} */ (summary)
+  );
   return { unfixable, overridesHygiene, incompatible, safeRows: landableRows };
 }
 
@@ -548,7 +558,7 @@ export async function printOutdated(data, options = {}) {
 /**
  * Route the post-applyFilters context to the right output handler. Extracted
  * from printOutdated to keep that function within the project's max-lines cap.
- * @param {object} ctx
+ * @param {Record<string, any>} ctx
  * @returns {Promise<object|undefined>}
  * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-CLI-FLAG
  * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-CLI-FLAG

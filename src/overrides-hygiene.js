@@ -36,7 +36,7 @@ import { calculateAgeInDays } from './age-calculator.js';
  * Run the overrides-hygiene scan.
  *
  * @param {object} options
- * @param {object} options.packageJson - Parsed package.json object.
+ * @param {Record<string, any>} options.packageJson - Parsed package.json object.
  * @param {{ vulnerabilities?: Record<string, { via?: Array<{ source?: number, url?: string, severity?: string, range?: string }> }> }} options.auditData - Pre-fetched `npm audit --json` payload.
  * @param {Record<string, { current?: string, latest?: string }>} options.outdatedData - Pre-fetched `npm outdated --json` payload.
  * @param {Record<string, string>} [options.versionTimes] - Injected `name@version` -> ISO publish-date map.

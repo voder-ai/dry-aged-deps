@@ -54,7 +54,7 @@ export async function computeUnfixable({
 }) {
   if (!enabled) return [];
   const audit = auditData ?? (await runProjectAudit());
-  const vulnerabilities = Object.values(audit?.vulnerabilities ?? {});
+  const vulnerabilities = /** @type {any[]} */ (Object.values(audit?.vulnerabilities ?? {}));
   const resolvedExclusions = exclusions ?? loadAuditExclusions();
   return findUnfixableVulns({ vulnerabilities, safePackages, exclusions: resolvedExclusions, severityFloor });
 }

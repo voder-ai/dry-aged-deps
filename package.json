@@ -32,22 +32,22 @@
     "push:watch": "bash scripts/push-watch.sh"
   },
   "devDependencies": {
-    "@commitlint/cli": "21.2.0",
+    "@commitlint/cli": "21.2.1",
     "@commitlint/config-conventional": "21.2.0",
     "@eslint/js": "^10.0.1",
     "@semantic-release/npm": "13.1.5",
-    "@types/node": "25.9.1",
+    "@types/node": "26.1.1",
     "@vitest/coverage-v8": "4.1.10",
     "better-npm-audit": "^3.11.0",
-    "eslint": "10.6.0",
+    "eslint": "10.7.0",
     "eslint-plugin-security": "4.0.1",
-    "execa": "^9.6.1",
+    "execa": "10.0.0",
     "globals": "17.7.0",
     "husky": "9.1.7",
-    "jscpd": "5.0.11",
+    "jscpd": "5.0.12",
     "prettier": "3.9.4",
     "semantic-release": "25.0.5",
-    "typescript": "6.0.3",
+    "typescript": "^7.0.2",
     "vitest": "4.1.10"
   },
   "publishConfig": {

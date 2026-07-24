@@ -24,7 +24,7 @@ import { severityRank } from './find-unfixable-vulns.js';
  * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-CLI-FLAG
  * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-JSON
  * @supports prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md REQ-EXPOSURE-JSON REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED
- * @param {{ rows: Array<[string, string, string, string, number|string, string]>, summary: FilterSummary, thresholds: Thresholds, vulnMap: Map<string, object>, filterReasonMap: Map<string, string>, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>, overridesHygiene?: Array<object>, incompatible?: Array<{ name: string, current: string, latest: string, reason: string }>, viaExposureModifierByPackage?: Map<string, { severity: string, baseSoakDays: number, effectiveSoakDays: number, advisories: Array<string> }> }} options
+ * @param {{ rows: Array<[string, string, string, string, number|string, string]>, summary: FilterSummary, thresholds: Thresholds, vulnMap: Map<string, any>, filterReasonMap: Map<string, string>, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>, overridesHygiene?: Array<any>, incompatible?: Array<{ name: string, current: string, latest: string, reason: string }>, viaExposureModifierByPackage?: Map<string, { severity: string, baseSoakDays: number, effectiveSoakDays: number, advisories: Array<string> }> }} options
  * @returns {FilterSummary} Summary object returned from filtering.
  */
 export function handleJsonOutput({
@@ -53,7 +53,7 @@ export function handleJsonOutput({
  * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-CLI-FLAG
  * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-XML
  * @supports prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md REQ-EXPOSURE-XML REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED
- * @param {{ rows: Array<[string, string, string, string, number|string, string]>, summary: FilterSummary, thresholds: Thresholds, vulnMap: Map<string, object>, filterReasonMap: Map<string, string>, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>, overridesHygiene?: Array<object>, incompatible?: Array<{ name: string, current: string, latest: string, reason: string }>, viaExposureModifierByPackage?: Map<string, { severity: string, baseSoakDays: number, effectiveSoakDays: number, advisories: Array<string> }> }} options
+ * @param {{ rows: Array<[string, string, string, string, number|string, string]>, summary: FilterSummary, thresholds: Thresholds, vulnMap: Map<string, any>, filterReasonMap: Map<string, string>, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>, overridesHygiene?: Array<any>, incompatible?: Array<{ name: string, current: string, latest: string, reason: string }>, viaExposureModifierByPackage?: Map<string, { severity: string, baseSoakDays: number, effectiveSoakDays: number, advisories: Array<string> }> }} options
  * @returns {FilterSummary} Summary object returned from filtering.
  */
 export function handleXmlOutput({
@@ -249,7 +249,7 @@ function printExposureModifierFootnotes(safeRows, annotations) {
  * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
  * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-TABLE
  * @supports prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md REQ-EXPOSURE-REPORT-MODIFIED REQ-EXPOSURE-REASON-VOCABULARY REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED
- * @param {{ safeRows: Array<Array>, matureRows: Array<Array>, summary: FilterSummary, prodMinAge: number, devMinAge: number, returnSummary: boolean, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string }>, overridesHygiene?: Array<object>, incompatible?: Array<{ name: string, current: string, latest: string, reason: string }>, viaExposureModifierByPackage?: Map<string, { severity: string, baseSoakDays: number, effectiveSoakDays: number, advisories: Array<string> }> }} options
+ * @param {{ safeRows: Array<Array>, matureRows: Array<Array>, summary: FilterSummary, prodMinAge: number, devMinAge: number, returnSummary: boolean, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string }>, overridesHygiene?: Array<any>, incompatible?: Array<{ name: string, current: string, latest: string, reason: string }>, viaExposureModifierByPackage?: Map<string, { severity: string, baseSoakDays: number, effectiveSoakDays: number, advisories: Array<string> }> }} options
  * @returns {FilterSummary|undefined} Summary when returnSummary is true or undefined otherwise.
  */
 export function handleTableOutput({
