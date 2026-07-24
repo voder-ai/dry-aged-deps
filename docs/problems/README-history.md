@@ -90,3 +90,7 @@ Archive of displaced `docs/problems/README.md` line 3 "Last reviewed" fragments 
 > Last reviewed: 2026-07-11 **P031 verification pending** — `recommended` JSON/XML field now reports the safe target (`latest`) not `wanted`; one-line producer fix in `src/output-utils.js` corrects both surfaces, RED→GREEN test added, ships via semantic-release patch.
 
 > Last reviewed: 2026-07-11 **P013 verification pending** — both gaps released: overrides-hygiene surface (`src/overrides-hygiene.js`, RFC-001) + fixAvailable-aware four-class unfixable-reason taxonomy (`src/find-unfixable-vulns.js`, ADR-0018 amended). Original `brace-expansion` mislabel closed; module + classifier suites green (21 tests), live `--check` clean.
+
+## 2026-07-24
+
+> Last reviewed: 2026-07-11 **P032 known error** — confirmed external root cause against upstream source (`wr-architect/0.19.0` + `wr-jtbd/0.12.14` `scripts/mark-oversight-confirmed.sh`: `WINDOW_MINS=1440` 24h announce-marker-only SID enumeration; `CLAUDE_SESSION_ID` unexported so a >24h session's own announce marker ages out of the `-mmin -1440` window). Transitioned Open→Known Error (WSJF 3.0→6.0), upstream report pending (defer marker in `## Related`; not auto-filed in AFK loop). Fix direction decided (unconditionally enumerate the live SID). Prior: **P027 known error** — external root cause (`@windyroad/itil` work-problems SKILL Step 5 P147 halt-contract prose); upstream report pending; fix-shape choice queued for the user.

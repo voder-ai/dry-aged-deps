@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-07-11 **P032 known error** — confirmed external root cause against upstream source (`wr-architect/0.19.0` + `wr-jtbd/0.12.14` `scripts/mark-oversight-confirmed.sh`: `WINDOW_MINS=1440` 24h announce-marker-only SID enumeration; `CLAUDE_SESSION_ID` unexported so a >24h session's own announce marker ages out of the `-mmin -1440` window). Transitioned Open→Known Error (WSJF 3.0→6.0), upstream report pending (defer marker in `## Related`; not auto-filed in AFK loop). Fix direction decided (unconditionally enumerate the live SID). Prior: **P027 known error** — external root cause (`@windyroad/itil` work-problems SKILL Step 5 P147 halt-contract prose); upstream report pending; fix-shape choice queued for the user.
+> Last reviewed: 2026-07-24 **batch transition** — P006 close (yes — observed: action-first orchestration in this session), P031 close (yes — observed: RED→GREEN exact-pin fixture + 387-test suite green), P022 close (open→closed; hypothesis falsified 2026-06-04, upstream hook paths absent in adopter tree). Verification Queue drops to 4 (P014, P013, P030, P028 all `no — not observed`).
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -15,7 +15,6 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 6.0  | P032 | oversight-marker helper's 24h SID window blocks born-confirmed ADR/JTBD writes on long sessions                                             | 6 (Medium) | Known Error | M      | 2026-07-11 | external (`@windyroad/wr-architect` + `@windyroad/wr-jtbd`)   |
 | 4.0  | P019 | work-problems Step 5 subprocess JSON envelope's duration_ms can dramatically undercount — extend P089 Gap 2 authority hierarchy             | 4 (Low)    | Known Error | M      | 2026-05-30 | external (`@windyroad/itil`)                                  |
 | 4.0  | P024 | external-comms gate cross-session marker dir mismatch — subagent PASS verdicts land in agent's own dir, main session's gate can't find them | 4 (Low)    | Known Error | M      | 2026-06-02 | external (`@windyroad/risk-scorer`)                           |
-| 4.0  | P022 | commit-gate hook unstages files on "Pipeline state drift" block — manual re-stage needed after rescore                                      | 4 (Low)    | Open        | S      | 2026-05-30 | internal                                                      |
 | 1.5  | P020 | `@windyroad/tdd` hook stem-match strict matching causes variant-named tests to fail to pair with their source modules                       | 3 (Low)    | Open        | M      | 2026-05-30 | external (`@windyroad/tdd`)                                   |
 | 1.5  | P026 | `@windyroad/tdd` hook per-session IDLE state blocks multi-session RED→GREEN impl edits                                                      | 3 (Medium) | Open        | M      | 2026-06-05 | external (`@windyroad/tdd` hook contract)                     |
 | 1.5  | P029 | dry-aged-deps should detect deprecated dependencies and surface them loudly (verbatim message, no auto-remediation)                         | 3 (Medium) | Open        | M      | 2026-06-17 | internal                                                      |
@@ -24,14 +23,12 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 
 Fix released; awaiting user confirmation that the production behaviour matches the fix intent. Excluded from WSJF ranking per ADR-022. Sorted by `Released date ASC` (oldest at row 1; same-day releases tiebreak by ID ASC). `Likely verified?` carries the evidence-first cell per P186 (`yes — observed: <evidence>` / `no — not observed` / `no — observed regression`).
 
-| ID   | Title                                                                                                                                    | Released   | Likely verified?                                                               |
-| ---- | ---------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ------------------------------------------------------------------------------ |
-| P006 | assistant defers actionable items to "next session" instead of acting when the user is observably present                                | 2026-06-04 | yes — observed: this iter's action-first orchestration (upstream itil@0.47.9)  |
-| P014 | the age soak is unconditional — it ignores the severity of the vulnerability the project is currently exposed to                         | 2026-06-04 | no — not observed                                                              |
-| P013 | dry-aged-deps ignores the package.json overrides block — stale/vulnerable pins undetected, override-fixable vulns mislabeled "unfixable" | 2026-07-08 | no — not observed                                                              |
-| P030 | `dry-aged-deps --update` leaves package-lock.json stale, breaking `npm ci` for adopters                                                  | 2026-07-08 | no — not observed                                                              |
-| P028 | dry-aged-deps --update should flag and skip un-landable updates (incompatible peer deps / ERESOLVE)                                      | 2026-07-10 | no — not observed                                                              |
-| P031 | JSON/XML `recommended` field reports `wanted`, not the safe update target                                                                | 2026-07-11 | yes — observed: RED→GREEN test on exact-pin fixture, full 387-test suite green |
+| ID   | Title                                                                                                                                    | Released   | Likely verified?  |
+| ---- | ---------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ----------------- |
+| P014 | the age soak is unconditional — it ignores the severity of the vulnerability the project is currently exposed to                         | 2026-06-04 | no — not observed |
+| P013 | dry-aged-deps ignores the package.json overrides block — stale/vulnerable pins undetected, override-fixable vulns mislabeled "unfixable" | 2026-07-08 | no — not observed |
+| P030 | `dry-aged-deps --update` leaves package-lock.json stale, breaking `npm ci` for adopters                                                  | 2026-07-08 | no — not observed |
+| P028 | dry-aged-deps --update should flag and skip un-landable updates (incompatible peer deps / ERESOLVE)                                      | 2026-07-10 | no — not observed |
 
 ## Parked
 

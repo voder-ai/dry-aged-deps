@@ -1,6 +1,9 @@
 # Problem 022: commit-gate hook unstages files on "Pipeline state drift" block — manual re-stage needed after rescore
 
-**Status**: Open
+**Status**: Closed
+
+**Closure (2026-07-24)**: Closed without fix. The leading "gate unstages files" hypothesis was falsified empirically (2026-06-04 iter 3: static audit + scratch-repo repro showed staging persists across `--hash-inputs`). The cited commit-gate hook paths (upstream `@windyroad/risk-scorer`) are absent in this adopter tree — no local fix surface. Re-capture with fresh `git status --porcelain` snapshots if the partial-staging symptom ever fires again.
+
 **Reported**: 2026-05-30
 **Priority**: 4 (Low) — Impact: Minor (2) x Likelihood: Unlikely (2) — leading "gate unstages files" hypothesis falsified 2026-06-04 iter 3 (static audit + empirical scratch-repo repro showed staging persists across `--hash-inputs`); remaining concern is UX recovery wording, not gate correctness. Re-frame: partial-staging misperception or inter-tool working-tree mutation between `git add` and `git commit` retry.
 **Origin**: internal

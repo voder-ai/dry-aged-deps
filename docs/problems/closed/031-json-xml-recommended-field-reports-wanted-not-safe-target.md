@@ -1,6 +1,6 @@
 # Problem 031: JSON/XML `recommended` field reports `wanted`, not the safe update target
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-07-11
 **Priority**: 6 (Medium) — Impact: 3 × Likelihood: 2 — derived at capture: a machine-readable output field is deterministically wrong, but the harm is bounded (the correct value is available in the adjacent `.latest` field, the human table output is unaffected, and the X→X symptom requires an exact-pinned project whose consumer reads `.recommended` programmatically).
 **Origin**: internal
