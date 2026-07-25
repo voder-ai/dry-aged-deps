@@ -11,13 +11,13 @@ Compact rendered index of every ADR's chosen option, confirmation criteria, and 
 
 For deep-dive — creating, evolving, ratifying, or contesting a decision — open the per-ADR file directly. `/wr-architect:create-adr`, `/wr-architect:capture-adr`, and `/wr-architect:review-decisions` all keep the full body in scope. Decision Drivers, Considered Options bodies, Pros and Cons, Consequences narrative, and Reassessment Criteria are intentionally NOT in this routine view — they live in the per-ADR body.
 
-**Total ADRs:** 22 (18 in-force, 4 historical)
+**Total ADRs:** 24 (20 in-force, 4 historical)
 
 ---
 
 ## In-force decisions
 
-_18 ADRs. These are the current rules. The architect agent reads this section first for routine compliance review._
+_20 ADRs. These are the current rules. The architect agent reads this section first for routine compliance review._
 
 ### ADR-0001 — 0001. Use ES Modules for All Code
 
@@ -79,12 +79,10 @@ _18 ADRs. These are the current rules. The architect agent reads this section fi
 **Status:** proposed | **Oversight:** confirmed | **Supersedes:** 0013-pre-commit-hook-read-only-policy
 **Chosen:** Chosen option: **Option 1 — plain-shell write-and-restage on staged files only**, because it honours the project's zero-runtime-dep / minimal-devDep posture (carried forward from ADR-0013), the implementation is small enough to read in on...
 
-### ADR-0017 — Single-workflow inline-loop for autonomous dependency updates
+### ADR-0017 — 0017. Single-workflow inline-loop for autonomous dependency updates
 
-**Status:** proposed | **Oversight:** confirmed | **Supersedes:** ADR-0009, ADR-0010
-**Decides:** Collapse the two-workflow auto-update flow (ADR-0009 detect/PR + ADR-0010 post-hoc recovery) into a single `auto-update.yml` with a bounded `MAX_RETRIES=3` inline loop (detect → apply → prepush → claude-fix → post-diff audit → merge), making recovery the mechanism that closes the loop rather than a one-shot fallback — ADR-0010's trust boundary carries forward verbatim, and the `needs-human` dead-end is replaced by a failing-but-inspectable PR with auto-merge disabled, per confirmed maintainer intent and the no-human-pool reality (JTBD-008, JTBD-106).
-**Confirmation:** only `auto-update.yml` remains (recover.yml deleted); grep-able `MAX_RETRIES=3` loop; post-diff audit inside the loop body and last gate before push; allow-list + no-touch list match ADR-0010 byte-for-byte; `CLAUDE_CODE_OAUTH_TOKEN` present, `ANTHROPIC_API_KEY` absent; green → `gh pr merge --auto --squash`, exhaustion → PR without auto-merge plus embedded failure context; skip-if-same-bump-open guard before apply; agent PR comment on every PR; bot co-author trailers; OIDC "Mint GitHub App installation token" step unchanged (ADR-0012).
-**Related:** ADR-0005, ADR-0008, ADR-0009, ADR-0010, ADR-0011, ADR-0012
+**Status:** proposed | **Oversight:** confirmed
+**Chosen:** Chosen option: **"Single inline-loop workflow"**, because it matches the maintainer's confirmed design intent, eliminates the cross-workflow `workflow_run` indirection that was load-bearing only under the old fallback framing, and lets reco...
 
 ### ADR-0018 — 0018. Surface known-vulnerable-but-unfixable packages in dry-aged-deps output
 
@@ -96,12 +94,10 @@ _18 ADRs. These are the current rules. The architect agent reads this section fi
 **Status:** proposed | **Oversight:** confirmed
 **Chosen:** Chosen option: **"Option A"**, because the framework is already implemented in the `@windyroad/itil` plugin we already adopt; reinventing the schema or skipping the tier would either fork the framework or leave direction-confirmed work (P01...
 
-### ADR-0020 — Test placement: co-locate paired tests beside their `src/` module
+### ADR-0020 — 0020. Test placement: co-locate paired tests beside their `src/` module
 
-**Status:** proposed | **Oversight:** confirmed | **Supersedes:** ADR-0015
-**Decides:** Adopt universal co-location for paired tests — every `src/foo.js` keeps its paired tests at `src/foo*.test.js` (with at least one canonical `src/foo.test.js`), while CLI integration / e2e and cross-cutting tests stay under `test/`. Chosen because it satisfies `@windyroad/tdd`'s same-directory association hook directly and eliminates the compounding per-file ADR-exception ceremony ADR-0015 required.
-**Confirmation:** ADR-0015 renamed `.superseded.md` with superseded-by note; paired tests sit beside their module; CLI / e2e + cross-cutting tests remain under `test/`; CLAUDE.md points at this ADR; `npm test` passes at 80% coverage post-relocation; P004 ticket carries the upstream-only disposition note; every paired module keeps a canonical `<stem>.test.js` the hook can associate.
-**Related:** ADR-0011, ADR-0013, ADR-0015, ADR-0016, ADR-0019
+**Status:** proposed | **Oversight:** confirmed | **Supersedes:** 0015-test-placement-co-location-exception-for-tdd-hook
+**Chosen:** Chosen: **Option 1 (universal co-location for paired tests)**.
 
 ### ADR-0021 — 0021. `--update` reconciles package-lock.json via incremental `npm install --package-lock-only`
 
@@ -120,9 +116,13 @@ _18 ADRs. These are the current rules. The architect agent reads this section fi
 ### ADR-0023 — Surface deprecated dependencies advisory-only in a dedicated section
 
 **Status:** proposed | **Oversight:** confirmed
-**Decides:** Surface the verbatim npm deprecation message in a dedicated `Deprecated dependencies` section (table) and a `deprecated` array (JSON/XML), advisory-only — deprecation never influences age/security filtering or the `--update` apply path. Chosen as the strictest reading of the "just be loud, leave the decision to the human/LLM" direction, matching the existing informational-section pattern and keeping the first cut free of new CLI-contract surface; the field is read by widening the existing per-package `npm view` call in `src/fetch-version-times.js` (no extra round-trip). Heuristic replacement extraction and auto-remediation are out of scope.
-**Confirmation:** deprecated dep shows a `Deprecated dependencies` section in table output with the verbatim message plus a `deprecated` array in JSON/XML; `--update` on such a project produces the same package.json/lockfile result as before (behavioural test); `deprecated` read from the same per-package registry call as `time` (fetch-layer test).
-**Related:** ADR-0018
+**Chosen:** Chosen: **surface the verbatim npm deprecation message in a dedicated section (table) / `deprecated` array (JSON, XML), advisory-only** — deprecation never influences filtering or `--update`. This is the strictest reading of the user's "j...
+**Confirmation:** A project depending on a known-deprecated package (e.g. clerk-sveltekit) shows a Deprecated dependencies secti...; --update applied to such a project produces the same package.json/lockfile result as before this change (depre...; The deprecated value is read from the same per-package registry call as time (no second npm view per package) ...
+
+### ADR-0024 — Pin CI npm to the lockfile-generator npm version
+
+**Status:** proposed | **Oversight:** unconfirmed
+**Chosen:** Chosen option: **"Align every release-path CI npm pin to the lockfile-generator npm"**, because the lockfile is generated by the npm the dev/agent sessions actually run (npm 11.x) and the CI pin is the side that can be moved to match withou...
 
 ---
 
