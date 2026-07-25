@@ -92,3 +92,9 @@ Query the registry directly, per package: `npm view <pkg> deprecated` (or `npm v
 - **P028** — sibling ticket: un-landable peer-graph detection (split from this capture per user direction 2026-06-17).
 - Motivating scenario: downstream `bbstats` project — deprecated, ~3-year-stale `clerk-sveltekit` (the verbatim npm message names `svelte-clerk`) blocking the vite 8 major.
 - Captured via /wr-itil:capture-problem; split into P028 + P029, then scoped to loud-surfacing-only (no heuristic extraction) per user direction 2026-06-17.
+
+## RFCs
+
+| RFC     | Status   | Title                                  |
+| ------- | -------- | -------------------------------------- |
+| RFC-005 | proposed | Surface deprecated dependencies loudly |
