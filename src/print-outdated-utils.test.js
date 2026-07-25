@@ -12,10 +12,10 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { handleTableOutput, printOverridesHygieneSection, printDeprecatedSection } from './print-outdated-utils.js';
 
-describe('Story 029: printDeprecatedSection', () => {
+describe('Story 020.0-DEV-SURFACE-DEPRECATED-DEPENDENCIES: printDeprecatedSection', () => {
   afterEach(() => vi.restoreAllMocks());
 
-  /** @supports prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md REQ-NPM-VIEW */
+  /** @supports prompts/020.0-DEV-SURFACE-DEPRECATED-DEPENDENCIES.md REQ-DEPRECATION-TABLE REQ-DEPRECATION-VERBATIM */
   function capture(deprecatedByPackage) {
     const logs = [];
     vi.spyOn(console, 'log').mockImplementation((...a) => logs.push(a.join(' ')));
@@ -23,7 +23,7 @@ describe('Story 029: printDeprecatedSection', () => {
     return logs;
   }
 
-  it('[REQ-NPM-VIEW] prints the section header, each deprecated package@version, and the verbatim message', () => {
+  it('[REQ-DEPRECATION-TABLE] [REQ-DEPRECATION-VERBATIM] prints the section header, each deprecated package@version, and the verbatim message', () => {
     const map = new Map([
       [
         'clerk-sveltekit',
@@ -47,7 +47,7 @@ describe('Story 029: printDeprecatedSection', () => {
     ).toBe(true);
   });
 
-  it('[REQ-NPM-VIEW] prints nothing when there are no deprecated dependencies', () => {
+  it('[REQ-DEPRECATION-TABLE] prints nothing when there are no deprecated dependencies', () => {
     expect(capture(new Map())).toEqual([]);
     expect(capture(undefined)).toEqual([]);
   });

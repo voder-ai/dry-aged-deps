@@ -198,6 +198,12 @@ Some safe, mature updates cannot actually be installed: the package's peer-depen
 
 An un-landable update is flagged and skipped rather than attempted: it drops out of the safe-update set (so it does not count toward the `--check` exit-1 trigger, keeping `--check` and `--update` in agreement), and the rest of the batch still lands — one un-resolvable peer no longer poisons every other update. Skipped updates surface as a separate section in the table (`Updates skipped (incompatible peer dependencies)`), JSON (`incompatible`), and XML (`<incompatible>`), each with reason `incompatible-peers`, so you can plan a manual resolution (bump the blocking peer, or replace an unmaintained dependency). The landability probe runs `npm install --ignore-scripts --package-lock-only` against a copy of your manifest; on a batch that resolves cleanly it adds one resolve step, and it only bisects to isolate a culprit when a batch actually fails.
 
+### Deprecated dependencies
+
+`dry-aged-deps` reads the npm registry `deprecated` field for each outdated package on every run — it rides the same `npm view` call already used to age versions, so there is no extra request. When a package's latest version has been deprecated by its maintainer, the verbatim npm deprecation message is surfaced in a dedicated section of the table (`Deprecated dependencies`), JSON (`deprecated` array of `{ name, version, message }`), and XML (`<deprecated>`).
+
+The surface is **advisory-only**: the message is shown exactly as the maintainer wrote it — if they named a replacement package or a migration URL, you see it and decide for yourself — and `dry-aged-deps` never parses it, recommends a replacement, or acts on it. Deprecation does **not** widen the `--check` exit-1 trigger and does **not** change what `--update` applies; it matches the [un-landable](#un-landable-updates) / [unfixable](#known-vulnerabilities-without-safe-fix) informational precedent (unlike an overrides-hygiene `safeUpgrade`, which is actionable and does trigger exit-1). The tool surfaces the signal; you (or an LLM acting for you) decide the migration.
+
 ### Exposure-aware soak
 
 `dry-aged-deps` waits `--min-age` days before recommending an update — a cheap proxy for "this release has been vetted." But when you are sitting on a known-vulnerable version and the fix is fresh, the right wait is shorter, not longer. `--exposure-aware-soak` (opt-in, default off) shortens the per-package maturity window in proportion to your current `npm audit` exposure severity:

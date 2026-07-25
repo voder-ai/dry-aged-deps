@@ -8,15 +8,15 @@
 import { describe, it, expect } from 'vitest';
 import { jsonFormatter } from './json-formatter.js';
 
-describe('Story 029: jsonFormatter deprecated array', () => {
-  /** @supports prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md REQ-NPM-VIEW */
+describe('Story 020.0-DEV-SURFACE-DEPRECATED-DEPENDENCIES: jsonFormatter deprecated array', () => {
+  /** @supports prompts/020.0-DEV-SURFACE-DEPRECATED-DEPENDENCIES.md REQ-DEPRECATION-JSON REQ-DEPRECATION-SCHEMA-COMPAT */
   const baseInput = {
     rows: [],
     summary: { totalOutdated: 0, safeUpdates: 0, filteredByAge: 0, filteredBySecurity: 0 },
     timestamp: '2026-07-26T00:00:00.000Z',
   };
 
-  it('[REQ-NPM-VIEW] emits a top-level deprecated array of { name, version, message } with the message verbatim', () => {
+  it('[REQ-DEPRECATION-JSON] emits a top-level deprecated array of { name, version, message } with the message verbatim', () => {
     const deprecated = [
       {
         name: 'clerk-sveltekit',
@@ -29,7 +29,7 @@ describe('Story 029: jsonFormatter deprecated array', () => {
     expect(obj.deprecated).toEqual(deprecated);
   });
 
-  it('[REQ-NPM-VIEW] omits the deprecated key when the array is empty (schema additive, backward-compatible)', () => {
+  it('[REQ-DEPRECATION-SCHEMA-COMPAT] omits the deprecated key when the array is empty (schema additive, backward-compatible)', () => {
     const obj = JSON.parse(jsonFormatter({ ...baseInput, deprecated: [] }));
     expect(obj).not.toHaveProperty('deprecated');
   });

@@ -27,6 +27,7 @@ An individual maintainer responsible for the day-to-day health of an npm project
 | JTBD-008 | Inspect what an automated update landed and why                              | [JTBD-008-inspect-automated-landings.proposed.md](project-maintainer/JTBD-008-inspect-automated-landings.proposed.md)       |
 | JTBD-009 | See vulnerabilities I can't yet fix so I can plan mitigation                 | [JTBD-009-see-unfixable-vulnerabilities.proposed.md](project-maintainer/JTBD-009-see-unfixable-vulnerabilities.proposed.md) |
 | JTBD-010 | See safe updates that can't currently land so I can plan a manual resolution | [JTBD-010-see-un-landable-updates.proposed.md](project-maintainer/JTBD-010-see-un-landable-updates.proposed.md)             |
+| JTBD-011 | See deprecated dependencies so I can plan a migration                        | [JTBD-011-see-deprecated-dependencies.proposed.md](project-maintainer/JTBD-011-see-deprecated-dependencies.proposed.md)     |
 
 ## CI/Automation Engineer
 
