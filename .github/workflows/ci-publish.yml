@@ -43,7 +43,7 @@ jobs:
           node-version: '22'
       
       - name: Install specific npm version
-        run: npm install -g npm@10.9.2
+        run: npm install -g npm@11.13.0
 
       - name: Install dependencies
         run: npm ci --prefer-frozen-lockfile
@@ -115,6 +115,9 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: '22'
+
+      - name: Install specific npm version
+        run: npm install -g npm@11.13.0
 
       - name: Install dependencies
         run: npm ci --prefer-frozen-lockfile
