@@ -102,3 +102,5 @@ Archive of displaced `docs/problems/README.md` line 3 "Last reviewed" fragments 
 ## 2026-07-26
 
 > Last reviewed: 2026-07-25 **P029 known error** — root cause confirmed: `dry-aged-deps` never reads the registry `deprecated` field (`src/fetch-version-times.js` fetches `time` only); the per-version signal is available by widening the existing per-package `npm view` call (no extra round-trip). Effort M → L (multi-formatter wiring + new ADR for output-shape / advisory-vs-filtering decisions). Fix proposal (RFC/ADR) deferred per ADR-072. Also corrected P020's stale Open→Known Error status cell in this render.
+
+> Last reviewed: 2026-07-26 **P029 verification pending** — deprecation surfacing fix RELEASED via `feat(deprecation)` (commit `7e77036`, RFC-005 slices 1-7, ADR-0023, JTBD-011): widened npm view read → DEPRECATED symbol → dedicated table section + JSON `deprecated` array + XML `<deprecated>`, advisory-only (verbatim, no filtering/--update/exit-code change). Full prepush green, architect + JTBD PASS on every slice. Awaiting user verification against a real deprecated-dep project.

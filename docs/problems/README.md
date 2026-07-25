@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-07-26 **P029 verification pending** — deprecation surfacing fix RELEASED via `feat(deprecation)` (commit `7e77036`, RFC-005 slices 1-7, ADR-0023, JTBD-011): widened npm view read → DEPRECATED symbol → dedicated table section + JSON `deprecated` array + XML `<deprecated>`, advisory-only (verbatim, no filtering/--update/exit-code change). Full prepush green, architect + JTBD PASS on every slice. Awaiting user verification against a real deprecated-dep project.
+> Last reviewed: 2026-07-26 **P033 captured** — CI npm pin drifts from the lockfile-generator npm version, silently stalling the release pipeline (`npm ci` rejects an npm-11 lockfile under a pinned npm-10 CI; 3 consecutive ci-publish failures on 2026-07-25 blocked the P029 `2.17.0` release until all three job pins were aligned to `11.13.0` in `f0cb373`). Sibling ADR-0024 records the pin-alignment invariant. Lightweight aside via /wr-itil:capture-problem.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -13,6 +13,7 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 6.0  | P023 | external-comms gate marker re-hashes on every draft-body delta — forces redundant re-fire cycles per iter                                   | 6 (Medium) | Known Error | M      | 2026-06-02 | external (`@windyroad/risk-scorer` + `@windyroad/voice-tone`) |
 | 6.0  | P027 | orchestrator halts AFK work-problems loop at P147 stuck-before-emit despite verified work integrity                                         | 6 (Medium) | Known Error | M      | 2026-06-05 | external (`@windyroad/itil`)                                  |
 | 6.0  | P032 | oversight-marker helper's 24h SID window blocks born-confirmed ADR/JTBD writes on long sessions                                             | 6 (Medium) | Known Error | M      | 2026-07-11 | external (`@windyroad/wr-architect` + `@windyroad/wr-jtbd`)   |
+| 4.5  | P033 | CI npm pin drifts from the lockfile-generator npm version, silently stalling the release pipeline                                           | 9 (Medium) | Open        | M      | 2026-07-26 | internal                                                      |
 | 4.0  | P019 | work-problems Step 5 subprocess JSON envelope's duration_ms can dramatically undercount — extend P089 Gap 2 authority hierarchy             | 4 (Low)    | Known Error | M      | 2026-05-30 | external (`@windyroad/itil`)                                  |
 | 4.0  | P024 | external-comms gate cross-session marker dir mismatch — subagent PASS verdicts land in agent's own dir, main session's gate can't find them | 4 (Low)    | Known Error | M      | 2026-06-02 | external (`@windyroad/risk-scorer`)                           |
 | 1.5  | P020 | `@windyroad/tdd` hook stem-match strict matching causes variant-named tests to fail to pair with their source modules                       | 3 (Low)    | Known Error | M      | 2026-05-30 | external (`@windyroad/tdd`)                                   |
