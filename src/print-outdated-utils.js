@@ -138,6 +138,24 @@ export function printUnfixableSection(unfixable) {
 }
 
 /**
+ * Print the dedicated "Deprecated dependencies" section (advisory-only, ADR-0023).
+ * Non-tabular by design: the verbatim npm deprecation message (often a name +
+ * URL) does not fit a padded column, so each package's message is printed on its
+ * own line. Skip-when-empty, mirroring the sibling informational sections.
+ * @param {Map<string, { version: string, message: string }>|undefined} deprecatedByPackage
+ * @supports prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md REQ-NPM-VIEW
+ */
+export function printDeprecatedSection(deprecatedByPackage) {
+  if (!deprecatedByPackage || deprecatedByPackage.size === 0) return;
+  console.log('');
+  console.log('Deprecated dependencies:');
+  for (const [name, { version, message }] of deprecatedByPackage) {
+    console.log(`  ${name}@${version}`);
+    console.log(`    ${message}`);
+  }
+}
+
+/**
  * Render a nullable value as a CLI cell. Null/undefined collapses to `-`
  * (terse CLI convention per VOICE-AND-TONE.md) so rows never carry literal
  * "null" text.
@@ -249,7 +267,7 @@ function printExposureModifierFootnotes(safeRows, annotations) {
  * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
  * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-TABLE
  * @supports prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md REQ-EXPOSURE-REPORT-MODIFIED REQ-EXPOSURE-REASON-VOCABULARY REQ-EXPOSURE-OFF-BY-DEFAULT-PRESERVED
- * @param {{ safeRows: Array<Array>, matureRows: Array<Array>, summary: FilterSummary, prodMinAge: number, devMinAge: number, returnSummary: boolean, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string }>, overridesHygiene?: Array<any>, incompatible?: Array<{ name: string, current: string, latest: string, reason: string }>, viaExposureModifierByPackage?: Map<string, { severity: string, baseSoakDays: number, effectiveSoakDays: number, advisories: Array<string> }> }} options
+ * @param {{ safeRows: Array<Array>, matureRows: Array<Array>, summary: FilterSummary, prodMinAge: number, devMinAge: number, returnSummary: boolean, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string }>, overridesHygiene?: Array<any>, incompatible?: Array<{ name: string, current: string, latest: string, reason: string }>, viaExposureModifierByPackage?: Map<string, { severity: string, baseSoakDays: number, effectiveSoakDays: number, advisories: Array<string> }>, deprecatedByPackage?: Map<string, { version: string, message: string }> }} options
  * @returns {FilterSummary|undefined} Summary when returnSummary is true or undefined otherwise.
  */
 export function handleTableOutput({
@@ -264,6 +282,7 @@ export function handleTableOutput({
   overridesHygiene = [],
   incompatible = [],
   viaExposureModifierByPackage,
+  deprecatedByPackage,
 }) {
   // @supports prompts/015.0-DEV-EXCLUDE-PACKAGES.md REQ-EXCLUDE-OUTPUT
   const excludedCount = Object.keys(excludeMap).length;
@@ -282,6 +301,7 @@ export function handleTableOutput({
     printUnfixableSection(unfixable);
     printOverridesHygieneSection(overridesHygiene);
     printIncompatibleSection(incompatible);
+    printDeprecatedSection(deprecatedByPackage);
     // @supports prompts/013.0-DEV-CHECK-MODE.md REQ-CHECK-FLAG
     if (returnSummary) return summary; // returns {FilterSummary} when returnSummary is true
     return undefined; // returns undefined when returnSummary is false
@@ -298,6 +318,7 @@ export function handleTableOutput({
     printUnfixableSection(unfixable);
     printOverridesHygieneSection(overridesHygiene);
     printIncompatibleSection(incompatible);
+    printDeprecatedSection(deprecatedByPackage);
     // @supports prompts/013.0-DEV-CHECK-MODE.md REQ-CHECK-FLAG
     if (returnSummary) return summary; // returns {FilterSummary} when returnSummary is true
     return undefined; // returns undefined when returnSummary is false
@@ -316,6 +337,7 @@ export function handleTableOutput({
   printUnfixableSection(unfixable);
   printOverridesHygieneSection(overridesHygiene);
   printIncompatibleSection(incompatible);
+  printDeprecatedSection(deprecatedByPackage);
   // @supports prompts/013.0-DEV-CHECK-MODE.md REQ-CHECK-FLAG
   if (returnSummary) return summary; // returns {FilterSummary} when returnSummary is true
   return undefined; // returns undefined when returnSummary is false

@@ -34,7 +34,7 @@ export function handleXmlOutput(options) {
  * @supports prompts/001.0-DEV-RUN-NPM-OUTDATED.md REQ-OUTPUT-DISPLAY
  * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-TABLE
  * @supports prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md REQ-EXPOSURE-REPORT-MODIFIED REQ-EXPOSURE-REASON-VOCABULARY
- * @param {{ safeRows: Array<Array>, matureRows: Array<Array>, summary: Object, prodMinAge: number, devMinAge: number, returnSummary: boolean, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>, overridesHygiene?: Array<object>, incompatible?: Array<{ name: string, current: string, latest: string, reason: string }>, viaExposureModifierByPackage?: Map<string, { severity: string, baseSoakDays: number, effectiveSoakDays: number, advisories: Array<string> }> }} options - Options for table output handler.
+ * @param {{ safeRows: Array<Array>, matureRows: Array<Array>, summary: Object, prodMinAge: number, devMinAge: number, returnSummary: boolean, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>, overridesHygiene?: Array<object>, incompatible?: Array<{ name: string, current: string, latest: string, reason: string }>, viaExposureModifierByPackage?: Map<string, { severity: string, baseSoakDays: number, effectiveSoakDays: number, advisories: Array<string> }>, deprecatedByPackage?: Map<string, { version: string, message: string }> }} options - Options for table output handler.
  * @returns {Object|undefined} summary when returnSummary is true or undefined otherwise.
  */
 export function handleTableOutput(options) {

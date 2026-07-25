@@ -502,12 +502,14 @@ export async function printOutdated(data, options = {}) {
     return handleNoOutdated({ format, returnSummary, thresholds, excludeMap, unfixable, overridesHygiene });
   }
 
-  // Build rows
+  // Build rows. deprecatedByPackage is populated during buildRows' existing per-package pass (ADR-0023, no extra npm view); advisory-only.
+  const deprecatedByPackage = /** @type {Map<string, { version: string, message: string }>} */ (new Map());
   const rows = await buildRows(filteredData, {
     fetchVersionTimes,
     calculateAgeInDays,
     getDependencyType,
     format,
+    deprecatedByPackage,
   });
 
   // RFC-002 T4+T5: opt-in exposure-aware-soak modifier + per-row annotation (default-OFF is byte-identical).
@@ -549,6 +551,7 @@ export async function printOutdated(data, options = {}) {
     overridesHygiene: surfaces.overridesHygiene,
     incompatible: surfaces.incompatible,
     viaExposureModifierByPackage,
+    deprecatedByPackage,
     prodMinAge,
     devMinAge,
     returnSummary,
@@ -582,6 +585,7 @@ async function dispatchFormatter(ctx) {
     overridesHygiene,
     incompatible,
     viaExposureModifierByPackage,
+    deprecatedByPackage,
     prodMinAge,
     devMinAge,
     returnSummary,
@@ -596,21 +600,13 @@ async function dispatchFormatter(ctx) {
     overridesHygiene,
     incompatible,
     viaExposureModifierByPackage,
+    deprecatedByPackage,
   };
   if (format === 'json') return handleJsonOutput({ rows: safeRows, ...sharedOpts });
   if (updateMode) return updatePackages(safeRows, skipConfirmation, summary);
   if (format === 'xml') return handleXmlOutput({ rows, ...sharedOpts });
-  return handleTableOutput({
-    safeRows,
-    matureRows,
-    summary,
-    prodMinAge,
-    devMinAge,
-    returnSummary,
-    excludeMap,
-    unfixable,
-    overridesHygiene,
-    incompatible,
-    viaExposureModifierByPackage,
-  });
+  // sharedOpts already carries summary, excludeMap, unfixable, overridesHygiene,
+  // incompatible, viaExposureModifierByPackage, and deprecatedByPackage; the
+  // table handler ignores the extra JSON/XML-only fields it doesn't destructure.
+  return handleTableOutput({ safeRows, matureRows, prodMinAge, devMinAge, returnSummary, ...sharedOpts });
 }

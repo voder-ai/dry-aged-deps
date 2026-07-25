@@ -10,7 +10,48 @@
  */
 
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { handleTableOutput, printOverridesHygieneSection } from './print-outdated-utils.js';
+import { handleTableOutput, printOverridesHygieneSection, printDeprecatedSection } from './print-outdated-utils.js';
+
+describe('Story 029: printDeprecatedSection', () => {
+  afterEach(() => vi.restoreAllMocks());
+
+  /** @supports prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md REQ-NPM-VIEW */
+  function capture(deprecatedByPackage) {
+    const logs = [];
+    vi.spyOn(console, 'log').mockImplementation((...a) => logs.push(a.join(' ')));
+    printDeprecatedSection(deprecatedByPackage);
+    return logs;
+  }
+
+  it('[REQ-NPM-VIEW] prints the section header, each deprecated package@version, and the verbatim message', () => {
+    const map = new Map([
+      [
+        'clerk-sveltekit',
+        {
+          version: '0.6.0',
+          message:
+            'This package is deprecated. Please use svelte-clerk instead: https://github.com/wobsoriano/svelte-clerk',
+        },
+      ],
+    ]);
+    const logs = capture(map);
+    expect(logs).toContain('Deprecated dependencies:');
+    expect(logs.some((l) => l.includes('clerk-sveltekit@0.6.0'))).toBe(true);
+    // The npm message is surfaced verbatim — no parsing, truncation, or reformatting.
+    expect(
+      logs.some((l) =>
+        l.includes(
+          'This package is deprecated. Please use svelte-clerk instead: https://github.com/wobsoriano/svelte-clerk'
+        )
+      )
+    ).toBe(true);
+  });
+
+  it('[REQ-NPM-VIEW] prints nothing when there are no deprecated dependencies', () => {
+    expect(capture(new Map())).toEqual([]);
+    expect(capture(undefined)).toEqual([]);
+  });
+});
 
 describe('Story 017.0-DEV-OVERRIDES-HYGIENE: printOverridesHygieneSection', () => {
   afterEach(() => vi.restoreAllMocks());

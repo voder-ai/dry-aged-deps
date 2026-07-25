@@ -1,5 +1,5 @@
 // @ts-check
-import { fetchVersionTimes as defaultFetchVersionTimes } from './fetch-version-times.js';
+import { fetchVersionTimes as defaultFetchVersionTimes, DEPRECATED } from './fetch-version-times.js';
 import { calculateAgeInDays as defaultCalculateAgeInDays } from './age-calculator.js';
 
 /**
@@ -9,7 +9,8 @@ import { calculateAgeInDays as defaultCalculateAgeInDays } from './age-calculato
  *   fetchVersionTimes?: Function,
  *   calculateAgeInDays?: Function,
  *   getDependencyType: Function,
- *   format?: string
+ *   format?: string,
+ *   deprecatedByPackage?: Map<string, { version: string, message: string }>
  * }} options
  * @returns {Promise<Array<[string, string, string, string, number|string, string]>>}
  * @supports prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md REQ-NPM-VIEW REQ-AGE-CALC REQ-OPTIMIZATION
@@ -32,6 +33,13 @@ export async function buildRows(data, options) {
         // @supports prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md REQ-AGE-CALC
         if (latestTime) {
           age = calculateAgeInDays(latestTime);
+        }
+        // @supports prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md REQ-NPM-VIEW
+        // The latest (update-candidate) version's deprecation rides the same
+        // fetch on the DEPRECATED symbol; collect it advisory-only for the caller.
+        const deprecatedMessage = /** @type {any} */ (versionTimes)[DEPRECATED];
+        if (options.deprecatedByPackage && typeof deprecatedMessage === 'string') {
+          options.deprecatedByPackage.set(name, { version: info.latest, message: deprecatedMessage });
         }
       } catch (err) {
         // @supports prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md REQ-NPM-VIEW
