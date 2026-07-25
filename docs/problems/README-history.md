@@ -94,3 +94,7 @@ Archive of displaced `docs/problems/README.md` line 3 "Last reviewed" fragments 
 ## 2026-07-24
 
 > Last reviewed: 2026-07-11 **P032 known error** — confirmed external root cause against upstream source (`wr-architect/0.19.0` + `wr-jtbd/0.12.14` `scripts/mark-oversight-confirmed.sh`: `WINDOW_MINS=1440` 24h announce-marker-only SID enumeration; `CLAUDE_SESSION_ID` unexported so a >24h session's own announce marker ages out of the `-mmin -1440` window). Transitioned Open→Known Error (WSJF 3.0→6.0), upstream report pending (defer marker in `## Related`; not auto-filed in AFK loop). Fix direction decided (unconditionally enumerate the live SID). Prior: **P027 known error** — external root cause (`@windyroad/itil` work-problems SKILL Step 5 P147 halt-contract prose); upstream report pending; fix-shape choice queued for the user.
+
+## 2026-07-25
+
+> Last reviewed: 2026-07-24 **batch transition** — P006 close (yes — observed: action-first orchestration in this session), P031 close (yes — observed: RED→GREEN exact-pin fixture + 387-test suite green), P022 close (open→closed; hypothesis falsified 2026-06-04, upstream hook paths absent in adopter tree). Verification Queue drops to 4 (P014, P013, P030, P028 all `no — not observed`).

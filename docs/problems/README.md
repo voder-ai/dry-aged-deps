@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-07-24 **batch transition** — P006 close (yes — observed: action-first orchestration in this session), P031 close (yes — observed: RED→GREEN exact-pin fixture + 387-test suite green), P022 close (open→closed; hypothesis falsified 2026-06-04, upstream hook paths absent in adopter tree). Verification Queue drops to 4 (P014, P013, P030, P028 all `no — not observed`).
+> Last reviewed: 2026-07-25 **P029 known error** — root cause confirmed: `dry-aged-deps` never reads the registry `deprecated` field (`src/fetch-version-times.js` fetches `time` only); the per-version signal is available by widening the existing per-package `npm view` call (no extra round-trip). Effort M → L (multi-formatter wiring + new ADR for output-shape / advisory-vs-filtering decisions). Fix proposal (RFC/ADR) deferred per ADR-072. Also corrected P020's stale Open→Known Error status cell in this render.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -15,9 +15,9 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 6.0  | P032 | oversight-marker helper's 24h SID window blocks born-confirmed ADR/JTBD writes on long sessions                                             | 6 (Medium) | Known Error | M      | 2026-07-11 | external (`@windyroad/wr-architect` + `@windyroad/wr-jtbd`)   |
 | 4.0  | P019 | work-problems Step 5 subprocess JSON envelope's duration_ms can dramatically undercount — extend P089 Gap 2 authority hierarchy             | 4 (Low)    | Known Error | M      | 2026-05-30 | external (`@windyroad/itil`)                                  |
 | 4.0  | P024 | external-comms gate cross-session marker dir mismatch — subagent PASS verdicts land in agent's own dir, main session's gate can't find them | 4 (Low)    | Known Error | M      | 2026-06-02 | external (`@windyroad/risk-scorer`)                           |
-| 1.5  | P020 | `@windyroad/tdd` hook stem-match strict matching causes variant-named tests to fail to pair with their source modules                       | 3 (Low)    | Open        | M      | 2026-05-30 | external (`@windyroad/tdd`)                                   |
+| 1.5  | P020 | `@windyroad/tdd` hook stem-match strict matching causes variant-named tests to fail to pair with their source modules                       | 3 (Low)    | Known Error | M      | 2026-05-30 | external (`@windyroad/tdd`)                                   |
+| 1.5  | P029 | dry-aged-deps should detect deprecated dependencies and surface them loudly (verbatim message, no auto-remediation)                         | 3 (Medium) | Known Error | L      | 2026-06-17 | internal                                                      |
 | 1.5  | P026 | `@windyroad/tdd` hook per-session IDLE state blocks multi-session RED→GREEN impl edits                                                      | 3 (Medium) | Open        | M      | 2026-06-05 | external (`@windyroad/tdd` hook contract)                     |
-| 1.5  | P029 | dry-aged-deps should detect deprecated dependencies and surface them loudly (verbatim message, no auto-remediation)                         | 3 (Medium) | Open        | M      | 2026-06-17 | internal                                                      |
 
 ## Verification Queue
 
