@@ -30,7 +30,7 @@ describe('Story 002.0-DEV-FETCH-AVAILABLE-VERSIONS: fetchVersionTimes error path
     expect(execFileMock.calls).toHaveLength(1);
     const [cmd, args, options, callback] = execFileMock.calls[0];
     expect(cmd).toBe('npm');
-    expect(args).toEqual(['view', 'validpkg', 'time', '--json']);
+    expect(args).toEqual(['view', 'validpkg', 'time', 'deprecated', '--json']);
     expect(options).toEqual({ encoding: 'utf8' });
     expect(typeof callback).toBe('function');
   });
