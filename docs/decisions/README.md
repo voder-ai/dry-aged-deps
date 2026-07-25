@@ -119,9 +119,9 @@ _18 ADRs. These are the current rules. The architect agent reads this section fi
 
 ### ADR-0023 — Surface deprecated dependencies advisory-only in a dedicated section
 
-**Status:** proposed | **Oversight:** unconfirmed
-**Decides:** Surface the verbatim npm deprecation message in a dedicated `Deprecated dependencies` section (table) and a `deprecated` array (JSON/XML), advisory-only — deprecation never influences age/security filtering or `--update`. Chosen to honour the "just be loud, leave the decision to the human/LLM" direction, match the existing informational-section pattern, and keep the first cut minimal; the field is read by widening the existing per-package `npm view` call in `src/fetch-version-times.js`.
-**Confirmation:** deprecated dep shows a `Deprecated dependencies` section in table output plus a `deprecated` array in JSON/XML; `--update` output on such a project is unchanged (behavioural test); `deprecated` read from the same per-package registry call as `time` (fetch-layer test).
+**Status:** proposed | **Oversight:** confirmed
+**Decides:** Surface the verbatim npm deprecation message in a dedicated `Deprecated dependencies` section (table) and a `deprecated` array (JSON/XML), advisory-only — deprecation never influences age/security filtering or the `--update` apply path. Chosen as the strictest reading of the "just be loud, leave the decision to the human/LLM" direction, matching the existing informational-section pattern and keeping the first cut free of new CLI-contract surface; the field is read by widening the existing per-package `npm view` call in `src/fetch-version-times.js` (no extra round-trip). Heuristic replacement extraction and auto-remediation are out of scope.
+**Confirmation:** deprecated dep shows a `Deprecated dependencies` section in table output with the verbatim message plus a `deprecated` array in JSON/XML; `--update` on such a project produces the same package.json/lockfile result as before (behavioural test); `deprecated` read from the same per-package registry call as `time` (fetch-layer test).
 **Related:** ADR-0018
 
 ---
