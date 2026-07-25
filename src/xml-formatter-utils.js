@@ -297,6 +297,25 @@ export function buildIncompatibleSection(incompatible) {
 }
 
 /**
+ * Build the <deprecated> section (advisory-only, ADR-0023). The verbatim npm
+ * message is emitted as element text (like <details>/<title>) since it is long
+ * free-text (name + URL); name/version are attributes. All values are escaped.
+ * @param {Array<{ name: string, version: string, message: string }>} deprecated
+ * @returns {string}
+ * @supports prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md REQ-NPM-VIEW
+ */
+export function buildDeprecatedSection(deprecated) {
+  let xml = '  <deprecated>\n';
+  for (const { name, version, message } of deprecated) {
+    xml += `    <package name="${escapeXml(name)}" version="${escapeXml(version)}">\n`;
+    xml += `      <message>${escapeXml(message)}</message>\n`;
+    xml += '    </package>\n';
+  }
+  xml += '  </deprecated>\n';
+  return xml;
+}
+
+/**
  * Render a nullable scalar as an attribute value. Null/undefined collapses
  * to the empty string so XML never carries the literal text `null`.
  * @param {unknown} value

@@ -12,7 +12,7 @@
 /**
  * Format data into JSON string
  * Supports legacy array rows and full JSON mode object rows
- * @param {{ rows: Array<Array<any> | Object>, summary: { totalOutdated: number, safeUpdates: number, filteredByAge: number, filteredBySecurity: number }, thresholds?: { prod: { minAge: number, minSeverity: string }, dev: { minAge: number, minSeverity: string } }, timestamp: string, excluded?: Array<{ name: string, reason: string }>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>, overridesHygiene?: Array<{ name: string, pinned: string|null, latest: string|null, ageDays: number|null, reason: string, advisories: Array<{ id: string, severity: string, patchedRange: string|null }>, safeUpgrade: string|null }>, incompatible?: Array<{ name: string, current: string, latest: string, reason: string }> }} params
+ * @param {{ rows: Array<Array<any> | Object>, summary: { totalOutdated: number, safeUpdates: number, filteredByAge: number, filteredBySecurity: number }, thresholds?: { prod: { minAge: number, minSeverity: string }, dev: { minAge: number, minSeverity: string } }, timestamp: string, excluded?: Array<{ name: string, reason: string }>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>, overridesHygiene?: Array<{ name: string, pinned: string|null, latest: string|null, ageDays: number|null, reason: string, advisories: Array<{ id: string, severity: string, patchedRange: string|null }>, safeUpgrade: string|null }>, incompatible?: Array<{ name: string, current: string, latest: string, reason: string }>, deprecated?: Array<{ name: string, version: string, message: string }> }} params
  * @returns {string} JSON string
  * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-JSON-SCHEMA REQ-COMPLETE-DATA REQ-SUMMARY-STATS
  * @supports prompts/015.0-DEV-EXCLUDE-PACKAGES.md REQ-EXCLUDE-OUTPUT
@@ -28,6 +28,7 @@ export function jsonFormatter({
   unfixable = [],
   overridesHygiene = [],
   incompatible = [],
+  deprecated = [],
 }) {
   const packages = rows.map((row) => {
     // @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-JSON-SCHEMA
@@ -108,6 +109,13 @@ export function jsonFormatter({
   // safe updates skipped because their peer graph won't resolve (P028).
   if (incompatible.length > 0) {
     output.incompatible = incompatible;
+  }
+
+  // @supports prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md REQ-NPM-VIEW
+  // Additive + omit-when-empty (ADR-0002 schema additivity, ADR-0023): the
+  // latest version's verbatim npm deprecation message, advisory-only.
+  if (deprecated.length > 0) {
+    output.deprecated = deprecated;
   }
 
   // @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-SUMMARY-STATS

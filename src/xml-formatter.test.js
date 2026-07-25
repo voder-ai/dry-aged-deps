@@ -7,6 +7,35 @@
 import { describe, it, expect } from 'vitest';
 import { xmlFormatter } from './xml-formatter.js';
 
+describe('Story 029: xmlFormatter deprecated section', () => {
+  /** @supports prompts/002.0-DEV-FETCH-AVAILABLE-VERSIONS.md REQ-NPM-VIEW */
+  const baseInput = {
+    rows: [],
+    summary: { totalOutdated: 0, safeUpdates: 0, filteredByAge: 0, filteredBySecurity: 0, minAge: 7 },
+    timestamp: '2026-07-26T00:00:00.000Z',
+  };
+
+  it('[REQ-NPM-VIEW] emits a <deprecated> section with per-package name/version and a verbatim <message>', () => {
+    const deprecated = [{ name: 'clerk-sveltekit', version: '0.6.0', message: 'Please use svelte-clerk' }];
+    const xml = xmlFormatter({ ...baseInput, deprecated });
+    expect(xml).toContain('<deprecated>');
+    expect(xml).toContain('<package name="clerk-sveltekit" version="0.6.0">');
+    expect(xml).toContain('<message>Please use svelte-clerk</message>');
+    expect(xml).toContain('</deprecated>');
+  });
+
+  it('[REQ-NPM-VIEW] XML-escapes the verbatim message (an & round-trips as &amp;)', () => {
+    const deprecated = [{ name: 'p', version: '1.0.0', message: 'see https://x.test/?a=1&b=2 <use> other' }];
+    const xml = xmlFormatter({ ...baseInput, deprecated });
+    expect(xml).toContain('see https://x.test/?a=1&amp;b=2 &lt;use&gt; other');
+  });
+
+  it('[REQ-NPM-VIEW] omits the <deprecated> section when the array is empty', () => {
+    const xml = xmlFormatter({ ...baseInput, deprecated: [] });
+    expect(xml).not.toContain('<deprecated>');
+  });
+});
+
 describe('Story 009.0-DEV-XML-OUTPUT: xmlFormatter', () => {
   it('[REQ-XML-SCHEMA] [REQ-COMPLETE-DATA] [REQ-SUMMARY-STATS] [REQ-XML-DECLARATION] should produce valid XML with header, root, packages, and summary', () => {
     const rows = [

@@ -10,7 +10,7 @@ import {
  * @supports prompts/008.0-DEV-JSON-OUTPUT.md REQ-CLI-FLAG
  * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-JSON
  * @supports prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md REQ-EXPOSURE-JSON
- * @param {{ rows: Array<[string, string, string, string, number|string, string]>, summary: Object, thresholds: Object, vulnMap: Map<string, object>, filterReasonMap: Map<string,string>, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>, overridesHygiene?: Array<object>, incompatible?: Array<{ name: string, current: string, latest: string, reason: string }>, viaExposureModifierByPackage?: Map<string, { severity: string, baseSoakDays: number, effectiveSoakDays: number, advisories: Array<string> }> }} options - Options for JSON output handler.
+ * @param {{ rows: Array<[string, string, string, string, number|string, string]>, summary: Object, thresholds: Object, vulnMap: Map<string, object>, filterReasonMap: Map<string,string>, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>, overridesHygiene?: Array<object>, incompatible?: Array<{ name: string, current: string, latest: string, reason: string }>, viaExposureModifierByPackage?: Map<string, { severity: string, baseSoakDays: number, effectiveSoakDays: number, advisories: Array<string> }>, deprecatedByPackage?: Map<string, { version: string, message: string }> }} options - Options for JSON output handler.
  * @returns {Object} summary object returned from filtering.
  */
 export function handleJsonOutput(options) {
@@ -22,7 +22,7 @@ export function handleJsonOutput(options) {
  * @supports prompts/009.0-DEV-XML-OUTPUT.md REQ-CLI-FLAG
  * @supports prompts/017.0-DEV-OVERRIDES-HYGIENE.md REQ-OVERRIDES-XML
  * @supports prompts/018.0-DEV-EXPOSURE-AWARE-SOAK.md REQ-EXPOSURE-XML
- * @param {{ rows: Array<any>, summary: Object, thresholds: Object, vulnMap: Map<string, object>, filterReasonMap: Map<string,string>, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>, overridesHygiene?: Array<object>, incompatible?: Array<{ name: string, current: string, latest: string, reason: string }>, viaExposureModifierByPackage?: Map<string, { severity: string, baseSoakDays: number, effectiveSoakDays: number, advisories: Array<string> }> }} options - Options for XML output handler.
+ * @param {{ rows: Array<any>, summary: Object, thresholds: Object, vulnMap: Map<string, object>, filterReasonMap: Map<string,string>, excludeMap?: Record<string, string>, unfixable?: Array<{ name: string, severity: string, advisory: string, reason: string, via: Array<string> }>, overridesHygiene?: Array<object>, incompatible?: Array<{ name: string, current: string, latest: string, reason: string }>, viaExposureModifierByPackage?: Map<string, { severity: string, baseSoakDays: number, effectiveSoakDays: number, advisories: Array<string> }>, deprecatedByPackage?: Map<string, { version: string, message: string }> }} options - Options for XML output handler.
  * @returns {Object} summary object returned from filtering.
  */
 export function handleXmlOutput(options) {
