@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-07-25 **P029 known error** — root cause confirmed: `dry-aged-deps` never reads the registry `deprecated` field (`src/fetch-version-times.js` fetches `time` only); the per-version signal is available by widening the existing per-package `npm view` call (no extra round-trip). Effort M → L (multi-formatter wiring + new ADR for output-shape / advisory-vs-filtering decisions). Fix proposal (RFC/ADR) deferred per ADR-072. Also corrected P020's stale Open→Known Error status cell in this render.
+> Last reviewed: 2026-07-26 **P029 verification pending** — deprecation surfacing fix RELEASED via `feat(deprecation)` (commit `7e77036`, RFC-005 slices 1-7, ADR-0023, JTBD-011): widened npm view read → DEPRECATED symbol → dedicated table section + JSON `deprecated` array + XML `<deprecated>`, advisory-only (verbatim, no filtering/--update/exit-code change). Full prepush green, architect + JTBD PASS on every slice. Awaiting user verification against a real deprecated-dep project.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -16,7 +16,6 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 4.0  | P019 | work-problems Step 5 subprocess JSON envelope's duration_ms can dramatically undercount — extend P089 Gap 2 authority hierarchy             | 4 (Low)    | Known Error | M      | 2026-05-30 | external (`@windyroad/itil`)                                  |
 | 4.0  | P024 | external-comms gate cross-session marker dir mismatch — subagent PASS verdicts land in agent's own dir, main session's gate can't find them | 4 (Low)    | Known Error | M      | 2026-06-02 | external (`@windyroad/risk-scorer`)                           |
 | 1.5  | P020 | `@windyroad/tdd` hook stem-match strict matching causes variant-named tests to fail to pair with their source modules                       | 3 (Low)    | Known Error | M      | 2026-05-30 | external (`@windyroad/tdd`)                                   |
-| 1.5  | P029 | dry-aged-deps should detect deprecated dependencies and surface them loudly (verbatim message, no auto-remediation)                         | 3 (Medium) | Known Error | L      | 2026-06-17 | internal                                                      |
 | 1.5  | P026 | `@windyroad/tdd` hook per-session IDLE state blocks multi-session RED→GREEN impl edits                                                      | 3 (Medium) | Open        | M      | 2026-06-05 | external (`@windyroad/tdd` hook contract)                     |
 
 ## Verification Queue
@@ -29,6 +28,7 @@ Fix released; awaiting user confirmation that the production behaviour matches t
 | P013 | dry-aged-deps ignores the package.json overrides block — stale/vulnerable pins undetected, override-fixable vulns mislabeled "unfixable" | 2026-07-08 | no — not observed |
 | P030 | `dry-aged-deps --update` leaves package-lock.json stale, breaking `npm ci` for adopters                                                  | 2026-07-08 | no — not observed |
 | P028 | dry-aged-deps --update should flag and skip un-landable updates (incompatible peer deps / ERESOLVE)                                      | 2026-07-10 | no — not observed |
+| P029 | dry-aged-deps should detect deprecated dependencies and surface them loudly (verbatim message, no auto-remediation)                      | 2026-07-26 | no — not observed |
 
 ## Parked
 

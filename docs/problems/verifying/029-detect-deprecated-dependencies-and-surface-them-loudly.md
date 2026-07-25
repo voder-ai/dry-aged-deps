@@ -1,7 +1,23 @@
 # Problem 029: dry-aged-deps should detect deprecated dependencies and surface them loudly (verbatim npm deprecation message) — no auto-remediation
 
-**Status**: Known Error
+**Status**: Verification Pending
 **Reported**: 2026-06-17
+
+## Fix Released
+
+**Released**: 2026-07-26 via `feat(deprecation): surface deprecated dependencies loudly (P029, RFC-005)` (commit `7e77036`, pushed to `main`) — ships as a semantic-release minor bump per ADR-0005 (the release-eligible `feat:` ship-signal completing RFC-005).
+
+Implemented across RFC-005 slices 1-7, governed by ADR-0023, tracing to JTBD-011:
+
+- **Slice 1** (`a52478d`) — `src/fetch-version-times.js` widened `npm view <pkg> time` → `time deprecated` (one call, no extra round-trip); latest version's deprecation rides the exported `DEPRECATED` symbol.
+- **Slices 2-3** (`2f0b3ff`) — `build-rows.js` collects `deprecatedByPackage`; `printDeprecatedSection` renders a dedicated non-tabular "Deprecated dependencies:" table section in all three exit branches.
+- **Slices 4-5** (`ffad51a`) — additive `deprecated` array in JSON, `<deprecated>` section in XML (verbatim, XML-escaped, omit-when-empty).
+- **Slice 6** — behavioural test asserts `--update` is unchanged for a deprecated package (advisory-only invariant).
+- **Slice 7** (`7e77036`) — `prompts/020.0` spec + REQ traceability, README "Deprecated dependencies" subsection, JTBD-011 index entry.
+
+Advisory-only: verbatim message, no parsing/replacement-extraction/remediation, no filtering / `--update` / exit-code change. Full prepush green (390+ tests, coverage ≥80%, audit:ci clean); architect + JTBD PASS on every slice.
+
+**Awaiting user verification** against a real project with a deprecated dependency (e.g. one depending on `clerk-sveltekit`): confirm the `Deprecated dependencies` section appears in `--check` table output and the `deprecated` array/element in `--check --format=json` / `--format=xml`, and that `--update` behaviour is unchanged.
 **Priority**: 3 (Medium) — Impact: Moderate (3) x Likelihood: Rare (1) — a deprecated dependency is a real standing risk, but the tool silently omitting the signal has low blast radius (advisory gap, no incorrect action taken)
 **Origin**: internal
 **Effort**: L — re-rated from the deferred `M` placeholder at Known-Error transition (2026-07-25, P047). Investigation confirmed the fix spans a registry-read widening (`src/fetch-version-times.js`), row-shape threading (`src/build-rows.js`), three output surfaces (table / JSON / XML formatters), and needs a new ADR for the two open design decisions (output shape + advisory-vs-filtering) plus an RFC/story trace. Single-package but multi-file + new-ADR → L, not M.

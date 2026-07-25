@@ -98,3 +98,7 @@ Archive of displaced `docs/problems/README.md` line 3 "Last reviewed" fragments 
 ## 2026-07-25
 
 > Last reviewed: 2026-07-24 **batch transition** — P006 close (yes — observed: action-first orchestration in this session), P031 close (yes — observed: RED→GREEN exact-pin fixture + 387-test suite green), P022 close (open→closed; hypothesis falsified 2026-06-04, upstream hook paths absent in adopter tree). Verification Queue drops to 4 (P014, P013, P030, P028 all `no — not observed`).
+
+## 2026-07-26
+
+> Last reviewed: 2026-07-25 **P029 known error** — root cause confirmed: `dry-aged-deps` never reads the registry `deprecated` field (`src/fetch-version-times.js` fetches `time` only); the per-version signal is available by widening the existing per-package `npm view` call (no extra round-trip). Effort M → L (multi-formatter wiring + new ADR for output-shape / advisory-vs-filtering decisions). Fix proposal (RFC/ADR) deferred per ADR-072. Also corrected P020's stale Open→Known Error status cell in this render.
