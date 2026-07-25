@@ -117,6 +117,13 @@ _18 ADRs. These are the current rules. The architect agent reads this section fi
 **Confirmation:** A fixture batch with one ERESOLVE-inducing update classifies that update; A non-ERESOLVE npm error during reconcile still fails loud (ADR-0021 preserved).; No code path passes --force / --legacy-peer-deps.; The incompatible-peers surface is additive across table/JSON/XML.
 **Related:** ADR-0021, ADR-0018, ADR-0014, ADR-0002
 
+### ADR-0023 — Surface deprecated dependencies advisory-only in a dedicated section
+
+**Status:** proposed | **Oversight:** unconfirmed
+**Decides:** Surface the verbatim npm deprecation message in a dedicated `Deprecated dependencies` section (table) and a `deprecated` array (JSON/XML), advisory-only — deprecation never influences age/security filtering or `--update`. Chosen to honour the "just be loud, leave the decision to the human/LLM" direction, match the existing informational-section pattern, and keep the first cut minimal; the field is read by widening the existing per-package `npm view` call in `src/fetch-version-times.js`.
+**Confirmation:** deprecated dep shows a `Deprecated dependencies` section in table output plus a `deprecated` array in JSON/XML; `--update` output on such a project is unchanged (behavioural test); `deprecated` read from the same per-package registry call as `time` (fetch-layer test).
+**Related:** ADR-0018
+
 ---
 
 ## Historical decisions
