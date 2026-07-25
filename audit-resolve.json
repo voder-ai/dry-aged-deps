@@ -1,3 +1,8 @@
 {
-  "exclusions": []
+  "exclusions": [
+    {
+      "id": 1124334,
+      "reason": "brace-expansion DoS (GHSA-mh99-v99m-4gvg, <=5.0.7) bundled inside npm within the @semantic-release/npm devDependency — unfixable from this repo (npm audit: 'cannot be fixed automatically'; only --force downgrades semantic-release 9 majors), dev-only + CI-release-only over trusted input. False positive per ADR-0008. See docs/security-incidents/SECURITY-INCIDENT-2026-07-25-brace-expansion-bundled-npm.disputed.md"
+    }
+  ]
 }
