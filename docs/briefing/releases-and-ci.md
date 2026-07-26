@@ -2,8 +2,8 @@
 
 ## What You Need to Know
 
-- `package.json` `version` field is **stale** per ADR-0005. semantic-release ignores it. The authoritative published version is `npm view dry-aged-deps version` (currently `2.7.0`). The repo file may show something much older.
-  <!-- signal-score: 1 | last-classified: 2026-06-05 | first-written: 2026-05-13 -->
+- `package.json` `version` field is **stale** per ADR-0005. semantic-release ignores it. The authoritative published version is `npm view dry-aged-deps version` (currently `2.17.1`). The repo file may show something much older (`0.1.3`). `@semantic-release/npm` is the plugin that runs the actual `npm publish` (the tool is a public CLI installed via npm); it also bundles its own npm, which is part of why bundled-npm transitive advisories don't land via the dep-update flow (P013).
+  <!-- signal-score: 3 | last-classified: 2026-07-26 | first-written: 2026-05-13 -->
 
 - `ci-publish.yml` runs `Build & Test` on every push and pull_request. The `Release` job runs only on push to `main` and runs `npx semantic-release`. No release-related config lives in `package.json`; `.releaserc.json` is the source of truth.
   <!-- signal-score: -1 | last-classified: 2026-06-05 | first-written: 2026-05-13 -->
@@ -33,6 +33,9 @@
 
 - **`push:watch`'s `dry-aged-deps --check` precheck reads from `node_modules/`, NOT from `package-lock.json`.** After editing `package.json` + running `npm install --ignore-scripts --package-lock-only` to refresh the lockfile only, `npm outdated` still reports the OLD installed version because `node_modules/<pkg>/package.json` hasn't changed. Result: `push:watch` keeps reporting the same stale dep until you run a full `npm install` (or `npm ci`) to sync `node_modules/`. Cost ~2 minutes per misdiagnosed loop. Observed on the v2.7.3 P008 verification work — downgrading globals via `--update --yes` left node_modules at the new version even after a `--package-lock-only` reset.
   <!-- signal-score: 0 | last-classified: 2026-06-05 | first-written: 2026-05-16 -->
+
+- **A release-eligible push can "succeed" yet never publish — silently.** If CI's pinned npm is a different major from the npm that generated `package-lock.json`, `npm ci` fails at "Install dependencies", so `Build & Test` fails and the `Release` job never runs. `git push` returns 0, the commit is on `main`, but `npm view dry-aged-deps version` never advances. There's no loud signal — you find it by inspecting the ci-publish run or noticing the version didn't bump. Verify a release actually shipped, don't assume push == published. See ADR-0024 / P033 (Critical Points) for the fix.
+  <!-- signal-score: 3 | last-classified: 2026-07-26 | first-written: 2026-07-26 -->
 
 - **`gh run watch --exit-status` (and `push:watch`) can return non-zero on transient API connectivity errors even when the CI run itself succeeded.** Two shapes: `error connecting to api.github.com` (2026-05-16) and `failed to get jobs: ... read: operation timed out` (2026-05-30 — `gh run view 26668291165` confirmed all jobs green). Verify with `gh run view <RUN_ID>` before believing the script. Two distinct fetch-path timeouts in this surface — a candidate `scripts/push-watch.sh` improvement (verify-on-fetch-failure before declaring failed) — see P016.
   <!-- signal-score: 1 | last-classified: 2026-06-05 | first-written: 2026-05-16 -->
