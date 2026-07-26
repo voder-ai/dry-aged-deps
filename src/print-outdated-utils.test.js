@@ -47,6 +47,18 @@ describe('Story 020.0-DEV-SURFACE-DEPRECATED-DEPENDENCIES: printDeprecatedSectio
     ).toBe(true);
   });
 
+  /** @supports prompts/020.0-DEV-SURFACE-DEPRECATED-DEPENDENCIES.md REQ-DEPRECATION-TABLE */
+  it('[REQ-DEPRECATION-TABLE] drops the @version suffix when the latest version is absent (renders bare name, not name@undefined)', () => {
+    const map = new Map([
+      ['@vitest/coverage-c8', { version: undefined, message: 'v8 coverage is moved to @vitest/coverage-v8 package' }],
+    ]);
+    const logs = capture(map);
+    expect(logs.some((l) => l.includes('@undefined'))).toBe(false);
+    expect(logs.some((l) => l.trim() === '@vitest/coverage-c8')).toBe(true);
+    // The verbatim message is still surfaced.
+    expect(logs.some((l) => l.includes('v8 coverage is moved to @vitest/coverage-v8 package'))).toBe(true);
+  });
+
   it('[REQ-DEPRECATION-TABLE] prints nothing when there are no deprecated dependencies', () => {
     expect(capture(new Map())).toEqual([]);
     expect(capture(undefined)).toEqual([]);

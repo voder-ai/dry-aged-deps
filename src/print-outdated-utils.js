@@ -185,7 +185,10 @@ export function printDeprecatedSection(deprecatedByPackage) {
   console.log('');
   console.log('Deprecated dependencies:');
   for (const [name, { version, message }] of deprecatedByPackage) {
-    console.log(`  ${name}@${version}`);
+    // version is undefined when `npm outdated` reports no `latest` for the package
+    // (deprecated-only / effectively unpublished) — drop the @version suffix rather
+    // than render `name@undefined`. Do NOT delete this guard on a type-only reading.
+    console.log(version ? `  ${name}@${version}` : `  ${name}`);
     console.log(`    ${message}`);
   }
 }

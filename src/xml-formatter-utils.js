@@ -307,7 +307,10 @@ export function buildIncompatibleSection(incompatible) {
 export function buildDeprecatedSection(deprecated) {
   let xml = '  <deprecated>\n';
   for (const { name, version, message } of deprecated) {
-    xml += `    <package name="${escapeXml(name)}" version="${escapeXml(version)}">\n`;
+    // version is absent when `npm outdated` reports no `latest` (deprecated-only /
+    // unpublished package) — omit the attribute rather than emit version="undefined".
+    const versionAttr = version ? ` version="${escapeXml(version)}"` : '';
+    xml += `    <package name="${escapeXml(name)}"${versionAttr}>\n`;
     xml += `      <message>${escapeXml(message)}</message>\n`;
     xml += '    </package>\n';
   }

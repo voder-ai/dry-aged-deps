@@ -21,7 +21,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { buildOverridesHygieneSection, buildPackagesSection } from './xml-formatter-utils.js';
+import { buildOverridesHygieneSection, buildPackagesSection, buildDeprecatedSection } from './xml-formatter-utils.js';
 
 describe('Story 017.0-DEV-OVERRIDES-HYGIENE: buildOverridesHygieneSection', () => {
   /** @story prompts/017.0-DEV-OVERRIDES-HYGIENE.md */
@@ -178,5 +178,27 @@ describe('Story 018.0-DEV-EXPOSURE-AWARE-SOAK: buildPackagesSection viaExposureM
     delete noAnnotation.viaExposureModifier;
     const xml = buildPackagesSection([noAnnotation]);
     expect(xml).not.toContain('<viaExposureModifier>');
+  });
+});
+
+/**
+ * @supports prompts/020.0-DEV-SURFACE-DEPRECATED-DEPENDENCIES.md REQ-DEPRECATION-XML
+ */
+describe('Story 020.0-DEV-SURFACE-DEPRECATED-DEPENDENCIES: buildDeprecatedSection', () => {
+  it('[REQ-DEPRECATION-XML] emits the version attribute when present, verbatim', () => {
+    const xml = buildDeprecatedSection([{ name: 'clerk-sveltekit', version: '0.6.0', message: 'use svelte-clerk' }]);
+    expect(xml).toContain('<package name="clerk-sveltekit" version="0.6.0">');
+    expect(xml).toContain('<message>use svelte-clerk</message>');
+  });
+
+  it('[REQ-DEPRECATION-XML] omits the version attribute when the latest version is absent (no version="undefined")', () => {
+    const xml = buildDeprecatedSection([
+      { name: '@vitest/coverage-c8', version: undefined, message: 'v8 coverage moved' },
+    ]);
+    expect(xml).not.toContain('version="undefined"');
+    expect(xml).not.toContain('version=""');
+    expect(xml).toContain('<package name="@vitest/coverage-c8">');
+    // The verbatim message is still emitted.
+    expect(xml).toContain('<message>v8 coverage moved</message>');
   });
 });
