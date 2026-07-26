@@ -1,6 +1,6 @@
 # Problem 029: dry-aged-deps should detect deprecated dependencies and surface them loudly (verbatim npm deprecation message) — no auto-remediation
 
-**Status**: Verification Pending
+**Status**: Closed
 **Reported**: 2026-06-17
 
 ## Fix Released
@@ -17,7 +17,7 @@ Implemented across RFC-005 slices 1-7, governed by ADR-0023, tracing to JTBD-011
 
 Advisory-only: verbatim message, no parsing/replacement-extraction/remediation, no filtering / `--update` / exit-code change. Full prepush green (390+ tests, coverage ≥80%, audit:ci clean); architect + JTBD PASS on every slice.
 
-**Awaiting user verification** against a real project with a deprecated dependency (e.g. one depending on `clerk-sveltekit`): confirm the `Deprecated dependencies` section appears in `--check` table output and the `deprecated` array/element in `--check --format=json` / `--format=xml`, and that `--update` behaviour is unchanged.
+**Verified 2026-07-26** by running `dry-aged-deps` against a sweep of real sibling projects (in `2.17.0`). Six surfaced deprecations correctly — verbatim message, replacement package name / URL preserved, multiple-per-project handled, in both table and JSON output. Confirmed cases: `bAIs` (`@mariozechner/pi-ai@0.73.1` → "please use @earendil-works/pi-ai instead"), `insomnia` (`insomnia-plugin-default-headers@3.6.0`), `make-fetch-happen` (`eslint-plugin-standard@4.1.0` + `npmlog@7.0.1`), `crammer`, `zod-fastify-example`, `config-sheriff`. Advisory-only invariant held (no `--update`/exit-code change). Maintainer confirmed close. One cosmetic edge caught (a `name@undefined` render when `npm outdated` reports no `latest` for the package) — tracked and fixed separately as a `fix:`, out of P029's scope.
 **Priority**: 3 (Medium) — Impact: Moderate (3) x Likelihood: Rare (1) — a deprecated dependency is a real standing risk, but the tool silently omitting the signal has low blast radius (advisory gap, no incorrect action taken)
 **Origin**: internal
 **Effort**: L — re-rated from the deferred `M` placeholder at Known-Error transition (2026-07-25, P047). Investigation confirmed the fix spans a registry-read widening (`src/fetch-version-times.js`), row-shape threading (`src/build-rows.js`), three output surfaces (table / JSON / XML formatters), and needs a new ADR for the two open design decisions (output shape + advisory-vs-filtering) plus an RFC/story trace. Single-package but multi-file + new-ADR → L, not M.

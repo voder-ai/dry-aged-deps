@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-07-26 **P033 captured** — CI npm pin drifts from the lockfile-generator npm version, silently stalling the release pipeline (`npm ci` rejects an npm-11 lockfile under a pinned npm-10 CI; 3 consecutive ci-publish failures on 2026-07-25 blocked the P029 `2.17.0` release until all three job pins were aligned to `11.13.0` in `f0cb373`). Sibling ADR-0024 records the pin-alignment invariant. Lightweight aside via /wr-itil:capture-problem.
+> Last reviewed: 2026-07-26 **P029 closed** — deprecation surfacing verified against a sweep of real sibling projects in `2.17.0` (6 surfaced deprecations correctly in table + JSON: bAIs, insomnia, make-fetch-happen, crammer, zod-fastify-example, config-sheriff; verbatim, advisory-only held). Moved verifying→closed. Verification Queue drops to 4 (P014, P013, P030, P028). One cosmetic `name@undefined` edge caught → tracked as a separate `fix:`.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -29,7 +29,6 @@ Fix released; awaiting user confirmation that the production behaviour matches t
 | P013 | dry-aged-deps ignores the package.json overrides block — stale/vulnerable pins undetected, override-fixable vulns mislabeled "unfixable" | 2026-07-08 | no — not observed |
 | P030 | `dry-aged-deps --update` leaves package-lock.json stale, breaking `npm ci` for adopters                                                  | 2026-07-08 | no — not observed |
 | P028 | dry-aged-deps --update should flag and skip un-landable updates (incompatible peer deps / ERESOLVE)                                      | 2026-07-10 | no — not observed |
-| P029 | dry-aged-deps should detect deprecated dependencies and surface them loudly (verbatim message, no auto-remediation)                      | 2026-07-26 | no — not observed |
 
 ## Parked
 
