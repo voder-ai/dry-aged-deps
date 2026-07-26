@@ -5,7 +5,7 @@
 **Priority**: 9 (Medium) — Impact: 3 (Moderate — publishing disrupted; every `feat:`/`fix:` sits unreleased on `main` and adopters get no updates) × Likelihood: 3 (Possible — fires whenever a session regenerates `package-lock.json` under a newer npm major than the pinned CI npm; observed 3 consecutive ci-publish failures on 2026-07-25)
 **Origin**: internal
 **Effort**: M — a `check:lockfile`/prepush guard comparing the CI npm pin to the `lockfileVersion` / npm major that generated `package-lock.json`; one script plus wiring, no cross-package work
-**JTBD**: (unconfirmed — elicitation queued)
+**JTBD**: JTBD-012
 **Persona**: project-maintainer
 
 ## Description
@@ -51,4 +51,4 @@ No invariant ties the CI npm pin to the npm version that generates `package-lock
 
 ## Related
 
-Captured via `/wr-itil:capture-problem` (lightweight aside). Immediate remediation (align all three npm pins to `11.13.0`) shipped in commit `f0cb373`; the Option-B decision that remediation embodies — "the CI npm pin must equal the npm version that generates the committed lockfile" — is recorded in the sibling ADR-0024. Persona derived confidently (project-maintainer, maintainer-side release concern); JTBD anchoring is genuinely low-confidence — no existing product JTBD covers _releasing dry-aged-deps itself_ (the corpus jobs are all about _using_ the tool), so the anchor is left as an honest `(unconfirmed — elicitation queued)` sentinel rather than shoehorned. Elicitation queued for the next interactive session.
+Captured via `/wr-itil:capture-problem` (lightweight aside). Immediate remediation (align all three npm pins to `11.13.0`) shipped in commit `f0cb373`; the Option-B decision that remediation embodies — "the CI npm pin must equal the npm version that generates the committed lockfile" — is recorded in the sibling ADR-0024. Persona: project-maintainer (maintainer-side release concern). No existing product JTBD covered _releasing dry-aged-deps itself_ (the corpus jobs are all about _using_ the tool), so rather than shoehorn, a new job was created and ratified: **JTBD-012** (ship a release without the pipeline stalling silently), 2026-07-26.
