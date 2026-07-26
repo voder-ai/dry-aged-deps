@@ -51,7 +51,7 @@ Option 2 was rejected because the dev/agent sessions run npm 11 and the lockfile
 
 ### Bad
 
-- The invariant is enforced by convention, not by a check — a future lockfile regen under a newer npm major re-introduces the drift until someone bumps the pins. This residual risk is exactly what P033 tracks (a `check:lockfile`/prepush guard that fails fast on pin/lockfile mismatch, or Option 3's single source of truth).
+- ~~The invariant is enforced by convention, not by a check — a future lockfile regen under a newer npm major re-introduces the drift until someone bumps the pins.~~ **Amended 2026-07-26 (P033 / RFC-006):** the invariant is now enforced by an automated fail-fast guard, `check:npm-pin` (`scripts/check-npm-pin.js`), wired into `npm run prepush` before `check:lockfile`. It greps every CI `npm install -g npm@<X>` pin, reads the local (lockfile-generator) `npm --version`, and fails loudly + locally when any pin's **major** diverges — so a lockfile regen under a newer npm major surfaces at prepush, before the commit lands, instead of silently re-introducing the drift. This closes the residual risk fired by Reassessment Criterion (a). Option 3 (single source of truth) remains deferred to a future reassessment.
 
 ## Confirmation
 

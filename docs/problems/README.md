@@ -1,6 +1,6 @@
 # Problem Backlog
 
-> Last reviewed: 2026-07-26 **P029 closed** — deprecation surfacing verified against a sweep of real sibling projects in `2.17.0` (6 surfaced deprecations correctly in table + JSON: bAIs, insomnia, make-fetch-happen, crammer, zod-fastify-example, config-sheriff; verbatim, advisory-only held). Moved verifying→closed. Verification Queue drops to 4 (P014, P013, P030, P028). One cosmetic `name@undefined` edge caught → tracked as a separate `fix:`.
+> Last reviewed: 2026-07-26 **P033 verification pending** — shipped the `check:npm-pin` prepush drift guard (RFC-006): greps CI npm pins from `.github/workflows/*.yml`, fails loudly + locally when any pin's major diverges from the local lockfile-generator npm (≥1-pin assertion, majors-only). ADR-0024's convention-only "Bad" consequence amended. Known Error→Verifying. Verification Queue rises to 5.
 > Run `/wr-itil:review-problems` to refresh WSJF rankings.
 
 ## WSJF Rankings
@@ -13,7 +13,6 @@ Dev-work queue only. Verification Pending (`.verifying.md`, WSJF multiplier 0) a
 | 6.0  | P023 | external-comms gate marker re-hashes on every draft-body delta — forces redundant re-fire cycles per iter                                   | 6 (Medium) | Known Error | M      | 2026-06-02 | external (`@windyroad/risk-scorer` + `@windyroad/voice-tone`) |
 | 6.0  | P027 | orchestrator halts AFK work-problems loop at P147 stuck-before-emit despite verified work integrity                                         | 6 (Medium) | Known Error | M      | 2026-06-05 | external (`@windyroad/itil`)                                  |
 | 6.0  | P032 | oversight-marker helper's 24h SID window blocks born-confirmed ADR/JTBD writes on long sessions                                             | 6 (Medium) | Known Error | M      | 2026-07-11 | external (`@windyroad/wr-architect` + `@windyroad/wr-jtbd`)   |
-| 4.5  | P033 | CI npm pin drifts from the lockfile-generator npm version, silently stalling the release pipeline                                           | 9 (Medium) | Open        | M      | 2026-07-26 | internal                                                      |
 | 4.0  | P019 | work-problems Step 5 subprocess JSON envelope's duration_ms can dramatically undercount — extend P089 Gap 2 authority hierarchy             | 4 (Low)    | Known Error | M      | 2026-05-30 | external (`@windyroad/itil`)                                  |
 | 4.0  | P024 | external-comms gate cross-session marker dir mismatch — subagent PASS verdicts land in agent's own dir, main session's gate can't find them | 4 (Low)    | Known Error | M      | 2026-06-02 | external (`@windyroad/risk-scorer`)                           |
 | 1.5  | P020 | `@windyroad/tdd` hook stem-match strict matching causes variant-named tests to fail to pair with their source modules                       | 3 (Low)    | Known Error | M      | 2026-05-30 | external (`@windyroad/tdd`)                                   |
@@ -29,6 +28,7 @@ Fix released; awaiting user confirmation that the production behaviour matches t
 | P013 | dry-aged-deps ignores the package.json overrides block — stale/vulnerable pins undetected, override-fixable vulns mislabeled "unfixable" | 2026-07-08 | no — not observed |
 | P030 | `dry-aged-deps --update` leaves package-lock.json stale, breaking `npm ci` for adopters                                                  | 2026-07-08 | no — not observed |
 | P028 | dry-aged-deps --update should flag and skip un-landable updates (incompatible peer deps / ERESOLVE)                                      | 2026-07-10 | no — not observed |
+| P033 | CI npm pin drifts from the lockfile-generator npm version, silently stalling the release pipeline                                        | 2026-07-26 | no — not observed |
 
 ## Parked
 
