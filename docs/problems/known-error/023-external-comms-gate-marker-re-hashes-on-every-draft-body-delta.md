@@ -67,3 +67,11 @@ JTBD-001 impact (governance without slowing down): 6 subagent dispatches per ite
 - **Upstream report pending** — external dependency identified; invoke /wr-itil:report-upstream when ready
 
 (captured via /wr-itil:capture-problem; expand at next investigation)
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/217#issuecomment-5083264797
+- **Reported**: 2026-07-26
+- **Template used**: comment cross-reference
+- **Disclosure path**: commented-on-existing-issue (#217, same marker-hash-exactness class)
+- **Cross-reference confirmed**: yes — comment carries the voder-ai/dry-aged-deps cross-reference + P023

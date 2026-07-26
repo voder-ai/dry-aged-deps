@@ -73,3 +73,11 @@ Two fix shapes:
 - **Upstream report pending** — external dependency identified; invoke /wr-itil:report-upstream when ready
 
 (captured via /wr-itil:capture-problem; expand at next investigation)
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/400
+- **Reported**: 2026-07-26
+- **Template used**: structured default (problem-shaped)
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes — upstream issue body carries the voder-ai/dry-aged-deps cross-reference + P024

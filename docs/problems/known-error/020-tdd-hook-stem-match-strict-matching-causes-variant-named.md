@@ -104,3 +104,11 @@ This is external/upstream root cause: the glob lives in `@windyroad/tdd`, not th
 - **Upstream report pending** -- external dependency identified; invoke /wr-itil:report-upstream when ready. Deferred at the 2026-07-11 Open→Known-Error transition: filing a public issue against `@windyroad/tdd` is outward-facing and was not auto-fired in the AFK loop (orchestrator owns external-comms cadence). Upstream target: `@windyroad/tdd`, `hooks/lib/tdd-gate.sh` `tdd_find_test_for_impl()`.
 
 (captured via /wr-itil:capture-problem; expanded + transitioned to Known Error 2026-07-11)
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/398
+- **Reported**: 2026-07-26
+- **Template used**: structured default (problem-shaped)
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes — upstream issue body carries the voder-ai/dry-aged-deps cross-reference + P020

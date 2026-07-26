@@ -97,3 +97,11 @@ Likely shape: (1) for the immediate fix + (3) for the class-level reinforcement.
 - **Upstream report pending** -- external dependency identified; invoke /wr-itil:report-upstream when ready. Root cause is upstream `@windyroad/itil` work-problems SKILL Step 5 P147 halt-contract prose (confirmed present in installed 0.57.2). Deferred not auto-filed this iter, consistent with sibling P017 / P019 (same external class carry the same deferred marker); the outward-facing upstream filing is queued for user authorization.
 
 (captured via /wr-itil:capture-problem during /wr-itil:work-problems orchestrator main turn post-iter-5 halt; expanded 2026-07-11 during /wr-itil:work-problems — root cause confirmed external, transitioned Open → Known Error)
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/401
+- **Reported**: 2026-07-26
+- **Template used**: structured default (problem-shaped)
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes — upstream issue body carries the voder-ai/dry-aged-deps cross-reference + P027

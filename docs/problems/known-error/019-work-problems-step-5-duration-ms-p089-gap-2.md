@@ -68,3 +68,11 @@ Fix shape: extend the Authority hierarchy paragraph to name `duration_ms` alongs
 (captured via /wr-itil:capture-problem; expand at next investigation)
 
 - **Upstream report pending** — external dependency identified; invoke /wr-itil:report-upstream when ready
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/397
+- **Reported**: 2026-07-26
+- **Template used**: structured default (problem-shaped)
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes — upstream issue body carries the voder-ai/dry-aged-deps cross-reference + P019

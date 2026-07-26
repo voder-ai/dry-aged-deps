@@ -101,3 +101,11 @@ The helper comment notes it cannot depend on itil-internal `get_candidate_sessio
 - **P024 / P007 / P023** — sibling external gate-marker friction tickets.
 - Captured via /wr-itil:capture-problem during the 2026-07-11 retro; hit repeatedly on ADR-0022 + JTBD-010 born-confirmed writes this session.
 - **Upstream report pending** -- external dependency identified; invoke /wr-itil:report-upstream when ready. Deferred at the 2026-07-11 Open→Known-Error transition: filing public issues against upstream repos is outward-facing and was not auto-fired in the AFK loop (orchestrator owns external-comms cadence). Two upstream targets: `@windyroad/wr-architect` + `@windyroad/wr-jtbd`, each `scripts/mark-oversight-confirmed.sh`.
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/393#issuecomment-5083267394
+- **Reported**: 2026-07-26
+- **Template used**: comment cross-reference
+- **Disclosure path**: commented-on-existing-issue (#393, same oversight-marker helper)
+- **Cross-reference confirmed**: yes — comment carries the voder-ai/dry-aged-deps cross-reference + P032

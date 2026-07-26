@@ -104,3 +104,11 @@ Defer the final call to the upstream maintainer when `/wr-itil:report-upstream` 
 - **Un-park trigger**: upstream `@windyroad/risk-scorer` ships a fix that lets the subagent emit a valid sha256 key (Option 2 — grant Bash) OR moves key-computation to the hook (Option 1 — hook recomputes from draft + surface). Detection signal: marker file under `${RDIR}/external-comms-risk-reviewed-<sha256hex>` appears after a `wr-risk-scorer:external-comms` invocation without `BYPASS_RISK_GATE=1`. On un-park: `git mv` to `.known-error.md` (root cause remains confirmed), exercise the gate end-to-end through a real `gh issue create`, then transition to `.verifying.md` per ADR-022.
 - **Parked since**: 2026-05-16
 - **External-root-cause detection (P063)**: already-noted check passed — the `- **Upstream report pending** —` marker in the `## Related` section (set during capture on 2026-05-13) is the audit-trail anchor; the parking-path detection did not re-fire the prompt.
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/149 (composed P010+P007) + https://github.com/windyroad/agent-plugins/issues/125 (marker key cannot be computed by the reviewer agent — no shasum)
+- **Reported**: 2026-05-13 (historical — both issues now Closed)
+- **Template used**: structured default (problem-shaped)
+- **Disclosure path**: public issue (already reported; no new issue filed 2026-07-26 — the SHA256-marker-compute gap is covered by closed #125 + #149)
+- **Cross-reference confirmed**: yes — #149 body composes P007; #125 is the same compute-side gap

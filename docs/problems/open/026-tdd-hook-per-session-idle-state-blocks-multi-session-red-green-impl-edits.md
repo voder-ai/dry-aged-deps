@@ -66,3 +66,11 @@ Possible fix shapes:
 - **P020** (`docs/problems/open/020-tdd-hook-stem-match-strict-matching-causes-variant-named.md`) — sibling ticket on the same upstream package, different subsystem. Hang-off-check 2026-06-05 verdict PROCEED_NEW (different fix locus).
 - **ADR-0018** (`docs/decisions/0018-...proposed.md`) — three-class unfixable-reason taxonomy; the RED/GREEN pair this evidence comes from.
 - Captured via `/wr-itil:capture-problem`; expand at next investigation.
+
+## Reported Upstream
+
+- **URL**: https://github.com/windyroad/agent-plugins/issues/399
+- **Reported**: 2026-07-26
+- **Template used**: structured default (problem-shaped)
+- **Disclosure path**: public issue
+- **Cross-reference confirmed**: yes — upstream issue body carries the voder-ai/dry-aged-deps cross-reference + P026
