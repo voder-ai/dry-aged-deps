@@ -33,14 +33,14 @@
     "push:watch": "bash scripts/push-watch.sh"
   },
   "devDependencies": {
-    "@commitlint/cli": "21.2.2",
-    "@commitlint/config-conventional": "21.2.2",
+    "@commitlint/cli": "21.2.3",
+    "@commitlint/config-conventional": "21.2.3",
     "@eslint/js": "^10.0.1",
     "@semantic-release/npm": "13.1.5",
     "@types/node": "26.1.1",
     "@vitest/coverage-v8": "4.1.11",
     "better-npm-audit": "^3.11.0",
-    "eslint": "10.9.1",
+    "eslint": "10.11.0",
     "eslint-plugin-security": "4.0.1",
     "execa": "10.0.1",
     "globals": "17.12.0",
